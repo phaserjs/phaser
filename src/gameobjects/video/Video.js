@@ -5,6 +5,7 @@
  */
 
 var Clamp = require('../../math/Clamp');
+var DefaultImageNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultImageNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var Events = require('../events');
@@ -48,6 +49,11 @@ var VideoRender = require('./VideoRender');
  * Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with
  * an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render
  * in-game with full transparency.
+ *
+ * Transparent videos are supported by the HEVC (H.265) codec,
+ * but only on some devices and browsers, and sometimes the alpha channel is ignored,
+ * which can be a problem if you're aiming for a consistent experience.
+ * We advise against relying on HEVC.
  *
  * Playback is handled entirely via the Request Video Frame API, which is supported by most modern browsers.
  * A polyfill is provided for older browsers.
@@ -101,10 +107,10 @@ var VideoRender = require('./VideoRender');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.TextureCrop
  * @extends Phaser.GameObjects.Components.Tint
@@ -127,10 +133,10 @@ var Video = new Class({
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.TextureCrop,
         Components.Tint,
@@ -195,7 +201,7 @@ var Video = new Class({
          * If you have saved this video to a texture via the `saveTexture` method, this controls if the video
          * is rendered with `flipY` in WebGL or not. You often need to set this if you wish to use the video texture
          * as the input source for a shader. If you find your video is appearing upside down within a shader or
-         * custom pipeline, flip this property.
+         * custom renderer, flip this property.
          *
          * @name Phaser.GameObjects.Video#flipY
          * @type {boolean}
@@ -527,8 +533,7 @@ var Video = new Class({
 
         this.setPosition(x, y);
         this.setSize(256, 256);
-        this.initPipeline();
-        this.initPostPipeline(true);
+        this.initRenderNodes(this._defaultRenderNodesMap);
 
         game.events.on(GameEvents.PAUSE, this.globalPause, this);
         game.events.on(GameEvents.RESUME, this.globalResume, this);
@@ -543,6 +548,23 @@ var Video = new Class({
         if (key)
         {
             this.load(key);
+        }
+    },
+
+    /**
+     * The default render node map for this Game Object.
+     *
+     * @name Phaser.GameObjects.Video#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultImageNodes;
         }
     },
 

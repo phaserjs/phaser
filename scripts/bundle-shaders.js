@@ -69,7 +69,7 @@ files.forEach(function (file, c) {
     {
         inc = inc.concat('Frag');
     }
-    else
+    else if (file.substr(-4) === 'vert')
     {
         inc = inc.concat('Vert');
     }

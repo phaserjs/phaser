@@ -9,12 +9,16 @@
  */
 
 var Wrappers = {
+    WebGLGlobalWrapper: require('./WebGLGlobalWrapper'),
     WebGLAttribLocationWrapper: require('./WebGLAttribLocationWrapper'),
     WebGLBufferWrapper: require('./WebGLBufferWrapper'),
     WebGLProgramWrapper: require('./WebGLProgramWrapper'),
+    WebGLShaderSetterWrapper: require('./WebGLShaderSetterWrapper'),
     WebGLTextureWrapper: require('./WebGLTextureWrapper'),
+    WebGLTextureUnitsWrapper: require('./WebGLTextureUnitsWrapper'),
     WebGLFramebufferWrapper: require('./WebGLFramebufferWrapper'),
-    WebGLUniformLocationWrapper: require('./WebGLUniformLocationWrapper')
+    WebGLVAOWrapper: require('./WebGLVAOWrapper'),
+    WebGLVertexBufferLayoutWrapper: require('./WebGLVertexBufferLayoutWrapper')
 };
 
 module.exports = Wrappers;

@@ -18,22 +18,22 @@ var Utils = require('../../../renderer/webgl/Utils');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Grid} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var GridWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
+    var camera = drawingContext.camera;
     camera.addToRenderList(src);
 
-    var pipeline = renderer.pipelines.set(src.pipeline);
+    var fillRectNode = src.customRenderNodes.FillRect || src.defaultRenderNodes.FillRect;
+    var submitterNode = src.customRenderNodes.Submitter || src.defaultRenderNodes.Submitter;
 
-    var result = GetCalcMatrix(src, camera, parentMatrix);
-
-    var calcMatrix = pipeline.calcMatrix.copyFrom(result.calc);
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
     calcMatrix.translate(-src._displayOriginX, -src._displayOriginY);
 
-    var alpha = camera.alpha * src.alpha;
+    var alpha = src.alpha;
 
     //  Work out the grid size
 
@@ -52,12 +52,16 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var cellWidthB = cellWidth - ((gridWidth * cellWidth) - width);
     var cellHeightB = cellHeight - ((gridHeight * cellHeight) - height);
 
-    var fillTint;
     var fillTintColor;
 
-    var showCells = src.showCells;
+    var showCells = src.isFilled;
     var showAltCells = src.showAltCells;
-    var showOutline = src.showOutline;
+    var showOutline = src.isStroked;
+
+    var cellPadding = src.cellPadding;
+
+    var lineWidth = src.lineWidth;
+    var halfLineWidth = lineWidth / 2;
 
     var x = 0;
     var y = 0;
@@ -65,34 +69,18 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
     var cw = 0;
     var ch = 0;
 
-    if (showOutline)
+    if (cellPadding)
     {
-        //  To make room for the grid lines (in case alpha < 1)
-        cellWidthA--;
-        cellHeightA--;
+        cellWidthA -= cellPadding * 2;
+        cellHeightA -= cellPadding * 2;
 
-        if (cellWidthB === cellWidth)
-        {
-            cellWidthB--;
-        }
-
-        if (cellHeightB === cellHeight)
-        {
-            cellHeightB--;
-        }
+        cellWidthB -= cellPadding * 2;
+        cellHeightB -= cellPadding * 2;
     }
-
-    renderer.pipelines.preBatch(src);
 
     if (showCells && src.fillAlpha > 0)
     {
-        fillTint = pipeline.fillTint;
         fillTintColor = Utils.getTintAppendFloatAlpha(src.fillColor, src.fillAlpha * alpha);
-
-        fillTint.TL = fillTintColor;
-        fillTint.TR = fillTintColor;
-        fillTint.BL = fillTintColor;
-        fillTint.BR = fillTintColor;
 
         for (y = 0; y < gridHeight; y++)
         {
@@ -114,25 +102,24 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 cw = (x < gridWidth - 1) ? cellWidthA : cellWidthB;
                 ch = (y < gridHeight - 1) ? cellHeightA : cellHeightB;
 
-                pipeline.batchFillRect(
-                    x * cellWidth,
-                    y * cellHeight,
-                    cw,
-                    ch
-                );
+                if (cw > 0 && ch > 0)
+                {
+                    fillRectNode.run(
+                        drawingContext,
+                        calcMatrix,
+                        submitterNode,
+                        x * cellWidth + cellPadding, y * cellHeight + cellPadding,
+                        cw, ch,
+                        fillTintColor, fillTintColor, fillTintColor, fillTintColor
+                    );
+                }
             }
         }
     }
 
     if (showAltCells && src.altFillAlpha > 0)
     {
-        fillTint = pipeline.fillTint;
         fillTintColor = Utils.getTintAppendFloatAlpha(src.altFillColor, src.altFillAlpha * alpha);
-
-        fillTint.TL = fillTintColor;
-        fillTint.TR = fillTintColor;
-        fillTint.BL = fillTintColor;
-        fillTint.BR = fillTintColor;
 
         for (y = 0; y < gridHeight; y++)
         {
@@ -154,42 +141,83 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 cw = (x < gridWidth - 1) ? cellWidthA : cellWidthB;
                 ch = (y < gridHeight - 1) ? cellHeightA : cellHeightB;
 
-                pipeline.batchFillRect(
-                    x * cellWidth,
-                    y * cellHeight,
-                    cw,
-                    ch
-                );
+                if (cw > 0 && ch > 0)
+                {
+                    fillRectNode.run(
+                        drawingContext,
+                        calcMatrix,
+                        submitterNode,
+                        x * cellWidth + cellPadding, y * cellHeight + cellPadding,
+                        cw, ch,
+                        fillTintColor, fillTintColor, fillTintColor, fillTintColor
+                    );
+                }
             }
         }
     }
 
-    if (showOutline && src.outlineFillAlpha > 0)
+    if (showOutline && src.strokeAlpha > 0)
     {
-        var strokeTint = pipeline.strokeTint;
-        var color = Utils.getTintAppendFloatAlpha(src.outlineFillColor, src.outlineFillAlpha * alpha);
+        var color = Utils.getTintAppendFloatAlpha(src.strokeColor, src.strokeAlpha * alpha);
 
-        strokeTint.TL = color;
-        strokeTint.TR = color;
-        strokeTint.BL = color;
-        strokeTint.BR = color;
+        var start = src.strokeOutside ? 0 : 1;
 
-        for (x = 1; x < gridWidth; x++)
+        for (x = start; x < gridWidth; x++)
         {
-            var x1 = x * cellWidth;
+            var x1 = x * cellWidth - halfLineWidth;
 
-            pipeline.batchLine(x1, 0, x1, height, 1, 1, 1, 0, false);
+            fillRectNode.run(
+                drawingContext,
+                calcMatrix,
+                submitterNode,
+                x1, 0,
+                lineWidth, height,
+                color, color, color, color
+            );
         }
 
-        for (y = 1; y < gridHeight; y++)
+        for (y = start; y < gridHeight; y++)
         {
-            var y1 = y * cellHeight;
+            var y1 = y * cellHeight - halfLineWidth;
 
-            pipeline.batchLine(0, y1, width, y1, 1, 1, 1, 0, false);
+            fillRectNode.run(
+                drawingContext,
+                calcMatrix,
+                submitterNode,
+                0, y1,
+                width, lineWidth,
+                color, color, color, color
+            );
+        }
+
+        // Render remaining outer strokes.
+        if (src.strokeOutside && src.strokeOutsideIncomplete)
+        {
+            if (width > halfLineWidth)
+            {
+                fillRectNode.run(
+                    drawingContext,
+                    calcMatrix,
+                    submitterNode,
+                    width - halfLineWidth, 0,
+                    lineWidth, height,
+                    color, color, color, color
+                );
+            }
+
+            if (height > halfLineWidth)
+            {
+                fillRectNode.run(
+                    drawingContext,
+                    calcMatrix,
+                    submitterNode,
+                    0, height - halfLineWidth,
+                    width, lineWidth,
+                    color, color, color, color
+                );
+            }
         }
     }
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = GridWebGLRenderer;

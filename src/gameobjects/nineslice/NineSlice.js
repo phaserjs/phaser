@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DefaultNineSliceNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultNineSliceNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
@@ -87,6 +88,9 @@ var Vertex = require('../../geom/mesh/Vertex');
  * specifying anything more than the texture key and frame and it will pull the
  * area data from the atlas.
  *
+ * This object does not support trimmed textures from Texture Packer.
+ * Trimming interferes with the ability to stretch the texture correctly.
+ *
  * @class NineSlice
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects
@@ -99,8 +103,7 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -129,8 +132,7 @@ var NineSlice = new Class({
         Components.GetBounds,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Texture,
         Components.Transform,
@@ -333,8 +335,24 @@ var NineSlice = new Class({
 
         this.updateDisplayOrigin();
 
-        this.initPipeline();
-        this.initPostPipeline();
+        this.initRenderNodes(this._defaultRenderNodesMap);
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.NineSlice#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultNineSliceNodes;
+        }
     },
 
     /**

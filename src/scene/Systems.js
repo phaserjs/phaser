@@ -62,18 +62,6 @@ var Systems = new Class({
          */
         this.renderer;
 
-        if (typeof PLUGIN_FBINSTANT)
-        {
-            /**
-             * The Facebook Instant Games Plugin.
-             *
-             * @name Phaser.Scenes.Systems#facebook
-             * @type {Phaser.FacebookInstantGamesPlugin}
-             * @since 3.12.0
-             */
-            this.facebook;
-        }
-
         /**
          * The Scene Configuration object, as passed in when creating the Scene.
          *

@@ -5,16 +5,16 @@
  */
 
 var BlendModes = require('../renderer/BlendModes');
-var Camera = require('../cameras/2d/Camera');
+var Camera = require('../cameras/2d/BaseCamera');
 var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var CONST = require('../const');
+var DrawingContext = require('../renderer/webgl/DrawingContext');
 var Frame = require('./Frame');
 var GetFastValue = require('../utils/object/GetFastValue');
-var PIPELINES = require('../renderer/webgl/pipelines/const');
-var RenderTarget = require('../renderer/webgl/RenderTarget');
 var Texture = require('./Texture');
 var Utils = require('../renderer/webgl/Utils');
+var DynamicTextureCommands = require('./DynamicTextureCommands');
 
 /**
  * @classdesc
@@ -32,6 +32,7 @@ var Utils = require('../renderer/webgl/Utils');
  * const t = this.textures.addDynamicTexture('player', 64, 128);
  * // draw objects to t
  * this.add.sprite(x, y, 'player');
+ * this.render();
  * ```
  *
  * Because this is a standard Texture within Phaser, you can add frames to it, meaning you can use it
@@ -42,11 +43,10 @@ var Utils = require('../renderer/webgl/Utils');
  * to be drawn with no aliasing around the edges. This is a technical limitation of WebGL1. To get around it,
  * create your shape as a texture in an art package, then draw that to this texture.
  *
- * Based on the assumption that you will be using this Dynamic Texture as a source for Sprites, it will
- * automatically invert any drawing done to it on the y axis. If you do not require this, please call the
- * `setIsSpriteTexture()` method and pass it `false` as its parameter. Do this before you start drawing
- * to this texture, otherwise you will get vertically inverted frames under WebGL. This isn't required
- * for Canvas.
+ * In the event that the WebGL context is lost, this DynamicTexture will
+ * lose its contents. Once context is restored (signalled by the `restorewebgl`
+ * event), you can choose to redraw the contents of the DynamicTexture.
+ * You are responsible for the redrawing logic.
  *
  * @class DynamicTexture
  * @extends Phaser.Textures.Texture
@@ -122,15 +122,15 @@ var DynamicTexture = new Class({
         this.height = -1;
 
         /**
-         * This flag is set to 'true' during `beginDraw` and reset to 'false` in `endDraw`,
-         * allowing you to determine if this Dynamic Texture is batch drawing, or not.
+         * An array of commands that are used to draw to this Dynamic Texture.
+         * This is flushed by the `render` method.
+         * The `clear` method will also clear this array, then store itself.
          *
-         * @name Phaser.Textures.DynamicTexture#isDrawing
-         * @type {boolean}
-         * @readonly
-         * @since 3.60.0
+         * @name Phaser.Textures.DynamicTexture#commandBuffer
+         * @type {array}
+         * @since 4.0.0
          */
-        this.isDrawing = false;
+        this.commandBuffer = [];
 
         /**
          * A reference to the Rendering Context belonging to the Canvas Element this Dynamic Texture is drawing to.
@@ -152,43 +152,6 @@ var DynamicTexture = new Class({
         this.context = (isCanvas) ? source.getContext('2d', { willReadFrequently: true }) : null;
 
         /**
-         * Is this Dynamic Texture dirty or not? If not it won't spend time clearing or filling itself.
-         *
-         * @name Phaser.Textures.DynamicTexture#dirty
-         * @type {boolean}
-         * @since 3.12.0
-         */
-        this.dirty = false;
-
-        /**
-         * Is this Dynamic Texture being used as the base texture for a Sprite Game Object?
-         *
-         * This is enabled by default, as we expect that will be the core use for Dynamic Textures.
-         *
-         * However, to disable it, call `RenderTexture.setIsSpriteTexture(false)`.
-         *
-         * You should do this _before_ drawing to this texture, so that it correctly
-         * inverses the frames for WebGL rendering. Not doing so will result in vertically flipped frames.
-         *
-         * This property is used in the `endDraw` method.
-         *
-         * @name Phaser.Textures.DynamicTexture#isSpriteTexture
-         * @type {boolean}
-         * @since 3.60.0
-         */
-        this.isSpriteTexture = true;
-
-        /**
-         * Internal erase mode flag.
-         *
-         * @name Phaser.Textures.DynamicTexture#_eraseMode
-         * @type {boolean}
-         * @private
-         * @since 3.16.0
-         */
-        this._eraseMode = false;
-
-        /**
          * An internal Camera that can be used to move around this Dynamic Texture.
          *
          * Control it just like you would any Scene Camera. The difference is that it only impacts
@@ -197,34 +160,31 @@ var DynamicTexture = new Class({
          * You can scroll, zoom and rotate this Camera.
          *
          * @name Phaser.Textures.DynamicTexture#camera
-         * @type {Phaser.Cameras.Scene2D.Camera}
+         * @type {Phaser.Cameras.Scene2D.BaseCamera}
          * @since 3.12.0
          */
         this.camera = new Camera(0, 0, width, height).setScene(manager.game.scene.systemScene, false);
 
         /**
-         * The Render Target that belongs to this Dynamic Texture.
+         * The drawing context of this Dynamic Texture.
+         * This contains the framebuffer that the Dynamic Texture is drawing to.
          *
-         * A Render Target encapsulates a framebuffer and texture for the WebGL Renderer.
-         *
-         * This property remains `null` under Canvas.
-         *
-         * @name Phaser.Textures.DynamicTexture#renderTarget
-         * @type {Phaser.Renderer.WebGL.RenderTarget}
-         * @since 3.60.0
+         * @name Phaser.Textures.DynamicTexture#drawingContext
+         * @type {Phaser.Renderer.WebGL.DrawingContext}
+         * @since 4.0.0
          */
-        this.renderTarget = (!isCanvas) ? new RenderTarget(renderer, width, height, 1, 0, false, false, true, false) : null;
+        this.drawingContext = isCanvas ? null : new DrawingContext(renderer, {
+            width: width,
+            height: height,
+            camera: this.camera,
+            autoClear: false
+        });
 
-        /**
-         * A reference to the WebGL Single Pipeline.
-         *
-         * This property remains `null` under Canvas.
-         *
-         * @name Phaser.Textures.DynamicTexture#pipeline
-         * @type {Phaser.Renderer.WebGL.Pipelines.SinglePipeline}
-         * @since 3.60.0
-         */
-        this.pipeline = (!isCanvas) ? renderer.pipelines.get(PIPELINES.SINGLE_PIPELINE) : null;
+        if (!isCanvas)
+        {
+            var frame = this.get();
+            frame.source.glTexture = this.drawingContext.texture;
+        }
 
         this.setSize(width, height);
     },
@@ -262,22 +222,11 @@ var DynamicTexture = new Class({
                 this.canvas.height = height;
             }
 
-            var renderTarget = this.renderTarget;
+            var drawingContext = this.drawingContext;
 
-            if (renderTarget)
+            if (drawingContext && (drawingContext.width !== width || drawingContext.height !== height))
             {
-                if (renderTarget.willResize(width, height))
-                {
-                    renderTarget.resize(width, height);
-                }
-
-                if (renderTarget.texture !== source.glTexture)
-                {
-                    //  The texture has been resized, so is new, so we need to delete the old one
-                    this.renderer.deleteTexture(source.glTexture);
-                }
-
-                this.setFromRenderTarget();
+                drawingContext.resize(width, height);
             }
 
             this.camera.setSize(width, height);
@@ -312,47 +261,243 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Links the WebGL Textures used by this Dynamic Texture to its Render Target.
+     * Render the buffered drawing commands to this Dynamic Texture.
+     * You must do this in order to see anything drawn to it.
      *
-     * This method is called internally by the Dynamic Texture when it is first created,
-     * or if you change its size.
-     *
-     * @method Phaser.Textures.DynamicTexture#setFromRenderTarget
-     * @since 3.70.0
-     *
+     * @method Phaser.Textures.DynamicTexture#render
+     * @since 4.0.0
      * @return {this} This Dynamic Texture instance.
      */
-    setFromRenderTarget: function ()
+    render: function ()
     {
-        var frame = this.get();
-        var source = frame.source;
-        var renderTarget = this.renderTarget;
+        if (this.commandBuffer.length === 0)
+        {
+            return;
+        }
 
-        source.isRenderTexture = true;
-        source.isGLTexture = true;
+        this.camera.preRender();
 
-        source.glTexture = renderTarget.texture;
+        if (this.renderer.type === CONST.WEBGL)
+        {
+            this._renderWebGL();
+        }
+        if (this.renderer.type === CONST.CANVAS)
+        {
+            this._renderCanvas();
+        }
+
+        this.commandBuffer.length = 0;
 
         return this;
     },
 
     /**
-     * If you are planning on using this Render Texture as a base texture for Sprite
-     * Game Objects, then you should call this method with a value of `true` before
-     * drawing anything to it, otherwise you will get inverted frames in WebGL.
+     * Render the DynamicTexture using the WebGL render system.
      *
-     * @method Phaser.Textures.DynamicTexture#setIsSpriteTexture
-     * @since 3.60.0
-     *
-     * @param {boolean} value - Is this Render Target being used as a Sprite Texture, or not?
-     *
-     * @return {this} This Dynamic Texture instance.
+     * @method Phaser.Textures.DynamicTexture#_renderWebGL
+     * @since 4.0.0
+     * @private
      */
-    setIsSpriteTexture: function (value)
+    _renderWebGL: function ()
     {
-        this.isSpriteTexture = value;
+        this.renderer.renderNodes.getNode('DynamicTextureHandler').run(this);
+    },
 
-        return this;
+    /**
+     * Render the DynamicTexture using the Canvas render system.
+     *
+     * @method Phaser.Textures.DynamicTexture#_renderCanvas
+     * @since 4.0.0
+     * @private
+     */
+    _renderCanvas: function ()
+    {
+        var camera = this.camera;
+        var context = this.context;
+        var renderer = this.renderer;
+        var textureManager = this.manager;
+
+        renderer.setContext(context);
+
+        // Big list of reused variables.
+        var alpha, blendMode, blendModePrev, frame, height, key, originX, originY, rotation, scaleX, scaleY, tint, width, x, y;
+
+        // Traverse commands.
+        var commandBuffer = this.commandBuffer;
+        var commandBufferLength = commandBuffer.length;
+        var eraseMode = false;
+
+        for (var index = 0; index < commandBufferLength; index++)
+        {
+            var command = commandBuffer[index];
+
+            switch (command)
+            {
+                case DynamicTextureCommands.CLEAR:
+                {
+                    context.save();
+                    context.setTransform(1, 0, 0, 1, 0, 0);
+                    context.clearRect(0, 0, this.width, this.height);
+                    context.restore();
+                    break;
+                }
+
+                case DynamicTextureCommands.FILL:
+                {
+                    var color = commandBuffer[++index];
+                    x = commandBuffer[++index];
+                    y = commandBuffer[++index];
+                    width = commandBuffer[++index];
+                    height = commandBuffer[++index];
+
+                    alpha = (color >> 24 & 0xFF) / 255;
+                    var r = (color >> 16 & 0xFF);
+                    var g = (color >> 8 & 0xFF);
+                    var b = (color & 0xFF);
+
+                    context.save();
+                    context.globalCompositeOperation = 'source-over';
+                    context.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+                    context.fillRect(x, y, width, height);
+                    context.restore();
+
+                    break;
+                }
+
+                case DynamicTextureCommands.STAMP:
+                {
+                    key = commandBuffer[++index];
+                    frame = commandBuffer[++index];
+                    x = commandBuffer[++index];
+                    y = commandBuffer[++index];
+                    alpha = commandBuffer[++index];
+                    tint = commandBuffer[++index];
+                    rotation = commandBuffer[++index];
+                    scaleX = commandBuffer[++index];
+                    scaleY = commandBuffer[++index];
+                    originX = commandBuffer[++index];
+                    originY = commandBuffer[++index];
+                    blendMode = commandBuffer[++index];
+
+                    if (eraseMode)
+                    {
+                        blendMode = BlendModes.ERASE;
+                    }
+
+                    var stamp = textureManager.resetStamp(alpha, tint);
+
+                    stamp.setPosition(x, y)
+                        .setRotation(rotation)
+                        .setScale(scaleX, scaleY)
+                        .setTexture(key, frame)
+                        .setOrigin(originX, originY)
+                        .setBlendMode(blendMode);
+
+                    stamp.renderCanvas(renderer, stamp, camera, null);
+
+                    break;
+                }
+
+                case DynamicTextureCommands.REPEAT:
+                {
+                    key = commandBuffer[++index];
+                    frame = commandBuffer[++index];
+                    x = commandBuffer[++index];
+                    y = commandBuffer[++index];
+                    alpha = commandBuffer[++index];
+                    tint = commandBuffer[++index];
+                    rotation = commandBuffer[++index];
+                    scaleX = commandBuffer[++index];
+                    scaleY = commandBuffer[++index];
+                    originX = commandBuffer[++index];
+                    originY = commandBuffer[++index];
+                    blendMode = commandBuffer[++index];
+
+                    width = commandBuffer[++index];
+                    height = commandBuffer[++index];
+                    var tilePositionX = commandBuffer[++index];
+                    var tilePositionY = commandBuffer[++index];
+                    var tileRotation = commandBuffer[++index];
+                    var tileScaleX = commandBuffer[++index];
+                    var tileScaleY = commandBuffer[++index];
+
+                    if (eraseMode)
+                    {
+                        blendMode = BlendModes.ERASE;
+                    }
+
+                    var repeat = textureManager.resetTileSprite(alpha, tint);
+
+                    repeat.setPosition(x, y)
+                        .setRotation(rotation)
+                        .setScale(scaleX, scaleY)
+                        .setTexture(key, frame)
+                        .setSize(width, height)
+                        .setOrigin(originX, originY)
+                        .setBlendMode(blendMode)
+                        .setTilePosition(tilePositionX, tilePositionY)
+                        .setTileRotation(tileRotation)
+                        .setTileScale(tileScaleX, tileScaleY);
+
+                    repeat.renderCanvas(renderer, repeat, camera, null);
+
+                    break;
+                }
+
+                case DynamicTextureCommands.DRAW:
+                {
+                    var object = commandBuffer[++index];
+                    x = commandBuffer[++index];
+                    y = commandBuffer[++index];
+
+                    if (x !== undefined)
+                    {
+                        var prevX = object.x;
+                        object.x = x;
+                    }
+
+                    if (y !== undefined)
+                    {
+                        var prevY = object.y;
+                        object.y = y;
+                    }
+
+                    if (eraseMode)
+                    {
+                        blendModePrev = object.blendMode;
+                        object.blendMode = BlendModes.ERASE;
+                    }
+
+                    object.renderCanvas(renderer, object, camera, null);
+
+                    if (x !== undefined)
+                    {
+                        object.x = prevX;
+                    }
+
+                    if (y !== undefined)
+                    {
+                        object.y = prevY;
+                    }
+
+                    if (eraseMode)
+                    {
+                        object.blendMode = blendModePrev;
+                    }
+
+                    break;
+                }
+
+                case DynamicTextureCommands.SET_ERASE:
+                {
+                    eraseMode = !!commandBuffer[++index];
+                    break;
+                }
+            }
+        }
+
+        // Finish rendering.
+        renderer.setContext();
     },
 
     /**
@@ -377,9 +522,6 @@ var DynamicTexture = new Class({
      */
     fill: function (rgb, alpha, x, y, width, height)
     {
-        var camera = this.camera;
-        var renderer = this.renderer;
-
         if (alpha === undefined) { alpha = 1; }
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -389,90 +531,31 @@ var DynamicTexture = new Class({
         var r = (rgb >> 16 & 0xFF);
         var g = (rgb >> 8 & 0xFF);
         var b = (rgb & 0xFF);
+        var color = Utils.getTintFromFloats(r / 255, g / 255, b / 255, alpha);
 
-        var renderTarget = this.renderTarget;
-
-        camera.preRender();
-
-        if (renderTarget)
-        {
-            renderTarget.bind(true);
-
-            var pipeline = this.pipeline.manager.set(this.pipeline);
-
-            var sx = renderer.width / renderTarget.width;
-            var sy = renderer.height / renderTarget.height;
-            var ty = renderTarget.height - (y + height);
-
-            pipeline.drawFillRect(
-                x * sx, ty * sy, width * sx, height * sy,
-                Utils.getTintFromFloats(b / 255, g / 255, r / 255, 1),
-                alpha
-            );
-
-            renderTarget.unbind(true);
-        }
-        else
-        {
-            var ctx = this.context;
-
-            renderer.setContext(ctx);
-
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
-            ctx.fillRect(x, y, width, height);
-
-            renderer.setContext();
-        }
-
-        this.dirty = true;
+        this.commandBuffer.push(
+            DynamicTextureCommands.FILL,
+            color,
+            x, y,
+            width, height
+        );
 
         return this;
     },
 
     /**
-     * Clears a portion or everything from this Dynamic Texture by erasing it and resetting it back to
-     * a blank, transparent, texture. To clear an area, specify the `x`, `y`, `width` and `height`.
+     * Fully clears this Dynamic Texture, erasing everything from it and resetting it back to
+     * a blank, transparent, texture.
+     *
      * @method Phaser.Textures.DynamicTexture#clear
      * @since 3.2.0
      *
-     * @param {number} [x=0] - The left coordinate of the fill rectangle.
-     * @param {number} [y=0] - The top coordinate of the fill rectangle.
-     * @param {number} [width=this.width] - The width of the fill rectangle.
-     * @param {number} [height=this.height] - The height of the fill rectangle.
-     * 
      * @return {this} This Dynamic Texture instance.
      */
-    clear: function (x, y, width, height)
+    clear: function ()
     {
-        if (this.dirty)
-        {
-            var ctx = this.context;
-            
-            var renderTarget = this.renderTarget;
+        this.commandBuffer.push(DynamicTextureCommands.CLEAR);
 
-            if (renderTarget)
-            {
-                renderTarget.clear(x, y, width, height);
-            }
-            else if (ctx)
-            {
-                if (x !== undefined && y !== undefined && width !== undefined && height !== undefined)
-                {
-                    ctx.clearRect(x, y, width, height);
-                }
-                else
-                {
-                    ctx.save();
-                    ctx.setTransform(1, 0, 0, 1, 0, 0);
-                    ctx.clearRect(0, 0, this.width, this.height);
-                    ctx.restore();
-                }
-            }
-
-            this.dirty = false;
-        }
-        
         return this;
     },
 
@@ -486,6 +569,8 @@ var DynamicTexture = new Class({
      *
      * If you wish to stamp from the top-left, set the config `originX` and
      * `originY` properties both to zero.
+     *
+     * This method ignores the `camera` property of the Dynamic Texture.
      *
      * @method Phaser.Textures.DynamicTexture#stamp
      * @since 3.60.0
@@ -513,45 +598,18 @@ var DynamicTexture = new Class({
         var originX = GetFastValue(config, 'originX', 0.5);
         var originY = GetFastValue(config, 'originY', 0.5);
         var blendMode = GetFastValue(config, 'blendMode', 0);
-        var erase = GetFastValue(config, 'erase', false);
-        var skipBatch = GetFastValue(config, 'skipBatch', false);
-
-        var stamp = this.manager.resetStamp(alpha, tint);
-
-        stamp.setAngle(0);
 
         if (angle !== 0)
         {
-            stamp.setAngle(angle);
-        }
-        else if (rotation !== 0)
-        {
-            stamp.setRotation(rotation);
+            rotation = angle * Math.PI / 180;
         }
 
-        stamp.setScale(scaleX, scaleY);
-        stamp.setTexture(key, frame);
-        stamp.setOrigin(originX, originY);
-        stamp.setBlendMode(blendMode);
-
-        if (erase)
-        {
-            this._eraseMode = true;
-        }
-
-        if (!skipBatch)
-        {
-            this.draw(stamp, x, y);
-        }
-        else
-        {
-            this.batchGameObject(stamp, x, y);
-        }
-
-        if (erase)
-        {
-            this._eraseMode = false;
-        }
+        this.commandBuffer.push(
+            DynamicTextureCommands.STAMP,
+            key, frame,
+            x, y,
+            alpha, tint, rotation, scaleX, scaleY, originX, originY, blendMode
+        );
 
         return this;
     },
@@ -560,43 +618,8 @@ var DynamicTexture = new Class({
      * Draws the given object, or an array of objects, to this Dynamic Texture using a blend mode of ERASE.
      * This has the effect of erasing any filled pixels present in the objects from this texture.
      *
-     * It can accept any of the following:
-     *
-     * * Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
-     * * Tilemap Layers.
-     * * A Group. The contents of which will be iterated and drawn in turn.
-     * * A Container. The contents of which will be iterated fully, and drawn in turn.
-     * * A Scene Display List. Pass in `Scene.children` to draw the whole list.
-     * * Another Dynamic Texture, or a Render Texture.
-     * * A Texture Frame instance.
-     * * A string. This is used to look-up the texture from the Texture Manager.
-     *
-     * Note: You cannot erase a Dynamic Texture from itself.
-     *
-     * If passing in a Group or Container it will only draw children that return `true`
-     * when their `willRender()` method is called. I.e. a Container with 10 children,
-     * 5 of which have `visible=false` will only draw the 5 visible ones.
-     *
-     * If passing in an array of Game Objects it will draw them all, regardless if
-     * they pass a `willRender` check or not.
-     *
-     * You can pass in a string in which case it will look for a texture in the Texture
-     * Manager matching that string, and draw the base frame.
-     *
-     * You can pass in the `x` and `y` coordinates to draw the objects at. The use of
-     * the coordinates differ based on what objects are being drawn. If the object is
-     * a Group, Container or Display List, the coordinates are _added_ to the positions
-     * of the children. For all other types of object, the coordinates are exact.
-     *
-     * Calling this method causes the WebGL batch to flush, so it can write the texture
-     * data to the framebuffer being used internally. The batch is flushed at the end,
-     * after the entries have been iterated. So if you've a bunch of objects to draw,
-     * try and pass them in an array in one single call, rather than making lots of
-     * separate calls.
-     *
-     * If you are not planning on using this Dynamic Texture as a base texture for Sprite
-     * Game Objects, then you should set `DynamicTexture.isSpriteTexture = false` before
-     * calling this method, otherwise you will get vertically inverted frames in WebGL.
+     * This method uses the `draw` method internally,
+     * and the parameters behave the same way.
      *
      * @method Phaser.Textures.DynamicTexture#erase
      * @since 3.16.0
@@ -604,16 +627,32 @@ var DynamicTexture = new Class({
      * @param {any} entries - Any renderable Game Object, or Group, Container, Display List, Render Texture, Texture Frame, or an array of any of these.
      * @param {number} [x=0] - The x position to draw the Frame at, or the offset applied to the object.
      * @param {number} [y=0] - The y position to draw the Frame at, or the offset applied to the object.
+     * @param {number} [alpha=1] - The alpha value. Only used when drawing Texture Frames to this texture. Game Objects use their own alpha.
+     * @param {number} [tint=0xffffff] - The tint color value. Only used when drawing Texture Frames to this texture. Game Objects use their own tint. WebGL only.
      *
      * @return {this} This Dynamic Texture instance.
      */
-    erase: function (entries, x, y)
+    erase: function (entries, x, y, alpha, tint)
     {
-        this._eraseMode = true;
+        var commandBuffer = this.commandBuffer;
+        var commandBufferLength = commandBuffer.length;
+        if (
+            commandBuffer[commandBufferLength - 2] === DynamicTextureCommands.SET_ERASE &&
+            !commandBuffer[commandBufferLength - 1]
+        )
+        {
+            // The last command finished an ERASE operation,
+            // so we can just extend it.
+            commandBuffer.length -= 2;
+        }
+        else
+        {
+            commandBuffer.push(DynamicTextureCommands.SET_ERASE, true);
+        }
 
-        this.draw(entries, x, y);
+        this.draw(entries, x, y, alpha, tint);
 
-        this._eraseMode = false;
+        commandBuffer.push(DynamicTextureCommands.SET_ERASE, false);
 
         return this;
     },
@@ -634,8 +673,8 @@ var DynamicTexture = new Class({
      *
      * Note 1: You cannot draw a Dynamic Texture to itself.
      *
-     * Note 2: For Game Objects that have Post FX Pipelines, the pipeline _cannot_ be
-     * used when drawn to this texture.
+     * Note 2: GameObjects will use the camera, while textures and frames will not.
+     * Textures and frames are drawn using the `stamp` method.
      *
      * If passing in a Group or Container it will only draw children that return `true`
      * when their `willRender()` method is called. I.e. a Container with 10 children,
@@ -652,19 +691,10 @@ var DynamicTexture = new Class({
      * the coordinates differ based on what objects are being drawn. If the object is
      * a Group, Container or Display List, the coordinates are _added_ to the positions
      * of the children. For all other types of object, the coordinates are exact.
+     * For textures and frames, the `x` and `y` values are the middle of the texture.
      *
      * The `alpha` and `tint` values are only used by Texture Frames.
      * Game Objects use their own alpha and tint values when being drawn.
-     *
-     * Calling this method causes the WebGL batch to flush, so it can write the texture
-     * data to the framebuffer being used internally. The batch is flushed at the end,
-     * after the entries have been iterated. So if you've a bunch of objects to draw,
-     * try and pass them in an array in one single call, rather than making lots of
-     * separate calls.
-     *
-     * If you are not planning on using this Dynamic Texture as a base texture for Sprite
-     * Game Objects, then you should set `DynamicTexture.isSpriteTexture = false` before
-     * calling this method, otherwise you will get vertically inverted frames in WebGL.
      *
      * @method Phaser.Textures.DynamicTexture#draw
      * @since 3.2.0
@@ -679,52 +709,57 @@ var DynamicTexture = new Class({
      */
     draw: function (entries, x, y, alpha, tint)
     {
-        this.beginDraw();
-        this.batchDraw(entries, x, y, alpha, tint);
-        this.endDraw();
+        if (!Array.isArray(entries))
+        {
+            entries = [ entries ];
+        }
 
-        return this;
-    },
+        var len = entries.length;
 
-    /**
-     * Draws the Texture Frame to the Render Texture at the given position.
-     *
-     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
-     *
-     * ```javascript
-     * var rt = this.add.renderTexture(0, 0, 800, 600);
-     * rt.drawFrame(key, frame);
-     * ```
-     *
-     * You can optionally provide a position, alpha and tint value to apply to the frame
-     * before it is drawn.
-     *
-     * Calling this method will cause a batch flush, so if you've got a stack of things to draw
-     * in a tight loop, try using the `draw` method instead.
-     *
-     * If you need to draw a Sprite to this Render Texture, use the `draw` method instead.
-     *
-     * If you are not planning on using this Dynamic Texture as a base texture for Sprite
-     * Game Objects, then you should set `DynamicTexture.isSpriteTexture = false` before
-     * calling this method, otherwise you will get vertically inverted frames in WebGL.
-     *
-     * @method Phaser.Textures.DynamicTexture#drawFrame
-     * @since 3.12.0
-     *
-     * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
-     * @param {(string|number)} [frame] - The name or index of the frame within the Texture. Set to `null` to skip this argument if not required.
-     * @param {number} [x=0] - The x position to draw the frame at.
-     * @param {number} [y=0] - The y position to draw the frame at.
-     * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture.
-     * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. WebGL only.
-     *
-     * @return {this} This Dynamic Texture instance.
-     */
-    drawFrame: function (key, frame, x, y, alpha, tint)
-    {
-        this.beginDraw();
-        this.batchDrawFrame(key, frame, x, y, alpha, tint);
-        this.endDraw();
+        for (var i = 0; i < len; i++)
+        {
+            var entry = entries[i];
+
+            if (!entry || entry === this)
+            {
+                continue;
+            }
+
+            if (entry.renderWebGL || entry.renderCanvas)
+            {
+                //  Game Objects
+                this.commandBuffer.push(DynamicTextureCommands.DRAW, entry, x, y);
+            }
+            else if (entry.isParent || entry.list)
+            {
+                //  Groups / Display Lists
+                var children = entry.getChildren();
+
+                for (var c = 0; c < children.length; c++)
+                {
+                    var child = children[c];
+                    if (child.willRender(this.camera))
+                    {
+                        this.draw(child, child.x + x || 0, child.y + y || 0);
+                    }
+                }
+            }
+            else if (typeof entry === 'string')
+            {
+                //  Texture key
+                this.stamp(entry, null, x, y, { alpha: alpha, tint: tint });
+            }
+            else if (entry instanceof Frame)
+            {
+                //  Texture Frame instance
+                this.stamp(entry.texture.key, entry, x, y, { alpha: alpha, tint: tint });
+            }
+            else if (Array.isArray(entry))
+            {
+                //  Another Array
+                this.draw(entry, x, y, alpha, tint);
+            }
+        }
 
         return this;
     },
@@ -732,6 +767,7 @@ var DynamicTexture = new Class({
     /**
      * Takes the given Texture Frame and draws it to this Dynamic Texture as a fill pattern,
      * i.e. in a grid-layout based on the frame dimensions.
+     * It uses a `TileSprite` internally to draw the frame repeatedly.
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.
      *
@@ -741,12 +777,7 @@ var DynamicTexture = new Class({
      *
      * The position can be negative if required, but the dimensions cannot.
      *
-     * Calling this method will cause a batch flush by default. Use the `skipBatch` argument
-     * to disable this if this call is part of a larger batch draw.
-     *
-     * If you are not planning on using this Dynamic Texture as a base texture for Sprite
-     * Game Objects, then you should set `DynamicTexture.isSpriteTexture = false` before
-     * calling this method, otherwise you will get vertically inverted frames in WebGL.
+     * This method respects the camera settings of the Dynamic Texture.
      *
      * @method Phaser.Textures.DynamicTexture#repeat
      * @since 3.60.0
@@ -757,705 +788,49 @@ var DynamicTexture = new Class({
      * @param {number} [y=0] - The y position to start drawing the frames from (can be negative to offset).
      * @param {number} [width=this.width] - The width of the area to repeat the frame within. Defaults to the width of this Dynamic Texture.
      * @param {number} [height=this.height] - The height of the area to repeat the frame within. Defaults to the height of this Dynamic Texture.
-     * @param {number} [alpha=1] - The alpha to use. Defaults to 1, no alpha.
-     * @param {number} [tint=0xffffff] - WebGL only. The tint color to use. Leave as undefined, or 0xffffff to have no tint.
-     * @param {boolean} [skipBatch=false] - Skip beginning and ending a batch with this call. Use if this is part of a bigger batched draw.
+     * @param {Phaser.Types.GameObjects.TileSprite.TileSpriteConfig} [config] - The configuration object for the TileSprite which repeats the texture, allowing you to set further properties on it.
      *
      * @return {this} This Dynamic Texture instance.
      */
-    repeat: function (key, frame, x, y, width, height, alpha, tint, skipBatch)
+    repeat: function (key, frame, x, y, width, height, config)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = this.width; }
         if (height === undefined) { height = this.height; }
-        if (alpha === undefined) { alpha = 1; }
-        if (tint === undefined) { tint = 0xffffff; }
-        if (skipBatch === undefined) { skipBatch = false; }
 
-        if (key instanceof Frame)
+        var alpha = GetFastValue(config, 'alpha', 1);
+        var tint = GetFastValue(config, 'tint', 0xffffff);
+        var angle = GetFastValue(config, 'angle', 0);
+        var rotation = GetFastValue(config, 'rotation', 0);
+        var scale = GetFastValue(config, 'scale', 1);
+        var scaleX = GetFastValue(config, 'scaleX', scale);
+        var scaleY = GetFastValue(config, 'scaleY', scale);
+        var originX = GetFastValue(config, 'originX', 0);
+        var originY = GetFastValue(config, 'originY', 0);
+        var blendMode = GetFastValue(config, 'blendMode', 0);
+
+        if (angle !== 0)
         {
-            frame = key;
-        }
-        else
-        {
-            frame = this.manager.getFrame(key, frame);
-        }
-
-        if (!frame)
-        {
-            return this;
-        }
-
-        var stamp = this.manager.resetStamp(alpha, tint);
-
-        stamp.setFrame(frame);
-        stamp.setOrigin(0);
-
-        var frameWidth = frame.width;
-        var frameHeight = frame.height;
-
-        //  Clamp to integer
-        width = Math.floor(width);
-        height = Math.floor(height);
-
-        //  How many stamps can we fit in horizontally and vertically?
-        //  We round this number up to allow for excess overflow
-        var hmax = Math.ceil(width / frameWidth);
-        var vmax = Math.ceil(height / frameHeight);
-
-        //  How much extra horizontal and vertical space do we have on the right/bottom?
-        var hdiff = (hmax * frameWidth) - width;
-        var vdiff = (vmax * frameHeight) - height;
-
-        if (hdiff > 0)
-        {
-            hdiff = frameWidth - hdiff;
+            rotation = angle * Math.PI / 180;
         }
 
-        if (vdiff > 0)
-        {
-            vdiff = frameHeight - vdiff;
-        }
+        var tilePositionX = GetFastValue(config, 'tilePositionX', 0);
+        var tilePositionY = GetFastValue(config, 'tilePositionY', 0);
+        var tileRotation = GetFastValue(config, 'tileRotation', 0);
+        var tileScaleX = GetFastValue(config, 'tileScaleX', 1);
+        var tileScaleY = GetFastValue(config, 'tileScaleY', 1);
 
-        //  x/y may be negative
-
-        if (x < 0)
-        {
-            hmax += Math.ceil(Math.abs(x) / frameWidth);
-        }
-
-        if (y < 0)
-        {
-            vmax += Math.ceil(Math.abs(y) / frameHeight);
-        }
-
-        var dx = x;
-        var dy = y;
-
-        var useCrop = false;
-        var cropRect = this.manager.stampCrop.setTo(0, 0, frameWidth, frameHeight);
-
-        if (!skipBatch)
-        {
-            this.beginDraw();
-        }
-
-        for (var ty = 0; ty < vmax; ty++)
-        {
-            //  Negative offset?
-            if (dy + frameHeight < 0)
-            {
-                //  We can't see it, as it's off the top
-                dy += frameHeight;
-                continue;
-            }
-
-            for (var tx = 0; tx < hmax; tx++)
-            {
-                useCrop = false;
-
-                //  Negative offset?
-                if (dx + frameWidth < 0)
-                {
-                    //  We can't see it, as it's fully off the left
-                    dx += frameWidth;
-                    continue;
-                }
-                else if (dx < 0)
-                {
-                    //  Partially off the left
-                    useCrop = true;
-                    cropRect.width = (frameWidth + dx);
-                    cropRect.x = frameWidth - cropRect.width;
-                }
-
-                //  Negative vertical offset
-                if (dy < 0)
-                {
-                    //  Partially off the top
-                    useCrop = true;
-                    cropRect.height = (frameHeight + dy);
-                    cropRect.y = frameHeight - cropRect.height;
-                }
-
-                if (hdiff > 0 && tx === hmax - 1)
-                {
-                    useCrop = true;
-                    cropRect.width = hdiff;
-                }
-
-                if (vdiff > 0 && ty === vmax - 1)
-                {
-                    useCrop = true;
-                    cropRect.height = vdiff;
-                }
-
-                if (useCrop)
-                {
-                    stamp.setCrop(cropRect);
-                }
-
-                this.batchGameObject(stamp, dx, dy);
-
-                //  Reset crop
-                stamp.isCropped = false;
-
-                cropRect.setTo(0, 0, frameWidth, frameHeight);
-
-                dx += frameWidth;
-            }
-
-            dx = x;
-            dy += frameHeight;
-        }
-
-        if (!skipBatch)
-        {
-            this.endDraw();
-        }
+        this.commandBuffer.push(
+            DynamicTextureCommands.REPEAT,
+            key, frame,
+            x, y,
+            alpha, tint, rotation, scaleX, scaleY, originX, originY, blendMode,
+            width, height,
+            tilePositionX, tilePositionY, tileRotation, tileScaleX, tileScaleY
+        );
 
         return this;
-    },
-
-    /**
-     * Use this method if you need to batch draw a large number of Game Objects to
-     * this Dynamic Texture in a single pass, or on a frequent basis. This is especially
-     * useful under WebGL, however, if your game is using Canvas only, it will not make
-     * any speed difference in that situation.
-     *
-     * This method starts the beginning of a batched draw, unless one is already open.
-     *
-     * Batched drawing is faster than calling `draw` in loop, but you must be careful
-     * to manage the flow of code and remember to call `endDraw()` when you're finished.
-     *
-     * If you don't need to draw large numbers of objects it's much safer and easier
-     * to use the `draw` method instead.
-     *
-     * The flow should be:
-     *
-     * ```javascript
-     * // Call once:
-     * DynamicTexture.beginDraw();
-     *
-     * // repeat n times:
-     * DynamicTexture.batchDraw();
-     * // or
-     * DynamicTexture.batchDrawFrame();
-     *
-     * // Call once:
-     * DynamicTexture.endDraw();
-     * ```
-     *
-     * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
-     * have started a batch. Also, be very careful not to destroy this Dynamic Texture while the
-     * batch is still open. Doing so will cause a run-time error in the WebGL Renderer.
-     *
-     * You can use the `DynamicTexture.isDrawing` boolean property to tell if a batch is
-     * currently open, or not.
-     *
-     * @method Phaser.Textures.DynamicTexture#beginDraw
-     * @since 3.50.0
-     *
-     * @return {this} This Dynamic Texture instance.
-     */
-    beginDraw: function ()
-    {
-        if (!this.isDrawing)
-        {
-            var camera = this.camera;
-            var renderer = this.renderer;
-            var renderTarget = this.renderTarget;
-
-            camera.preRender();
-
-            if (renderTarget)
-            {
-                renderer.beginCapture(renderTarget.width, renderTarget.height);
-            }
-            else
-            {
-                renderer.setContext(this.context);
-            }
-
-            this.isDrawing = true;
-        }
-
-        return this;
-    },
-
-    /**
-     * Use this method if you have already called `beginDraw` and need to batch
-     * draw a large number of objects to this Dynamic Texture.
-     *
-     * This method batches the drawing of the given objects to this texture,
-     * without causing a WebGL bind or batch flush for each one.
-     *
-     * It is faster than calling `draw`, but you must be careful to manage the
-     * flow of code and remember to call `endDraw()`. If you don't need to draw large
-     * numbers of objects it's much safer and easier to use the `draw` method instead.
-     *
-     * The flow should be:
-     *
-     * ```javascript
-     * // Call once:
-     * DynamicTexture.beginDraw();
-     *
-     * // repeat n times:
-     * DynamicTexture.batchDraw();
-     * // or
-     * DynamicTexture.batchDrawFrame();
-     *
-     * // Call once:
-     * DynamicTexture.endDraw();
-     * ```
-     *
-     * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
-     * have started a batch. Also, be very careful not to destroy this Dynamic Texture while the
-     * batch is still open. Doing so will cause a run-time error in the WebGL Renderer.
-     *
-     * You can use the `DynamicTexture.isDrawing` boolean property to tell if a batch is
-     * currently open, or not.
-     *
-     * This method can accept any of the following:
-     *
-     * * Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
-     * * Tilemap Layers.
-     * * A Group. The contents of which will be iterated and drawn in turn.
-     * * A Container. The contents of which will be iterated fully, and drawn in turn.
-     * * A Scene's Display List. Pass in `Scene.children` to draw the whole list.
-     * * Another Dynamic Texture or Render Texture.
-     * * A Texture Frame instance.
-     * * A string. This is used to look-up a texture from the Texture Manager.
-     *
-     * Note: You cannot draw a Dynamic Texture to itself.
-     *
-     * If passing in a Group or Container it will only draw children that return `true`
-     * when their `willRender()` method is called. I.e. a Container with 10 children,
-     * 5 of which have `visible=false` will only draw the 5 visible ones.
-     *
-     * If passing in an array of Game Objects it will draw them all, regardless if
-     * they pass a `willRender` check or not.
-     *
-     * You can pass in a string in which case it will look for a texture in the Texture
-     * Manager matching that string, and draw the base frame. If you need to specify
-     * exactly which frame to draw then use the method `drawFrame` instead.
-     *
-     * You can pass in the `x` and `y` coordinates to draw the objects at. The use of
-     * the coordinates differ based on what objects are being drawn. If the object is
-     * a Group, Container or Display List, the coordinates are _added_ to the positions
-     * of the children. For all other types of object, the coordinates are exact.
-     *
-     * The `alpha` and `tint` values are only used by Texture Frames.
-     * Game Objects use their own alpha and tint values when being drawn.
-     *
-     * @method Phaser.Textures.DynamicTexture#batchDraw
-     * @since 3.50.0
-     *
-     * @param {any} entries - Any renderable Game Object, or Group, Container, Display List, other Dynamic or Texture, Texture Frame or an array of any of these.
-     * @param {number} [x=0] - The x position to draw the Frame at, or the offset applied to the object.
-     * @param {number} [y=0] - The y position to draw the Frame at, or the offset applied to the object.
-     * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture. Game Objects use their own alpha.
-     * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. Game Objects use their own tint. WebGL only.
-     *
-     * @return {this} This Dynamic Texture instance.
-     */
-    batchDraw: function (entries, x, y, alpha, tint)
-    {
-        if (!Array.isArray(entries))
-        {
-            entries = [ entries ];
-        }
-
-        this.batchList(entries, x, y, alpha, tint);
-
-        return this;
-    },
-
-    /**
-     * Use this method if you have already called `beginDraw` and need to batch
-     * draw a large number of texture frames to this Dynamic Texture.
-     *
-     * This method batches the drawing of the given frames to this Dynamic Texture,
-     * without causing a WebGL bind or batch flush for each one.
-     *
-     * It is faster than calling `drawFrame`, but you must be careful to manage the
-     * flow of code and remember to call `endDraw()`. If you don't need to draw large
-     * numbers of frames it's much safer and easier to use the `drawFrame` method instead.
-     *
-     * The flow should be:
-     *
-     * ```javascript
-     * // Call once:
-     * DynamicTexture.beginDraw();
-     *
-     * // repeat n times:
-     * DynamicTexture.batchDraw();
-     * // or
-     * DynamicTexture.batchDrawFrame();
-     *
-     * // Call once:
-     * DynamicTexture.endDraw();
-     * ```
-     *
-     * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
-     * have started a batch. Also, be very careful not to destroy this Dynamic Texture while the
-     * batch is still open. Doing so will cause a run-time error in the WebGL Renderer.
-     *
-     * You can use the `DynamicTexture.isDrawing` boolean property to tell if a batch is
-     * currently open, or not.
-     *
-     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
-     *
-     * You can optionally provide a position, alpha and tint value to apply to the frame
-     * before it is drawn.
-     *
-     * @method Phaser.Textures.DynamicTexture#batchDrawFrame
-     * @since 3.50.0
-     *
-     * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
-     * @param {(string|number)} [frame] - The name or index of the frame within the Texture.
-     * @param {number} [x=0] - The x position to draw the frame at.
-     * @param {number} [y=0] - The y position to draw the frame at.
-     * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture. Game Objects use their own alpha.
-     * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. Game Objects use their own tint. WebGL only.
-     *
-     * @return {this} This Dynamic Texture instance.
-     */
-    batchDrawFrame: function (key, frame, x, y, alpha, tint)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-        if (alpha === undefined) { alpha = 1; }
-        if (tint === undefined) { tint = 0xffffff; }
-
-        var textureFrame = this.manager.getFrame(key, frame);
-
-        if (textureFrame)
-        {
-            if (this.renderTarget)
-            {
-                this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, this.camera.matrix, null);
-            }
-            else
-            {
-                this.batchTextureFrame(textureFrame, x, y, alpha, tint);
-            }
-        }
-
-        return this;
-    },
-
-    /**
-     * Use this method to finish batch drawing to this Dynamic Texture.
-     *
-     * Doing so will stop the WebGL Renderer from capturing draws and then blit the
-     * framebuffer to the Render Target owned by this texture.
-     *
-     * Calling this method without first calling `beginDraw` will have no effect.
-     *
-     * Batch drawing is faster than calling `draw`, but you must be careful to manage the
-     * flow of code and remember to call `endDraw()` when you're finished.
-     *
-     * If you don't need to draw large numbers of objects it's much safer and easier
-     * to use the `draw` method instead.
-     *
-     * The flow should be:
-     *
-     * ```javascript
-     * // Call once:
-     * DynamicTexture.beginDraw();
-     *
-     * // repeat n times:
-     * DynamicTexture.batchDraw();
-     * // or
-     * DynamicTexture.batchDrawFrame();
-     *
-     * // Call once:
-     * DynamicTexture.endDraw();
-     * ```
-     *
-     * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
-     * have started a batch. Also, be very careful not to destroy this Dynamic Texture while the
-     * batch is still open. Doing so will cause a run-time error in the WebGL Renderer.
-     *
-     * You can use the `DynamicTexture.isDrawing` boolean property to tell if a batch is
-     * currently open, or not.
-     *
-     * @method Phaser.Textures.DynamicTexture#endDraw
-     * @since 3.50.0
-     *
-     * @param {boolean} [erase=false] - Draws all objects in this batch using a blend mode of ERASE. This has the effect of erasing any filled pixels in the objects being drawn.
-     *
-     * @return {this} This Dynamic Texture instance.
-     */
-    endDraw: function (erase)
-    {
-        if (erase === undefined) { erase = this._eraseMode; }
-
-        if (this.isDrawing)
-        {
-            var renderer = this.renderer;
-
-            var renderTarget = this.renderTarget;
-
-            if (renderTarget)
-            {
-                var canvasTarget = renderer.endCapture();
-
-                var util = renderer.pipelines.setUtility();
-
-                util.blitFrame(canvasTarget, renderTarget, 1, false, false, erase, this.isSpriteTexture);
-
-                renderer.resetScissor();
-                renderer.resetViewport();
-            }
-            else
-            {
-                renderer.setContext();
-            }
-
-            this.dirty = true;
-            this.isDrawing = false;
-        }
-
-        return this;
-    },
-
-    /**
-     * Internal method that handles the drawing of an array of children.
-     *
-     * @method Phaser.Textures.DynamicTexture#batchList
-     * @private
-     * @since 3.12.0
-     *
-     * @param {array} children - The array of Game Objects, Textures or Frames to draw.
-     * @param {number} [x=0] - The x position to offset the Game Object by.
-     * @param {number} [y=0] - The y position to offset the Game Object by.
-     * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture. Game Objects use their own alpha.
-     * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. Game Objects use their own tint. WebGL only.
-     */
-    batchList: function (children, x, y, alpha, tint)
-    {
-        var len = children.length;
-
-        if (len === 0)
-        {
-            return;
-        }
-
-        for (var i = 0; i < len; i++)
-        {
-            var entry = children[i];
-
-            if (!entry || entry === this)
-            {
-                continue;
-            }
-
-            if (entry.renderWebGL || entry.renderCanvas)
-            {
-                //  Game Objects
-                this.batchGameObject(entry, x, y);
-            }
-            else if (entry.isParent || entry.list)
-            {
-                //  Groups / Display Lists
-                this.batchGroup(entry.getChildren(), x, y);
-            }
-            else if (typeof entry === 'string')
-            {
-                //  Texture key
-                this.batchTextureFrameKey(entry, null, x, y, alpha, tint);
-            }
-            else if (entry instanceof Frame)
-            {
-                //  Texture Frame instance
-                this.batchTextureFrame(entry, x, y, alpha, tint);
-            }
-            else if (Array.isArray(entry))
-            {
-                //  Another Array
-                this.batchList(entry, x, y, alpha, tint);
-            }
-        }
-    },
-
-    /**
-     * Internal method that handles drawing the contents of a Phaser Group to this Dynamic Texture.
-     *
-     * @method Phaser.Textures.DynamicTexture#batchGroup
-     * @private
-     * @since 3.12.0
-     *
-     * @param {array} children - The array of Game Objects to draw.
-     * @param {number} [x=0] - The x position to offset the Game Objects by.
-     * @param {number} [y=0] - The y position to offset the Game Objects by.
-     */
-    batchGroup: function (children, x, y)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-
-        for (var i = 0; i < children.length; i++)
-        {
-            var entry = children[i];
-
-            if (entry.willRender(this.camera))
-            {
-                this.batchGameObject(entry, entry.x + x, entry.y + y);
-            }
-        }
-    },
-
-    /**
-     * Internal method that handles drawing a single Phaser Game Object to this Dynamic Texture.
-     *
-     * @method Phaser.Textures.DynamicTexture#batchGameObject
-     * @private
-     * @since 3.12.0
-     *
-     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to draw.
-     * @param {number} [x=0] - The x position to draw the Game Object at.
-     * @param {number} [y=0] - The y position to draw the Game Object at.
-     */
-    batchGameObject: function (gameObject, x, y)
-    {
-        if (x === undefined) { x = gameObject.x; }
-        if (y === undefined) { y = gameObject.y; }
-
-        var prevX = gameObject.x;
-        var prevY = gameObject.y;
-
-        var camera = this.camera;
-        var renderer = this.renderer;
-        var eraseMode = this._eraseMode;
-
-        var mask = gameObject.mask;
-
-        gameObject.setPosition(x, y);
-
-        if (this.canvas)
-        {
-            if (eraseMode)
-            {
-                var blendMode = gameObject.blendMode;
-
-                gameObject.blendMode = BlendModes.ERASE;
-            }
-
-            if (mask)
-            {
-                mask.preRenderCanvas(renderer, gameObject, camera);
-            }
-
-            gameObject.renderCanvas(renderer, gameObject, camera, null);
-
-            if (mask)
-            {
-                mask.postRenderCanvas(renderer, gameObject, camera);
-            }
-
-            if (eraseMode)
-            {
-                gameObject.blendMode = blendMode;
-            }
-        }
-        else if (renderer)
-        {
-            if (mask)
-            {
-                mask.preRenderWebGL(renderer, gameObject, camera);
-            }
-
-            if (!eraseMode)
-            {
-                renderer.setBlendMode(gameObject.blendMode);
-            }
-
-            gameObject.renderWebGL(renderer, gameObject, camera);
-
-            if (mask)
-            {
-                mask.postRenderWebGL(renderer, camera, this.renderTarget);
-            }
-        }
-
-        gameObject.setPosition(prevX, prevY);
-    },
-
-    /**
-     * Internal method that handles the drawing a Texture Frame based on its key.
-     *
-     * @method Phaser.Textures.DynamicTexture#batchTextureFrameKey
-     * @private
-     * @since 3.12.0
-     *
-     * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
-     * @param {(string|number)} [frame] - The name or index of the frame within the Texture.
-     * @param {number} [x=0] - The x position to offset the Game Object by.
-     * @param {number} [y=0] - The y position to offset the Game Object by.
-     * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture. Game Objects use their own alpha.
-     * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. Game Objects use their own tint. WebGL only.
-     */
-    batchTextureFrameKey: function (key, frame, x, y, alpha, tint)
-    {
-        var textureFrame = this.manager.getFrame(key, frame);
-
-        if (textureFrame)
-        {
-            this.batchTextureFrame(textureFrame, x, y, alpha, tint);
-        }
-    },
-
-    /**
-     * Internal method that handles the drawing of a Texture Frame to this Dynamic Texture.
-     *
-     * @method Phaser.Textures.DynamicTexture#batchTextureFrame
-     * @private
-     * @since 3.12.0
-     *
-     * @param {Phaser.Textures.Frame} textureFrame - The Texture Frame to draw.
-     * @param {number} [x=0] - The x position to draw the Frame at.
-     * @param {number} [y=0] - The y position to draw the Frame at.
-     * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture. Game Objects use their own alpha.
-     * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. Game Objects use their own tint. WebGL only.
-     */
-    batchTextureFrame: function (textureFrame, x, y, alpha, tint)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-        if (alpha === undefined) { alpha = 1; }
-        if (tint === undefined) { tint = 0xffffff; }
-
-        var matrix = this.camera.matrix;
-        var renderTarget = this.renderTarget;
-
-        if (renderTarget)
-        {
-            this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, matrix, null);
-        }
-        else
-        {
-            var ctx = this.context;
-            var cd = textureFrame.canvasData;
-            var source = textureFrame.source.image;
-
-            ctx.save();
-
-            ctx.globalCompositeOperation = (this._eraseMode) ? 'destination-out' : 'source-over';
-
-            ctx.globalAlpha = alpha;
-
-            matrix.setToContext(ctx);
-
-            if (cd.width > 0 && cd.height > 0)
-            {
-                ctx.drawImage(source, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
-            }
-
-            ctx.restore();
-        }
     },
 
     /**
@@ -1488,9 +863,9 @@ var DynamicTexture = new Class({
      */
     snapshotArea: function (x, y, width, height, callback, type, encoderOptions)
     {
-        if (this.renderTarget)
+        if (this.drawingContext)
         {
-            this.renderer.snapshotFramebuffer(this.renderTarget.framebuffer, this.width, this.height, callback, false, x, y, width, height, type, encoderOptions);
+            this.renderer.snapshotFramebuffer(this.drawingContext.framebuffer, this.width, this.height, callback, false, x, y, width, height, type, encoderOptions);
         }
         else
         {
@@ -1565,14 +940,15 @@ var DynamicTexture = new Class({
      */
     getWebGLTexture: function ()
     {
-        if (this.renderTarget)
+        if (this.drawingContext)
         {
-            return this.renderTarget.texture;
+            return this.drawingContext.texture;
         }
     },
 
     /**
-     * Renders this Dynamic Texture onto the Stamp Game Object as a BitmapMask.
+     * Sets this Dynamic Texture onto the TextureManager.Stamp
+     * and then calls its render method.
      *
      * @method Phaser.Textures.DynamicTexture#renderWebGL
      * @since 3.60.0
@@ -1626,9 +1002,9 @@ var DynamicTexture = new Class({
 
         CanvasPool.remove(this.canvas);
 
-        if (this.renderTarget)
+        if (this.drawingContext)
         {
-            this.renderTarget.destroy();
+            this.drawingContext.destroy();
         }
 
         this.camera.destroy();

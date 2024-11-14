@@ -91,14 +91,14 @@ export class Parser {
                 case 'Phaser.GameObjects.Components.ComputedSize':
                 case 'Phaser.GameObjects.Components.Crop':
                 case 'Phaser.GameObjects.Components.Depth':
+                case 'Phaser.GameObjects.Components.ElapseTimer':
                 case 'Phaser.GameObjects.Components.Flip':
-                case 'Phaser.GameObjects.Components.FX':
                 case 'Phaser.GameObjects.Components.GetBounds':
+                case 'Phaser.GameObjects.Components.Lighting':
                 case 'Phaser.GameObjects.Components.Mask':
                 case 'Phaser.GameObjects.Components.Origin':
                 case 'Phaser.GameObjects.Components.PathFollower':
-                case 'Phaser.GameObjects.Components.Pipeline':
-                case 'Phaser.GameObjects.Components.PostPipeline':
+                case 'Phaser.GameObjects.Components.RenderNodes':
                 case 'Phaser.GameObjects.Components.ScrollFactor':
                 case 'Phaser.GameObjects.Components.Size':
                 case 'Phaser.GameObjects.Components.Texture':

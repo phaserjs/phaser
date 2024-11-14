@@ -22,7 +22,7 @@ var IsSizePowerOfTwo = require('../../../math/pow2/IsSizePowerOfTwo');
  * @constructor
  * @since 3.80.0
  *
- * @param {WebGLRenderingContext} gl - WebGL context the texture belongs to.
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance that owns this wrapper.
  * @param {number} mipLevel - Mip level of the texture.
  * @param {number} minFilter - Filtering of the texture.
  * @param {number} magFilter - Filtering of the texture.
@@ -40,8 +40,17 @@ var WebGLTextureWrapper = new Class({
 
     initialize:
 
-    function WebGLTextureWrapper (gl, mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY)
+    function WebGLTextureWrapper (renderer, mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY)
     {
+        /**
+         * The WebGLRenderer this WebGLTexture belongs to.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#renderer
+         * @type {Phaser.Renderer.WebGL.WebGLRenderer}
+         * @since 4.0.0
+         */
+        this.renderer = renderer;
+
         /**
          * The WebGLTexture that this wrapper is wrapping.
          *
@@ -65,15 +74,6 @@ var WebGLTextureWrapper = new Class({
          * @since 3.80.0
          */
         this.isRenderTexture = false;
-
-        /**
-         * The WebGL context this WebGLTexture belongs to.
-         *
-         * @name Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#gl
-         * @type {WebGLRenderingContext}
-         * @since 3.80.0
-         */
-        this.gl = gl;
 
         /**
          * Mip level of the texture.
@@ -196,6 +196,20 @@ var WebGLTextureWrapper = new Class({
         // eslint-disable-next-line camelcase
         this.__SPECTOR_Metadata = {};
 
+        /**
+         * The texture unit this texture will be bound to in the current
+         * rendering batch.
+         *
+         * This should be set by the batcher. It is a quick way to tell whether
+         * this texture has been included in the batch. If it is -1, it has not.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#batchUnit
+         * @type {number}
+         * @since 4.0.0
+         * @default -1
+         */
+        this.batchUnit = -1;
+
         this.createResource();
     },
 
@@ -210,7 +224,7 @@ var WebGLTextureWrapper = new Class({
      */
     createResource: function ()
     {
-        var gl = this.gl;
+        var gl = this.renderer.gl;
 
         if (gl.isContextLost())
         {
@@ -239,9 +253,34 @@ var WebGLTextureWrapper = new Class({
     },
 
     /**
+     * Resizes the WebGLTexture to the new dimensions.
+     * This will destroy the contents of the texture.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#resize
+     * @since 4.0.0
+     * @param {number} width - The new width of the WebGLTexture.
+     * @param {number} height - The new height of the WebGLTexture.
+     */
+    resize: function (width, height)
+    {
+        if (this.width === width && this.height === height)
+        {
+            return;
+        }
+
+        this.width = width;
+        this.height = height;
+
+        this._processTexture();
+    },
+
+    /**
      * Updates the WebGLTexture from an updated source.
      *
      * This should only be used when the source is a Canvas or Video element.
+     *
+     * Because textures usually change into something complex and unique,
+     * this method forces all properties to update without checking.
      *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#update
      * @since 3.80.0
@@ -274,15 +313,6 @@ var WebGLTextureWrapper = new Class({
         this.magFilter = magFilter;
         this.format = format;
 
-        var gl = this.gl;
-
-        if (gl.isContextLost())
-        {
-            // GL state can't be updated right now.
-            // `createResource` will run when the context is restored.
-            return;
-        }
-
         this._processTexture();
     },
 
@@ -291,26 +321,26 @@ var WebGLTextureWrapper = new Class({
      *
      * @function Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#_processTexture
      * @protected
-     * @since 3.85.0
+     * @since 4.0.0
      * @ignore
      */
     _processTexture: function ()
     {
-        var gl = this.gl;
+        var gl = this.renderer.gl;
 
-        gl.activeTexture(gl.TEXTURE0);
-
-        var currentTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
-
-        gl.bindTexture(gl.TEXTURE_2D, this.webGLTexture);
+        this.renderer.glTextureUnits.bind(this, 0);
+        this.renderer.glWrapper.updateTexturing({
+            texturing:
+            {
+                flipY: this.flipY,
+                premultiplyAlpha: this.pma
+            }
+        });
 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.minFilter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.magFilter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrapS);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.wrapT);
-
-        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, this.pma);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, this.flipY);
 
         var pixels = this.pixels;
         var mipLevel = this.mipLevel;
@@ -360,16 +390,6 @@ var WebGLTextureWrapper = new Class({
         {
             gl.generateMipmap(gl.TEXTURE_2D);
         }
-
-        // Restore previous texture bind.
-        if (currentTexture)
-        {
-            gl.bindTexture(gl.TEXTURE_2D, currentTexture);
-        }
-        else
-        {
-            gl.bindTexture(gl.TEXTURE_2D, null);
-        }
     },
 
     /**
@@ -392,11 +412,8 @@ var WebGLTextureWrapper = new Class({
             // eslint-disable-next-line camelcase
             this.__SPECTOR_Metadata = value;
 
-            if (!this.gl.isContextLost())
-            {
-                // eslint-disable-next-line camelcase
-                this.webGLTexture.__SPECTOR_Metadata = value;
-            }
+            // eslint-disable-next-line camelcase
+            this.webGLTexture.__SPECTOR_Metadata = value;
         }
     },
 
@@ -413,18 +430,15 @@ var WebGLTextureWrapper = new Class({
             return;
         }
 
-        if (!this.gl.isContextLost())
+        if (!(this.pixels instanceof WebGLTextureWrapper))
         {
-            if (!(this.pixels instanceof WebGLTextureWrapper))
-            {
-                // Do not delete a texture that belongs to another wrapper.
-                this.gl.deleteTexture(this.webGLTexture);
-            }
+            // Do not delete a texture that belongs to another wrapper.
+            this.renderer.gl.deleteTexture(this.webGLTexture);
         }
 
         this.pixels = null;
         this.webGLTexture = null;
-        this.gl = null;
+        this.renderer = null;
     }
 });
 

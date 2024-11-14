@@ -24,7 +24,7 @@ var TileSpriteCanvasRenderer = function (renderer, src, camera, parentMatrix)
 
     camera.addToRenderList(src);
 
-    renderer.batchSprite(src, src.frame, camera, parentMatrix);
+    renderer.batchSprite(src, src.displayFrame, camera, parentMatrix);
 };
 
 module.exports = TileSpriteCanvasRenderer;

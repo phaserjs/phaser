@@ -1,0 +1,305 @@
+// FILTER_BLEND_FS
+#pragma phaserTemplate(shaderName)
+
+precision mediump float;
+
+uniform sampler2D uMainSampler;
+uniform sampler2D uMainSampler2;
+uniform float amount;
+uniform vec4 color;
+
+varying vec2 outTexCoord;
+
+vec4 NORMAL (vec4 base, vec4 blend)
+{
+    // This replicates the NORMAL blend equation:
+    // SRC ONE
+    // DST ONE_MINUS_SRC_ALPHA
+    // EQUATION FUNC_ADD
+
+    return blend + base * (1.0 - blend.a);
+}
+
+vec4 ADD (vec4 base, vec4 blend)
+{
+    return base + blend;
+}
+
+vec4 MULTIPLY (vec4 base, vec4 blend)
+{
+    return base * blend;
+}
+
+vec4 SCREEN (vec4 base, vec4 blend)
+{
+    return 1.0 - (1.0 - base) * (1.0 - blend);
+}
+
+float overlayChannel (float base, float blend)
+{
+    return base < 0.5 ? 2.0 * base * blend : 1.0 - 2.0 * (1.0 - base) * (1.0 - blend);
+}
+
+vec4 OVERLAY (vec4 base, vec4 blend)
+{
+    return vec4(
+        overlayChannel(base.r, blend.r),
+        overlayChannel(base.g, blend.g),
+        overlayChannel(base.b, blend.b),
+        overlayChannel(base.a, blend.a)
+    );
+}
+
+vec4 DARKEN (vec4 base, vec4 blend)
+{
+    return min(base, blend);
+}
+
+vec4 LIGHTEN (vec4 base, vec4 blend)
+{
+    return max(base, blend);
+}
+
+float dodgeChannel (float base, float blend)
+{
+    return blend == 1.0 ? blend : min(1.0, base / (1.0 - blend));
+}
+
+vec4 COLOR_DODGE (vec4 base, vec4 blend)
+{
+    return vec4(
+        dodgeChannel(base.r, blend.r),
+        dodgeChannel(base.g, blend.g),
+        dodgeChannel(base.b, blend.b),
+        dodgeChannel(base.a, blend.a)
+    );
+}
+
+float burnChannel (float base, float blend)
+{
+    return blend == 0.0 ? blend : 1.0 - min(1.0, (1.0 - base) / blend);
+}
+
+vec4 COLOR_BURN (vec4 base, vec4 blend)
+{
+    return vec4(
+        burnChannel(base.r, blend.r),
+        burnChannel(base.g, blend.g),
+        burnChannel(base.b, blend.b),
+        burnChannel(base.a, blend.a)
+    );
+}
+
+float hardLightChannel (float base, float blend)
+{
+    return blend < 0.5 ? 2.0 * base * blend : 1.0 - 2.0 * (1.0 - base) * (1.0 - blend);
+}
+
+vec4 HARD_LIGHT (vec4 base, vec4 blend)
+{
+    return vec4(
+        hardLightChannel(base.r, blend.r),
+        hardLightChannel(base.g, blend.g),
+        hardLightChannel(base.b, blend.b),
+        hardLightChannel(base.a, blend.a)
+    );
+}
+
+float softLightChannel (float base, float blend)
+{
+    return blend < 0.5 ? (2.0 * base * blend + base * base * (1.0 - 2.0 * blend)) : (sqrt(base) * (2.0 * blend - 1.0) + 2.0 * base * (1.0 - blend));
+}
+
+vec4 SOFT_LIGHT (vec4 base, vec4 blend)
+{
+    return vec4(
+        softLightChannel(base.r, blend.r),
+        softLightChannel(base.g, blend.g),
+        softLightChannel(base.b, blend.b),
+        softLightChannel(base.a, blend.a)
+    );
+}
+
+vec4 DIFFERENCE (vec4 base, vec4 blend)
+{
+    return abs(base - blend);
+}
+
+vec4 EXCLUSION (vec4 base, vec4 blend)
+{
+    return base + blend - 2.0 * base * blend;
+}
+
+vec3 rgbToHsl (vec3 color)
+{
+    vec3 hsl = vec3(0.0);
+    float fmin = min(min(color.r, color.g), color.b);
+    float fmax = max(max(color.r, color.g), color.b);
+    float delta = fmax - fmin;
+    hsl.z = (fmax + fmin) / 2.0;
+
+    if (delta == 0.0)
+    {
+        hsl.x = 0.0;
+        hsl.y = 0.0;
+    }
+    else
+    {
+        if (hsl.z < 0.5)
+        {
+            hsl.y = delta / (fmax + fmin);
+        }
+        else
+        {
+            hsl.y = delta / (2.0 - fmax - fmin);
+        }
+
+        float deltaR = (((fmax - color.r) / 6.0) + (delta / 2.0)) / delta;
+        float deltaG = (((fmax - color.g) / 6.0) + (delta / 2.0)) / delta;
+        float deltaB = (((fmax - color.b) / 6.0) + (delta / 2.0)) / delta;
+
+        if (color.r == fmax)
+        {
+            hsl.x = deltaB - deltaG;
+        }
+        else if (color.g == fmax)
+        {
+            hsl.x = (1.0 / 3.0) + deltaR - deltaB;
+        }
+        else if (color.b == fmax)
+        {
+            hsl.x = (2.0 / 3.0) + deltaG - deltaR;
+        }
+
+        if (hsl.x < 0.0)
+        {
+            hsl.x += 1.0;
+        }
+        else if (hsl.x > 1.0)
+        {
+            hsl.x -= 1.0;
+        }
+    }
+
+    return hsl;
+}
+
+vec3 hslToRgb (vec3 hsl)
+{
+    float p = hsl.z * (1.0 - hsl.y);
+    float q = hsl.z * (1.0 - hsl.y * hsl.x);
+    float t = hsl.z * (1.0 - hsl.y * (1.0 - hsl.x));
+
+    if (hsl.x < 1.0 / 6.0)
+    {
+        return vec3(hsl.z, t, p);
+    }
+    else if (hsl.x < 0.5)
+    {
+        return vec3(q, hsl.z, p);
+    }
+    else if (hsl.x < 2.0 / 3.0)
+    {
+        return vec3(p, hsl.z, t);
+    }
+    return vec3(p, q, hsl.z);
+}
+
+vec4 HUE (vec4 base, vec4 blend)
+{
+    vec3 baseHSL = rgbToHsl(base.rgb);
+    vec3 blendHSL = rgbToHsl(blend.rgb);
+
+    return vec4(hslToRgb(vec3(blendHSL.x, baseHSL.y, baseHSL.z)), base.a);
+}
+
+vec4 SATURATION (vec4 base, vec4 blend)
+{
+    vec3 baseHSL = rgbToHsl(base.rgb);
+    vec3 blendHSL = rgbToHsl(blend.rgb);
+
+    return vec4(hslToRgb(vec3(baseHSL.x, blendHSL.y, baseHSL.z)), base.a);
+}
+
+vec4 COLOR (vec4 base, vec4 blend)
+{
+    vec3 baseHSL = rgbToHsl(base.rgb);
+    vec3 blendHSL = rgbToHsl(blend.rgb);
+
+    return vec4(hslToRgb(vec3(blendHSL.x, blendHSL.y, baseHSL.z)), base.a);
+}
+
+vec4 LUMINOSITY (vec4 base, vec4 blend)
+{
+    vec3 baseHSL = rgbToHsl(base.rgb);
+    vec3 blendHSL = rgbToHsl(blend.rgb);
+
+    return vec4(hslToRgb(vec3(baseHSL.x, baseHSL.y, blendHSL.z)), base.a);
+}
+
+vec4 ERASE (vec4 base, vec4 blend)
+{
+    return base * (1.0 - blend.a);
+}
+
+vec4 SOURCE_IN (vec4 base, vec4 blend)
+{
+    return blend * base.a;
+}
+
+vec4 SOURCE_OUT (vec4 base, vec4 blend)
+{
+    return blend * (1.0 - base.a);
+}
+
+vec4 SOURCE_ATOP (vec4 base, vec4 blend)
+{
+    return base * (1.0 - blend.a) + blend * base.a;
+}
+
+vec4 DESTINATION_OVER (vec4 base, vec4 blend)
+{
+    return base + blend * (1.0 - base.a);
+}
+
+vec4 DESTINATION_IN (vec4 base, vec4 blend)
+{
+    return base * blend.a;
+}
+
+vec4 DESTINATION_OUT (vec4 base, vec4 blend)
+{
+    return base * (1.0 - blend.a);
+}
+
+vec4 DESTINATION_ATOP (vec4 base, vec4 blend)
+{
+    return base * blend.a + blend * (1.0 - base.a);
+}
+
+vec4 LIGHTER (vec4 base, vec4 blend)
+{
+    return ADD(base, blend);
+}
+
+vec4 COPY (vec4 base, vec4 blend)
+{
+    return blend;
+}
+
+vec4 XOR (vec4 base, vec4 blend)
+{
+    return base * (1.0 - blend.a) + blend * (1.0 - base.a);
+}
+
+#pragma phaserTemplate(fragmentHeader)
+
+void main ()
+{
+    vec4 base = boundedSampler(uMainSampler, outTexCoord);
+    vec4 blend = boundedSampler(uMainSampler2, outTexCoord) * color;
+
+    vec4 blended = BLEND(base, blend);
+
+    gl_FragColor = mix(base, blended, amount);
+}

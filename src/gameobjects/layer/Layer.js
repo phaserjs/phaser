@@ -46,10 +46,6 @@ var StableSort = require('../../utils/array/StableSort');
  * display list position of the Layers children, causing it to adjust the order in which they are
  * rendered. Using `setDepth` on a child allows you to override this.
  *
- * Layers can have Post FX Pipelines set, which allows you to easily enable a post pipeline across
- * a whole range of children, which, depending on the effect, can often be far more efficient that doing so
- * on a per-child basis.
- *
  * Layers have no position or size within the Scene. This means you cannot enable a Layer for
  * physics or input, or change the position, rotation or scale of a Layer. They also have no scroll
  * factor, texture, tint, origin, crop or bounds.
@@ -70,7 +66,6 @@ var StableSort = require('../../utils/array/StableSort');
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -85,7 +80,6 @@ var Layer = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.Mask,
-        Components.PostPipeline,
         Components.Visible,
         EventEmitter,
         Render
@@ -303,8 +297,6 @@ var Layer = new Class({
         //  Set the List callbacks
         this.addCallback = this.addChildCallback;
         this.removeCallback = this.removeChildCallback;
-
-        this.initPostPipeline();
 
         this.clearAlpha();
 
@@ -956,8 +948,6 @@ var Layer = new Class({
         }
 
         this.removeAllListeners();
-
-        this.resetPostPipeline(true);
 
         if (this.displayList)
         {

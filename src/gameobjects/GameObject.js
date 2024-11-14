@@ -889,12 +889,6 @@ var GameObject = new Class({
         this.emit(Events.DESTROY, this, fromScene);
 
         this.removeAllListeners();
-
-        if (this.postPipelines)
-        {
-            this.resetPostPipeline(true);
-        }
-
         this.removeFromDisplayList();
         this.removeFromUpdateList();
 
@@ -917,20 +911,6 @@ var GameObject = new Class({
             this.body.destroy();
 
             this.body = undefined;
-        }
-
-        if (this.preFX)
-        {
-            this.preFX.destroy();
-
-            this.preFX = undefined;
-        }
-
-        if (this.postFX)
-        {
-            this.postFX.destroy();
-
-            this.postFX = undefined;
         }
 
         this.active = false;

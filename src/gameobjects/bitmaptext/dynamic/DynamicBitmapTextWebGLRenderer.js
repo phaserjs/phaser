@@ -10,6 +10,19 @@ var Utils = require('../../../renderer/webgl/Utils');
 
 var tempMatrix = new TransformMatrix();
 
+var tempTextureData = {
+    frame: null,
+    uvSource: null
+};
+
+var tempTintData1 = {
+    tintEffect: 0,
+    tintTopLeft: 0,
+    tintTopRight: 0,
+    tintBottomLeft: 0,
+    tintBottomRight: 0
+};
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -21,10 +34,10 @@ var tempMatrix = new TransformMatrix();
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.DynamicBitmapText} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var DynamicBitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
     var text = src.text;
     var textLength = text.length;
@@ -34,14 +47,14 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
         return;
     }
 
+    var camera = drawingContext.camera;
     camera.addToRenderList(src);
 
-    var pipeline = renderer.pipelines.set(src.pipeline, src);
+    var currentContext = drawingContext;
+
+    var submitterNode = src.customRenderNodes.Submitter || src.defaultRenderNodes.Submitter;
 
     var result = GetCalcMatrix(src, camera, parentMatrix);
-
-    //  This causes a flush if the BitmapText has a Post Pipeline
-    renderer.pipelines.preBatch(src);
 
     var spriteMatrix = result.sprite;
     var calcMatrix = result.calc;
@@ -52,26 +65,24 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
 
     if (crop)
     {
-        pipeline.flush();
-
-        renderer.pushScissor(
+        currentContext = drawingContext.getClone();
+        currentContext.setScissorEnable(true);
+        currentContext.setScissorBox(
             calcMatrix.tx,
             calcMatrix.ty,
             src.cropWidth * calcMatrix.scaleX,
             src.cropHeight * calcMatrix.scaleY
         );
+        currentContext.use();
     }
 
-    var frame = src.frame;
-    var texture = frame.glTexture;
+    tempTextureData.frame = src.frame;
 
     var tintEffect = src.tintFill;
-    var tintTL = Utils.getTintAppendFloatAlpha(src.tintTopLeft, camera.alpha * src._alphaTL);
-    var tintTR = Utils.getTintAppendFloatAlpha(src.tintTopRight, camera.alpha * src._alphaTR);
-    var tintBL = Utils.getTintAppendFloatAlpha(src.tintBottomLeft, camera.alpha * src._alphaBL);
-    var tintBR = Utils.getTintAppendFloatAlpha(src.tintBottomRight, camera.alpha * src._alphaBR);
-
-    var textureUnit = pipeline.setGameObject(src);
+    var tintTL = Utils.getTintAppendFloatAlpha(src.tintTopLeft, src._alphaTL);
+    var tintTR = Utils.getTintAppendFloatAlpha(src.tintTopRight, src._alphaTR);
+    var tintBL = Utils.getTintAppendFloatAlpha(src.tintBottomLeft, src._alphaBL);
+    var tintBR = Utils.getTintAppendFloatAlpha(src.tintBottomRight, src._alphaBR);
 
     var xAdvance = 0;
     var yAdvance = 0;
@@ -152,6 +163,8 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
             continue;
         }
 
+        tempTextureData.uvSource = glyph;
+
         glyphW = glyph.width;
         glyphH = glyph.height;
 
@@ -160,9 +173,8 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
 
         if (lastGlyph !== null)
         {
-            var kerningOffset = glyph.kerning[lastCharCode] || 0;
-            x += kerningOffset;
-            xAdvance += kerningOffset;
+            var kerningOffset = glyph.kerning[lastCharCode];
+            x += (kerningOffset !== undefined) ? kerningOffset : 0;
         }
 
         xAdvance += glyph.xAdvance + letterSpacing;
@@ -215,11 +227,17 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
                 tintBR = output.tint.bottomRight;
             }
 
-            tintTL = Utils.getTintAppendFloatAlpha(tintTL, camera.alpha * src._alphaTL);
-            tintTR = Utils.getTintAppendFloatAlpha(tintTR, camera.alpha * src._alphaTR);
-            tintBL = Utils.getTintAppendFloatAlpha(tintBL, camera.alpha * src._alphaBL);
-            tintBR = Utils.getTintAppendFloatAlpha(tintBR, camera.alpha * src._alphaBR);
+            tintTL = Utils.getTintAppendFloatAlpha(tintTL, src._alphaTL);
+            tintTR = Utils.getTintAppendFloatAlpha(tintTR, src._alphaTR);
+            tintBL = Utils.getTintAppendFloatAlpha(tintBL, src._alphaBL);
+            tintBR = Utils.getTintAppendFloatAlpha(tintBR, src._alphaBR);
         }
+
+        tempTintData1.tintFill = tintEffect;
+        tempTintData1.tintTopLeft = tintTL;
+        tempTintData1.tintTopRight = tintTR;
+        tempTintData1.tintBottomLeft = tintBL;
+        tempTintData1.tintBottomRight = tintBR;
 
         x *= scale;
         y *= scale;
@@ -232,11 +250,6 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
         fontMatrix.applyITRS(x, y, rotation, scale, scale);
 
         calcMatrix.multiply(fontMatrix, spriteMatrix);
-
-        var u0 = glyph.u0;
-        var v0 = glyph.v0;
-        var u1 = glyph.u1;
-        var v1 = glyph.v1;
 
         var xw = glyphW;
         var yh = glyphH;
@@ -268,23 +281,23 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, camera, parentMatr
             ty3 = Math.round(ty3);
         }
 
-        if (pipeline.shouldFlush(6))
-        {
-            pipeline.flush();
-            textureUnit = pipeline.setGameObject(src);
-        }
-
-        pipeline.batchQuad(src, tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
+        submitterNode.run(
+            currentContext,
+            src,
+            undefined,
+            0,
+            tempTextureData,
+            {
+                quad: [ tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3 ]
+            },
+            tempTintData1
+        );
     }
 
     if (crop)
     {
-        pipeline.flush();
-
-        renderer.popScissor();
+        drawingContext.use();
     }
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = DynamicBitmapTextWebGLRenderer;

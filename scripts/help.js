@@ -15,7 +15,6 @@ v.log('{white} npm run {green}lint {cyan}                  ESLint check Phaser s
 v.log('{white} npm run {green}lintfix {cyan}       ESLint check and fix Phaser source');
 v.log('{white} npm run {green}sloc {cyan}       Get source code & comments line count');
 v.log('{white} npm run {green}bundleshaders {cyan}    Convert vert/frag shaders to js');
-v.log('{white} npm run {green}plugin.cam3d {cyan}               Build Camera3D Plugin');
 v.log('');
 v.log(' {white}{bold}Spine Plugin{/bold}');
 v.log('');
@@ -25,17 +24,10 @@ v.log('{white} npm run {green}plugin.spine.runtimes {cyan}       Build Spine Run
 v.log('{white} npm run {green}plugin.spine.dist {cyan}             Build Spine Plugin');
 v.log('{white} npm run {green}plugin.spine.full.dist {cyan}         Build Full Plugin');
 v.log('');
-v.log(' {white}{bold}Facebook Instant Games{/bold}');
-v.log('');
-v.log('{white} npm run {green}buildfb {cyan}         Build dev Phaser FB with Webpack');
-v.log('{white} npm run {green}watchfb {cyan}       Build FB dev in Webpack watch mode');
-v.log('{white} npm run {green}distfb {cyan}          Build dist versions of Phaser FB');
-v.log('{white} npm run {green}distfull {cyan}      Build dist versions of Phaser + FB');
-v.log('');
 v.log(' {white}{bold}TypeScript{/bold}');
 v.log('');
 v.log('{white} npm run {green}build-tsgen {cyan}     Build the TypeScript Defs parser');
 v.log('{white} npm run {green}tsgen {cyan}               Generate the TypeScript Defs');
 v.log('{white} npm run {green}test-ts {cyan}                 Test the TypeScript Defs');
 
-v.log('{bgYellow}{black} https://phaser.io                 https://labs.phaser.io ');
+v.log('{bgYellow}{black} https://phaser.io                 https://docs.phaser.io ');

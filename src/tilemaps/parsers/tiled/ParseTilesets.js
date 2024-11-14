@@ -25,6 +25,7 @@ var ParseTilesets = function (json)
     var imageCollections = [];
     var lastSet = null;
     var stringID;
+    var t;
 
     for (var i = 0; i < json.tilesets.length; i++)
     {
@@ -50,7 +51,7 @@ var ParseTilesets = function (json)
                     props = props || {};
 
                     // Tiled 1.2+
-                    for (var t = 0; t < set.tiles.length; t++)
+                    for (t = 0; t < set.tiles.length; t++)
                     {
                         var tile = set.tiles[t];
 
@@ -94,6 +95,25 @@ var ParseTilesets = function (json)
                         if (tile.type)
                         {
                             (datas[tile.id] || (datas[tile.id] = {})).type = tile.type;
+                        }
+                    }
+
+                    // Sum up animation length.
+                    for (var tid in datas)
+                    {
+                        var animData = datas[tid].animation;
+
+                        if (animData)
+                        {
+                            var animTime = 0;
+
+                            for (var j = 0; j < animData.length; j++)
+                            {
+                                animData[j].startTime = animTime;
+                                animTime += animData[j].duration;
+                            }
+
+                            datas[tid].animationDuration = animTime;
                         }
                     }
                 }

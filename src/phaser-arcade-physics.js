@@ -28,7 +28,7 @@ var Phaser = {
     Display: require('./display'),
     DOM: require('./dom'),
     Events: require('./events'),
-    FX: require('./fx'),
+    Filters: require('./filters'),
     Game: require('./core/Game'),
     GameObjects: require('./gameobjects'),
     Geom: require('./geom'),
@@ -58,19 +58,6 @@ var Phaser = {
 if (typeof FEATURE_SOUND)
 {
     Phaser.Sound = require('./sound');
-}
-
-if (typeof PLUGIN_CAMERA3D)
-{
-    Phaser.Cameras.Sprite3D = require('../plugins/camera3d/src');
-    Phaser.GameObjects.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3D');
-    Phaser.GameObjects.Factories.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3DFactory');
-    Phaser.GameObjects.Creators.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3DCreator');
-}
-
-if (typeof PLUGIN_FBINSTANT)
-{
-    Phaser.FacebookInstantGamesPlugin = require('../plugins/fbinstant/src/FacebookInstantGamesPlugin');
 }
 
 //   Merge in the consts

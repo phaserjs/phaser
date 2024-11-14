@@ -38,9 +38,10 @@ var tempMatrix = new Matrix4();
  *
  * Make sure your 3D package has triangulated the model data prior to exporting it.
  *
- * You can use the data returned by this function to populate the vertices of a Mesh Game Object.
+ * You can use the data returned by this function to populate the vertices
+ * of a mesh object, an object with `vertices` and `faces` arrays.
  *
- * You may add multiple models to a single Mesh, although they will act as one when
+ * You may add multiple models to a single mesh object, although they will act as one when
  * moved or rotated. You can scale the model data, should it be too small (or large) to visualize.
  * You can also offset the model via the `x`, `y` and `z` parameters.
  *
@@ -48,7 +49,7 @@ var tempMatrix = new Matrix4();
  * @since 3.50.0
  *
  * @param {Phaser.Types.Geom.Mesh.OBJData} data - The parsed OBJ model data.
- * @param {Phaser.GameObjects.Mesh} [mesh] - An optional Mesh Game Object. If given, the generated Faces will be automatically added to this Mesh. Set to `null` to skip.
+ * @param {{ faces: Array, vertices: Array }} [mesh] - An optional mesh object. If given, the generated Faces will be automatically added to this mesh. Set to `null` to skip.
  * @param {number} [scale=1] - An amount to scale the model data by. Use this if the model has exported too small, or large, to see.
  * @param {number} [x=0] - Translate the model x position by this amount.
  * @param {number} [y=0] - Translate the model y position by this amount.

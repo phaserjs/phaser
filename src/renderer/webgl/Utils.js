@@ -129,78 +129,145 @@ module.exports = {
     },
 
     /**
-     * Checks the given Fragment Shader Source for `%count%` and `%forloop%` declarations and
-     * replaces those with GLSL code for setting `texture = texture2D(uMainSampler[i], outTexCoord)`.
+     * Update lighting uniforms for a given shader program manager.
+     * This is a standard procedure for most lighting shaders.
      *
-     * @function Phaser.Renderer.WebGL.Utils.parseFragmentShaderMaxTextures
-     * @since 3.50.0
+     * @function Phaser.Renderer.WebGL.Utils.updateLightingUniforms
+     * @since 4.0.0
+     * @webglOnly
      *
-     * @param {string} fragmentShaderSource - The Fragment Shader source code to operate on.
-     * @param {number} maxTextures - The number of maxTextures value.
-     *
-     * @return {string} The modified Fragment Shader source.
+     * @param {boolean} enable - Whether to enable lighting.
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance.
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The DrawingContext instance.
+     * @param {Phaser.Renderer.WebGL.ProgramManager} programManager - The ShaderProgramManager instance.
+     * @param {number} textureUnit - The texture unit to use for the normal map.
+     * @param {Phaser.Math.Vector2} vec - A Vector2 instance.
+     * @param {boolean} [selfShadow] - Whether to enable self-shadowing.
+     * @param {number} [selfShadowPenumbra] - The penumbra value for self-shadowing.
+     * @param {number} [selfShadowThreshold] - The threshold value for self-shadowing.
      */
-    parseFragmentShaderMaxTextures: function (fragmentShaderSource, maxTextures)
+    updateLightingUniforms: function (
+        enable,
+        renderer,
+        drawingContext,
+        programManager,
+        textureUnit,
+        vec,
+        selfShadow,
+        selfShadowPenumbra,
+        selfShadowThreshold
+    )
     {
-        if (!fragmentShaderSource)
-        {
-            return '';
-        }
+        var camera = drawingContext.camera;
+        var scene = camera.scene;
+        var lightManager = scene.sys.lights;
+        var lights = lightManager.getLights(camera);
+        var lightsCount = lights.length;
+        var ambientColor = lightManager.ambientColor;
+        var height = renderer.height;
 
-        var src = '';
-
-        for (var i = 0; i < maxTextures; i++)
+        if (enable)
         {
-            if (i > 0)
+            programManager.setUniform(
+                'uNormSampler',
+                textureUnit
+            );
+
+            programManager.setUniform(
+                'uCamera',
+                [
+                    camera.x,
+                    camera.y,
+                    camera.rotation,
+                    camera.zoom
+                ]
+            );
+            programManager.setUniform(
+                'uAmbientLightColor',
+                [
+                    ambientColor.r,
+                    ambientColor.g,
+                    ambientColor.b
+                ]
+            );
+            programManager.setUniform(
+                'uLightCount',
+                lightsCount
+            );
+
+            for (var i = 0; i < lightsCount; i++)
             {
-                src += '\n\telse ';
+                var light = lights[i].light;
+                var color = light.color;
+
+                var lightName = 'uLights[' + i + '].';
+
+                camera.matrix.transformPoint(
+                    light.x - (camera.scrollX * light.scrollFactorX * camera.zoom),
+                    light.y - (camera.scrollY * light.scrollFactorY * camera.zoom),
+                    vec
+                );
+
+                programManager.setUniform(
+                    lightName + 'position',
+                    [
+                        vec.x,
+                        height - (vec.y),
+                        light.z * camera.zoom
+                    ]
+                );
+                programManager.setUniform(
+                    lightName + 'color',
+                    [
+                        color.r,
+                        color.g,
+                        color.b
+                    ]
+                );
+                programManager.setUniform(
+                    lightName + 'intensity',
+                    light.intensity
+                );
+                programManager.setUniform(
+                    lightName + 'radius',
+                    light.radius
+                );
             }
 
-            if (i < maxTextures - 1)
+            if (selfShadow)
             {
-                src += 'if (outTexId < ' + i + '.5)';
+                // Self-shadowing uniforms.
+                programManager.setUniform(
+                    'uDiffuseFlatThreshold',
+                    selfShadowThreshold * 3
+                );
+
+                programManager.setUniform(
+                    'uPenumbra',
+                    selfShadowPenumbra
+                );
             }
-
-            src += '\n\t{';
-            src += '\n\t\ttexture = texture2D(uMainSampler[' + i + '], outTexCoord);';
-            src += '\n\t}';
         }
-
-        fragmentShaderSource = fragmentShaderSource.replace(/%count%/gi, maxTextures.toString());
-
-        return fragmentShaderSource.replace(/%forloop%/gi, src);
-    },
-
-    /**
-     * Takes the Glow FX Shader source and parses out the __SIZE__ and __DIST__
-     * consts with the configuration values.
-     *
-     * @function Phaser.Renderer.WebGL.Utils.setGlowQuality
-     * @since 3.60.0
-     *
-     * @param {string} shader - The Fragment Shader source code to operate on.
-     * @param {Phaser.Game} game - The Phaser Game instance.
-     * @param {number} [quality] - The quality of the glow (defaults to 0.1)
-     * @param {number} [distance] - The distance of the glow (defaults to 10)
-     *
-     * @return {string} The modified Fragment Shader source.
-     */
-    setGlowQuality: function (shader, game, quality, distance)
-    {
-        if (quality === undefined)
+        else
         {
-            quality = game.config.glowFXQuality;
+            // Clear lighting uniforms.
+            programManager.removeUniform('uNormSampler');
+            programManager.removeUniform('uCamera');
+            programManager.removeUniform('uAmbientLightColor');
+            programManager.removeUniform('uLightCount');
+
+            programManager.removeUniform('uPenumbra');
+            programManager.removeUniform('uDiffuseFlatThreshold');
+
+            for (i = 0; i < lightsCount; i++)
+            {
+                lightName = 'uLights[' + i + '].';
+
+                programManager.removeUniform(lightName + 'position');
+                programManager.removeUniform(lightName + 'color');
+                programManager.removeUniform(lightName + 'intensity');
+                programManager.removeUniform(lightName + 'radius');
+            }
         }
-
-        if (distance === undefined)
-        {
-            distance = game.config.glowFXDistance;
-        }
-
-        shader = shader.replace(/__SIZE__/gi, (1 / quality / distance).toFixed(7));
-        shader = shader.replace(/__DIST__/gi, distance.toFixed(0) + '.0');
-
-        return shader;
     }
-
 };

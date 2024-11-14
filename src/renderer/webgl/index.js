@@ -13,13 +13,16 @@ var Extend = require('../../utils/object/Extend');
 
 var WebGL = {
 
-    PipelineManager: require('./PipelineManager'),
-    Pipelines: require('./pipelines'),
-    RenderTarget: require('./RenderTarget'),
+    Shaders: require('./shaders'),
+    ShaderAdditionMakers: require('./shaders/additionMakers'),
+
+    DrawingContext: require('./DrawingContext'),
+    DrawingContextPool: require('./DrawingContextPool'),
+    ProgramManager: require('./ProgramManager'),
+    RenderNodes: require('./renderNodes'),
+    ShaderProgramFactory: require('./ShaderProgramFactory'),
     Utils: require('./Utils'),
-    WebGLPipeline: require('./WebGLPipeline'),
     WebGLRenderer: require('./WebGLRenderer'),
-    WebGLShader: require('./WebGLShader'),
     Wrappers: require('./wrappers')
 
 };

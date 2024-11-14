@@ -52,9 +52,14 @@ var GridCanvasRenderer = function (renderer, src, camera, parentMatrix)
         var cellWidthB = cellWidth - ((gridWidth * cellWidth) - width);
         var cellHeightB = cellHeight - ((gridHeight * cellHeight) - height);
 
-        var showCells = src.showCells;
+        var showCells = src.isFilled;
         var showAltCells = src.showAltCells;
-        var showOutline = src.showOutline;
+        var showOutline = src.isStroked;
+
+        var cellPadding = src.cellPadding;
+
+        var lineWidth = src.lineWidth;
+        var halfLineWidth = lineWidth / 2;
 
         var x = 0;
         var y = 0;
@@ -62,21 +67,14 @@ var GridCanvasRenderer = function (renderer, src, camera, parentMatrix)
         var cw = 0;
         var ch = 0;
 
-        if (showOutline)
+        if (cellPadding)
         {
-            //  To make room for the grid lines (in case alpha < 1)
-            cellWidthA--;
-            cellHeightA--;
+            cellWidthA -= cellPadding * 2;
+            cellHeightA -= cellPadding * 2;
 
-            if (cellWidthB === cellWidth)
-            {
-                cellWidthB--;
-            }
 
-            if (cellHeightB === cellHeight)
-            {
-                cellHeightB--;
-            }
+            cellWidthB -= cellPadding * 2;
+            cellHeightB -= cellPadding * 2;
         }
 
         if (showCells && src.fillAlpha > 0)
@@ -103,12 +101,15 @@ var GridCanvasRenderer = function (renderer, src, camera, parentMatrix)
                     cw = (x < gridWidth - 1) ? cellWidthA : cellWidthB;
                     ch = (y < gridHeight - 1) ? cellHeightA : cellHeightB;
 
-                    ctx.fillRect(
-                        dx + x * cellWidth,
-                        dy + y * cellHeight,
-                        cw,
-                        ch
-                    );
+                    if (cw > 0 && ch > 0)
+                    {
+                        ctx.fillRect(
+                            dx + x * cellWidth + cellPadding,
+                            dy + y * cellHeight + cellPadding,
+                            cw,
+                            ch
+                        );
+                    }
                 }
             }
         }
@@ -137,21 +138,26 @@ var GridCanvasRenderer = function (renderer, src, camera, parentMatrix)
                     cw = (x < gridWidth - 1) ? cellWidthA : cellWidthB;
                     ch = (y < gridHeight - 1) ? cellHeightA : cellHeightB;
 
-                    ctx.fillRect(
-                        dx + x * cellWidth,
-                        dy + y * cellHeight,
-                        cw,
-                        ch
-                    );
+                    if (cw > 0 && ch > 0)
+                    {
+                        ctx.fillRect(
+                            dx + x * cellWidth + cellPadding,
+                            dy + y * cellHeight + cellPadding,
+                            cw,
+                            ch
+                        );
+                    }
                 }
             }
         }
 
-        if (showOutline && src.outlineFillAlpha > 0)
+        if (showOutline && src.strokeAlpha > 0)
         {
-            LineStyleCanvas(ctx, src, src.outlineFillColor, src.outlineFillAlpha * alpha);
+            LineStyleCanvas(ctx, src, src.strokeColor, src.strokeAlpha * alpha);
 
-            for (x = 1; x < gridWidth; x++)
+            var start = src.strokeOutside ? 0 : 1;
+
+            for (x = start; x < gridWidth; x++)
             {
                 var x1 = x * cellWidth;
 
@@ -163,7 +169,7 @@ var GridCanvasRenderer = function (renderer, src, camera, parentMatrix)
                 ctx.stroke();
             }
 
-            for (y = 1; y < gridHeight; y++)
+            for (y = start; y < gridHeight; y++)
             {
                 var y1 = y * cellHeight;
 
@@ -173,6 +179,30 @@ var GridCanvasRenderer = function (renderer, src, camera, parentMatrix)
                 ctx.lineTo(dx + width, y1 + dy);
 
                 ctx.stroke();
+            }
+
+            // Render remaining outer strokes.
+            if (src.strokeOutside)
+            {
+                if (width > halfLineWidth)
+                {
+                    ctx.beginPath();
+
+                    ctx.moveTo(width + dx, dy);
+                    ctx.lineTo(width + dx, height + dy);
+
+                    ctx.stroke();
+                }
+
+                if (height > halfLineWidth)
+                {
+                    ctx.beginPath();
+
+                    ctx.moveTo(dx, height + dy);
+                    ctx.lineTo(width + dx, height + dy);
+
+                    ctx.stroke();
+                }
             }
         }
 

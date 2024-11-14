@@ -21,6 +21,7 @@ var GetFastValue = require('../utils/object/GetFastValue');
  *
  * @property {boolean} h264 - Can this device play h264 mp4 video files?
  * @property {boolean} hls - Can this device play hls video files?
+ * @property {boolean} mov - Can this device play mov video files?
  * @property {boolean} mp4 - Can this device play h264 mp4 video files?
  * @property {boolean} m4v - Can this device play m4v (typically mp4) video files?
  * @property {boolean} ogg - Can this device play ogg video files?
@@ -32,6 +33,7 @@ var Video = {
 
     h264: false,
     hls: false,
+    mov: false,
     mp4: false,
     m4v: false,
     ogg: false,
@@ -66,6 +68,11 @@ function init ()
                 // Without QuickTime, this value will be `undefined`. github.com/Modernizr/Modernizr/issues/546
                 Video.h264 = true;
                 Video.mp4 = true;
+            }
+
+            if (videoElement.canPlayType('video/quicktime4; codecs="avc1.42E01E"').replace(no, ''))
+            {
+                Video.mov = true;
             }
 
             if (videoElement.canPlayType('video/x-m4v').replace(no, ''))

@@ -16,7 +16,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @webglOnly
  * @since 3.17.0
  *
- * @param {(string|Phaser.Display.BaseShader)} key - The key of the shader to use from the shader cache, or a BaseShader instance.
+ * @param {(string|Phaser.Types.GameObjects.Shader.ShaderQuadConfig)} config - The configuration object this Shader will use. It can also be a key that corresponds to a shader in the shader cache, which will be used as `fragmentKey` in a new config object.
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [width=128] - The width of the Game Object.
@@ -28,8 +28,8 @@ var GameObjectFactory = require('../GameObjectFactory');
  */
 if (typeof WEBGL_RENDERER)
 {
-    GameObjectFactory.register('shader', function (key, x, y, width, height, textures, textureData)
+    GameObjectFactory.register('shader', function (config, x, y, width, height, textures, textureData)
     {
-        return this.displayList.add(new Shader(this.scene, key, x, y, width, height, textures, textureData));
+        return this.displayList.add(new Shader(this.scene, config, x, y, width, height, textures, textureData));
     });
 }

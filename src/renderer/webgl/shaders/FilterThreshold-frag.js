@@ -1,0 +1,16 @@
+module.exports = [
+    '#pragma phaserTemplate(shaderName)',
+    'precision mediump float;',
+    'uniform sampler2D uMainSampler;',
+    'uniform vec4 edge1;',
+    'uniform vec4 edge2;',
+    'uniform vec4 invert;',
+    'varying vec2 outTexCoord;',
+    'void main ()',
+    '{',
+    '    vec4 color = texture2D(uMainSampler, outTexCoord);',
+    '    color = clamp((color - edge1) / (edge2 - edge1), 0.0, 1.0);',
+    '    color = mix(color, 1.0 - color, invert);',
+    '    gl_FragColor = color;',
+    '}',
+].join('\n');

@@ -29,7 +29,9 @@ var Tilemaps = {
     TilemapCreator: require('./TilemapCreator'),
     TilemapFactory: require('./TilemapFactory'),
     Tileset: require('./Tileset'),
+    TilemapLayerBase: require('./TilemapLayerBase'),
     TilemapLayer: require('./TilemapLayer'),
+    TilemapGPULayer: require('./TilemapGPULayer'),
     Orientation: require('./const/ORIENTATION_CONST'),
 
     LayerData: require('./mapdata/LayerData'),

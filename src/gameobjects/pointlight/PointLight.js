@@ -4,11 +4,11 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DefaultPointLightNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultPointLightNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var IntegerToColor = require('../../display/color/IntegerToColor');
-var PIPELINES_CONST = require('../../renderer/webgl/pipelines/const');
 var Render = require('./PointLightRender');
 
 /**
@@ -19,14 +19,14 @@ var Render = require('./PointLightRender');
  * The difference is that the Point Light renders using a custom shader, designed to give the
  * impression of a point light source, of variable radius, intensity and color, in your game.
  * However, unlike the Light Game Object, it does not impact any other Game Objects, or use their
- * normal maps for calcuations. This makes them extremely fast to render compared to Lights
+ * normal maps for calculations. This makes them extremely fast to render compared to Lights
  * and perfect for special effects, such as flickering torches or muzzle flashes.
  *
  * For maximum performance you should batch Point Light Game Objects together. This means
  * ensuring they follow each other consecutively on the display list. Ideally, use a Layer
  * Game Object and then add just Point Lights to it, so that it can batch together the rendering
  * of the lights. You don't _have_ to do this, and if you've only a handful of Point Lights in
- * your game then it's perfectly safe to mix them into the dislay list as normal. However, if
+ * your game then it's perfectly safe to mix them into the display list as normal. However, if
  * you're using a large number of them, please consider how they are mixed into the display list.
  *
  * The renderer will automatically cull Point Lights. Those with a radius that does not intersect
@@ -48,8 +48,7 @@ var Render = require('./PointLightRender');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -71,8 +70,7 @@ var PointLight = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.Mask,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Transform,
         Components.Visible,
@@ -90,8 +88,7 @@ var PointLight = new Class({
 
         GameObject.call(this, scene, 'PointLight');
 
-        this.initPipeline(PIPELINES_CONST.POINTLIGHT_PIPELINE);
-        this.initPostPipeline();
+        this.initRenderNodes(this._defaultRenderNodesMap);
 
         this.setPosition(x, y);
 
@@ -135,6 +132,23 @@ var PointLight = new Class({
         this.height = radius * 2;
 
         this._radius = radius;
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.PointLight#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultPointLightNodes;
+        }
     },
 
     /**

@@ -11,7 +11,7 @@ var SceneEvents = require('../../scene/events');
 
 /**
  * @classdesc
- * A Scene plugin that provides a {@link Phaser.GameObjects.LightsManager} for the Light2D pipeline.
+ * A Scene plugin that provides a {@link Phaser.GameObjects.LightsManager} for rendering objects with dynamic lighting.
  *
  * Available from within a Scene via `this.lights`.
  *
@@ -25,13 +25,11 @@ var SceneEvents = require('../../scene/events');
  * this.lights.addLight(400, 300, 200);
  * ```
  *
- * For Game Objects to be affected by the Lights when rendered, you will need to set them to use the `Light2D` pipeline like so:
+ * For Game Objects to be affected by the Lights when rendered, you will need to set them to use lighting like so:
  *
  * ```javascript
- * sprite.setPipeline('Light2D');
+ * sprite.setLighting(true);
  * ```
- *
- * Note that you cannot use this pipeline on Graphics Game Objects or Shape Game Objects.
  *
  * @class LightsPlugin
  * @extends Phaser.GameObjects.LightsManager

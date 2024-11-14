@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DefaultParticleEmitterNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultParticleEmitterNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var ComponentsToJSON = require('../components/ToJSON');
@@ -24,7 +25,6 @@ var List = require('../../structs/List');
 var MergeRect = require('../../geom/rectangle/MergeRect');
 var MergeRight = require('../../utils/object/MergeRight');
 var Particle = require('./Particle');
-var ParticleBounds = require('./ParticleBounds');
 var RandomZone = require('./zones/RandomZone');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleToRectangle = require('../../geom/intersects/RectangleToRectangle');
@@ -34,6 +34,7 @@ var StableSort = require('../../utils/array/StableSort');
 var TransformMatrix = require('../components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
+var ParticleBounds = require('./ParticleBounds');
 
 /**
  * Names of simple configuration properties.
@@ -320,9 +321,9 @@ var configOpMap = [
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -342,9 +343,9 @@ var ParticleEmitter = new Class({
         Components.AlphaSingle,
         Components.BlendMode,
         Components.Depth,
+        Components.Lighting,
         Components.Mask,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Texture,
         Components.Transform,
@@ -909,8 +910,7 @@ var ParticleEmitter = new Class({
          */
         this.tintFill = false;
 
-        this.initPipeline();
-        this.initPostPipeline();
+        this.initRenderNodes(this._defaultRenderNodesMap);
 
         this.setPosition(x, y);
         this.setTexture(texture);
@@ -918,6 +918,23 @@ var ParticleEmitter = new Class({
         if (config)
         {
             this.setConfig(config);
+        }
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.Particles.ParticleEmitter#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultParticleEmitterNodes;
         }
     },
 

@@ -6,6 +6,32 @@
 
 var Utils = require('../renderer/webgl/Utils');
 
+var getTint = Utils.getTintAppendFloatAlpha;
+
+var texturerData = {
+    frame: {
+        source: {
+            glTexture: null
+        }
+    },
+    uvSource: {
+        u0: 0,
+        v0: 0,
+        u1: 1,
+        v1: 1
+    },
+    frameWidth: 0,
+    frameHeight: 0
+};
+
+var tinterData = {
+    tintFill: 0,
+    tintTopLeft: 0,
+    tintTopRight: 0,
+    tintBottomLeft: 0,
+    tintBottomRight: 0
+};
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -17,14 +43,15 @@ var Utils = require('../renderer/webgl/Utils');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.Tilemaps.TilemapLayer} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  */
-var TilemapLayerWebGLRenderer = function (renderer, src, camera)
+var TilemapLayerWebGLRenderer = function (renderer, src, drawingContext)
 {
+    var camera = drawingContext.camera;
     var renderTiles = src.cull(camera);
 
     var tileCount = renderTiles.length;
-    var alpha = camera.alpha * src.alpha;
+    var alpha = src.alpha;
 
     if (tileCount === 0 || alpha <= 0)
     {
@@ -32,20 +59,11 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
     }
 
     var gidMap = src.gidMap;
-    var pipeline = renderer.pipelines.set(src.pipeline, src);
 
-    var getTint = Utils.getTintAppendFloatAlpha;
+    var submitterNode = src.customRenderNodes.Submitter || src.defaultRenderNodes.Submitter;
+    var transformerNode = src.customRenderNodes.Transformer || src.defaultRenderNodes.Transformer;
 
-    var scrollFactorX = src.scrollFactorX;
-    var scrollFactorY = src.scrollFactorY;
-
-    var x = src.x;
-    var y = src.y;
-
-    var sx = src.scaleX;
-    var sy = src.scaleY;
-
-    renderer.pipelines.preBatch(src);
+    var timeElapsed = src.timeElapsed;
 
     for (var i = 0; i < tileCount; i++)
     {
@@ -58,7 +76,14 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
             continue;
         }
 
-        var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
+        var tileIndex = tileset.getAnimatedTileId(tile.index, timeElapsed);
+
+        if (tileIndex === null)
+        {
+            continue;
+        }
+
+        var tileTexCoords = tileset.getTileTextureCoordinates(tileIndex);
         var tileWidth = tileset.tileWidth;
         var tileHeight = tileset.tileHeight;
 
@@ -67,12 +92,7 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
             continue;
         }
 
-        var halfWidth = tileWidth * 0.5;
-        var halfHeight = tileHeight * 0.5;
-
         var texture = tileset.glTexture;
-
-        var textureUnit = pipeline.setTexture2D(texture, src);
 
         var frameWidth = tileWidth;
         var frameHeight = tileHeight;
@@ -80,35 +100,32 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
         var frameX = tileTexCoords.x;
         var frameY = tileTexCoords.y;
 
-        var tOffsetX = tileset.tileOffset.x;
-        var tOffsetY = tileset.tileOffset.y;
-
         var tint = getTint(tile.tint, alpha * tile.alpha);
 
-        pipeline.batchTexture(
+        texturerData.frame.source.glTexture = tileset.glTexture;
+        texturerData.frameWidth = frameWidth;
+        texturerData.frameHeight = frameHeight;
+        texturerData.uvSource.u0 = frameX / texture.width;
+        texturerData.uvSource.v0 = frameY / texture.height;
+        texturerData.uvSource.u1 = (frameX + frameWidth) / texture.width;
+        texturerData.uvSource.v1 = (frameY + frameHeight) / texture.height;
+
+        tinterData.tintFill = tile.tintFill;
+        tinterData.tintTopLeft = tint;
+        tinterData.tintTopRight = tint;
+        tinterData.tintBottomLeft = tint;
+        tinterData.tintBottomRight = tint;
+
+        submitterNode.run(
+            drawingContext,
             src,
-            texture,
-            texture.width, texture.height,
-            x + tile.pixelX * sx + (halfWidth * sx - tOffsetX),
-            y + tile.pixelY * sy + (halfHeight * sy - tOffsetY),
-            tileWidth, tileHeight,
-            sx, sy,
-            tile.rotation,
-            tile.flipX, tile.flipY,
-            scrollFactorX, scrollFactorY,
-            halfWidth, halfHeight,
-            frameX, frameY, frameWidth, frameHeight,
-            tint, tint, tint, tint, tile.tintFill,
-            0, 0,
-            camera,
-            null,
-            true,
-            textureUnit,
-            true
+            undefined,
+            tile,
+            texturerData,
+            transformerNode,
+            tinterData
         );
     }
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = TilemapLayerWebGLRenderer;

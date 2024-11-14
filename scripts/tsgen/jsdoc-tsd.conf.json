@@ -4,18 +4,15 @@
     },
     "source": {
         "include": [
-            "../../src/",
-            "../../plugins/fbinstant/src"
+            "../../src/"
         ],
         "exclude": [
             "../../src/phaser-arcade-physics.js",
-            "../../src/phaser-ie9.js",
             "../../src/phaser-core.js",
             "../../src/phaser-esm.js",
             "../../src/physics/matter-js/poly-decomp/",
             "../../src/physics/matter-js/lib",
-            "../../src/polyfills",
-            "../../src/layer3d"
+            "../../src/polyfills"
         ],
         "includePattern": ".+\\.js?$",
         "excludePattern": "(^|\\/|\\\\)_"

@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DefaultBitmapTextNodes = require('../../../renderer/webgl/renderNodes/defaults/DefaultBitmapTextNodes');
 var Class = require('../../../utils/Class');
 var Clamp = require('../../../math/Clamp');
 var Components = require('../../components');
@@ -47,10 +48,10 @@ var Render = require('./BitmapTextRender');
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Tint
@@ -74,10 +75,10 @@ var BitmapText = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Texture,
         Components.Tint,
@@ -110,7 +111,7 @@ var BitmapText = new Class({
 
         if (!entry)
         {
-            throw new Error('Invalid BitmapText key: ' + font);
+            console.warn('Invalid BitmapText key: ' + font);
         }
 
         /**
@@ -294,10 +295,26 @@ var BitmapText = new Class({
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
-        this.initPipeline();
-        this.initPostPipeline();
+        this.initRenderNodes(this._defaultRenderNodesMap);
 
         this.setText(text);
+    },
+
+    /**
+     * The default render nodes to initialize.
+     *
+     * @name Phaser.GameObjects.BitmapText#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultBitmapTextNodes;
+        }
     },
 
     /**

@@ -8,6 +8,22 @@ var BatchChar = require('../BatchChar');
 var GetCalcMatrix = require('../../GetCalcMatrix');
 var Utils = require('../../../renderer/webgl/Utils');
 
+var tempTintData1 = {
+    tintEffect: 0,
+    tintTopLeft: 0,
+    tintTopRight: 0,
+    tintBottomLeft: 0,
+    tintBottomRight: 0
+};
+
+var tempTintData2 = {
+    tintEffect: 0,
+    tintTopLeft: 0,
+    tintTopRight: 0,
+    tintBottomLeft: 0,
+    tintBottomRight: 0
+};
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -19,10 +35,10 @@ var Utils = require('../../../renderer/webgl/Utils');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.BitmapText} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
     var text = src._text;
     var textLength = text.length;
@@ -32,32 +48,24 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
+    var camera = drawingContext.camera;
     camera.addToRenderList(src);
 
-    var pipeline = renderer.pipelines.set(src.pipeline, src);
+    var submitterNode = src.customRenderNodes.Submitter || src.defaultRenderNodes.Submitter;
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
-    //  This causes a flush if the BitmapText has a Post Pipeline
-    renderer.pipelines.preBatch(src);
-
     var roundPixels = camera.roundPixels;
-
-    var cameraAlpha = camera.alpha;
 
     var charColors = src.charColors;
 
-    var tintEffect = src.tintFill;
-
     var getTint = Utils.getTintAppendFloatAlpha;
 
-    var tintTL = getTint(src.tintTopLeft, cameraAlpha * src._alphaTL);
-    var tintTR = getTint(src.tintTopRight, cameraAlpha * src._alphaTR);
-    var tintBL = getTint(src.tintBottomLeft, cameraAlpha * src._alphaBL);
-    var tintBR = getTint(src.tintBottomRight, cameraAlpha * src._alphaBR);
-
-    var texture = src.frame.glTexture;
-    var textureUnit = pipeline.setGameObject(src);
+    tempTintData1.tintFill = src.tintFill;
+    tempTintData1.tintTopLeft = getTint(src.tintTopLeft, src._alphaTL);
+    tempTintData1.tintTopRight = getTint(src.tintTopRight, src._alphaTR);
+    tempTintData1.tintBottomLeft = getTint(src.tintBottomLeft, src._alphaBL);
+    tempTintData1.tintBottomRight = getTint(src.tintBottomRight, src._alphaBR);
 
     //  Update the bounds - skipped internally if not dirty
     var bounds = src.getTextBounds(false);
@@ -78,10 +86,11 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
         var srcShadowColor = src.dropShadowColor;
         var srcShadowAlpha = src.dropShadowAlpha;
 
-        var shadowTL = getTint(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaTL);
-        var shadowTR = getTint(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaTR);
-        var shadowBL = getTint(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaBL);
-        var shadowBR = getTint(srcShadowColor, cameraAlpha * srcShadowAlpha * src._alphaBR);
+        tempTintData2.tintFill = 1;
+        tempTintData2.tintTopLeft = getTint(srcShadowColor, srcShadowAlpha * src._alphaTL);
+        tempTintData2.tintTopRight = getTint(srcShadowColor, srcShadowAlpha * src._alphaTR);
+        tempTintData2.tintBottomLeft = getTint(srcShadowColor, srcShadowAlpha * src._alphaBL);
+        tempTintData2.tintBottomRight = getTint(srcShadowColor, srcShadowAlpha * src._alphaBR);
 
         for (i = 0; i < characters.length; i++)
         {
@@ -93,7 +102,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
                 continue;
             }
 
-            BatchChar(pipeline, src, char, glyph, dropShadowX, dropShadowY, calcMatrix, roundPixels, shadowTL, shadowTR, shadowBL, shadowBR, 1, texture, textureUnit);
+            BatchChar(drawingContext, submitterNode, src, char, glyph, dropShadowX, dropShadowY, calcMatrix, roundPixels, tempTintData2);
         }
     }
 
@@ -107,34 +116,23 @@ var BitmapTextWebGLRenderer = function (renderer, src, camera, parentMatrix)
             continue;
         }
 
-        if (pipeline.shouldFlush(6))
-        {
-            pipeline.flush();
-            textureUnit = pipeline.setGameObject(src);
-        }
-
         if (charColors[char.i])
         {
             var color = charColors[char.i];
 
-            var charTintEffect = color.tintEffect;
-            var charTintTL = getTint(color.tintTL, cameraAlpha * src._alphaTL);
-            var charTintTR = getTint(color.tintTR, cameraAlpha * src._alphaTR);
-            var charTintBL = getTint(color.tintBL, cameraAlpha * src._alphaBL);
-            var charTintBR = getTint(color.tintBR, cameraAlpha * src._alphaBR);
+            tempTintData2.tintFill = color.tintEffect;
+            tempTintData2.tintTopLeft = getTint(color.tintTL, src._alphaTL);
+            tempTintData2.tintTopRight = getTint(color.tintTR, src._alphaTR);
+            tempTintData2.tintBottomLeft = getTint(color.tintBL, src._alphaBL);
+            tempTintData2.tintBottomRight = getTint(color.tintBR, src._alphaBR);
 
-            BatchChar(pipeline, src, char, glyph, 0, 0, calcMatrix, roundPixels, charTintTL, charTintTR, charTintBL, charTintBR, charTintEffect, texture, textureUnit);
+            BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, roundPixels, tempTintData2);
         }
         else
         {
-            BatchChar(pipeline, src, char, glyph, 0, 0, calcMatrix, roundPixels, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, textureUnit);
+            BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, roundPixels, tempTintData1);
         }
-
-        //  Debug test if the characters are in the correct place when rendered:
-        // pipeline.drawFillRect(tx0, ty0, tx2 - tx0, ty2 - ty0, 0x00ff00, 0.5);
     }
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = BitmapTextWebGLRenderer;

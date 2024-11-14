@@ -15,9 +15,7 @@ module.exports = [
             phaser: './phaser.js',
             'phaser.min': './phaser.js',
             'phaser-arcade-physics': './phaser-arcade-physics.js',
-            'phaser-arcade-physics.min': './phaser-arcade-physics.js',
-            'phaser-ie9': './phaser-ie9.js',
-            'phaser-ie9.min': './phaser-ie9.js'
+            'phaser-arcade-physics.min': './phaser-arcade-physics.js'
         },
 
         output: {
@@ -58,9 +56,6 @@ module.exports = [
                 "typeof WEBGL_RENDERER": JSON.stringify(true),
                 "typeof WEBGL_DEBUG": JSON.stringify(false),
                 "typeof EXPERIMENTAL": JSON.stringify(false),
-                "typeof PLUGIN_3D": JSON.stringify(false),
-                "typeof PLUGIN_CAMERA3D": JSON.stringify(false),
-                "typeof PLUGIN_FBINSTANT": JSON.stringify(false),
                 "typeof FEATURE_SOUND": JSON.stringify(true)
             }),
 
@@ -118,9 +113,6 @@ module.exports = [
                 "typeof WEBGL_RENDERER": JSON.stringify(true),
                 "typeof WEBGL_DEBUG": JSON.stringify(false),
                 "typeof EXPERIMENTAL": JSON.stringify(false),
-                "typeof PLUGIN_3D": JSON.stringify(false),
-                "typeof PLUGIN_CAMERA3D": JSON.stringify(false),
-                "typeof PLUGIN_FBINSTANT": JSON.stringify(false),
                 "typeof FEATURE_SOUND": JSON.stringify(true)
             })
         ]

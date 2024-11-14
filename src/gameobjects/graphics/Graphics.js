@@ -10,6 +10,7 @@ var Commands = require('./Commands');
 var Components = require('../components');
 var Ellipse = require('../../geom/ellipse/Ellipse');
 var GameObject = require('../GameObject');
+var DefaultGraphicsNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultGraphicsNodes.js');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
@@ -53,6 +54,11 @@ var Render = require('./GraphicsRender');
  * updates frequently then you should avoid doing this, as it will constantly generate new textures, which will consume
  * memory.
  *
+ * Under WebGL, Graphics uses its own shader which will batch drawing operations.
+ * Try to keep Graphics objects grouped together so they can be batched together.
+ * Avoid mixing object types where possible, as each batch will be flushed,
+ * costing performance.
+ *
  * As you can tell, Graphics objects are a bit of a trade-off. While they are extremely useful, you need to be careful
  * in their complexity and quantity of them in your game.
  *
@@ -65,9 +71,9 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  * @extends Phaser.GameObjects.Components.ScrollFactor
@@ -83,9 +89,9 @@ var Graphics = new Class({
         Components.AlphaSingle,
         Components.BlendMode,
         Components.Depth,
+        Components.Lighting,
         Components.Mask,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
@@ -102,8 +108,7 @@ var Graphics = new Class({
         GameObject.call(this, scene, 'Graphics');
 
         this.setPosition(x, y);
-        this.initPipeline();
-        this.initPostPipeline();
+        this.initRenderNodes(this._defaultRenderNodesMap);
 
         /**
          * The horizontal display origin of the Graphics.
@@ -205,10 +210,48 @@ var Graphics = new Class({
          */
         this._lineWidth = 1;
 
+        /**
+         * Path detail threshold for the WebGL renderer, in pixels.
+         * Path segments will be combined until the path is complete
+         * or the segment length is above the threshold.
+         *
+         * If the value is negative, the threshold will be taken from the
+         * game config `render.pathDetailThreshold` property.
+         *
+         * This threshold can greatly improve performance on complex shapes.
+         * It is calculated at render time and does not affect the original
+         * path data.
+         * The threshold is evaluated in screen pixels, so if the object is
+         * scaled up, fine detail will emerge.
+         *
+         * @name Phaser.GameObjects.Graphics#pathDetailThreshold
+         * @type {number}
+         * @default -1
+         * @since 4.0.0
+         */
+        this.pathDetailThreshold = -1;
+
         this.lineStyle(1, 0, 0);
         this.fillStyle(0, 0);
 
         this.setDefaultStyles(options);
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.Graphics#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultGraphicsNodes;
+        }
     },
 
     /**

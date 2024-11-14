@@ -44,7 +44,6 @@ var Vector2 = require('../../math/Vector2');
  * @since 3.0.0
  *
  * @extends Phaser.Cameras.Scene2D.BaseCamera
- * @extends Phaser.GameObjects.Components.PostPipeline
  *
  * @param {number} x - The x position of the Camera, relative to the top-left of the game canvas.
  * @param {number} y - The y position of the Camera, relative to the top-left of the game canvas.
@@ -55,17 +54,27 @@ var Camera = new Class({
 
     Extends: BaseCamera,
 
-    Mixins: [
-        Components.PostPipeline
-    ],
-
     initialize:
 
     function Camera (x, y, width, height)
     {
         BaseCamera.call(this, x, y, width, height);
 
-        this.initPostPipeline();
+        /**
+         * The filters for this camera.
+         * Filters control special effects and masks.
+         *
+         * This object contains two lists of filters: `internal` and `external`.
+         * See {@link Phaser.GameObjects.Components.FilterList} for more information.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#filters
+         * @type {{ internal: Phaser.GameObjects.Components.FilterList, external: Phaser.GameObjects.Components.FilterList }}
+         * @since 4.0.0
+         */
+        this.filters = {
+            internal: new Components.FilterList(this),
+            external: new Components.FilterList(this)
+        };
 
         /**
          * Does this Camera allow the Game Objects it renders to receive input events?
@@ -497,11 +506,8 @@ var Camera = new Class({
         var halfWidth = width * 0.5;
         var halfHeight = height * 0.5;
 
-        var zoomX = this.zoomX;
-        var zoomY = this.zoomY;
+        var zoom = this.zoom;
         var matrix = this.matrix;
-
-        this.renderRoundPixels = (this.roundPixels && Number.isInteger(zoomX) && Number.isInteger(zoomY));
 
         var originX = width * this.originX;
         var originY = height * this.originY;
@@ -555,12 +561,6 @@ var Camera = new Class({
             emitFollowEvent = true;
         }
 
-        if (this.roundPixels)
-        {
-            sx = Math.floor(sx);
-            sy = Math.floor(sy);
-        }
-
         if (this.useBounds)
         {
             sx = this.clampX(sx);
@@ -571,7 +571,6 @@ var Camera = new Class({
         this.scrollX = sx;
         this.scrollY = sy;
 
-        //  Don't round the midPoint, otherwise it breaks things like smooth zoom
         var midX = sx + halfWidth;
         var midY = sy + halfHeight;
 
@@ -579,20 +578,15 @@ var Camera = new Class({
         //  Basically the pixel value of what it's looking at in the middle of the cam
         this.midPoint.set(midX, midY);
 
-        var displayWidth = Math.floor((width / zoomX) + 0.5);
-        var displayHeight = Math.floor((height / zoomY) + 0.5);
+        var displayWidth = width / zoom;
+        var displayHeight = height / zoom;
 
-        var vwx = Math.floor((midX - (displayWidth / 2)) + 0.5);
-        var vwy = Math.floor((midY - (displayHeight / 2)) + 0.5);
+        var vwx = Math.floor(midX - (displayWidth / 2));
+        var vwy = Math.floor(midY - (displayHeight / 2));
 
         this.worldView.setTo(vwx, vwy, displayWidth, displayHeight);
 
-        matrix.applyITRS(
-            Math.floor(this.x + originX + 0.5),
-            Math.floor(this.y + originY + 0.5),
-            this.rotation,
-            zoomX, zoomY
-        );
+        matrix.applyITRS(Math.floor(this.x + originX), Math.floor(this.y + originY), this.rotation, zoom, zoom);
 
         matrix.translate(-originX, -originY);
 
@@ -790,6 +784,9 @@ var Camera = new Class({
     destroy: function ()
     {
         this.resetFX();
+
+        this.filters.internal.destroy();
+        this.filters.external.destroy();
 
         BaseCamera.prototype.destroy.call(this);
 

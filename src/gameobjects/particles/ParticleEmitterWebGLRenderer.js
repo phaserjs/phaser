@@ -13,6 +13,10 @@ var tempMatrix2 = new TransformMatrix();
 var tempMatrix3 = new TransformMatrix();
 var tempMatrix4 = new TransformMatrix();
 
+var tempTexturer = {};
+var tempTinter = {};
+var tempTransformer = { quad: new Float32Array(8) };
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -24,12 +28,12 @@ var tempMatrix4 = new TransformMatrix();
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMatrix)
+var ParticleEmitterWebGLRenderer = function (renderer, emitter, drawingContext, parentMatrix)
 {
-    var pipeline = renderer.pipelines.set(emitter.pipeline);
+    var camera = drawingContext.camera;
 
     var camMatrix = tempMatrix1;
     var calcMatrix = tempMatrix2;
@@ -50,10 +54,7 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
     }
 
     var getTint = Utils.getTintAppendFloatAlpha;
-    var camerAlpha = camera.alpha;
     var emitterAlpha = emitter.alpha;
-
-    renderer.pipelines.preBatch(emitter);
 
     var particles = emitter.alive;
     var particleCount = particles.length;
@@ -75,24 +76,13 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
 
     camMatrix.multiplyWithOffset(managerMatrix, -camera.scrollX * emitter.scrollFactorX, -camera.scrollY * emitter.scrollFactorY);
 
-    renderer.setBlendMode(emitter.blendMode);
-
-    if (emitter.mask)
-    {
-        emitter.mask.preRenderWebGL(renderer, emitter, camera);
-
-        renderer.pipelines.set(emitter.pipeline);
-    }
-
-    var tintEffect = emitter.tintFill;
-    var textureUnit;
-    var glTexture;
+    var tintFill = emitter.tintFill;
 
     for (var i = 0; i < particleCount; i++)
     {
         var particle = particles[i];
 
-        var alpha = particle.alpha * emitterAlpha * camerAlpha;
+        var alpha = particle.alpha * emitterAlpha;
 
         if (alpha <= 0 || particle.scaleX === 0 || particle.scaleY === 0)
         {
@@ -110,44 +100,58 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, camera, parentMa
 
         var frame = particle.frame;
 
-        if (frame.glTexture !== glTexture)
-        {
-            glTexture = frame.glTexture;
-
-            textureUnit = pipeline.setGameObject(emitter, frame);
-        }
-
         var x = -frame.halfWidth;
         var y = -frame.halfHeight;
 
-        var quad = calcMatrix.setQuad(x, y, x + frame.width, y + frame.height);
+        calcMatrix.setQuad(x, y, x + frame.width, y + frame.height, false, tempTransformer.quad);
 
-        var tint = getTint(particle.tint, alpha);
-
-        if (pipeline.shouldFlush(6))
+        if (tempTexturer.frame !== frame)
         {
-            pipeline.flush();
-
-            textureUnit = pipeline.setGameObject(emitter, frame);
+            tempTexturer.frame = frame;
+            tempTexturer.uvSource = frame;
         }
 
-        pipeline.batchQuad(
+        var tint = getTint(particle.tint, alpha);
+        tempTinter.tintTopLeft = tint;
+        tempTinter.tintBottomLeft = tint;
+        tempTinter.tintTopRight = tint;
+        tempTinter.tintBottomRight = tint;
+        tempTinter.tintFill = tintFill;
+
+        var normalMap, normalMapRotation;
+
+        if (emitter.lighting)
+        {
+            if (particle.texture)
+            {
+                normalMap = frame.texture.dataSource[frame.sourceIndex];
+            }
+
+            normalMapRotation = particle.rotation;
+            if (emitter.parentContainer)
+            {
+                var matrix = emitter.getWorldTransformMatrix(tempMatrix1, tempMatrix2).rotate(particle.rotation);
+
+                normalMapRotation = matrix.rotationNormalized;
+            }
+        }
+
+        var customRenderNodes = emitter.customRenderNodes;
+        var defaultRenderNodes = emitter.defaultRenderNodes;
+
+        (customRenderNodes.Submitter || defaultRenderNodes.Submitter).run(
+            drawingContext,
             emitter,
-            quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7],
-            frame.u0, frame.v0, frame.u1, frame.v1,
-            tint, tint, tint, tint,
-            tintEffect,
-            glTexture,
-            textureUnit
+            parentMatrix,
+            0,
+            tempTexturer,
+            tempTransformer,
+            tempTinter,
+
+            // Optional normal map overrides
+            normalMap, normalMapRotation
         );
     }
-
-    if (emitter.mask)
-    {
-        emitter.mask.postRenderWebGL(renderer, camera);
-    }
-
-    renderer.pipelines.postBatch(emitter);
 };
 
 module.exports = ParticleEmitterWebGLRenderer;

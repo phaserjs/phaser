@@ -13,7 +13,6 @@ var GetValue = require('../utils/object/GetValue');
 var IsPlainObject = require('../utils/object/IsPlainObject');
 var NOOP = require('../utils/NOOP');
 var PhaserMath = require('../math/');
-var PIPELINE_CONST = require('../renderer/webgl/pipelines/const');
 var ValueToColor = require('../display/color/ValueToColor');
 
 /**
@@ -341,34 +340,14 @@ var Config = new Class({
          */
         this.fps = GetValue(config, 'fps', null);
 
-        /**
-         * @const {boolean} Phaser.Core.Config#disablePreFX - Disables the automatic creation of the Pre FX Pipelines. If disabled, you cannot use the built-in Pre FX on Game Objects.
-         */
-        this.disablePreFX = GetValue(config, 'disablePreFX', false);
-
-        /**
-         * @const {boolean} Phaser.Core.Config#disablePostFX - Disables the automatic creation of the Post FX Pipelines. If disabled, you cannot use the built-in Post FX on Game Objects.
-         */
-        this.disablePostFX = GetValue(config, 'disablePostFX', false);
-
         //  Render Settings - Anything set in here over-rides anything set in the core game config
 
         var renderConfig = GetValue(config, 'render', null);
 
         /**
-         * @const {Phaser.Types.Core.PipelineConfig} Phaser.Core.Config#pipeline - An object mapping WebGL names to WebGLPipeline classes. These should be class constructors, not instances.
+         * @const {boolean} Phaser.Core.Config#autoMobileTextures - If iOS or Android detected, automatically restrict WebGL to use 1 texture per batch. This can help performance on some devices.
          */
-        this.pipeline = GetValue(renderConfig, 'pipeline', null, config);
-
-        /**
-         * @const {boolean} Phaser.Core.Config#autoMobilePipeline - Automatically enable the Mobile Pipeline if iOS or Android detected?
-         */
-        this.autoMobilePipeline = GetValue(renderConfig, 'autoMobilePipeline', true, config);
-
-        /**
-         * @const {string} Phaser.Core.Config#defaultPipeline - The WebGL Pipeline that Game Objects will use by default. Set to 'MultiPipeline' as standard. See also 'autoMobilePipeline'.
-         */
-        this.defaultPipeline = GetValue(renderConfig, 'defaultPipeline', PIPELINE_CONST.MULTI_PIPELINE, config);
+        this.autoMobileTextures = GetValue(renderConfig, 'autoMobileTextures', true, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#antialias - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
@@ -393,7 +372,17 @@ var Config = new Class({
         /**
          * @const {boolean} Phaser.Core.Config#roundPixels - Draw texture-based Game Objects at only whole-integer positions. Game Objects without textures, like Graphics, ignore this property.
          */
-        this.roundPixels = GetValue(renderConfig, 'roundPixels', false, config);
+        this.roundPixels = GetValue(renderConfig, 'roundPixels', true, config);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#selfShadow - On textured objects with lighting, this enables self-shadowing based on the diffuse map.
+         */
+        this.selfShadow = GetValue(renderConfig, 'selfShadow', false, config);
+
+        /**
+         * @const {number} Phaser.Core.Config#pathDetailThreshold - Threshold for combining points into a single path in the WebGL renderer for Graphics objects. This can be overridden at the Graphics object level.
+         */
+        this.pathDetailThreshold = GetValue(renderConfig, 'pathDetailThreshold', 1, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#pixelArt - Prevent pixel art from becoming blurred when scaled. It will remain crisp (tells the WebGL renderer to automatically create textures using a linear filter mode).
@@ -405,6 +394,18 @@ var Config = new Class({
             this.antialias = false;
             this.antialiasGL = false;
             this.roundPixels = true;
+        }
+
+        /**
+         * @const {boolean} Phaser.Core.Config#smoothPixelArt - WebGL only. Sets `antialias` to true and `pixelArt` to false. Texture-based Game Objects use special shader setting that preserve blocky pixels, but smooth the edges between the pixels. This is only visible when objects are scaled up; otherwise, `antialias` is simpler.
+         */
+        this.smoothPixelArt = GetValue(renderConfig, 'smoothPixelArt', false, config);
+
+        if (this.smoothPixelArt)
+        {
+            this.antialias = true;
+            this.antialiasGL = true;
+            this.pixelArt = false;
         }
 
         /**
@@ -428,6 +429,11 @@ var Config = new Class({
         this.premultipliedAlpha = GetValue(renderConfig, 'premultipliedAlpha', true, config);
 
         /**
+         * @const {boolean} Phaser.Core.Config#skipUnreadyShaders - Avert stuttering during shader compilation, by enabling parallel shader compilation, where supported. Objects which request a shader that is not yet ready will not be drawn. This prevents stutter, but may cause "pop-in" of objects unless you use a pre-touch strategy.
+         */
+        this.skipUnreadyShaders = GetValue(renderConfig, 'skipUnreadyShaders', false, config);
+
+        /**
          * @const {boolean} Phaser.Core.Config#failIfMajorPerformanceCaveat - Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
          */
         this.failIfMajorPerformanceCaveat = GetValue(renderConfig, 'failIfMajorPerformanceCaveat', false, config);
@@ -440,7 +446,7 @@ var Config = new Class({
         /**
          * @const {number} Phaser.Core.Config#batchSize - The default WebGL Batch size. Represents the number of _quads_ that can be added to a single batch.
          */
-        this.batchSize = GetValue(renderConfig, 'batchSize', 4096, config);
+        this.batchSize = GetValue(renderConfig, 'batchSize', 16384, config);
 
         /**
          * @const {number} Phaser.Core.Config#maxTextures - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
@@ -554,14 +560,14 @@ var Config = new Class({
         this.loaderLocalScheme = GetValue(config, 'loader.localScheme', [ 'file://', 'capacitor://' ]);
 
         /**
-         * @const {number} Phaser.Core.Config#glowFXQuality - The quality of the Glow FX (defaults to 0.1)
+         * @const {number} Phaser.Core.Config#glowQuality - The quality of the Glow filter (defaults to 10)
          */
-        this.glowFXQuality = GetValue(config, 'fx.glow.quality', 0.1);
+        this.glowQuality = GetValue(config, 'filters.glow.quality', 10);
 
         /**
-         * @const {number} Phaser.Core.Config#glowFXDistance - The distance of the Glow FX (defaults to 10)
+         * @const {number} Phaser.Core.Config#glowDistance - The distance of the Glow filter (defaults to 10)
          */
-        this.glowFXDistance = GetValue(config, 'fx.glow.distance', 10);
+        this.glowDistance = GetValue(config, 'filters.glow.distance', 10);
 
         /*
          * Allows `plugins` property to either be an array, in which case it just replaces

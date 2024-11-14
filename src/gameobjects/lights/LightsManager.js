@@ -24,7 +24,7 @@ var Utils = require('../../renderer/webgl/Utils');
  * @classdesc
  * Manages Lights for a Scene.
  *
- * Affects the rendering of Game Objects using the `Light2D` pipeline.
+ * Affects the rendering of Game Objects with `lighting` enabled.
  *
  * @class LightsManager
  * @memberof Phaser.GameObjects
@@ -78,7 +78,7 @@ var LightsManager = new Class({
         this.maxLights = -1;
 
         /**
-         * The number of lights that the LightPipeline processed in the _previous_ frame.
+         * The number of lights processed in the _previous_ frame.
          *
          * @name Phaser.GameObjects.LightsManager#visibleLights
          * @type {number}
@@ -174,7 +174,7 @@ var LightsManager = new Class({
      *
      * It will automatically cull lights that are outside the world view of the Camera.
      *
-     * If more lights are returned than supported by the pipeline, the lights are then culled
+     * If more lights are returned than supported by the renderer, the lights are then culled
      * based on the distance from the center of the camera. Only those closest are rendered.
      *
      * @method Phaser.GameObjects.LightsManager#getLights
@@ -281,20 +281,22 @@ var LightsManager = new Class({
      * @param {number} [radius=128] - The radius of the Light.
      * @param {number} [rgb=0xffffff] - The integer RGB color of the light.
      * @param {number} [intensity=1] - The intensity of the Light.
+     * @param {number} [z] - The z position of the light. If omitted, it will be set to `radius * 0.1`.
      *
      * @return {Phaser.GameObjects.Light} The Light that was added.
      */
-    addLight: function (x, y, radius, rgb, intensity)
+    addLight: function (x, y, radius, rgb, intensity, z)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (radius === undefined) { radius = 128; }
         if (rgb === undefined) { rgb = 0xffffff; }
         if (intensity === undefined) { intensity = 1; }
+        if (z === undefined) { z = radius * 0.1; }
 
         var color = Utils.getFloatsFromUintRGB(rgb);
 
-        var light = new Light(x, y, radius, color[0], color[1], color[2], intensity);
+        var light = new Light(x, y, radius, color[0], color[1], color[2], intensity, z);
 
         this.lights.push(light);
 

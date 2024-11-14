@@ -6,6 +6,7 @@
 
 var AddToDOM = require('../../dom/AddToDOM');
 var CanvasPool = require('../../display/canvas/CanvasPool');
+var DefaultImageNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultImageNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
@@ -68,8 +69,7 @@ var UUID = require('../../utils/string/UUID');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
@@ -95,10 +95,10 @@ var Text = new Class({
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Tint,
         Components.Transform,
@@ -126,8 +126,7 @@ var Text = new Class({
 
         this.setPosition(x, y);
         this.setOrigin(0, 0);
-        this.initPipeline();
-        this.initPostPipeline(true);
+        this.initRenderNodes(this._defaultRenderNodesMap);
 
         /**
          * The canvas element that the text is rendered to.
@@ -304,6 +303,23 @@ var Text = new Class({
         if (style && style.lineSpacing)
         {
             this.setLineSpacing(style.lineSpacing);
+        }
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.Text#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultImageNodes;
         }
     },
 
@@ -1302,6 +1318,12 @@ var Text = new Class({
             canvas.height = h;
 
             this.frame.setSize(w, h);
+
+            // Resizing the canvas changes the size of the texture source.
+            // Because this is a dedicated texture for this Text object,
+            // we know this is a simple resize.
+            this.frame.source.updateSize(w, h);
+            this.frame.updateUVs();
 
             //  Because resizing the canvas resets the context
             style.syncFont(canvas, context);

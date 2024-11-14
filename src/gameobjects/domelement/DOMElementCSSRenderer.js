@@ -33,6 +33,12 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
+    if (camera.camera)
+    {
+        // `camera` is really a DrawingContext object, used in WebGL rendering.
+        camera = camera.camera;
+    }
+
     var style = src.node.style;
     var settings = src.scene.sys.settings;
 
@@ -85,7 +91,7 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
         dx = (src.width) * src.originX;
         dy = (src.height) * src.originY;
 
-        srcMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
+        srcMatrix.applyITRS(src.x - dx, src.y - dy, src.rotation, src.scaleX, src.scaleY);
 
         camMatrix.copyFrom(camera.matrix);
 
@@ -97,9 +103,6 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
 
         //  Multiply by the src matrix, store result in calcMatrix
         camMatrix.multiply(srcMatrix, calcMatrix);
-
-        calcMatrix.e -= dx;
-        calcMatrix.f -= dy;
     }
 
     if (!src.transformOnly)

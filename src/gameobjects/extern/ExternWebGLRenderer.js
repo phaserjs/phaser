@@ -17,18 +17,18 @@ var GetCalcMatrix = require('../GetCalcMatrix');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Extern} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var ExternWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var ExternWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
-    renderer.pipelines.clear();
+    renderer.renderNodes.getNode('YieldContext').run(drawingContext);
 
-    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
+    var calcMatrix = GetCalcMatrix(src, drawingContext.camera, parentMatrix).calc;
 
-    src.render.call(src, renderer, camera, calcMatrix);
+    src.render.call(src, renderer, drawingContext.camera, calcMatrix);
 
-    renderer.pipelines.rebind();
+    renderer.renderNodes.getNode('RebindContext').run(drawingContext);
 };
 
 module.exports = ExternWebGLRenderer;

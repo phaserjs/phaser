@@ -29,17 +29,19 @@ var GameObjects = {
     Container: require('./container/Container'),
     DOMElement: require('./domelement/DOMElement'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
-    Extern: require('./extern/Extern'),
-    Graphics: require('./graphics/Graphics'),
+    Extern: require('./extern/Extern.js'),
+    Graphics: require('./graphics/Graphics.js'),
     Group: require('./group/Group'),
     Image: require('./image/Image'),
     Layer: require('./layer/Layer'),
     Particles: require('./particles'),
     PathFollower: require('./pathfollower/PathFollower'),
+    RenderFilters: require('./renderFilters/RenderFilters'),
     RenderTexture: require('./rendertexture/RenderTexture'),
     RetroFont: require('./bitmaptext/RetroFont'),
     Rope: require('./rope/Rope'),
     Sprite: require('./sprite/Sprite'),
+    Stamp: require('./stamp/Stamp'),
 
     Text: require('./text/Text'),
     GetTextSize: require('./text/GetTextSize'),
@@ -79,9 +81,11 @@ var GameObjects = {
         Layer: require('./layer/LayerFactory'),
         Particles: require('./particles/ParticleEmitterFactory'),
         PathFollower: require('./pathfollower/PathFollowerFactory'),
+        RenderFilters: require('./renderFilters/RenderFiltersFactory'),
         RenderTexture: require('./rendertexture/RenderTextureFactory'),
         Rope: require('./rope/RopeFactory'),
         Sprite: require('./sprite/SpriteFactory'),
+        Stamp: require('./stamp/StampFactory'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
         Text: require('./text/TextFactory'),
         TileSprite: require('./tilesprite/TileSpriteFactory'),
@@ -111,9 +115,11 @@ var GameObjects = {
         Image: require('./image/ImageCreator'),
         Layer: require('./layer/LayerCreator'),
         Particles: require('./particles/ParticleEmitterCreator'),
+        RenderFilters: require('./renderFilters/RenderFiltersCreator'),
         RenderTexture: require('./rendertexture/RenderTextureCreator'),
         Rope: require('./rope/RopeCreator'),
         Sprite: require('./sprite/SpriteCreator'),
+        Stamp: require('./stamp/StampCreator'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
         Text: require('./text/TextCreator'),
         TileSprite: require('./tilesprite/TileSpriteCreator'),
@@ -127,22 +133,16 @@ var GameObjects = {
 if (typeof WEBGL_RENDERER)
 {
     GameObjects.Shader = require('./shader/Shader');
-    GameObjects.Mesh = require('./mesh/Mesh');
     GameObjects.NineSlice = require('./nineslice/NineSlice');
     GameObjects.PointLight = require('./pointlight/PointLight');
-    GameObjects.Plane = require('./plane/Plane');
 
     GameObjects.Factories.Shader = require('./shader/ShaderFactory');
-    GameObjects.Factories.Mesh = require('./mesh/MeshFactory');
     GameObjects.Factories.NineSlice = require('./nineslice/NineSliceFactory');
     GameObjects.Factories.PointLight = require('./pointlight/PointLightFactory');
-    GameObjects.Factories.Plane = require('./plane/PlaneFactory');
 
     GameObjects.Creators.Shader = require('./shader/ShaderCreator');
-    GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
     GameObjects.Creators.NineSlice = require('./nineslice/NineSliceCreator');
     GameObjects.Creators.PointLight = require('./pointlight/PointLightCreator');
-    GameObjects.Creators.Plane = require('./plane/PlaneCreator');
 
     GameObjects.Light = require('./lights/Light');
     GameObjects.LightsManager = require('./lights/LightsManager');

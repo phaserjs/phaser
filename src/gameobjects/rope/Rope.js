@@ -5,10 +5,10 @@
  */
 
 var AnimationState = require('../../animations/AnimationState');
+var DefaultRopeNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultRopeNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
-var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
 var RopeRender = require('./RopeRender');
 var Vector2 = require('../../math/Vector2');
 
@@ -26,6 +26,9 @@ var Vector2 = require('../../math/Vector2');
  *
  * A Ropes origin is always 0.5 x 0.5 and cannot be changed.
  *
+ * This object does not support trimmed textures from Texture Packer.
+ * Trimming may interfere with the vertex arrangement.
+ *
  * @class Rope
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects
@@ -38,8 +41,7 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -66,8 +68,7 @@ var Rope = new Class({
         Components.Depth,
         Components.Flip,
         Components.Mask,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.Size,
         Components.Texture,
         Components.Transform,
@@ -277,8 +278,7 @@ var Rope = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
-        this.initPipeline(PIPELINE_CONST.ROPE_PIPELINE);
-        this.initPostPipeline();
+        this.initRenderNodes(this._defaultRenderNodesMap);
 
         if (Array.isArray(points))
         {
@@ -288,6 +288,23 @@ var Rope = new Class({
         this.setPoints(points, colors, alphas);
 
         this.updateVertices();
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.Rope#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultRopeNodes;
+        }
     },
 
     //  Overrides Game Object method

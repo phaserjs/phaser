@@ -4,7 +4,7 @@
  *
  * @property {(string|Phaser.Textures.Texture)} texture - The texture to be used for this Grid. Must be a Texture instance. Can also be a string but only if the `mesh` property is set.
  * @property {(string|number)} [frame] - The name or index of the frame within the Texture.
- * @property {Phaser.GameObjects.Mesh} [mesh] - If specified, the vertices of the generated grid will be added to this Mesh Game Object.
+ * @property {{ faces: Array, vertices: Array }} [mesh] - If specified, the vertices of the generated grid will be added to this mesh object.
  * @property {number} [width=1] - The width of the grid in 3D units. If you wish to get a pixel accurate grid based on a texture, you can use an Ortho Mesh or the `isOrtho` parameter.
  * @property {number} [height=width] - The height of the grid in 3D units.
  * @property {number} [widthSegments=1] - The number of segments to split the grid horizontally in to.
