@@ -34,9 +34,29 @@ Other changes also include the following:
 ✔️ We have removed the Facebook Plugin detection constants from the core library.  
 ✔️ We have removed the Camera3D Plugin.  
 ✔️ We have removed the Layer3D Plugin.  
-* We are removing `Phaser.Struct.Map` and replacing it with a regular JS `Map` instance. This means methods like `contains` and `setAll` will be gone.  
 * The `Geom.Point` class and all related functions will be removed. All functionality for this can be found in the existing Vector2 math classes. All Geometry classes that currently create and return Point objects will be updated to return Vector2 objects instead.  
+* We are removing `Phaser.Struct.Map` and replacing it with a regular JS `Map` instance. This means methods like `contains` and `setAll` will be gone.  
 * The Spine 3 and Spine 4 plugins will no longer be updated. You should now use the official Phaser Spine plugin created by Esoteric Software.  
+
+`Point.Ceil` = `Vector2.ceil`
+`Point.Floor` = `Vector2.floor`
+`Point.Clone` = `Vector2.clone`
+`Point.CopyFrom(src,dest)` = `dest.copy(src)`
+`Point.Equals` = `Vector2.equals`
+`Point.GetCentroid` = `Math.GetCentroid`
+`Point.GetMagnitude` = `Vector2.length`
+`Point.GetMagnitudeSq` = `Vector2.lengthSq`
+`Point.Invert` = `Vector2.invert`
+`Point.Negative` = `Vector2.negate`
+`Point.SetMagnitude` = `Vector2.setLength`
+`Point.Project` = `Vector2.project`
+`Point.ProjectUnit` = `Vector2.projectUnit`
+
+* `Vector2.ceil` is a new method that will apply Math.ceil to the x and y components of the vector. Use as a replacement for `Geom.Point.Ceil`.
+* `Vector2.floor` is a new method that will apply Math.floor to the x and y components of the vector. Use as a replacement for `Geom.Point.Floor`.
+* `Math.GetCentroid` is a new function that will get the centroid, or geometric center, of a plane figure from an array of Vector2 like objects. Use as a replacement for `Geom.Point.GetCentroid`.
+* `Vector2.invert` is a new method that will swap the x and y components of the vector. Use as a replacement for `Geom.Point.Invert`.
+* `Vector2.projectUnit` is a new method that will calculate the vector projection onto a non-zero target vector. Use as a replacement for `Geom.Point.ProjectUnit`.
 
 ## Installing Phaser from NPM
 
