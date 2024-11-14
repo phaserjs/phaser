@@ -22,6 +22,15 @@ You are looking at the Beta Release of Phaser v4. There are large internal diffe
 
 Please only use this release if you wish to help beta test Phaser v4.
 
+v4 contains the following API-breaking changes:
+
+* We are removing `Phaser.Struct.Map` and replacing it with a regular JS `Map` instance. This means methods like `contains` and `setAll` will be gone.
+* We are removing `Phaser.Struct.Set` and replacing it with a regular JS `Set` instance. This means methods like `iterateLocal` will be gone.
+* The `Create.GenerateTexture`, all of the Create Palettes and the `create` folder will be removed.
+* The `phaser-ie9.js` entry-point will be removed along with all associated polyfills.
+* The Spine 3 and Spine 4 plugins will no longer be updated. You should now use the official Phaser Spine plugin created by Esoteric Software.
+* The `Geom.Point` class and all related functions will be removed. All functionality for this can be found in the existing Vector2 math classes. All Geometry classes that currently create and return Point objects will be updated to return Vector2 objects instead.
+
 ## Installing Phaser from NPM
 
 Install via [npm](https://www.npmjs.com/package/phaser):
