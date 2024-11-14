@@ -1,4 +1,4 @@
-# Version 3.87 - Aoi - in dev
+# Version 3.87 - Hanabi - 14th November 2024
 
 ## New Features
 
@@ -35,3 +35,4 @@ Thanks to the following for helping with the Phaser Examples, Beta Testing, Docs
 @Jessime
 @drakang4
 @BenAfonso
+@hatchling13
