@@ -305,14 +305,28 @@ var TweenData = new Class({
             this.progress = progress;
             this.previous = this.current;
 
+            if (!forward)
+            {
+                progress = 1 - progress;
+            }
+
+            var v = this.ease(progress);
+
+            if (this.interpolation)
+            {
+                this.current = this.interpolation(this.interpolationData, v);
+            }
+            else
+            {
+                this.current = this.start + ((this.end - this.start) * v);
+            }
+
+            target[key] = this.current;
+
             if (complete)
             {
                 if (forward)
                 {
-                    this.current = this.end;
-
-                    target[key] = this.end;
-
                     if (this.hold > 0)
                     {
                         this.elapsed = this.hold;
@@ -326,32 +340,8 @@ var TweenData = new Class({
                 }
                 else
                 {
-                    this.current = this.start;
-
-                    target[key] = this.start;
-
                     this.setStateFromStart(diff);
                 }
-            }
-            else
-            {
-                if (!forward)
-                {
-                    progress = 1 - progress;
-                }
-
-                var v = this.ease(progress);
-
-                if (this.interpolation)
-                {
-                    this.current = this.interpolation(this.interpolationData, v);
-                }
-                else
-                {
-                    this.current = this.start + ((this.end - this.start) * v);
-                }
-
-                target[key] = this.current;
             }
 
             this.dispatchEvent(Events.TWEEN_UPDATE, 'onUpdate');
