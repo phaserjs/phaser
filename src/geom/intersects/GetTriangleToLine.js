@@ -19,9 +19,9 @@ var LineToLine = require('./LineToLine');
  *
  * @param {Phaser.Geom.Triangle} triangle - The Triangle to check with.
  * @param {Phaser.Geom.Line} line - The Line to check with.
- * @param {array} [out] - An optional array in which to store the points of intersection.
+ * @param {Phaser.Math.Vector2[]} [out] - An optional array of Vector2 objects in which to store the points of intersection.
  *
- * @return {array} An array with the points of intersection if objects intersect, otherwise an empty array.
+ * @return {Phaser.Math.Vector2[]} An array with the points of intersection if objects intersect, otherwise an empty array.
  */
 var GetTriangleToLine = function (triangle, line, out)
 {
@@ -33,7 +33,7 @@ var GetTriangleToLine = function (triangle, line, out)
         var lineB = triangle.getLineB();
         var lineC = triangle.getLineC();
 
-        var output = [ new Point(), new Point(), new Point() ];
+        var output = [ new Vector2(), new Vector2(), new Vector2() ];
 
         var result = [
             LineToLine(lineA, line, output[0]),
@@ -43,7 +43,10 @@ var GetTriangleToLine = function (triangle, line, out)
 
         for (var i = 0; i < 3; i++)
         {
-            if (result[i]) { out.push(output[i]); }
+            if (result[i])
+            {
+                out.push(output[i]);
+            }
         }
     }
 

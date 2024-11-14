@@ -16,9 +16,9 @@ var CircleToCircle = require('./CircleToCircle');
  *
  * @param {Phaser.Geom.Circle} circleA - The first Circle to check for intersection.
  * @param {Phaser.Geom.Circle} circleB - The second Circle to check for intersection.
- * @param {array} [out] - An optional array in which to store the points of intersection.
+ * @param {Phaser.Math.Vector2[]} [out] - An optional array of Vector2 objects in which to store the points of intersection.
  *
- * @return {array} An array with the points of intersection if objects intersect, otherwise an empty array.
+ * @return {Phaser.Math.Vector2[]} An array with the points of intersection if objects intersect, otherwise an empty array.
  */
 var GetCircleToCircle = function (circleA, circleB, out)
 {
@@ -48,12 +48,12 @@ var GetCircleToCircle = function (circleA, circleB, out)
 
             if (lambda === 0)
             {
-                out.push(new Point(x, (-coefficientB / (2 * coefficientA))));
+                out.push(new Vector2(x, (-coefficientB / (2 * coefficientA))));
             }
             else if (lambda > 0)
             {
-                out.push(new Point(x, (-coefficientB + Math.sqrt(lambda)) / (2 * coefficientA)));
-                out.push(new Point(x, (-coefficientB - Math.sqrt(lambda)) / (2 * coefficientA)));
+                out.push(new Vector2(x, (-coefficientB + Math.sqrt(lambda)) / (2 * coefficientA)));
+                out.push(new Vector2(x, (-coefficientB - Math.sqrt(lambda)) / (2 * coefficientA)));
             }
         }
         else
@@ -70,14 +70,14 @@ var GetCircleToCircle = function (circleA, circleB, out)
             if (lambda === 0)
             {
                 x = (-coefficientB / (2 * coefficientA));
-                out.push(new Point(x, (n - (x * v1))));
+                out.push(new Vector2(x, (n - (x * v1))));
             }
             else if (lambda > 0)
             {
                 x = (-coefficientB + Math.sqrt(lambda)) / (2 * coefficientA);
-                out.push(new Point(x, (n - (x * v1))));
+                out.push(new Vector2(x, (n - (x * v1))));
                 x = (-coefficientB - Math.sqrt(lambda)) / (2 * coefficientA);
-                out.push(new Point(x, (n - (x * v1))));
+                out.push(new Vector2(x, (n - (x * v1))));
             }
         }
     }

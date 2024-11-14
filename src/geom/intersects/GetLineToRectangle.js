@@ -17,10 +17,10 @@ var LineToRectangle = require('./LineToRectangle');
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Line} line - The Line to check for intersection.
- * @param {(Phaser.Geom.Rectangle|object)} rect - The Rectangle to check for intersection.
- * @param {array} [out] - An optional array in which to store the points of intersection.
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to check for intersection.
+ * @param {Phaser.Math.Vector2[]} [out] - An optional array of Vector2 objects in which to store the points of intersection.
  *
- * @return {array} An array with the points of intersection if objects intersect, otherwise an empty array.
+ * @return {Phaser.Math.Vector2[]} An array with the points of intersection if objects intersect, otherwise an empty array.
  */
 var GetLineToRectangle = function (line, rect, out)
 {
@@ -33,7 +33,7 @@ var GetLineToRectangle = function (line, rect, out)
         var lineC = rect.getLineC();
         var lineD = rect.getLineD();
 
-        var output = [ new Point(), new Point(), new Point(), new Point() ];
+        var output = [ new Vector2(), new Vector2(), new Vector2(), new Vector2() ];
 
         var result = [
             LineToLine(lineA, line, output[0]),
@@ -44,7 +44,10 @@ var GetLineToRectangle = function (line, rect, out)
 
         for (var i = 0; i < 4; i++)
         {
-            if (result[i]) { out.push(output[i]); }
+            if (result[i])
+            {
+                out.push(output[i]);
+            }
         }
     }
 

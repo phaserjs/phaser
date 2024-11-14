@@ -16,7 +16,6 @@ var Point = function (x, y, width)
     this.width = width;
 };
 
-
 var Path = function (x, y, width)
 {
     this.points = [];
