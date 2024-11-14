@@ -7,7 +7,7 @@
 /**
  * @typedef {object} Phaser.Physics.Matter.Events.CollisionEndEvent
  *
- * @property {Phaser.Types.Physics.Matter.MatterCollisionData[]} pairs - A list of all affected pairs in the collision.
+ * @property {Phaser.Types.Physics.Matter.MatterCollisionPair[]} pairs - A list of all affected pairs in the collision.
  * @property {number} timestamp - The Matter Engine `timing.timestamp` value for the event.
  * @property {any} source - The source object of the event.
  * @property {string} name - The name of the event.
