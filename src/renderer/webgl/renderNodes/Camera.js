@@ -99,19 +99,19 @@ var Camera = new Class({
 
         // Generate a drawing context.
         var baseContext = drawingContext.getClone();
-        baseContext.setScissorBox(0, 0, drawingContext.width, drawingContext.height);
         baseContext.setCamera(camera);
-
+        
         if (useFramebuffers)
         {
+            baseContext.setScissorBox(0, 0, drawingContext.width, drawingContext.height);
             currentContext = drawingContextPool.get(cw, ch);
-            currentContext.setScissorBox(cx, cy, cw, ch);
             currentContext.setCamera(camera);
         }
         else
         {
             currentContext = baseContext;
         }
+        currentContext.setScissorBox(cx, cy, cw, ch);
 
         // Enter drawing context.
         currentContext.use();
