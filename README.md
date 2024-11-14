@@ -22,7 +22,9 @@ You are looking at the Beta Release of Phaser v4. There are large internal diffe
 
 Please only use this release if you wish to help beta test Phaser v4.
 
-v4 contains the following API-breaking changes:
+Phaser v4 contains Phaser Beam, our brand-new and highly efficient WebGL renderer. Virtually the entire renderer from v3 has been replaced and this transition will be documented in its own Change Log.
+
+Other changes also include the following:
 
 ✔️ We have removed `Phaser.Struct.Set` and replaced it with a regular JS `Set` instance. This means methods like `iterateLocal` are gone.  
 ✔️ We have removed the `Create.GenerateTexture` function and all of the Create Palettes and the `create` folder.  
