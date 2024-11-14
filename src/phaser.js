@@ -22,7 +22,6 @@ var Phaser = {
     Cameras: require('./cameras'),
     Core: require('./core'),
     Class: require('./utils/Class'),
-    Create: require('./create'),
     Curves: require('./curves'),
     Data: require('./data'),
     Display: require('./display'),

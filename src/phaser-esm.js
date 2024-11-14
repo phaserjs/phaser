@@ -14,7 +14,6 @@ export const BlendModes = require('./renderer/BlendModes');
 export const Cache = require('./cache');
 export const Cameras = require('./cameras');
 export const Core = require('./core');
-export const Create = require('./create');
 export const Curves = require('./curves');
 export const Data = require('./data');
 export const Display = require('./display');
