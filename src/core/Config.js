@@ -372,7 +372,7 @@ var Config = new Class({
         /**
          * @const {boolean} Phaser.Core.Config#roundPixels - Draw texture-based Game Objects at only whole-integer positions. Game Objects without textures, like Graphics, ignore this property.
          */
-        this.roundPixels = GetValue(renderConfig, 'roundPixels', true, config);
+        this.roundPixels = GetValue(renderConfig, 'roundPixels', false, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#selfShadow - On textured objects with lighting, this enables self-shadowing based on the diffuse map.

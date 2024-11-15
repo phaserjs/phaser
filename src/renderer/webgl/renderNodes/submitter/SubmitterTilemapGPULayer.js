@@ -441,7 +441,6 @@ var SubmitterTilemapGPULayer = new Class({
 
         // Transform layer quad.
         var camera = drawingContext.camera;
-        var roundPixels = camera.roundPixels;
         var spriteMatrix = this._spriteMatrix;
         var calcMatrix = this._calcMatrix;
         var quad = this._quad;
@@ -451,7 +450,7 @@ var SubmitterTilemapGPULayer = new Class({
         var width = tilemapLayer.width;
         var height = tilemapLayer.height;
 
-        if (roundPixels)
+        if (camera.roundPixels)
         {
             x = Math.floor(x);
             y = Math.floor(y);
@@ -470,7 +469,7 @@ var SubmitterTilemapGPULayer = new Class({
             y,
             x + width,
             y + height,
-            roundPixels,
+            camera.renderRoundPixels,
             quad
         );
 

@@ -517,6 +517,22 @@ var BaseCamera = new Class({
          * @since 3.60.0
          */
         this.isSceneCamera = true;
+
+        /**
+         * Can this Camera render rounded pixel values?
+         * 
+         * This property is updated during the `preRender` method and should not be
+         * set directly. It is set based on the `roundPixels` property of the Camera
+         * combined with the zoom level. If the zoom is an integer then the WebGL
+         * Renderer can apply rounding during rendering.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#renderRoundPixels
+         * @type {boolean}
+         * @readonly
+         * @default true
+         * @since 3.86.0
+         */
+        this.renderRoundPixels = true;
     },
 
     /**
@@ -910,64 +926,6 @@ var BaseCamera = new Class({
         }
 
         return this;
-    },
-
-    /**
-     * Internal preRender step.
-     *
-     * @method Phaser.Cameras.Scene2D.BaseCamera#preRender
-     * @protected
-     * @since 3.0.0
-     */
-    preRender: function ()
-    {
-        this.renderList.length = 0;
-
-        var width = this.width;
-        var height = this.height;
-
-        var halfWidth = width * 0.5;
-        var halfHeight = height * 0.5;
-
-        var zoomX = this.zoomX;
-        var zoomY = this.zoomY;
-        var matrix = this.matrix;
-
-        var originX = width * this.originX;
-        var originY = height * this.originY;
-
-        var sx = this.scrollX;
-        var sy = this.scrollY;
-
-        if (this.useBounds)
-        {
-            sx = this.clampX(sx);
-            sy = this.clampY(sy);
-        }
-
-        //  Values are in pixels and not impacted by zooming the Camera
-        this.scrollX = sx;
-        this.scrollY = sy;
-
-        var midX = sx + halfWidth;
-        var midY = sy + halfHeight;
-
-        //  The center of the camera, in world space, so taking zoom into account
-        //  Basically the pixel value of what it's looking at in the middle of the cam
-        this.midPoint.set(midX, midY);
-
-        var displayWidth = width / zoomX;
-        var displayHeight = height / zoomY;
-
-        this.worldView.setTo(
-            midX - (displayWidth / 2),
-            midY - (displayHeight / 2),
-            displayWidth,
-            displayHeight
-        );
-
-        matrix.applyITRS(this.x + originX, this.y + originY, this.rotation, zoomX, zoomY);
-        matrix.translate(-originX, -originY);
     },
 
     /**
