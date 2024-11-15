@@ -114,6 +114,14 @@ var TransformerStamp = new Class({
         var gx = gameObject.x;
         var gy = gameObject.y;
 
+        var roundPixels = drawingContext.camera.roundPixels;
+
+        if (roundPixels)
+        {
+            gx = Math.floor(gx);
+            gy = Math.floor(gy);
+        }
+
         var spriteMatrix = this._spriteMatrix;
 
         spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
@@ -123,7 +131,8 @@ var TransformerStamp = new Class({
             x,
             y,
             x + texturerNode.frameWidth,
-            y + texturerNode.frameHeight
+            y + texturerNode.frameHeight,
+            roundPixels
         );
 
         this.onRunEnd(drawingContext);

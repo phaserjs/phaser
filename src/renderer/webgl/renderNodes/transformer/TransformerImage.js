@@ -135,6 +135,12 @@ var TransformerImage = new Class({
         var camMatrix = this._camMatrix;
         var spriteMatrix = this._spriteMatrix;
 
+        if (camera.roundPixels)
+        {
+            gx = Math.floor(gx);
+            gy = Math.floor(gy);
+        }
+
         spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
 
         if (parentMatrix)
@@ -164,7 +170,7 @@ var TransformerImage = new Class({
             y,
             x + texturerNode.frameWidth,
             y + texturerNode.frameHeight,
-            false,
+            camera.roundPixels,
             this.quad
         );
 

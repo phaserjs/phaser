@@ -266,11 +266,6 @@ var BatchHandlerQuad = new Class({
 
         // Standard uniforms.
         programManager.setUniform(
-            'uRoundPixels',
-            drawingContext.camera.roundPixels
-        );
-
-        programManager.setUniform(
             'uResolution',
             [ drawingContext.width, drawingContext.height ]
         );
