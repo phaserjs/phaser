@@ -5,29 +5,64 @@ class MainMenuScene extends Phaser.Scene {
 
     preload() {
         // Preload assets like background images or buttons
-        this.load.image('background', './ui/background.png'); // Add your actual image path
-        this.load.image('playButton', './ui/playButton.png'); // Add your actual image path
-        this.load.image('rankingButton', './ui/rankingButton.png'); // Add your actual image path
+        this.load.image('title', './src/ui/title.png');
+        this.load.image('background', './src/ui/platformer_background_1/platformer_background_1.png'); // Add your actual image path
+        this.load.image('playButton', './src/ui/ButtonsText/ButtonText_Small_ROund.png'); // Add your actual playButton image path
+        this.load.image('rankingButton', './src/ui/ButtonsText/ButtonText_Small_ROund.png'); // Add your actual rankingButton image path
     }
 
     create() {
+        // Add background to the scene
+        const background = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'background')
+            .setOrigin(0.5)
+            .setDisplaySize(this.cameras.main.width, this.cameras.main.height);
+        
+        const scaleX = this.cameras.main.width / background.width;
+        const scaleY = this.cameras.main.height / background.height;
+        const scale = Math.max(scaleX, scaleY);
+        background.setScale(scale).setScrollFactor(0);
+        
+        // Add title
+        const margin = 100; // Adjust this value for your margin
+        const titleYPosition = 50 + margin;
+        const title = this.add.image(this.cameras.main.width / 2, titleYPosition, 'title')
+            .setOrigin(0.5)
+            .setScale(0.3);
 
-        //Add Main Menu text
-        this.add.text(100, 100, 'Main Menu', { font: '24px Arial', fill: '#fff' });
-
-        // Add background and buttons to the scene
-        this.add.image(400, 300, 'background').setScale(0.5); // Adjust position as needed
-        const playButton = this.add.image(400, 300, 'playButton').setInteractive();
-        const rankingButton = this.add.image(400, 400, 'rankingButton').setInteractive();
-
+        // Add playButton
+        const playButton = this.add.image(this.cameras.main.width / 2, this.cameras.main.height * 0.45, 'playButton')
+            .setInteractive()
+            .setScale(0.2)
+            .setOrigin(0.5);
+        
+        // Add "Main Menu" text above the Play button
+        this.add.text(this.cameras.main.width / 2, playButton.y - 70, 'Main Menu', { font: 'bold 30px Arial', fill: 'black' })
+            .setOrigin(0.5);
+        
+        // Add "Play" text on playButton
+        this.add.text(playButton.x, playButton.y, 'Play', { font: '20px Arial', fill: '#ffffff' })
+            .setOrigin(0.5);
+    
+        // Add rankingButton
+        const rankingButton = this.add.image(this.cameras.main.width / 2, this.cameras.main.height * 0.55, 'rankingButton')
+            .setInteractive()
+            .setScale(0.2)
+            .setOrigin(0.5);
+        
+        // Add "Ranking" text on rankingButton
+        this.add.text(rankingButton.x, rankingButton.y, 'Ranking', { font: '20px Arial', fill: '#ffffff' })
+            .setOrigin(0.5);
+    
         // Button interactions
         playButton.on('pointerdown', () => {
-            this.scene.start('GameScene'); // Replace with the actual game scene name
+            this.scene.start('GameStartScene'); // Replace with the actual game scene name
         });
+    
         rankingButton.on('pointerdown', () => {
             this.scene.start('RankingScene'); // Replace with the actual ranking scene name
         });
-    }
+    }    
+
 }
 
 export { MainMenuScene };
