@@ -13,6 +13,7 @@ precision mediump float;
 #pragma phaserTemplate(vertexDefine)
 
 uniform mat4 uProjectionMatrix;
+uniform int uRoundPixels;
 uniform vec2 uResolution;
 uniform vec4 uTileWidthHeightMarginSpacing;
 
@@ -29,6 +30,11 @@ varying vec2 outTileStride;
 void main ()
 {
     gl_Position = uProjectionMatrix * vec4(inPosition, 1.0, 1.0);
+
+    if (uRoundPixels == 1)
+    {
+        gl_Position.xy = floor(((gl_Position.xy + 1.0) * 0.5 * uResolution) + 0.5) / uResolution * 2.0 - 1.0;
+    }
 
     outTexCoord = inTexCoord;
     outTileStride = uTileWidthHeightMarginSpacing.xy + uTileWidthHeightMarginSpacing.zz;

@@ -48,7 +48,6 @@ var TransformerTile = new Class({
         this.onRunBegin(drawingContext);
 
         var camera = drawingContext.camera;
-        var roundPixels = camera.roundPixels;
         var calcMatrix = this._calcMatrix;
         var spriteMatrix = this._spriteMatrix;
 
@@ -77,12 +76,6 @@ var TransformerTile = new Class({
 
         var srcX = gameObject.x + element.pixelX * sx + (halfWidth * sx - tOffsetX);
         var srcY = gameObject.y + element.pixelY * sy + (halfHeight * sy - tOffsetY);
-
-        if (roundPixels)
-        {
-            srcX = Math.floor(srcX);
-            srcY = Math.floor(srcY);
-        }
 
         var x = - halfWidth;
         var y = - halfHeight;
@@ -117,7 +110,7 @@ var TransformerTile = new Class({
             y,
             x + width,
             y + height,
-            roundPixels,
+            false,
             this.quad
         );
 

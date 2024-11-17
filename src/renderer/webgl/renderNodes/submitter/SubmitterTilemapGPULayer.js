@@ -255,9 +255,16 @@ var SubmitterTilemapGPULayer = new Class({
      */
     setupUniforms: function (drawingContext, tilemapLayer)
     {
+        var camera = drawingContext.camera;
         var programManager = this.programManager;
 
         // Standard uniforms.
+
+        programManager.setUniform(
+            'uRoundPixels',
+            camera.roundPixels
+        );
+
         programManager.setUniform(
             'uResolution',
             [ drawingContext.width, drawingContext.height ]
@@ -441,7 +448,6 @@ var SubmitterTilemapGPULayer = new Class({
 
         // Transform layer quad.
         var camera = drawingContext.camera;
-        var roundPixels = camera.roundPixels;
         var spriteMatrix = this._spriteMatrix;
         var calcMatrix = this._calcMatrix;
         var quad = this._quad;
@@ -450,12 +456,6 @@ var SubmitterTilemapGPULayer = new Class({
         var y = tilemapLayer.y;
         var width = tilemapLayer.width;
         var height = tilemapLayer.height;
-
-        if (roundPixels)
-        {
-            x = Math.floor(x);
-            y = Math.floor(y);
-        }
 
         spriteMatrix.applyITRS(x, y, 0, tilemapLayer.scaleX, tilemapLayer.scaleY);
         spriteMatrix.e -= camera.scrollX * tilemapLayer.scrollFactorX;
@@ -470,7 +470,7 @@ var SubmitterTilemapGPULayer = new Class({
             y,
             x + width,
             y + height,
-            roundPixels,
+            false,
             quad
         );
 

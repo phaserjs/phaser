@@ -80,16 +80,9 @@ var TransformerTileSprite = new Class({
         var gy = gameObject.y;
 
         var camera = drawingContext.camera;
-        var roundPixels = camera.roundPixels;
         var calcMatrix = this._calcMatrix;
         var camMatrix = this._camMatrix;
         var spriteMatrix = this._spriteMatrix;
-
-        if (roundPixels)
-        {
-            gx = Math.floor(gx);
-            gy = Math.floor(gy);
-        }
 
         spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
 
@@ -120,7 +113,7 @@ var TransformerTileSprite = new Class({
             y,
             x + width,
             y + height,
-            roundPixels,
+            false,
             this.quad
         );
 
