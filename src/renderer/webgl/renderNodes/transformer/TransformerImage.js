@@ -170,7 +170,7 @@ var TransformerImage = new Class({
             y,
             x + texturerNode.frameWidth,
             y + texturerNode.frameHeight,
-            camera.renderRoundPixels,
+            camera.roundPixels,
             this.quad
         );
 

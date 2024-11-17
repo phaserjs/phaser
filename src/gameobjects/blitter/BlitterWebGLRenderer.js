@@ -57,6 +57,7 @@ var BlitterWebGLRenderer = function (renderer, src, drawingContext, parentMatrix
 
     var blitterX = src.x - cameraScrollX;
     var blitterY = src.y - cameraScrollY;
+    var roundPixels = camera.roundPixels;
 
     var customRenderNodes = src.customRenderNodes;
     var defaultRenderNodes = src.defaultRenderNodes;
@@ -90,7 +91,7 @@ var BlitterWebGLRenderer = function (renderer, src, drawingContext, parentMatrix
             y += frame.height;
         }
 
-        calcMatrix.setQuad(x, y, x + width, y + height, camera.renderRoundPixels, tempTransformer.quad);
+        calcMatrix.setQuad(x, y, x + width, y + height, roundPixels, tempTransformer.quad);
 
         tempTexturer.frame = frame;
         tempTexturer.uvSource = frame;

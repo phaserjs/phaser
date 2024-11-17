@@ -34,7 +34,7 @@ var tempTransformer = { quad: new Float32Array(8) };
 var ParticleEmitterWebGLRenderer = function (renderer, emitter, drawingContext, parentMatrix)
 {
     var camera = drawingContext.camera;
-    var renderRoundPixels = camera.renderRoundPixels;
+    var roundPixels = camera.roundPixels;
 
     var camMatrix = tempMatrix1;
     var calcMatrix = tempMatrix2;
@@ -104,7 +104,7 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, drawingContext, 
         var x = -frame.halfWidth;
         var y = -frame.halfHeight;
 
-        calcMatrix.setQuad(x, y, x + frame.width, y + frame.height, renderRoundPixels, tempTransformer.quad);
+        calcMatrix.setQuad(x, y, x + frame.width, y + frame.height, roundPixels, tempTransformer.quad);
 
         if (tempTexturer.frame !== frame)
         {

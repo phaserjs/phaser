@@ -74,8 +74,6 @@ var TransformerStamp = new Class({
     {
         this.onRunBegin(drawingContext);
 
-        var camera = drawingContext.camera;
-
         var frame = texturerNode.frame;
         var uvSource = texturerNode.uvSource;
 
@@ -116,7 +114,9 @@ var TransformerStamp = new Class({
         var gx = gameObject.x;
         var gy = gameObject.y;
 
-        if (camera.roundPixels)
+        var roundPixels = drawingContext.camera.roundPixels;
+
+        if (roundPixels)
         {
             gx = Math.floor(gx);
             gy = Math.floor(gy);
@@ -132,7 +132,7 @@ var TransformerStamp = new Class({
             y,
             x + texturerNode.frameWidth,
             y + texturerNode.frameHeight,
-            camera.renderRoundPixels
+            roundPixels
         );
 
         this.onRunEnd(drawingContext);
