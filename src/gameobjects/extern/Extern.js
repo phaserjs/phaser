@@ -25,6 +25,9 @@ var ExternRender = require('./ExternRender');
  * override the `render` (and optionally `preUpdate`) methods and pass off control to your
  * 3rd party libraries or custom WebGL code there.
  *
+ * The `render` method is called with this signature:
+ * `render(renderer: Phaser.Renderer.WebGL.WebGLRenderer, drawingContext: Phaser.Renderer.WebGL.DrawingContext, calcMatrix: Phaser.GameObjects.Components.TransformMatrix): void`.
+ *
  * Once you've finished, you should free-up any of your resources.
  * The Extern will then return Phaser state and carry on rendering the display list.
  *
@@ -98,7 +101,7 @@ var Extern = new Class({
     render: function ()
     {
         //  override this!
-        //  Arguments: renderer, camera, calcMatrix
+        //  Arguments: renderer, drawingContext, calcMatrix
     }
 
 });
