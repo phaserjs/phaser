@@ -42,7 +42,7 @@ var WebGLGlobalParametersFactory = {
             cullFace: false,
             depthTest: false,
             scissor: {
-                enable: false,
+                enable: true,
                 box: [ 0, 0, 0, 0 ]
             },
             stencil: WebGLStencilParametersFactory.create(renderer),

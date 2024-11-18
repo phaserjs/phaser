@@ -684,16 +684,6 @@ var WebGLRenderer = new Class({
         this.mipmapFilter = null;
 
         /**
-         * The default scissor, set during `preRender` and modified during `resize`.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#defaultScissor
-         * @type {number[]}
-         * @private
-         * @since 3.50.0
-         */
-        this.defaultScissor = [ 0, 0, 0, 0 ];
-
-        /**
          * Has this renderer fully booted yet?
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#isBooted
@@ -1060,10 +1050,6 @@ var WebGLRenderer = new Class({
         );
         this.on(Events.RESIZE, this.baseDrawingContext.resize, this.baseDrawingContext);
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        gl.enable(gl.SCISSOR_TEST);
-
         game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
         this.resize(width, height);
@@ -1317,14 +1303,14 @@ var WebGLRenderer = new Class({
 
         this.setProjectionMatrix(width, height);
 
-        gl.viewport(0, 0, width, height);
-
         this.drawingBufferHeight = gl.drawingBufferHeight;
 
-        gl.scissor(0, (gl.drawingBufferHeight - height), width, height);
-
-        this.defaultScissor[2] = width;
-        this.defaultScissor[3] = height;
+        this.glWrapper.update({
+            scissor: {
+                box: [ 0, (gl.drawingBufferHeight - height), width, height ]
+            },
+            viewport: [ 0, 0, width, height ]
+        });
 
         this.emit(Events.RESIZE, width, height);
 
