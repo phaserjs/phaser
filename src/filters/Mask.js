@@ -5,6 +5,7 @@
  */
 
 var Class = require('../utils/Class');
+var UUID = require('../utils/string/UUID');
 var Controller = require('./Controller');
 
 /**
@@ -164,11 +165,10 @@ var Mask = new Class({
             return;
         }
 
-        var textureManager = this.camera.scene.sys.textures;
-
         if (!this._dynamicTexture)
         {
-            this._dynamicTexture = textureManager.addDynamicTexture('', width, height);
+            var textureManager = this.camera.scene.sys.textures;
+            this._dynamicTexture = textureManager.addDynamicTexture(UUID(), width, height);
         }
         else if (this._dynamicTexture.width !== width || this._dynamicTexture.height !== height)
         {

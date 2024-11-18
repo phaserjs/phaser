@@ -5,7 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
-var DynamicTexture = require('../../textures/DynamicTexture');
+var UUID = require('../../utils/string/UUID');
 var Image = require('../image/Image');
 
 /**
@@ -70,7 +70,7 @@ var RenderTexture = new Class({
         if (width === undefined) { width = 32; }
         if (height === undefined) { height = 32; }
 
-        var dynamicTexture = new DynamicTexture(scene.sys.textures, '', width, height);
+        var dynamicTexture = scene.sys.textures.addDynamicTexture(UUID(), width, height);
 
         Image.call(this, scene, x, y, dynamicTexture);
 
