@@ -143,7 +143,8 @@ var WebGLVAOWrapper = new Class({
                 var attributeIndex = glAttributeNames.get(layout.name);
                 if (attributeIndex === undefined)
                 {
-                    throw new Error('Attribute not found: ' + layout.name);
+                    // This attribute is not used in the shader, so skip it.
+                    continue;
                 }
                 var attributeInfo = glAttributes[attributeIndex];
                 layout.location = attributeInfo.location;
