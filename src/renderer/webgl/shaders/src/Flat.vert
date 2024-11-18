@@ -4,7 +4,11 @@
 
 #pragma phaserTemplate(features)
 
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
 precision mediump float;
+#endif
 
 #pragma phaserTemplate(vertexDefine)
 
