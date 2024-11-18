@@ -228,7 +228,7 @@ var WebGLFramebufferWrapper = new Class({
             {
                 framebuffer: this
             }
-        });
+        }, true);
 
         // Create attachments.
         for (i = 0; i < this.attachments.length; i++)
