@@ -106,16 +106,8 @@ var TileSprite = new Class({
         var displayTexture = scene.sys.textures.get(textureKey);
         var displayFrame = displayTexture.get(frameKey);
 
-        if (!width || !height)
-        {
-            width = displayFrame.width;
-            height = displayFrame.height;
-        }
-        else
-        {
-            width = Math.floor(width);
-            height = Math.floor(height);
-        }
+        width = width ? Math.floor(width) : displayFrame.width;
+        height = height ? Math.floor(height) : displayFrame.height;
 
         /**
          * Internal tile position vector.
