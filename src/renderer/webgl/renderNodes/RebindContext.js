@@ -48,7 +48,7 @@ var RebindContext = new Class({
         // Clear the current framebuffer's stencil and depth renderbuffers.
         renderer.clearFramebuffer(
             undefined,
-            renderer.hasActiveStencilMask() ? undefined : 0,
+            undefined, // Stencil is currently not implemented by DrawingContext.
             0
         );
 
