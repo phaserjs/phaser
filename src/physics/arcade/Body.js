@@ -1846,7 +1846,7 @@ var Body = new Class({
 
         if (this.world)
         {
-            this.world.pendingDestroy.set(this);
+            this.world.pendingDestroy.add(this);
         }
     },
 

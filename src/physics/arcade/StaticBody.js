@@ -890,7 +890,7 @@ var StaticBody = new Class({
     {
         this.enable = false;
 
-        this.world.pendingDestroy.set(this);
+        this.world.pendingDestroy.add(this);
     },
 
     /**
