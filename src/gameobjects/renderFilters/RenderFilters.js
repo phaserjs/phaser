@@ -274,7 +274,7 @@ var RenderFilters = new Class({
          */
         this.needsFocusContext = false;
 
-        this.setChild(child, true, true);
+        this.setChild(child, true, false);
         this.initRenderNodes(this._defaultRenderNodesMap);
     },
 
@@ -434,7 +434,12 @@ var RenderFilters = new Class({
      * If the child has a width and height, the RenderFilters will match those.
      * Otherwise, the RenderFilters will match the child's bounds.
      *
-     * The child will be removed from its current display list.
+     * The RenderFilters will replace the child in the display list,
+     * if `updateOrder` is true. This is useful when applying filters to an object
+     * which is already part of a scene.
+     *
+     * The child will be removed from its current display list
+     * if it is in the same display list as the RenderFilters.
      * This stops its `preUpdate` method from running.
      * By default, this object will call any `preUpdate` method on the child.
      * You can disable this by setting `runChildPreUpdate` to false.
@@ -445,14 +450,22 @@ var RenderFilters = new Class({
      * @since 4.0.0
      * @param {Phaser.GameObjects.GameObject} child - The Game Object that this RenderFilters will wrap.
      * @param {boolean} [match=false] - Should the RenderFilters transfer the properties of the child to itself? This includes position, rotation, scale, blend mode, flip, visibility, scroll factor, and depth.
+     * @param {boolean} [updateOrder=true] - Should the RenderFilters update its own display list position to replace the child? This is useful when applying filters to an object which is already part of a scene. Note that this does not apply when initially creating the RenderFilters.
      * @return {this} This RenderFilters Game Object.
      */
-    setChild: function (child, match)
+    setChild: function (child, match, updateOrder)
     {
         // Destroy the current child, if any.
         if (this.child)
         {
             this.child.destroy();
+        }
+
+        // Update display order.
+        if (updateOrder !== false && child.displayList)
+        {
+            this.addToDisplayList(child.displayList);
+            this.displayList.moveAbove(this, child);
         }
 
         // Remove the new child from its current display list.
