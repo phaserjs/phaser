@@ -51,7 +51,7 @@ var BaseFilterShader = new Class({
     {
         if (!fragmentShaderSource)
         {
-            var baseShader = manager.renderer.shaders.get(fragmentShaderKey);
+            var baseShader = manager.renderer.game.cache.shader.get(fragmentShaderKey);
             if (!(baseShader && baseShader.glsl))
             {
                 throw new Error('BaseFilterShader: No fragment shader source provided and no shader found with key ' + fragmentShaderKey);
