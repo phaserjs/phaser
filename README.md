@@ -35,7 +35,7 @@ Other changes also include the following:
 ✔️ We have removed the Facebook Plugin detection constants from the core library.  
 ✔️ We have removed the Camera3D Plugin.  
 ✔️ We have removed the Layer3D Plugin.  
-* The `Geom.Point` class and all related functions will be removed. All functionality for this can be found in the existing Vector2 math classes. All Geometry classes that currently create and return Point objects will be updated to return Vector2 objects instead.  
+✔️ The `Geom.Point` class and all related functions will be removed. All functionality for this can be found in the existing Vector2 math classes. All Geometry classes that currently create and return Point objects will be updated to return Vector2 objects instead.  
 * We are removing `Phaser.Struct.Map` and replacing it with a regular JS `Map` instance. This means methods like `contains` and `setAll` will be gone.  
 * The Spine 3 and Spine 4 plugins will no longer be updated. You should now use the official Phaser Spine plugin created by Esoteric Software.  
 
@@ -77,7 +77,18 @@ Other changes also include the following:
 * `Geom.Triangle.getPoint`, `getPoints` and `getRandomPoint` now all return Vector2 objects instead of Point.
 * The functions `Geom.Triangle.Centroid`, `Triangle.CircumCenter`, `Triangle.ContainsArray`, `Triangle.ContainsPoint`, `Triangle.GetPoint`, `Triangle.GetPoints`, `Triangle.InCenter`, `Triangle.Random` and `Triangle.RotateAroundPoint` all now take and in some cases return Vector2 instances instead of Point objects.
 
+v4.0.0 Beta 2 Updates:
 
+* Better roundPixels handling via bias.
+* UUIDs for DynamicTexture names.
+    * Masks work (again). Big feature!
+* DynamicTexture can resize immediately after creation.
+* Fix shader compilation issues on diverse systems.
+        * Shapes/Graphics should work again in Firefox.
+        * Issues with inTexDatum should be eliminated in affected Linux systems.
+* Fix Extern and extend its rendering potential (see Beam Examples).
+* TileSprite now assigns default dimensions to each dimension separately.
+* BaseFilterShader now accesses loaded shader cache keys correctly.
 
 
 ## Installing Phaser from NPM
