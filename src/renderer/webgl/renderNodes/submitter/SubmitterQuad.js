@@ -256,7 +256,7 @@ var SubmitterQuad = new Class({
             var selfShadowEnabled = selfShadow.enabled;
             if (selfShadowEnabled === null)
             {
-                selfShadowEnabled = gameObject.scene.game.config.selfShadow;
+                selfShadowEnabled = gameObject.scene.sys.game.config.selfShadow;
             }
 
             this._lightingOptions.normalGLTexture = normalMap;
@@ -280,7 +280,7 @@ var SubmitterQuad = new Class({
         }
         else
         {
-            smoothPixelArt = gameObject.scene.game.config.smoothPixelArt;
+            smoothPixelArt = gameObject.scene.sys.game.config.smoothPixelArt;
         }
         this._renderOptions.smoothPixelArt = smoothPixelArt;
     }
