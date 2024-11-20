@@ -103,6 +103,7 @@ var MatterSprite = new Class({
         this.setTexture(texture, frame);
         this.setSizeToFrame();
         this.setOrigin();
+        this.initRenderNodes(this._defaultRenderNodesMap);
 
         /**
          * A reference to the Matter.World instance that this body belongs to.
