@@ -818,4 +818,34 @@ var RenderFilters = new Class({
     }
 });
 
+/**
+ * Static method to replace a game object with a RenderFilters
+ * which wraps that object. This preserves the display order.
+ *
+ * @method Phaser.GameObjects.RenderFilters.replace
+ * @since 4.0.0
+ * @static
+ * @param {Phaser.GameObjects.GameObject} child - The Game Object that is being wrapped by this RenderFilters instance.
+ */
+RenderFilters.replace = function (child)
+{
+    var scene = child.scene;
+    if (!scene)
+    {
+        throw new Error('Cannot replace a Game Object with a RenderFilters if it has no Scene.');
+    }
+
+    var displayList = child.displayList;
+    if (!displayList)
+    {
+        return new RenderFilters(scene, child);
+    }
+
+    var index = child.displayList.getIndex(child);
+    var renderFilters = new RenderFilters(scene, child);
+    scene.sys.displayList.addAt(renderFilters, index);
+
+    return renderFilters;
+};
+
 module.exports = RenderFilters;
