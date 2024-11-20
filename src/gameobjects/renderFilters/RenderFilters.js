@@ -171,6 +171,11 @@ var RenderFilters = new Class({
          */
         this.camera = new Camera(0, 0, 1, 1).setScene(scene, false);
 
+        if (scene.game.config.roundPixels)
+        {
+            this.camera.roundPixels = true;
+        }
+
         /**
          * The maximum width of the base RenderFilters texture.
          * Filters may use a larger texture after the base texture is rendered.
@@ -274,6 +279,20 @@ var RenderFilters = new Class({
          */
         this.needsFocusContext = false;
 
+        /**
+         * Whether the RenderFilters should automatically transfer properties
+         * from the child to itself every frame.
+         * This is useful if you want to transform the child instead of this
+         * RenderFilters. You should activate `autoFocus` to ensure the child
+         * is always in view in the internal camera.
+         *
+         * @name Phaser.GameObjects.RenderFilters#autoTransferProperties
+         * @type {boolean}
+         * @default false
+         * @since 4.0.0
+         */
+        this.autoTransferProperties = false;
+
         this.setChild(child, true, false);
         this.initRenderNodes(this._defaultRenderNodesMap);
     },
@@ -339,6 +358,11 @@ var RenderFilters = new Class({
             {
                 this.focusOnChild();
             }
+        }
+
+        if (this.autoTransferProperties)
+        {
+            this.transferProperties(this.child, this);
         }
     },
 

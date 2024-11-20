@@ -154,6 +154,9 @@ var Camera = new Class({
         {
             var index, filter, padding, renderNode, tint;
 
+            // Set up render options.
+            blankRenderOptions.smoothPixelArt = manager.renderer.game.config.smoothPixelArt;
+
             // Draw internal filters.
             var coverageInternal = new Rectangle(0, 0, currentContext.width, currentContext.height);
             for (index = 0; index < internalFilters.length; index++)
