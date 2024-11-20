@@ -82,7 +82,7 @@ var Lighting = {
         {
             if (enabled === null)
             {
-                this.selfShadow.enabled = this.scene.game.config.selfShadow;
+                this.selfShadow.enabled = this.scene.sys.game.config.selfShadow;
             }
             else
             {

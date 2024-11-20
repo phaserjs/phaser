@@ -46,7 +46,7 @@ var RopeWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
     }
     else
     {
-        smoothPixelArt = src.scene.game.config.smoothPixelArt;
+        smoothPixelArt = src.scene.sys.game.config.smoothPixelArt;
     }
     renderOptions.smoothPixelArt = smoothPixelArt;
 

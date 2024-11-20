@@ -391,7 +391,7 @@ var SubmitterTilemapGPULayer = new Class({
         var selfShadow = gameObject.selfShadow.enabled;
         if (selfShadow === null)
         {
-            selfShadow = gameObject.scene.game.config.selfShadow;
+            selfShadow = gameObject.scene.sys.game.config.selfShadow;
         }
         if (selfShadow)
         {
@@ -406,7 +406,7 @@ var SubmitterTilemapGPULayer = new Class({
         var smoothPixelArt = texture.smoothPixelArt;
         if (smoothPixelArt === null)
         {
-            smoothPixelArt = gameObject.scene.game.config.smoothPixelArt;
+            smoothPixelArt = gameObject.scene.sys.game.config.smoothPixelArt;
         }
         var smoothPixelArtAddition = programManager.getAddition('SmoothPixelArt');
         if (smoothPixelArtAddition)
