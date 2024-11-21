@@ -860,8 +860,10 @@ var RenderFilters = new Class({
  * @since 4.0.0
  * @static
  * @param {Phaser.GameObjects.GameObject} child - The Game Object that is being wrapped by this RenderFilters instance.
+ * @param {boolean} [autoFocus=false] - Whether the RenderFilters should automatically focus on the child every frame. Sets `autoFocus` property.
+ * @param {boolean} [autoTransfer=false] - Whether the RenderFilters should automatically transfer properties from the child to itself every frame. Sets `autoTransferProperties` property. If not set, it defaults to the `autoFocus` param.
  */
-RenderFilters.Replace = function (child)
+RenderFilters.Replace = function (child, autoFocus, autoTransfer)
 {
     var scene = child.scene;
     if (!scene)
@@ -876,7 +878,7 @@ RenderFilters.Replace = function (child)
     }
 
     var index = child.displayList.getIndex(child);
-    var renderFilters = new RenderFilters(scene, child);
+    var renderFilters = new RenderFilters(scene, child, autoFocus, autoTransfer);
     scene.sys.displayList.addAt(renderFilters, index);
 
     return renderFilters;
