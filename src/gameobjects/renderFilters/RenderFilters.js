@@ -127,6 +127,8 @@ var RenderFiltersRender = require('./RenderFiltersRender');
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {Phaser.GameObjects.GameObject} child - The Game Object that this RenderFilters will wrap.
+ * @param {boolean} [autoFocus=false] - Whether the RenderFilters should automatically focus on the child every frame. Sets `autoFocus` property.
+ * @param {boolean} [autoTransfer=false] - Whether the RenderFilters should automatically transfer properties from the child to itself every frame. Sets `autoTransferProperties` property. If not set, it defaults to the `autoFocus` param.
  */
 var RenderFilters = new Class({
 
@@ -147,8 +149,11 @@ var RenderFilters = new Class({
         RenderFiltersRender
     ],
 
-    initialize: function RenderFilters (scene, child)
+    initialize: function RenderFilters (scene, child, autoFocus, autoTransfer)
     {
+        if (autoFocus === undefined) { autoFocus = false; }
+        if (autoTransfer === undefined) { autoTransfer = autoFocus; }
+
         GameObject.call(this, scene, 'RenderFilters');
 
         /**
@@ -250,7 +255,7 @@ var RenderFilters = new Class({
          * @default false
          * @since 4.0.0
          */
-        this.autoFocus = false;
+        this.autoFocus = autoFocus;
 
         /**
          * Whether the RenderFilters should focus on its own context,
@@ -291,7 +296,7 @@ var RenderFilters = new Class({
          * @default false
          * @since 4.0.0
          */
-        this.autoTransferProperties = false;
+        this.autoTransferProperties = autoTransfer;
 
         this.setChild(child, true, false);
         this.initRenderNodes(this._defaultRenderNodesMap);
@@ -492,8 +497,10 @@ var RenderFilters = new Class({
             this.displayList.moveAbove(this, child);
         }
 
-        // Remove the new child from its current display list.
         child.removeFromDisplayList();
+
+        child.filters = this.filters;
+        child.filtersWrapper = this;
 
         this.child = child;
 
@@ -532,6 +539,9 @@ var RenderFilters = new Class({
             this.child = null;
 
             child.addToDisplayList();
+
+            child.filters = null;
+            child.filtersWrapper = null;
         }
 
         return child;
@@ -846,12 +856,12 @@ var RenderFilters = new Class({
  * Static method to replace a game object with a RenderFilters
  * which wraps that object. This preserves the display order.
  *
- * @method Phaser.GameObjects.RenderFilters.replace
+ * @method Phaser.GameObjects.RenderFilters.Replace
  * @since 4.0.0
  * @static
  * @param {Phaser.GameObjects.GameObject} child - The Game Object that is being wrapped by this RenderFilters instance.
  */
-RenderFilters.replace = function (child)
+RenderFilters.Replace = function (child)
 {
     var scene = child.scene;
     if (!scene)

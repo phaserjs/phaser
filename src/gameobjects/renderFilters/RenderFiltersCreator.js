@@ -27,8 +27,10 @@ GameObjectCreator.register('renderFilters', function (config, addToScene)
     if (config === undefined) { config = {}; }
 
     var child = GetAdvancedValue(config, 'child', null);
+    var autoFocus = GetAdvancedValue(config, 'autoFocus', false);
+    var autoTransfer = GetAdvancedValue(config, 'autoTransfer', autoFocus);
 
-    var renderFilters = new RenderFilters(this.scene, child, 0, 0);
+    var renderFilters = new RenderFilters(this.scene, child, autoFocus, autoTransfer);
 
     if (addToScene !== undefined)
     {
