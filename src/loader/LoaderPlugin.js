@@ -1029,8 +1029,9 @@ var LoaderPlugin = new Class({
      *
      * @param {Phaser.Loader.File} file - The File that just finished loading, or errored during load.
      * @param {boolean} success - `true` if the file loaded successfully, otherwise `false`.
+     * @param {Event | string} [event] - The Event that resulted from an error, if loading was not successful.
      */
-    nextFile: function (file, success)
+    nextFile: function (file, success, event)
     {
         //  Has the game been destroyed during load? If so, bail out now.
         if (!this.inflight)
@@ -1058,7 +1059,7 @@ var LoaderPlugin = new Class({
 
             this._deleteQueue.set(file);
 
-            this.emit(Events.FILE_LOAD_ERROR, file);
+            this.emit(Events.FILE_LOAD_ERROR, file, event);
 
             this.fileProcessComplete(file);
         }
