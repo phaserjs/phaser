@@ -243,23 +243,33 @@ var File = new Class({
         this.base64 = (typeof url === 'string') && (url.indexOf('data:') === 0);
 
         /**
-         * The counter for the number of times to retry loading this file before it fails.
-         * 
+         * The number of times to retry loading this file if it fails.
+         *
          * You can set this property value in the FileConfig object. If not present,
          * this property is read from the `LoaderPlugin.maxRetries` property when
          * this File instance is created.
-         * 
+         *
          * You can set this value via the Game Config, or you can adjust the `LoaderPlugin` property
          * at any point after the Loader has started. However, it will not apply to files
          * that have already been added to the Loader, only those added after this value
          * is changed.
          *
-         * @name Phaser.Loader.File#retryAttempts
+         * @name Phaser.Loader.File#maxRetries
          * @type {number}
          * @default 2
-         * @since 3.85.0
+         * @since 3.88.0
          */
-        this.retryAttempts = GetFastValue(fileConfig, 'maxRetries', loader.maxRetries);
+        this.maxRetries = GetFastValue(fileConfig, 'maxRetries', loader.maxRetries);
+
+        /**
+         * The counter for the number of times loading has failed and was retried.
+         *
+         * @name Phaser.Loader.File#retries
+         * @type {number}
+         * @default 0
+         * @since 3.88.0
+         */
+        this.retries = 0;
     },
 
     /**
@@ -395,11 +405,13 @@ var File = new Class({
     {
         this.resetXHR();
 
-        if (this.retryAttempts > 0)
+        if (this.retries < this.maxRetries)
         {
-            this.retryAttempts--;
+            var retryDelay = Math.min(Math.pow(2, this.retries) * 100, 5000); // ms
 
-            this.load();
+            this.retries++;
+
+            setTimeout(this.load.bind(this), retryDelay);
         }
         else
         {
