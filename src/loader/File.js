@@ -259,7 +259,7 @@ var File = new Class({
          * @default 2
          * @since 3.88.0
          */
-        this.maxRetries = GetFastValue(fileConfig, 'maxRetries', loader.maxRetries);
+        this.maxRetries = GetFastValue(this.xhrSettings, 'maxRetries', loader.maxRetries);
 
         /**
          * The counter for the number of times loading has failed and was retried.

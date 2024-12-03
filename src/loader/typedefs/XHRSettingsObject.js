@@ -12,5 +12,6 @@
  * @property {(string|undefined)} [headerValue] - This value is used to populate the XHR `setRequestHeader` and is undefined by default.
  * @property {(string|undefined)} [requestedWith] - This value is used to populate the XHR `setRequestHeader` and is undefined by default.
  * @property {(string|undefined)} [overrideMimeType] - Provide a custom mime-type to use instead of the default.
- * @property {boolean} [withCredentials=false] - The withCredentials property indicates whether or not cross-site Access-Control requests should be made using credentials such as cookies, authorization headers or TLS client certificates. Setting withCredentials has no effect on same-site requests.
+ * @property {boolean} [withCredentials=false] - The withCredentials property indicates whether cross-site Access-Control requests should be made using credentials such as cookies, authorization headers or TLS client certificates. Setting withCredentials has no effect on same-site requests.
+ * @property {number} [maxRetries=2] - The number of times to retry the file load if it fails.
  */
