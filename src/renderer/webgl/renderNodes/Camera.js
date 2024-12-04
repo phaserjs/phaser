@@ -75,8 +75,16 @@ var Camera = new Class({
      * @param {Phaser.Cameras.Scene2D.Camera} camera - Current Camera.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - This transform matrix is defined if the game object is nested
      * @param {boolean} [forceFramebuffer=false] - Should the camera always draw to a new framebuffer? This will also be activated if the camera has filters enabled.
+     * @param {number} [renderStep=0] - Which step of the rendering process is this? This is the index of the currently running function in a list of functions.
      */
-    run: function (drawingContext, children, camera, parentTransformMatrix, forceFramebuffer)
+    run: function (
+        drawingContext,
+        children,
+        camera,
+        parentTransformMatrix,
+        forceFramebuffer,
+        renderStep
+    )
     {
         this.onRunBegin(drawingContext);
 
@@ -127,7 +135,7 @@ var Camera = new Class({
         }
 
         // Draw children.
-        this.listCompositorNode.run(currentContext, children, useFramebuffers ? null : parentTransformMatrix);
+        this.listCompositorNode.run(currentContext, children, useFramebuffers ? null : parentTransformMatrix, renderStep);
 
         // Draw camera post effects.
 

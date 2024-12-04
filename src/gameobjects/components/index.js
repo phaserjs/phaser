@@ -25,6 +25,7 @@ module.exports = {
     Origin: require('./Origin'),
     PathFollower: require('./PathFollower'),
     RenderNodes: require('./RenderNodes'),
+    RenderSteps: require('./RenderSteps'),
     ScrollFactor: require('./ScrollFactor'),
     Size: require('./Size'),
     Texture: require('./Texture'),

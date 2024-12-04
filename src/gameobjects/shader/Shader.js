@@ -386,7 +386,7 @@ var Shader = new Class({
         this.renderToTexture = true;
 
         // Render at least once, so our texture isn't blank on the first update
-        this.renderWebGL(renderer, this, this.drawingContext);
+        this.renderWebGLStep(renderer, this, this.drawingContext);
 
         return this;
     },

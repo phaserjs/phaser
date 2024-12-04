@@ -118,7 +118,7 @@ var ContainerWebGLRenderer = function (renderer, container, drawingContext, pare
         child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
 
         //  Render
-        child.renderWebGL(renderer, child, currentContext, transformMatrix, container);
+        child.renderWebGLStep(renderer, child, currentContext, transformMatrix);
 
         //  Restore original values
 

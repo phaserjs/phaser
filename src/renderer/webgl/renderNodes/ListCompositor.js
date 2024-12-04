@@ -37,8 +37,14 @@ var ListCompositor = new Class({
      * @param {Phaser.Renderer.WebGL.DrawingContext} displayContext - The context currently in use.
      * @param {Phaser.GameObjects.GameObject[]} children - The list of children to render.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - This transform matrix is defined if the game object is nested
+     * @param {number} [renderStep=0] - Which step of the rendering process is this? This is the index of the currently running function in a list of functions.
      */
-    run: function (displayContext, children, parentTransformMatrix)
+    run: function (
+        displayContext,
+        children,
+        parentTransformMatrix,
+        renderStep
+    )
     {
         this.onRunBegin(displayContext);
 
@@ -79,7 +85,7 @@ var ListCompositor = new Class({
                 }
             }
 
-            child.renderWebGL(renderer, child, currentContext, parentTransformMatrix);
+            child.renderWebGLStep(renderer, child, currentContext, parentTransformMatrix, renderStep);
         }
 
         // Release any remaining context.

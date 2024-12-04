@@ -307,7 +307,7 @@ var DynamicTextureHandler = new Class({
             currentContext.use();
         }
 
-        object.renderWebGL(renderer, object, currentContext);
+        object.renderWebGLStep(renderer, object, currentContext);
 
         return currentContext;
     }

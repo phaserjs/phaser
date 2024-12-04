@@ -965,7 +965,7 @@ var DynamicTexture = new Class({
         stamp.setTexture(this);
         stamp.setOrigin(0);
 
-        stamp.renderWebGL(renderer, stamp, camera, parentMatrix);
+        stamp.renderWebGLStep(renderer, stamp, camera, parentMatrix);
     },
 
     /**

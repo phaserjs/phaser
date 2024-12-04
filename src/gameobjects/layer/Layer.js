@@ -80,6 +80,7 @@ var Layer = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.Mask,
+        Components.RenderSteps, // This does not extend GameObject so it must mixin RenderSteps here.
         Components.Visible,
         EventEmitter,
         Render
