@@ -1814,12 +1814,12 @@ var World = new Class({
 
         if (object1.isParent && (object1.physicsType === undefined || object2 === undefined || object1 === object2))
         {
-            object1 = object1.children.entries;
+            object1 = Array.from(object1.children);
         }
 
         if (object2 && object2.isParent && object2.physicsType === undefined)
         {
-            object2 = object2.children.entries;
+            object2 = Array.from(object2.children);
         }
 
         var object1isArray = Array.isArray(object1);
