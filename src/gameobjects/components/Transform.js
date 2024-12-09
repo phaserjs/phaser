@@ -540,6 +540,40 @@ var Transform = {
     },
 
     /**
+     * Gets the world position of this Game Object, factoring in any parent Containers.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getWorldPoint
+     * @since 4.0.0
+     *
+     * @param {Phaser.Math.Vector2} [point] - A Vector2, or point-like object, to store the result in.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - A temporary matrix to hold the Game Object's values.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A temporary matrix to hold parent values.
+     *
+     * @return {Phaser.Math.Vector2} The world position of this Game Object.
+     */
+    getWorldPoint: function (point, tempMatrix, parentMatrix)
+    {
+        if (point === undefined) { point = new Vector2(); }
+
+        var parent = this.parentContainer;
+
+        if (!parent)
+        {
+            point.x = this.x;
+            point.y = this.y;
+
+            return point;
+        }
+
+        var worldTransform = this.getWorldTransformMatrix(tempMatrix, parentMatrix);
+
+        point.x = worldTransform.tx;
+        point.y = worldTransform.ty;
+
+        return point;
+    },
+
+    /**
      * Takes the given `x` and `y` coordinates and converts them into local space for this
      * Game Object, taking into account parent and local transforms, and the Display Origin.
      *
