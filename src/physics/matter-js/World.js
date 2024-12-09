@@ -179,7 +179,8 @@ var World = new Class({
             isFixed: GetFastValue(runnerConfig, 'isFixed', false),
             delta: delta,
             deltaMin: deltaMin,
-            deltaMax: deltaMax
+            deltaMax: deltaMax,
+            maxFrameTime: 100
         };
 
         /**
