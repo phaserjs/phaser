@@ -32,7 +32,8 @@ var GameObject = new Class({
     Extends: EventEmitter,
 
     Mixins: [
-        Components.RenderSteps,
+        Components.Filters,
+        Components.RenderSteps
     ],
 
     initialize:
@@ -103,43 +104,6 @@ var GameObject = new Class({
          * @since 3.4.0
          */
         this.parentContainer = null;
-
-        /**
-         * If this GameObject was added to a
-         * {@link Phaser.GameObjects.RenderFilters} object,
-         * causing it to be removed from the display list,
-         * this will contain a reference to the `RenderFilters.filters` object.
-         *
-         * This provides access to the `internal` and `external`
-         * filter lists that are used to manage filters.
-         * See the `filtersWrapper` property for the `RenderFilters` GameObject.
-         *
-         * @example
-         * scene.add.renderFilters(myGameObject);
-         * myGameObject.filters.internal.addBlur();
-         *
-         * @name Phaser.GameObjects.GameObject#filters
-         * @type {{ internal: Phaser.GameObjects.Components.FilterList, external: Phaser.GameObjects.Components.FilterList }}
-         * @default null
-         * @since 4.0.0
-         */
-        this.filters = null;
-
-        /**
-         * If this GameObject was added to a
-         * {@link Phaser.GameObjects.RenderFilters} object,
-         * causing it to be removed from the display list,
-         * this will contain a reference to the `RenderFilters` GameObject.
-         *
-         * This is the GameObject itself.
-         * See the `filters` property for the `FilterList` objects.
-         *
-         * @name Phaser.GameObjects.GameObject#filtersWrapper
-         * @type {Phaser.GameObjects.RenderFilters}
-         * @default null
-         * @since 4.0.0
-         */
-        this.filtersWrapper = null;
 
         /**
          * The name of this Game Object.

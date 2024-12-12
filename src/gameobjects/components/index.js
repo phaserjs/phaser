@@ -18,6 +18,7 @@ module.exports = {
     Depth: require('./Depth'),
     ElapseTimer: require('./ElapseTimer'),
     FilterList: require('./FilterList'),
+    Filters: require('./Filters'),
     Flip: require('./Flip'),
     GetBounds: require('./GetBounds'),
     Lighting: require('./Lighting'),
