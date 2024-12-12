@@ -161,6 +161,18 @@ if (typeof WEBGL_RENDERER)
         filtersFocusContext: false,
 
         /**
+         * Whether the Filters component should always draw to a framebuffer,
+         * even if there are no active filters.
+         *
+         * @name Phaser.GameObjects.Components.Filters#filtersForceComposite
+         * @type {boolean}
+         * @default false
+         * @since 4.0.0
+         * @webglOnly
+         */
+        filtersForceComposite: false,
+
+        /**
          * The origin of the filters.
          * This is derived from the GameObject's origin by default.
          * If the GameObject has no origin, the object bounds or context are used.
@@ -205,7 +217,8 @@ if (typeof WEBGL_RENDERER)
                 this.filters &&
                 (
                     this.filters.internal.getActive().length > 0 ||
-                    this.filters.external.getActive().length > 0
+                    this.filters.external.getActive().length > 0 ||
+                    this.filtersForceComposite
                 );
         },
 
