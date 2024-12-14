@@ -145,15 +145,9 @@ var World = new Class({
 
         var hasFPS = GetFastValue(runnerConfig, 'fps', false);
 
-        var fps = GetFastValue(runnerConfig, 'fps', 60);
-
-        var delta = GetFastValue(runnerConfig, 'delta', 1000 / fps);
-        var deltaMin = GetFastValue(runnerConfig, 'deltaMin', 1000 / fps);
-        var deltaMax = GetFastValue(runnerConfig, 'deltaMax', 1000 / (fps * 0.5));
-
-        if (!hasFPS)
+        if (hasFPS)
         {
-            fps = 1000 / delta;
+            runnerConfig.delta = 1000 / GetFastValue(runnerConfig, 'fps', 60);
         }
 
         /**
@@ -166,21 +160,7 @@ var World = new Class({
          * @type {Phaser.Types.Physics.Matter.MatterRunnerConfig}
          * @since 3.22.0
          */
-        this.runner = {
-            fps: fps,
-            deltaSampleSize: GetFastValue(runnerConfig, 'deltaSampleSize', 60),
-            counterTimestamp: 0,
-            frameCounter: 0,
-            deltaHistory: [],
-            timePrev: null,
-            timeScalePrev: 1,
-            frameRequestId: null,
-            timeBuffer: 0,
-            isFixed: GetFastValue(runnerConfig, 'isFixed', false),
-            delta: delta,
-            deltaMin: deltaMin,
-            deltaMax: deltaMax
-        };
+        this.runner = MatterRunner.create(runnerConfig);
 
         /**
          * Automatically call Engine.update every time the game steps.
