@@ -173,22 +173,6 @@ if (typeof WEBGL_RENDERER)
         filtersForceComposite: false,
 
         /**
-         * The origin of the filters.
-         * This is derived from the GameObject's origin by default.
-         * If the GameObject has no origin, the object bounds or context are used.
-         * It is calculated automatically when the object is rendered.
-         *
-         * This is only available if you use the `enableFilters` method.
-         *
-         * @name Phaser.GameObjects.Components.Filters#_filtersOrigin
-         * @type {Phaser.Math.Vector2}
-         * @private
-         * @since 4.0.0
-         * @webglOnly
-         */
-        _filtersOrigin: null,
-
-        /**
          * A transform matrix used to render the filters.
          *
          * This is only available if you use the `enableFilters` method.
@@ -263,7 +247,6 @@ if (typeof WEBGL_RENDERER)
                 this.maxFilterSize = new Vector2(4096, 4096);
             }
 
-            this._filtersOrigin = new Vector2(0.5, 0.5);
             this._filtersMatrix = new TransformMatrix();
 
             // Check whether the object is poorly bounded, and needs to focus on the context.
@@ -354,10 +337,9 @@ if (typeof WEBGL_RENDERER)
             // Offset origin.
             var width = filterCamera.width;
             var height = filterCamera.height;
-            var origin = gameObject._filtersOrigin;
             transformMatrix.translate(
-                -width * origin.x,
-                -height * origin.y
+                -width * filterCamera.originX,
+                -height * filterCamera.originY
             );
 
             // Apply camera.
@@ -454,15 +436,13 @@ if (typeof WEBGL_RENDERER)
             var filterCamera = this.filterCamera;
             var centerX = width === 0 ? this.x : bounds.centerX;
             var centerY = height === 0 ? this.y : bounds.centerY;
+            var originX = 0.5 + (this.x - centerX) / width;
+            var originY = 0.5 + (this.y - centerY) / height;
 
             filterCamera.centerOn(centerX, centerY)
                 .setRotation(-rotation)
+                .setOrigin(originX, originY)
                 .setZoom(1 / scaleX, 1 / scaleY);
-
-            this._filtersOrigin.set(
-                0.5 + (this.x - centerX) / width,
-                0.5 + (this.y - centerY) / height
-            );
 
             return this;
         },
@@ -517,10 +497,10 @@ if (typeof WEBGL_RENDERER)
             this.setFilterSize(width, height);
             filterCamera.setScroll(objectX - x, objectY - y);
 
-            this._filtersOrigin.set(
-                x / width,
-                y / height
-            );
+            var originX = x / width;
+            var originY = y / height;
+
+            filterCamera.setOrigin(originX, originY);
 
             // Stop automatic focus.
             this.filtersAutoFocus = false;
