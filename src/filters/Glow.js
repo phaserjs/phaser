@@ -223,7 +223,7 @@ var Glow = new Class({
         }
 
         var padding = this.currentPadding;
-        var distance = this.distance * this.scale;
+        var distance = Math.ceil(this.distance * this.scale);
 
         padding.left = -distance;
         padding.top = -distance;

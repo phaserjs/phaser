@@ -117,8 +117,8 @@ var Displacement = new Class({
         }
 
         var camera = this.camera;
-        var x = camera.width * this.x * 0.5;
-        var y = camera.height * this.y * 0.5;
+        var x = Math.ceil(camera.width * this.x * 0.5);
+        var y = Math.ceil(camera.height * this.y * 0.5);
 
         this.currentPadding.setTo(-x, -y, x * 2, y * 2);
 

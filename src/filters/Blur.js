@@ -181,8 +181,8 @@ var Blur = new Class({
             : quality === 1 ? 3.2307692308
                 : 5.176470588235294;
         var offset = this.steps * this.strength * offsetConstant;
-        var x = this.x * offset;
-        var y = this.y * offset;
+        var x = Math.ceil(this.x * offset);
+        var y = Math.ceil(this.y * offset);
 
         this.currentPadding.setTo(-x, -y, x * 2, y * 2);
 

@@ -164,8 +164,8 @@ var Shadow = new Class({
 
         var camera = this.camera;
         var factor = this.decay * this.intensity;
-        var x = Math.abs(this.x) * camera.width * factor;
-        var y = Math.abs(this.y) * camera.height * factor;
+        var x = Math.ceil(Math.abs(this.x) * camera.width * factor);
+        var y = Math.ceil(Math.abs(this.y) * camera.height * factor);
 
         // Never get smaller, only larger.
         this.currentPadding.setTo(-x, -y, x * 2, y * 2);
