@@ -231,14 +231,16 @@ var Camera = new Class({
             {
                 // Draw the framebuffer to the external context.
                 // If there are no external filters, this will be the final draw.
+                var externalX = coverageExternal.x;
+                var externalY = coverageExternal.y;
                 var quad;
                 if (parentTransformMatrix)
                 {
                     parentTransformMatrix.setQuad(
-                        coverageInternal.x - coverageExternal.x,
-                        coverageInternal.y - coverageExternal.y,
-                        coverageInternal.width + coverageInternal.x - coverageExternal.x,
-                        coverageInternal.height + coverageInternal.y - coverageExternal.y
+                        coverageInternal.x,
+                        coverageInternal.y,
+                        coverageInternal.width,
+                        coverageInternal.height
                     );
                     quad = parentTransformMatrix.quad;
                 }
@@ -270,10 +272,10 @@ var Camera = new Class({
                     outputContext.texture,
 
                     // Transformed quad in order TL, BL, TR, BR:
-                    quad[0], quad[1],
-                    quad[2], quad[3],
-                    quad[6], quad[7],
-                    quad[4], quad[5],
+                    quad[0] - externalX, quad[1] - externalY,
+                    quad[2] - externalX, quad[3] - externalY,
+                    quad[6] - externalX, quad[7] - externalY,
+                    quad[4] - externalX, quad[5] - externalY,
 
                     // Texture coordinates in X, Y, Width, Height:
                     0, 0, 1, 1,
