@@ -25,7 +25,7 @@ var Threshold = require('../../filters/Threshold');
  *
  * Filters can apply special effects and masks.
  * They are only available in WebGL.
- * Use {@link Phaser.GameObjects.RenderFilters} to apply them to Game Objects.
+ * Use `gameObject.enableFilters()` to apply them to Game Objects.
  *
  * Filters include the following:
  *
@@ -57,7 +57,7 @@ var Threshold = require('../../filters/Threshold');
  *   again applying effects and expanding where necessary.
  * 5. The final texture draws the filtered camera contents to the context.
  *
- * For example, consider a RenderFilters game object which is rotated 45 degrees.
+ * For example, consider a game object which is rotated 45 degrees.
  * Apply a horizontal blur filter.
  * If the filter is internal, the blur will appear at 45 degrees,
  * because it is applied before the object is rotated.

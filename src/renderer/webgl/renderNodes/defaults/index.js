@@ -16,7 +16,6 @@ var Defaults = {
     DefaultNineSliceNodes: require('./DefaultNineSliceNodes'),
     DefaultParticleEmitterNodes: require('./DefaultParticleEmitterNodes'),
     DefaultPointLightNodes: require('./DefaultPointLightNodes'),
-    DefaultRenderFiltersNodes: require('./DefaultRenderFiltersNodes'),
     DefaultRopeNodes: require('./DefaultRopeNodes'),
     DefaultStampNodes: require('./DefaultStampNodes'),
     DefaultTilemapGPULayerNodes: require('./DefaultTilemapGPULayerNodes'),

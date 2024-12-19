@@ -365,7 +365,7 @@ if (typeof WEBGL_RENDERER)
             //  Multiply the camera by the transform, store result in transformMatrix
             cameraMatrix.multiply(transformMatrix, transformMatrix);
 
-            // Now we have the transform of the RenderFilters object.
+            // Now we have the transform for the game object.
             // Render game object to framebuffer.
             renderer.cameraRenderNode.run(
                 drawingContext,
