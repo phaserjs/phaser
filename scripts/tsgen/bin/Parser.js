@@ -62,6 +62,7 @@ class Parser {
                 case 'Phaser.GameObjects.Components.Crop':
                 case 'Phaser.GameObjects.Components.Depth':
                 case 'Phaser.GameObjects.Components.ElapseTimer':
+                case 'Phaser.GameObjects.Components.Filters':
                 case 'Phaser.GameObjects.Components.Flip':
                 case 'Phaser.GameObjects.Components.GetBounds':
                 case 'Phaser.GameObjects.Components.Lighting':
