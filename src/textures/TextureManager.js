@@ -383,6 +383,11 @@ var TextureManager = new Class({
             {
                 var texture = _this.create(key, image);
 
+                if (!texture)
+                {
+                    return;
+                }
+
                 Parser.Image(texture, 0);
 
                 _this.emit(Events.ADD, key, texture);
