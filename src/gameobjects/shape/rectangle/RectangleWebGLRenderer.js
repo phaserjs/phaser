@@ -33,8 +33,8 @@ var RectangleWebGLRenderer = function (renderer, src, drawingContext, parentMatr
     var dy = src._displayOriginY;
     var alpha = src.alpha;
 
-    var customRenderNodes = this.customRenderNodes;
-    var defaultRenderNodes = this.defaultRenderNodes;
+    var customRenderNodes = src.customRenderNodes;
+    var defaultRenderNodes = src.defaultRenderNodes;
     var submitter = customRenderNodes.Submitter || defaultRenderNodes.Submitter;
 
     if (src.isFilled)
