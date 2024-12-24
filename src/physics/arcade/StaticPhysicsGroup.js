@@ -209,7 +209,7 @@ var StaticPhysicsGroup = new Class({
      */
     refresh: function ()
     {
-        var children = this.children.entries;
+        var children = Array.from(this.children);
 
         for (var i = 0; i < children.length; i++)
         {
