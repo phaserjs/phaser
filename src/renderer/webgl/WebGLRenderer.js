@@ -419,7 +419,7 @@ var WebGLRenderer = new Class({
         /**
          * If the browser supports the `ANGLE_instanced_arrays` extension, this property will hold
          * a reference to the glExtension for it.
-         * 
+         *
          * This is populated in the `setExtensions` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#instancedArraysExtension
@@ -432,7 +432,7 @@ var WebGLRenderer = new Class({
         /**
          * If the browser supports the `OES_vertex_array_object` extension, this property will hold
          * a reference to the glExtension for it.
-         * 
+         *
          * This is populated in the `setExtensions` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#vaoExtension
@@ -853,6 +853,7 @@ var WebGLRenderer = new Class({
         gl.enable(gl.BLEND);
 
         gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, clearColor.alphaGL);
+        gl.clear(gl.COLOR_BUFFER_BIT);
 
         //  Mipmaps
         var validMipMaps = [ 'NEAREST', 'LINEAR', 'NEAREST_MIPMAP_NEAREST', 'LINEAR_MIPMAP_NEAREST', 'NEAREST_MIPMAP_LINEAR', 'LINEAR_MIPMAP_LINEAR' ];
@@ -931,11 +932,11 @@ var WebGLRenderer = new Class({
 
     /**
      * Queries the GL context to get the supported extensions.
-     * 
+     *
      * Then sets them into the `supportedExtensions`, `instancedArraysExtension` and `vaoExtension` properties.
-     * 
+     *
      * Called automatically during the `init` method.
-     * 
+     *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setExtensions
      * @since 3.85.2
      */
@@ -958,14 +959,14 @@ var WebGLRenderer = new Class({
 
     /**
      * Sets the handlers that are called when WebGL context is lost or restored by the browser.
-     * 
+     *
      * The default handlers are referenced via the properties `WebGLRenderer.contextLostHandler` and `WebGLRenderer.contextRestoredHandler`.
      * By default, these map to the methods `WebGLRenderer.dispatchContextLost` and `WebGLRenderer.dispatchContextRestored`.
-     * 
+     *
      * You can override these handlers with your own via this method.
-     * 
+     *
      * If you do override them, make sure that your handlers invoke the methods `WebGLRenderer.dispatchContextLost` and `WebGLRenderer.dispatchContextRestored` in due course, otherwise the renderer will not be able to restore itself fully.
-     * 
+     *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setContextHandlers
      * @since 3.85.0
      *
@@ -982,7 +983,7 @@ var WebGLRenderer = new Class({
         {
             this.canvas.removeEventListener('webglcontextlost', this.previousContextRestoredHandler, false);
         }
-        
+
         if (typeof contextLost === 'function')
         {
             this.contextLostHandler = contextLost.bind(this);
@@ -1014,7 +1015,7 @@ var WebGLRenderer = new Class({
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#dispatchContextLost
      * @since 3.85.0
-     * 
+     *
      * @param {WebGLContextEvent } event - The WebGL context lost Event.
      */
     dispatchContextLost: function (event)
@@ -1037,7 +1038,7 @@ var WebGLRenderer = new Class({
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#dispatchContextRestored
      * @since 3.85.0
-     * 
+     *
      * @param {WebGLContextEvent } event - The WebGL context restored Event.
      */
     dispatchContextRestored: function (event)
@@ -1111,10 +1112,10 @@ var WebGLRenderer = new Class({
 
         event.preventDefault();
     },
-    
+
     /**
      * Create temporary WebGL textures to stop WebGL errors on macOS.
-     * 
+     *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createTemporaryTextures
      * @since 3.60.0
      */
