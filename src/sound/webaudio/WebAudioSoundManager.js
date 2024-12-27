@@ -322,7 +322,6 @@ var WebAudioSoundManager = new Class({
                     bodyRemove('touchend', unlockHandler);
                     bodyRemove('mousedown', unlockHandler);
                     bodyRemove('mouseup', unlockHandler);
-                    bodyRemove('click', unlockHandler);
                     bodyRemove('keydown', unlockHandler);
 
                     _this.unlocked = true;
@@ -333,7 +332,6 @@ var WebAudioSoundManager = new Class({
                     bodyRemove('touchend', unlockHandler);
                     bodyRemove('mousedown', unlockHandler);
                     bodyRemove('mouseup', unlockHandler);
-                    bodyRemove('click', unlockHandler);
                     bodyRemove('keydown', unlockHandler);
                 });
             }
@@ -345,7 +343,6 @@ var WebAudioSoundManager = new Class({
             body.addEventListener('touchend', unlockHandler, false);
             body.addEventListener('mousedown', unlockHandler, false);
             body.addEventListener('mouseup', unlockHandler, false);
-            body.addEventListener('click', unlockHandler, false);
             body.addEventListener('keydown', unlockHandler, false);
         }
     },
