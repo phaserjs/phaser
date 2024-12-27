@@ -81,13 +81,16 @@ var WebAudioSoundManager = new Class({
 
         BaseSoundManager.call(this, game);
 
-        if (this.locked && game.isBooted)
+        if (this.locked)
         {
-            this.unlock();
-        }
-        else
-        {
-            game.events.once(GameEvents.BOOT, this.unlock, this);
+            if (game.isBooted)
+            {
+                this.unlock();
+            }
+            else
+            {
+                game.events.once(GameEvents.BOOT, this.unlock, this);
+            }
         }
     },
 
