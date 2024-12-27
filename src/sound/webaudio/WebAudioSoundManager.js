@@ -77,7 +77,7 @@ var WebAudioSoundManager = new Class({
          */
         this.destination = this.masterMuteNode;
 
-        this.locked = this.context.state === 'suspended' && ('ontouchstart' in window || 'onclick' in window);
+        this.locked = this.context.state === 'suspended';
 
         BaseSoundManager.call(this, game);
 
