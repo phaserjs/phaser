@@ -9,6 +9,7 @@ var Defaults = require('../tween/Defaults');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetBoolean = require('./GetBoolean');
 var GetEaseFunction = require('./GetEaseFunction');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var GetInterpolationFunction = require('./GetInterpolationFunction');
 var GetNewValue = require('./GetNewValue');
 var GetProps = require('./GetProps');
@@ -60,17 +61,17 @@ var TweenBuilder = function (parent, config, defaults)
 
     //  Default Tween values
 
-    var delay = GetValue(config, 'delay', defaults.delay);
-    var duration = GetValue(config, 'duration', defaults.duration);
-    var easeParams = GetValue(config, 'easeParams', defaults.easeParams);
-    var ease = GetValue(config, 'ease', defaults.ease);
-    var hold = GetValue(config, 'hold', defaults.hold);
-    var repeat = GetValue(config, 'repeat', defaults.repeat);
-    var repeatDelay = GetValue(config, 'repeatDelay', defaults.repeatDelay);
+    var delay = GetFastValue(config, 'delay', defaults.delay);
+    var duration = GetFastValue(config, 'duration', defaults.duration);
+    var easeParams = GetFastValue(config, 'easeParams', defaults.easeParams);
+    var ease = GetFastValue(config, 'ease', defaults.ease);
+    var hold = GetFastValue(config, 'hold', defaults.hold);
+    var repeat = GetFastValue(config, 'repeat', defaults.repeat);
+    var repeatDelay = GetFastValue(config, 'repeatDelay', defaults.repeatDelay);
     var yoyo = GetBoolean(config, 'yoyo', defaults.yoyo);
     var flipX = GetBoolean(config, 'flipX', defaults.flipX);
     var flipY = GetBoolean(config, 'flipY', defaults.flipY);
-    var interpolation = GetValue(config, 'interpolation', defaults.interpolation);
+    var interpolation = GetFastValue(config, 'interpolation', defaults.interpolation);
 
     var addTarget = function (tween, targetIndex, key, value)
     {
@@ -108,10 +109,10 @@ var TweenBuilder = function (parent, config, defaults)
                 texture,
                 frame,
                 GetNewValue(value, 'delay', delay),
-                GetValue(value, 'duration', duration),
-                GetValue(value, 'hold', hold),
-                GetValue(value, 'repeat', repeat),
-                GetValue(value, 'repeatDelay', repeatDelay),
+                GetFastValue(value, 'duration', duration),
+                GetFastValue(value, 'hold', hold),
+                GetFastValue(value, 'repeat', repeat),
+                GetFastValue(value, 'repeatDelay', repeatDelay),
                 GetBoolean(value, 'flipX', flipX),
                 GetBoolean(value, 'flipY', flipY)
             );
@@ -120,7 +121,7 @@ var TweenBuilder = function (parent, config, defaults)
         {
             var ops = GetValueOp(key, value);
 
-            var interpolationFunc = GetInterpolationFunction(GetValue(value, 'interpolation', interpolation));
+            var interpolationFunc = GetInterpolationFunction(GetFastValue(value, 'interpolation', interpolation));
 
             tween.add(
                 targetIndex,
@@ -128,13 +129,13 @@ var TweenBuilder = function (parent, config, defaults)
                 ops.getEnd,
                 ops.getStart,
                 ops.getActive,
-                GetEaseFunction(GetValue(value, 'ease', ease), GetValue(value, 'easeParams', easeParams)),
+                GetEaseFunction(GetFastValue(value, 'ease', ease), GetFastValue(value, 'easeParams', easeParams)),
                 GetNewValue(value, 'delay', delay),
-                GetValue(value, 'duration', duration),
+                GetFastValue(value, 'duration', duration),
                 GetBoolean(value, 'yoyo', yoyo),
-                GetValue(value, 'hold', hold),
-                GetValue(value, 'repeat', repeat),
-                GetValue(value, 'repeatDelay', repeatDelay),
+                GetFastValue(value, 'hold', hold),
+                GetFastValue(value, 'repeat', repeat),
+                GetFastValue(value, 'repeatDelay', repeatDelay),
                 GetBoolean(value, 'flipX', flipX),
                 GetBoolean(value, 'flipY', flipY),
                 interpolationFunc,
@@ -174,7 +175,7 @@ var TweenBuilder = function (parent, config, defaults)
     tween.persist = GetBoolean(config, 'persist', false);
 
     //  Set the Callbacks
-    tween.callbackScope = GetValue(config, 'callbackScope', tween);
+    tween.callbackScope = GetFastValue(config, 'callbackScope', tween);
 
     var callbacks = BaseTween.TYPES;
 
