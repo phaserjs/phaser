@@ -5,6 +5,7 @@
 ## Updates
 
 * `Tween.isNumberTween` is a new boolean property that tells if the Tween is a NumberTween, or not.
+* The `TransformMatrix.setTransform` method has been updated so that it uses the old way of passing in matrix values for Canvas 2D. This fixes the error "Failed to execute 'setTransform' on 'CanvasRenderingContext2D': 6 arguments required, but only 1 present." in old legacy browsers such as Chromium Embedded Framework. Fix #6965 (thanks @rafa-fie)
 
 ## Bug Fixes
 
