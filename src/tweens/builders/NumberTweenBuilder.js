@@ -93,6 +93,7 @@ var NumberTweenBuilder = function (parent, config, defaults)
     tween.loopDelay = Math.round(GetAdvancedValue(config, 'loopDelay', 0));
     tween.paused = GetBoolean(config, 'paused', false);
     tween.persist = GetBoolean(config, 'persist', false);
+    tween.isNumberTween = true;
 
     //  Set the Callbacks
     tween.callbackScope = GetValue(config, 'callbackScope', tween);
