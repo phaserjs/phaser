@@ -154,6 +154,16 @@ var Tween = new Class({
          * @since 3.60.0
          */
         this.totalProgress = 0;
+
+        /**
+         * Is this Tween a Number Tween? Number Tweens are a special kind of tween that don't have a target.
+         *
+         * @name Phaser.Tweens.Tween#isNumberTween
+         * @type {boolean}
+         * @default false
+         * @since 3.88.0
+         */
+        this.isNumberTween = false;
     },
 
     /**
