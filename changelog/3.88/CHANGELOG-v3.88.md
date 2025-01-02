@@ -4,7 +4,11 @@
 
 ## Updates
 
+* `Tween.isNumberTween` is a new boolean property that tells if the Tween is a NumberTween, or not.
+
 ## Bug Fixes
+
+* `TweenData.update` will now check if the Tween is a Number Tween and apply the final start/end value to the result on completion, instead of the eased value as calculated by the change made in v3.87.
 
 ## Examples, Documentation, Beta Testing and TypeScript
 

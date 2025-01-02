@@ -6,6 +6,7 @@ Please select a version to read that specific change log:
 
 | Version | Name | Release Date |
 | ------- | ---- | ------------ |
+| [3.88](changelog/3.88/CHANGELOG-v3.88.md) | Minami | in development |
 | [3.87](changelog/3.87/CHANGELOG-v3.87.md) | Hanabi | 14th November 2024 |
 | [3.86](changelog/3.86/CHANGELOG-v3.86.md) | Aoi | 11th October 2024 |
 | [3.85.2](changelog/3.85.2/CHANGELOG-v3.85.2.md) | Itsuki | 17th September 2024 |
