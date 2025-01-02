@@ -327,6 +327,12 @@ var TweenData = new Class({
             {
                 if (forward)
                 {
+                    if (tween.isNumberTween)
+                    {
+                        this.current = this.end;
+                        target[key] = this.current;
+                    }
+
                     if (this.hold > 0)
                     {
                         this.elapsed = this.hold;
@@ -340,6 +346,12 @@ var TweenData = new Class({
                 }
                 else
                 {
+                    if (tween.isNumberTween)
+                    {
+                        this.current = this.start;
+                        target[key] = this.current;
+                    }
+
                     this.setStateFromStart(diff);
                 }
             }
