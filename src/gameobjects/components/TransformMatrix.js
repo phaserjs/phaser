@@ -707,7 +707,8 @@ var TransformMatrix = new Class({
      */
     setToContext: function (ctx)
     {
-        ctx.setTransform(this);
+        // using old way for old browser compatibility #6965
+        ctx.setTransform(this.a, this.b, this.c, this.d, this.e, this.f);
 
         return ctx;
     },
