@@ -520,9 +520,13 @@ var Transform = {
             return this.getLocalTransformMatrix(tempMatrix);
         }
 
+        var destroyParentMatrix = false;
+
         if (!parentMatrix)
         {
             parentMatrix = new TransformMatrix();
+
+            destroyParentMatrix = true;
         }
 
         tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
@@ -534,6 +538,11 @@ var Transform = {
             parentMatrix.multiply(tempMatrix, tempMatrix);
 
             parent = parent.parentContainer;
+        }
+
+        if (destroyParentMatrix)
+        {
+            parentMatrix.destroy();
         }
 
         return tempMatrix;
@@ -585,6 +594,40 @@ var Transform = {
             point.x += this._displayOriginX;
             point.y += this._displayOriginY;
         }
+
+        return point;
+    },
+
+    /**
+     * Gets the world position of this Game Object, factoring in any parent Containers.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getWorldPoint
+     * @since 3.88.0
+     *
+     * @param {Phaser.Math.Vector2} [point] - A Vector2, or point-like object, to store the result in.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - A temporary matrix to hold the Game Object's values.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A temporary matrix to hold parent values.
+     *
+     * @return {Phaser.Math.Vector2} The world position of this Game Object.
+     */
+    getWorldPoint: function (point, tempMatrix, parentMatrix)
+    {
+        if (point === undefined) { point = new Vector2(); }
+
+        var parent = this.parentContainer;
+
+        if (!parent)
+        {
+            point.x = this.x;
+            point.y = this.y;
+
+            return point;
+        }
+
+        var worldTransform = this.getWorldTransformMatrix(tempMatrix, parentMatrix);
+
+        point.x = worldTransform.tx;
+        point.y = worldTransform.ty;
 
         return point;
     },
