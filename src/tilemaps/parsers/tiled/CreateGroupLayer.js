@@ -1,6 +1,6 @@
 /**
  * @author       Seth Berrier <berriers@uwstout.edu>
- * @copyright    2013-2024 Phaser Studio Inc.
+ * @copyright    2013-2025 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
