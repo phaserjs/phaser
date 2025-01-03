@@ -19,6 +19,7 @@
 * `TweenData.update` will now check if the Tween is a Number Tween and apply the final start/end value to the result on completion, instead of the eased value as calculated by the change made in v3.87.
 * `BaseTweenData.duration` can now never be zero or less than zero, which would trigger NaN errors. It's now clamped to a minimum of 0.01ms. Fix #6955 (thanks @kainage)
 * Fixed the properties in the `FontFileConfig` (thanks @samme)
+* `Matter.World.update` could hang and crash the browser if a large delta value was given to it, such as returning to a long-dormant tab. The Matter Runner config values are now properly passed through, preventing this from happening. Fix #6977 (thanks @ubershmekel @samme)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
