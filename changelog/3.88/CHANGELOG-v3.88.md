@@ -2,6 +2,8 @@
 
 ## New Features
 
+* `Transform.getWorldPoint` is a new method that will return the World point as a Vector2 of a Game Object, factoring in parents if applicable (thanks @samme)
+
 ## Updates
 
 * `Tween.isNumberTween` is a new boolean property that tells if the Tween is a NumberTween, or not.
@@ -10,6 +12,7 @@
 * In both the Canvas and WebGL Renderer the background color, as set in the game config, is applied directly to the canvas immediately upon creation, rather than at the first render step. This may avoid some 'flashes' of color in certain circumstances (thanks @pavle-goloskokovic)
 * The Texture Manager will now fail gracefully when a texture isn't created as a result of calling the `addBase64` method. Rather than the error "TypeError: null is not an object (evaluating 'texture.source')" is will not return early (thanks @samme)
 * Both `TweenBuilder` and `NumberTweenBuilder` have been updated to use `GetFastValue` for most properties instead of `GetValue`.
+* The `Transform.getWorldTransformMatrix` method will now destroy the parent matrix at the end, if it was created within the method.
 
 ## Bug Fixes
 
