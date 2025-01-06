@@ -111,6 +111,8 @@ var ParseTileLayers = function (json, insertNull)
         var gidInfo;
         var tile;
         var blankTile;
+        var triangleHeight;
+        var triangleWidth;
 
         var output = [];
         var x = 0;
@@ -140,6 +142,19 @@ var ParseTileLayers = function (json, insertNull)
                 layerData.hexSideLength = json.hexsidelength;
                 layerData.staggerAxis = json.staggeraxis;
                 layerData.staggerIndex = json.staggerindex;
+
+                if (layerData.staggerAxis === 'y')
+                {
+                    triangleHeight = (layerData.tileHeight - layerData.hexSideLength) / 2;
+                    layerData.widthInPixels = layerData.tileWidth * (layerData.width + 0.5);
+                    layerData.heightInPixels = layerData.height * (layerData.hexSideLength + triangleHeight) + triangleHeight;
+                }
+                else
+                {
+                    triangleWidth = (layerData.tileWidth - layerData.hexSideLength) / 2;
+                    layerData.widthInPixels = layerData.width * (layerData.hexSideLength + triangleWidth) + triangleWidth;
+                    layerData.heightInPixels = layerData.tileHeight * (layerData.height + 0.5);
+                }
             }
 
             for (var c = 0; c < curl.height; c++)
@@ -221,6 +236,19 @@ var ParseTileLayers = function (json, insertNull)
                 layerData.hexSideLength = json.hexsidelength;
                 layerData.staggerAxis = json.staggeraxis;
                 layerData.staggerIndex = json.staggerindex;
+
+                if (layerData.staggerAxis === 'y')
+                {
+                    triangleHeight = (layerData.tileHeight - layerData.hexSideLength) / 2;
+                    layerData.widthInPixels = layerData.tileWidth * (layerData.width + 0.5);
+                    layerData.heightInPixels = layerData.height * (layerData.hexSideLength + triangleHeight) + triangleHeight;
+                }
+                else
+                {
+                    triangleWidth = (layerData.tileWidth - layerData.hexSideLength) / 2;
+                    layerData.widthInPixels = layerData.width * (layerData.hexSideLength + triangleWidth) + triangleWidth;
+                    layerData.heightInPixels = layerData.tileHeight * (layerData.height + 0.5);
+                }
             }
             var row = [];
 

@@ -57,6 +57,19 @@ var ParseJSONTiled = function (name, source, insertNull)
         mapData.hexSideLength = json.hexsidelength;
         mapData.staggerAxis = json.staggeraxis;
         mapData.staggerIndex = json.staggerindex;
+
+        if (mapData.staggerAxis === 'y')
+        {
+            var triangleHeight = (mapData.tileHeight - mapData.hexSideLength) / 2;
+            mapData.widthInPixels = mapData.tileWidth * (mapData.width + 0.5);
+            mapData.heightInPixels = mapData.height * (mapData.hexSideLength + triangleHeight) + triangleHeight;
+        }
+        else
+        {
+            var triangleWidth = (mapData.tileWidth - mapData.hexSideLength) / 2;
+            mapData.widthInPixels = mapData.width * (mapData.hexSideLength + triangleWidth) + triangleWidth;
+            mapData.heightInPixels = mapData.tileHeight * (mapData.height + 0.5);
+        }
     }
 
     mapData.layers = ParseTileLayers(json, insertNull);
