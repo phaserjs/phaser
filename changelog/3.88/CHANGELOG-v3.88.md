@@ -13,6 +13,7 @@
 * The Texture Manager will now fail gracefully when a texture isn't created as a result of calling the `addBase64` method. Rather than the error "TypeError: null is not an object (evaluating 'texture.source')" is will not return early (thanks @samme)
 * Both `TweenBuilder` and `NumberTweenBuilder` have been updated to use `GetFastValue` for most properties instead of `GetValue`.
 * The `Transform.getWorldTransformMatrix` method will now destroy the parent matrix at the end, if it was created within the method.
+* The Arcade Physics `Body.setGameObject` and `StaticBody.setGameObject` methods have been updated to do the following: Return if no valid Game Object is passed. Disable and null the body of the existing Game Object if the Body has one. Set the `body` property, even if it doesn't exist (converts non-physics objects into physics objects). Calls `setSize` to update the body dimensions to make the new Game Object and finally sets `enable` based on the given parameter, which is now correctly referenced. The StaticBody version also has a new parameter, `enable` which matches that of the Dynamic Body and defaults to `true` (the original state). Fix #6969 (thanks @yongzheng7)
 
 ## Bug Fixes
 
