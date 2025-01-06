@@ -1641,7 +1641,8 @@ var World = new Class({
 
                 body1.updateCenter();
             }
-            else if (!body2Immovable || body2.pushable || deadlock)
+            
+            if (!body2Immovable || body2.pushable || deadlock)
             {
                 body2.x += overlapX;
                 body2.y += overlapY;
@@ -1664,7 +1665,8 @@ var World = new Class({
 
                 body1.updateCenter();
             }
-            else if (!body2Immovable || body2.pushable || deadlock)
+
+            if (!body2Immovable || body2.pushable || deadlock)
             {
                 body2.x += overlapX;
                 body2.y += overlapY;
