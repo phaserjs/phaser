@@ -5,6 +5,7 @@
  */
 
 var Linear = require('../../math/Linear');
+var GetColor = require('./GetColor');
 
 /**
  * @namespace Phaser.Display.Color.Interpolate
@@ -37,11 +38,16 @@ var RGBWithRGB = function (r1, g1, b1, r2, g2, b2, length, index)
     if (index === undefined) { index = 0; }
 
     var t = index / length;
+    var r = Linear(r1, r2, t);
+    var g = Linear(g1, g2, t);
+    var b = Linear(b1, b2, t);
 
     return {
-        r: Linear(r1, r2, t),
-        g: Linear(g1, g2, t),
-        b: Linear(b1, b2, t)
+        r: r,
+        g: g,
+        b: b,
+        a: 255,
+        color: GetColor(r, g, b)
     };
 };
 
