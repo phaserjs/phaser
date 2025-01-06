@@ -20,6 +20,9 @@
 * `BaseTweenData.duration` can now never be zero or less than zero, which would trigger NaN errors. It's now clamped to a minimum of 0.01ms. Fix #6955 (thanks @kainage)
 * Fixed the properties in the `FontFileConfig` (thanks @samme)
 * `Matter.World.update` could hang and crash the browser if a large delta value was given to it, such as returning to a long-dormant tab. The Matter Runner config values are now properly passed through, preventing this from happening. Fix #6977 (thanks @ubershmekel @samme)
+* `Phaser.Textures.Frame.setCropUVs` updated crop calculation to include the `spriteSourceSize`. Fix #6996 (thanks @CrispMind)
+* `Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled` updated hexagonal tilemaps to correctly calculate the `widthInPixels` and `heightInPixels` based on the hexagonal overlapping tiles. Fix #6992 (thanks @ptantiku)
+* `Phaser.Display.Color.Interpolate.RGBWithRGB` now correctly returns a `Phaser.Types.Display.ColorObject` that includes `r`, `g`, `b`, `a` and `color` values. Fix #6979 (thanks @XWILKINX)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
