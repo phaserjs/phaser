@@ -14,6 +14,7 @@
 * Both `TweenBuilder` and `NumberTweenBuilder` have been updated to use `GetFastValue` for most properties instead of `GetValue`.
 * The `Transform.getWorldTransformMatrix` method will now destroy the parent matrix at the end, if it was created within the method.
 * The Arcade Physics `Body.setGameObject` and `StaticBody.setGameObject` methods have been updated to do the following: Return if no valid Game Object is passed. Disable and null the body of the existing Game Object if the Body has one. Set the `body` property, even if it doesn't exist (converts non-physics objects into physics objects). Calls `setSize` to update the body dimensions to make the new Game Object and finally sets `enable` based on the given parameter, which is now correctly referenced. The StaticBody version also has a new parameter, `enable` which matches that of the Dynamic Body and defaults to `true` (the original state). Fix #6969 (thanks @yongzheng7)
+* The Arcade Physics `Phaser.Types.Physics.Arcade.ArcadeColliderType` has been updated to include `Phaser.Physics.Arcade.StaticBody`. Fix #6967 (thanks @yongzheng7)
 
 ## Bug Fixes
 
