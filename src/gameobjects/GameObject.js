@@ -212,6 +212,12 @@ var GameObject = new Class({
          */
         this.ignoreDestroy = false;
 
+        // Initialize RenderSteps mixin.
+        if (this.addRenderStep)
+        {
+            this.addRenderStep(this.renderWebGL);
+        }
+
         this.on(Events.ADDED_TO_SCENE, this.addedToScene, this);
         this.on(Events.REMOVED_FROM_SCENE, this.removedFromScene, this);
 
