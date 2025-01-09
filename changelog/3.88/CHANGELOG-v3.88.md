@@ -26,6 +26,7 @@
 * `Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled` updated hexagonal tilemaps to correctly calculate the `widthInPixels` and `heightInPixels` based on the hexagonal overlapping tiles. Fix #6992 (thanks @ptantiku)
 * `Phaser.Display.Color.Interpolate.RGBWithRGB` now correctly returns a `Phaser.Types.Display.ColorObject` that includes `r`, `g`, `b`, `a` and `color` values. Fix #6979 (thanks @XWILKINX)
 * Fixed incorrect Arcade Physics circle separation logic for circle to circle, and circle to rectangle collisions. The logic was incorrectly moving only one body, even if both could be moved. Fix #6963 (thanks @samme)
+* `Phaser.Plugins.PluginManager` automatically boots plugins when the game config render type is set to `Phaser.HEADLESS`. Fix #6893 (thanks @hubertgrzeskowiak)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
