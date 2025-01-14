@@ -17,6 +17,7 @@ jobs:
     steps:
       - uses: dessant/lock-threads@v5
         with:
+          owner: ${{ github.repository_owner }}
           github-token: ${{ github.token }}
           issue-inactive-days: '180'
           issue-lock-reason: 'resolved'
