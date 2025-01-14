@@ -21,4 +21,5 @@ jobs:
           github-token: ${{ github.token }}
           issue-inactive-days: '180'
           issue-lock-reason: 'resolved'
-          log-output: false
+          process-only: 'issues'
+          log-output: true
