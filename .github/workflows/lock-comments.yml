@@ -15,7 +15,7 @@ jobs:
   action:
     runs-on: ubuntu-latest
     steps:
-      - uses: zekeatchan/lock-threads
+      - uses: zekeatchan/lock-threads@0.1
         with:
           owner: ${{ github.repository_owner }}
           github-token: ${{ github.token }}
