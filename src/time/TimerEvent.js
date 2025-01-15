@@ -188,7 +188,7 @@ var TimerEvent = new Class({
         this.hasDispatched = false;
         this.repeatCount = (this.repeat === -1 || this.loop) ? 999999999999 : this.repeat;
 
-        if (this.delay === 0 && (this.repeat > 0 || this.loop))
+        if (this.delay <= 0 && this.repeatCount > 0)
         {
             throw new Error('TimerEvent infinite loop created via zero delay');
         }

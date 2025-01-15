@@ -197,6 +197,11 @@ var Clock = new Class({
             event.elapsed = event.startAt;
             event.hasDispatched = false;
             event.repeatCount = (event.repeat === -1 || event.loop) ? 999999999999 : event.repeat;
+
+            if (event.delay <= 0 && event.repeatCount > 0)
+            {
+                throw new Error('TimerEvent infinite loop created via zero delay');
+            }
         }
         else
         {
