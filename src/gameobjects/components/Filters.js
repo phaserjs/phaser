@@ -395,6 +395,10 @@ if (typeof WEBGL_RENDERER)
          */
         focusFilters: function (camera)
         {
+            // We must set the position to 0,0, or the bounds will be off.
+            // This is due to a floating point precision issue.
+            var posX = this.x;
+            var posY = this.y;
             var rotation = this.rotation;
             var scaleX = this.scaleX;
             var scaleY = this.scaleY;
@@ -402,11 +406,17 @@ if (typeof WEBGL_RENDERER)
             if (!camera && this.getBounds)
             {
                 // Temporarily reorient the object to get axis-aligned bounds.
-                this.setRotation(0).setScale(1);
+                this
+                    .setPosition(0, 0)
+                    .setRotation(0)
+                    .setScale(1);
 
                 var bounds = this.getBounds();
 
-                this.setScale(scaleX, scaleY).setRotation(rotation);
+                this
+                    .setScale(scaleX, scaleY)
+                    .setRotation(rotation)
+                    .setPosition(posX, posY);
 
                 if (bounds.width === 0 || bounds.height === 0)
                 {
@@ -434,8 +444,8 @@ if (typeof WEBGL_RENDERER)
 
             // Set the filter camera to match the object.
             var filterCamera = this.filterCamera;
-            var centerX = width === 0 ? this.x : bounds.centerX;
-            var centerY = height === 0 ? this.y : bounds.centerY;
+            var centerX = width === 0 ? this.x : bounds.centerX + posX;
+            var centerY = height === 0 ? this.y : bounds.centerY + posY;
             var originX = 0.5 + (this.x - centerX) / width;
             var originY = 0.5 + (this.y - centerY) / height;
 
