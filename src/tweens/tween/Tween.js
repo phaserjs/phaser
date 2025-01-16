@@ -799,6 +799,11 @@ var Tween = new Class({
         {
             this.emit(event, this, this.targets);
 
+            if (!this.callbacks)
+            {
+                return;
+            }
+
             var handler = this.callbacks[callback];
 
             if (handler)
