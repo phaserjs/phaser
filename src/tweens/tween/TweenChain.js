@@ -407,15 +407,28 @@ var TweenChain = new Class({
         if (this.isLoopDelayed())
         {
             this.updateLoopCountdown(delta);
+
+            return false;
         }
         else if (this.isCompleteDelayed())
         {
             this.updateCompleteDelay(delta);
+
+            return false;
         }
-        else if (this.isStartDelayed())
+        else if (!this.hasStarted)
         {
-            //  Reset the delta so we always start progress from zero
-            delta = this.updateStartCountdown(delta);
+            this.startDelay -= delta;
+
+            if (this.startDelay <= 0)
+            {
+                this.hasStarted = true;
+
+                this.dispatchEvent(Events.TWEEN_START, 'onStart');
+
+                //  Reset the delta so we always start progress from zero
+                delta = 0;
+            }
         }
 
         var remove = false;
