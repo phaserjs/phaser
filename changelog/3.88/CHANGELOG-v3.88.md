@@ -30,6 +30,8 @@
 * Tweens created with `persist` set to `true` and given a `completeDelay` value are no longer destroyed and can be replayed. Fix #7008 (thanks @Stever1388)
 * `Phaser.Tweens.TweenChain` `onStart` event is dispatched properly. Fix #7007 (thanks @Stever1388)
 * `Phaser.GameObjects.Particles.Zones.DeathZone` now uses world position coordinates instead of local position coordinates following the particle emitter position. Fix #7006 (thanks @Stever1388)
+* Merged pull request #7009 from @samme that prevents hanging timer events with repeats and negative delays. Fix #7004(thanks @Stever1388)
+* When adding a new tween, passing an event listener callback outside the `Phaser.Types.Tweens.TweenBuilderConfig` object is correctly executed without errors. Fix #7003 (thanks @Stever1388)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
