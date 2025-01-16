@@ -4,8 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Camera = null;
-var Rectangle = require('../../geom/rectangle/Rectangle');
+var Camera = null; // Lazy loaded.
 var Vector2 = require('../../math/Vector2');
 var TransformMatrix = require('./TransformMatrix');
 
@@ -383,73 +382,76 @@ if (typeof WEBGL_RENDERER)
          * This is called automatically on render if `filtersAutoFocus` is enabled.
          *
          * If a camera is provided, this will focus on the camera.
-         * Otherwise, this will focus on the GameObject bounds if available.
-         * If the GameObject has no bounds, this will focus on the context
-         * being used during rendering.
+         * Otherwise, this will focus on the GameObject's raw dimensions
+         * if available.
+         * If the GameObject has no dimensions, this will focus on the context:
+         * the camera belonging to the DrawingContext used to render the GameObject.
+         * Context focus occurs during rendering,
+         * as the context is not known until then.
          *
          * @method Phaser.GameObjects.Components.Filters#focusFilters
          * @webglOnly
          * @since 4.0.0
-         * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera to focus on. If omitted, this will focus on the game object bounds if available. If the game object has no bounds, this will focus on the context: the camera belonging to the DrawingContext used to render the game object.
+         * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera to focus on. Optional; if provided, this will focus on the camera.
          * @returns {this}
          */
         focusFilters: function (camera)
         {
-            // We must set the position to 0,0, or the bounds will be off.
-            // This is due to a floating point precision issue.
             var posX = this.x;
             var posY = this.y;
             var rotation = this.rotation;
             var scaleX = this.scaleX;
             var scaleY = this.scaleY;
+            var originX = this.originX;
+            var originY = this.originY;
+            var width = this.width;
+            var height = this.height;
+            var centerX;
+            var centerY;
 
-            if (!camera && this.getBounds)
+            var bounded = false;
+
+            // Attempt to create bounds from basic object properties.
+            if (!camera)
             {
-                // Temporarily reorient the object to get axis-aligned bounds.
-                this
-                    .setPosition(0, 0)
-                    .setRotation(0)
-                    .setScale(1);
-
-                var bounds = this.getBounds();
-
-                this
-                    .setScale(scaleX, scaleY)
-                    .setRotation(rotation)
-                    .setPosition(posX, posY);
-
-                if (bounds.width === 0 || bounds.height === 0)
+                if (!(
+                    isNaN(posX) || isNaN(posY) ||
+                    isNaN(width) || isNaN(height) ||
+                    isNaN(originX) || isNaN(originY) ||
+                    width === 0 || height === 0
+                ))
                 {
-                    bounds = null;
+                    centerX = posX;
+                    centerY = posY;
+                    bounded = true;
                 }
             }
 
-            // If the object has no bounds, focus on the context.
-            if (!bounds)
+            // If the object has no valid bounds, focus on the context.
+            if (!bounded)
             {
                 if (camera)
                 {
-                    bounds = new Rectangle(camera.scrollX, camera.scrollY, camera.width, camera.height);
+                    width = camera.width;
+                    height = camera.height;
+                    centerX = camera.scrollX + width / 2;
+                    centerY = camera.scrollY + height / 2;
+                    originX = 0.5 + (posX - centerX) / width;
+                    originY = 0.5 + (posY - centerY) / height;
                 }
                 else
                 {
                     this.filtersFocusContext = true;
+                    return this;
                 }
             }
 
             // Set the filter camera size to match the object.
-            var width = bounds.width;
-            var height = bounds.height;
             this.setFilterSize(width, height);
 
             // Set the filter camera to match the object.
-            var filterCamera = this.filterCamera;
-            var centerX = width === 0 ? this.x : bounds.centerX + posX;
-            var centerY = height === 0 ? this.y : bounds.centerY + posY;
-            var originX = 0.5 + (this.x - centerX) / width;
-            var originY = 0.5 + (this.y - centerY) / height;
-
-            filterCamera.centerOn(centerX, centerY)
+            this.filterCamera
+                .centerOn(centerX, centerY)
                 .setRotation(-rotation)
                 .setOrigin(originX, originY)
                 .setZoom(1 / scaleX, 1 / scaleY);
@@ -523,7 +525,7 @@ if (typeof WEBGL_RENDERER)
          * This is the size of the texture that internal filters will be drawn to.
          * External filters are drawn to the size of the context (usually the game canvas).
          *
-         * This is typically the size of the Game Object's bounds.
+         * This is typically the size of the GameObject.
          * It is set automatically when the Game Object is rendered
          * and `filtersAutoFocus` is enabled.
          * Turn off auto focus to set it manually.
