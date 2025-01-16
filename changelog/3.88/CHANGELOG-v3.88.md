@@ -27,6 +27,9 @@
 * `Phaser.Display.Color.Interpolate.RGBWithRGB` now correctly returns a `Phaser.Types.Display.ColorObject` that includes `r`, `g`, `b`, `a` and `color` values. Fix #6979 (thanks @XWILKINX)
 * Fixed incorrect Arcade Physics circle separation logic for circle to circle, and circle to rectangle collisions. The logic was incorrectly moving only one body, even if both could be moved. Fix #6963 (thanks @samme)
 * `Phaser.Plugins.PluginManager` automatically boots plugins when the game config render type is set to `Phaser.HEADLESS`. Fix #6893 (thanks @hubertgrzeskowiak)
+* Tweens created with `persist` set to `true` and given a `completeDelay` value are no longer destroyed and can be replayed. Fix #7008 (thanks @Stever1388)
+* `Phaser.Tweens.TweenChain` `onStart` event is dispatched properly. Fix #7007 (thanks @Stever1388)
+* `Phaser.GameObjects.Particles.Zones.DeathZone` now uses world position coordinates instead of local position coordinates following the particle emitter position. Fix #7006 (thanks @Stever1388)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
