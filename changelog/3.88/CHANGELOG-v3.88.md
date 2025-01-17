@@ -3,6 +3,7 @@
 ## New Features
 
 * `Transform.getWorldPoint` is a new method that will return the World point as a Vector2 of a Game Object, factoring in parents if applicable (thanks @samme)
+* `Phaser.Types.GameObjects.Text.TextStyle` includes `letterSpacing`: a positive or negative amount to add to the spacing between characters. (thanks @Stever1388)
 
 ## Updates
 

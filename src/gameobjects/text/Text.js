@@ -305,6 +305,11 @@ var Text = new Class({
         {
             this.setLineSpacing(style.lineSpacing);
         }
+
+        if (style && style.letterSpacing)
+        {
+            this.setLetterSpacing(style.letterSpacing);
+        }
     },
 
     /**

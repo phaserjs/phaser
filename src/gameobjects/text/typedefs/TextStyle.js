@@ -26,4 +26,5 @@
  * @property {Phaser.Types.GameObjects.Text.TextWordWrap} [wordWrap] - The Text Word wrap configuration object.
  * @property {Phaser.Types.GameObjects.Text.TextMetrics} [metrics] - A Text Metrics object. Use this to avoid expensive font size calculations in text heavy games.
  * @property {number} [lineSpacing] - The amount to add to the font height to achieve the overall line height.
+ * @property {number} [letterSpacing] - The amount to add to the spacing between characters. Can be a negative or positive number.
  */
