@@ -15,7 +15,7 @@
 * The `Transform.getWorldTransformMatrix` method will now destroy the parent matrix at the end, if it was created within the method.
 * The Arcade Physics `Body.setGameObject` and `StaticBody.setGameObject` methods have been updated to do the following: Return if no valid Game Object is passed. Disable and null the body of the existing Game Object if the Body has one. Set the `body` property, even if it doesn't exist (converts non-physics objects into physics objects). Calls `setSize` to update the body dimensions to make the new Game Object and finally sets `enable` based on the given parameter, which is now correctly referenced. The StaticBody version also has a new parameter, `enable` which matches that of the Dynamic Body and defaults to `true` (the original state). Fix #6969 (thanks @yongzheng7)
 * The Arcade Physics `Phaser.Types.Physics.Arcade.ArcadeColliderType` has been updated to include `Phaser.Physics.Arcade.StaticBody`. Fix #6967 (thanks @yongzheng7)
-* `Phaser.Types.GameObjects.Text.TextStyle` includes `letterSpacing`: a positive or negative amount to add to the spacing between characters. Fox #7002 (thanks @Stever1388)
+* `Phaser.Types.GameObjects.Text.TextStyle` includes `letterSpacing`: a positive or negative amount to add to the spacing between characters. Fix #7002 (thanks @Stever1388)
 
 ## Bug Fixes
 
@@ -23,6 +23,7 @@
 * `BaseTweenData.duration` can now never be zero or less than zero, which would trigger NaN errors. It's now clamped to a minimum of 0.01ms. Fix #6955 (thanks @kainage)
 * Fixed the properties in the `FontFileConfig` (thanks @samme)
 * `Matter.World.update` could hang and crash the browser if a large delta value was given to it, such as returning to a long-dormant tab. The Matter Runner config values are now properly passed through, preventing this from happening. Fix #6977 (thanks @ubershmekel @samme)
+* `Phaser.Physics.Matter.Components.Transform#scale` correctly scales the physics body with the GameObject. Fix #7001 (thanks @Stever1388)
 * `Phaser.Textures.Frame.setCropUVs` updated crop calculation to include the `spriteSourceSize`. Fix #6996 (thanks @CrispMind)
 * `Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled` updated hexagonal tilemaps to correctly calculate the `widthInPixels` and `heightInPixels` based on the hexagonal overlapping tiles. Fix #6992 (thanks @ptantiku)
 * `Phaser.Display.Color.Interpolate.RGBWithRGB` now correctly returns a `Phaser.Types.Display.ColorObject` that includes `r`, `g`, `b`, `a` and `color` values. Fix #6979 (thanks @XWILKINX)
