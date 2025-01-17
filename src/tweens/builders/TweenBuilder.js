@@ -49,7 +49,7 @@ var TweenBuilder = function (parent, config, defaults)
         defaults = MergeRight(Defaults, defaults);
     }
 
-    //  Create arrays of the Targets and the Properties
+    //  Create arrays of the Targets and the Properties. This Targets array should not be manipulated outside of this Tween.
     var targets = GetTargets(config);
 
     if (!targets && defaults.targets)

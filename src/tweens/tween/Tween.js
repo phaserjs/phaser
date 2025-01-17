@@ -29,7 +29,7 @@ var TweenFrameData = require('./TweenFrameData');
  * @since 3.0.0
  *
  * @param {Phaser.Tweens.TweenManager} parent - A reference to the Tween Manager that owns this Tween.
- * @param {object[]} targets - An array of targets to be tweened.
+ * @param {object[]} targets - An array of targets to be tweened. This array should not be manipulated outside of this Tween.
  */
 var Tween = new Class({
 
