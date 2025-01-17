@@ -3,7 +3,6 @@
 ## New Features
 
 * `Transform.getWorldPoint` is a new method that will return the World point as a Vector2 of a Game Object, factoring in parents if applicable (thanks @samme)
-* `Phaser.Types.GameObjects.Text.TextStyle` includes `letterSpacing`: a positive or negative amount to add to the spacing between characters. (thanks @Stever1388)
 
 ## Updates
 
@@ -16,6 +15,7 @@
 * The `Transform.getWorldTransformMatrix` method will now destroy the parent matrix at the end, if it was created within the method.
 * The Arcade Physics `Body.setGameObject` and `StaticBody.setGameObject` methods have been updated to do the following: Return if no valid Game Object is passed. Disable and null the body of the existing Game Object if the Body has one. Set the `body` property, even if it doesn't exist (converts non-physics objects into physics objects). Calls `setSize` to update the body dimensions to make the new Game Object and finally sets `enable` based on the given parameter, which is now correctly referenced. The StaticBody version also has a new parameter, `enable` which matches that of the Dynamic Body and defaults to `true` (the original state). Fix #6969 (thanks @yongzheng7)
 * The Arcade Physics `Phaser.Types.Physics.Arcade.ArcadeColliderType` has been updated to include `Phaser.Physics.Arcade.StaticBody`. Fix #6967 (thanks @yongzheng7)
+* `Phaser.Types.GameObjects.Text.TextStyle` includes `letterSpacing`: a positive or negative amount to add to the spacing between characters. Fox #7002 (thanks @Stever1388)
 
 ## Bug Fixes
 
@@ -33,6 +33,7 @@
 * `Phaser.GameObjects.Particles.Zones.DeathZone` now uses world position coordinates instead of local position coordinates following the particle emitter position. Fix #7006 (thanks @Stever1388)
 * Merged pull request #7009 from @samme that prevents hanging timer events with repeats and negative delays. Fix #7004(thanks @Stever1388)
 * When adding a new tween, passing an event listener callback outside the `Phaser.Types.Tweens.TweenBuilderConfig` object is correctly executed without errors. Fix #7003 (thanks @Stever1388)
+* `Phaser.GameObjects.GameObject.Text` created with `wordwrap` and have `letterSpacing` applied now takes into account the provided `letterSpacing` value to correctly wrap lines. Fix #7002. (thanks @Stever1388)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
