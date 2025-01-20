@@ -3,6 +3,7 @@
 ## New Features
 
 * `Transform.getWorldPoint` is a new method that will return the World point as a Vector2 of a Game Object, factoring in parents if applicable (thanks @samme)
+* `Phaser.Utils.Array.GetFirst` can now search from the end of the array when setting `startIndex` to -1.
 
 ## Updates
 
