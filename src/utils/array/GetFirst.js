@@ -42,7 +42,7 @@ var GetFirst = function (array, property, value, startIndex, endIndex)
 
         if (SafeRange(array, endIndex, startIndex))
         {
-            for (i = startIndex; i > endIndex; i--)
+            for (i = startIndex; i >= endIndex; i--)
             {
                 child = array[i];
 
