@@ -32,11 +32,30 @@ var GetFirst = function (array, property, value, startIndex, endIndex)
     if (startIndex === undefined) { startIndex = 0; }
     if (endIndex === undefined) { endIndex = array.length; }
 
-    if (SafeRange(array, startIndex, endIndex))
+    var i, child;
+
+    if (startIndex > endIndex)
     {
-        for (var i = startIndex; i < endIndex; i++)
+        if (SafeRange(array, endIndex, startIndex))
         {
-            var child = array[i];
+            for (i = startIndex; i > endIndex; i--)
+            {
+                child = array[i];
+
+                if (!property ||
+                    (property && value === undefined && child.hasOwnProperty(property)) ||
+                    (property && value !== undefined && child[property] === value))
+                {
+                    return child;
+                }
+            }
+        }
+    }
+    else if (SafeRange(array, startIndex, endIndex))
+    {
+        for (i = startIndex; i < endIndex; i++)
+        {
+            child = array[i];
 
             if (!property ||
                 (property && value === undefined && child.hasOwnProperty(property)) ||
@@ -46,7 +65,6 @@ var GetFirst = function (array, property, value, startIndex, endIndex)
             }
         }
     }
-
     return null;
 };
 
