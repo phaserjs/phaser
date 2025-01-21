@@ -72,7 +72,7 @@ var TilemapLayerWebGLRenderer = function (renderer, src, camera)
 
         var texture = tileset.glTexture;
 
-        var textureUnit = pipeline.setTexture2D(texture, src);
+        var textureUnit = pipeline.setTexture2D(texture);
 
         var frameWidth = tileWidth;
         var frameHeight = tileHeight;
