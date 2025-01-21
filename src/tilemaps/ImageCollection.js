@@ -150,6 +150,8 @@ var ImageCollection = new Class({
      *
      * @param {number} gid - The gid of the image in the Image Collection.
      * @param {string} image - The the key of the image in the Image Collection and in the cache.
+     * @param {number} width - The width of the image in the Image Collection.
+     * @param {number} height - The height of the image in the Image Collection.
      *
      * @return {Phaser.Tilemaps.ImageCollection} This ImageCollection object.
      */
