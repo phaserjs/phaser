@@ -31,42 +31,29 @@ var SafeRange = require('./SafeRange');
 var GetFirst = function (array, property, value, startIndex, endIndex)
 {
     if (startIndex === undefined) { startIndex = 0; }
-    if (endIndex === undefined) { endIndex = array.length; }
+    if (endIndex === undefined) { endIndex = startIndex >= 0 ? array.length - 1 : 0; }
+    if (startIndex === -1) { startIndex = array.length - 1; }
 
     var i, child;
 
-    if (startIndex === - 1)
+    if (SafeRange(array, Math.min(startIndex, endIndex), Math.max(startIndex, endIndex)))
     {
-        startIndex = array.length - 1;
-        if (endIndex === undefined) { endIndex = 0; }
+        var step = startIndex < endIndex ? 1 : -1;
+        var count = Math.abs(endIndex - startIndex);
+        var index = startIndex;
 
-        if (SafeRange(array, endIndex, startIndex))
+        for (i = 0; i < count; i += step)
         {
-            for (i = startIndex; i >= endIndex; i--)
-            {
-                child = array[i];
-
-                if (!property ||
-                    (property && value === undefined && child.hasOwnProperty(property)) ||
-                    (property && value !== undefined && child[property] === value))
-                {
-                    return child;
-                }
-            }
-        }
-    }
-    else if (SafeRange(array, startIndex, endIndex))
-    {
-        for (i = startIndex; i < endIndex; i++)
-        {
-            child = array[i];
+            child = array[index];
 
             if (!property ||
                 (property && value === undefined && child.hasOwnProperty(property)) ||
-                (property && value !== undefined && child[property] === value))
+                (property && value !== undefined && child[property] === value)) 
             {
                 return child;
             }
+
+            index += step;
         }
     }
     return null;
