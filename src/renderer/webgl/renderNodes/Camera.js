@@ -236,16 +236,18 @@ var Camera = new Class({
                 var quad;
                 if (parentTransformMatrix)
                 {
+                    // We're drawing a filtered object.
                     parentTransformMatrix.setQuad(
                         coverageInternal.x,
                         coverageInternal.y,
-                        coverageInternal.width,
-                        coverageInternal.height
+                        coverageInternal.x + coverageInternal.width,
+                        coverageInternal.y + coverageInternal.height
                     );
                     quad = parentTransformMatrix.quad;
                 }
                 else
                 {
+                    // We're drawing a camera.
                     var offsetX = (currentContext.width - outputContext.width) / 2;
                     var offsetY = (currentContext.height - outputContext.height) / 2;
                     var w = currentContext.width - offsetX;
