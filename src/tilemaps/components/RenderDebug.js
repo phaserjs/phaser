@@ -42,10 +42,11 @@ var RenderDebug = function (graphics, styleConfig, layer)
     {
         var tile = tiles[i];
 
+        var offset = tile.tileset ? tile.tileset.tileOffset : { x: 0, y: 0 };
         var tw = tile.width;
         var th = tile.height;
-        var x = tile.pixelX;
-        var y = tile.pixelY;
+        var x = tile.pixelX - offset.x;
+        var y = tile.pixelY - offset.y;
 
         var color = tile.collides ? collidingTileColor : tileColor;
 
