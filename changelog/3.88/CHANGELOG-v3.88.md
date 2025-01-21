@@ -18,6 +18,8 @@
 * The Arcade Physics `Phaser.Types.Physics.Arcade.ArcadeColliderType` has been updated to include `Phaser.Physics.Arcade.StaticBody`. Fix #6967 (thanks @yongzheng7)
 * `Phaser.Types.GameObjects.Text.TextStyle` includes `letterSpacing`: a positive or negative amount to add to the spacing between characters. Fix #7002 (thanks @Stever1388)
 * `Phaser.Tilemaps.Parsers.Tiled.ParseTilesets`, `Phaser.Tilemaps.Parsers.Tiled.BuildTilesetIndex` and `Phaser.Tilemaps.ImageCollection#addImage` updated to include `width` and `height` of each individual image. Fix #6990 (thanks @stickleprojects)
+* `Phaser.Tilemaps.Parsers.Tiled.ParseTilesets`, `Phaser.Tilemaps.Parsers.Tiled.BuildTilesetIndex` and `Phaser.Tilemaps.ImageCollection#addImage` updated to include `width` and `height` of each individual image. Fix #6990 (thanks @stickleprojects)
+* `Phaser.Tilemaps.Components.RenderDebug` and `Phaser.Tilemaps.Parsers.Tiled.BuildTilesetIndex` updated to include `width` and `height` offsets in Image Collections.
 
 ## Bug Fixes
 
