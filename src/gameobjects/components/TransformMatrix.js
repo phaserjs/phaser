@@ -905,7 +905,7 @@ var TransformMatrix = new Class({
 
     /**
      * Performs the 8 calculations required to create the vertices of
-     * a quad based on this matrix and the given x/y/xw/yh values.
+     * a quad based on this matrix and the given vertex coordinates.
      *
      * The result is stored in `TransformMatrix.quad`, which is returned
      * from this method.
@@ -913,10 +913,10 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#setQuad
      * @since 3.60.0
      *
-     * @param {number} x - The x value.
-     * @param {number} y - The y value.
-     * @param {number} xw - The xw value.
-     * @param {number} yh - The yh value.
+     * @param {number} x - The x value of the top-left vertex of the quad.
+     * @param {number} y - The y value of the top-left vertex of the quad.
+     * @param {number} xw - The x value of the bottom-right vertex of the quad. This is the x + width.
+     * @param {number} yh - The y value of the bottom-right vertex of the quad. This is the y + height.
      * @param {boolean} [roundPixels=false] - Pass the results via Math.round?
      * @param {Float32Array} [quad] - Optional Float32Array to store the results in. Otherwises uses the local quad array.
      *
