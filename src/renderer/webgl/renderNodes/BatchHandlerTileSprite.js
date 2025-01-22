@@ -103,13 +103,33 @@ var BatchHandlerTileSprite = new Class({
     {
         BatchHandlerQuad.prototype.updateRenderOptions.call(this, renderOptions);
 
+        var oldRenderOptions = this.renderOptions;
         var newRenderOptions = this.nextRenderOptions;
+        var changed = this._renderOptionsChanged;
 
         newRenderOptions.clampFrame = !!renderOptions.clampFrame;
+        if (newRenderOptions.clampFrame !== oldRenderOptions.clampFrame)
+        {
+            changed = true;
+        }
+
         newRenderOptions.wrapFrame = !!renderOptions.wrapFrame;
+        if (newRenderOptions.wrapFrame !== oldRenderOptions.wrapFrame)
+        {
+            changed = true;
+        }
 
         // Enable texture resolution data if not already available.
         newRenderOptions.texRes = newRenderOptions.clampFrame || newRenderOptions.texRes;
+        if (newRenderOptions.texRes !== oldRenderOptions.texRes)
+        {
+            changed = true;
+        }
+
+        if (changed)
+        {
+            this._renderOptionsChanged = true;
+        }
     },
 
     updateShaderConfig: function ()
