@@ -60,7 +60,8 @@ var SubmitterQuad = new Class({
         this._renderOptions = {
             multiTexturing: true,
             lighting: null,
-            smoothPixelArt: null
+            smoothPixelArt: null,
+            roundPixels: false
         };
 
         /**
@@ -163,6 +164,8 @@ var SubmitterQuad = new Class({
 
         this.setRenderOptions(gameObject, normalMap, normalMapRotation);
 
+        this._renderOptions.roundPixels = !!transformerNode.onlyTranslate && drawingContext.camera.roundPixels;
+
         (
             gameObject.customRenderNodes[this.batchHandler] ||
             gameObject.defaultRenderNodes[this.batchHandler]
@@ -196,6 +199,7 @@ var SubmitterQuad = new Class({
 
     setRenderOptions: function (gameObject, normalMap, normalMapRotation)
     {
+        var renderOptions = this._renderOptions;
         var baseTexture, sourceIndex;
         if (gameObject.displayTexture)
         {
@@ -265,11 +269,11 @@ var SubmitterQuad = new Class({
             this._lightingOptions.selfShadow.penumbra = selfShadow.penumbra;
             this._lightingOptions.selfShadow.diffuseFlatThreshold = selfShadow.diffuseFlatThreshold;
 
-            this._renderOptions.lighting = this._lightingOptions;
+            renderOptions.lighting = this._lightingOptions;
         }
         else
         {
-            this._renderOptions.lighting = null;
+            renderOptions.lighting = null;
         }
 
         // Get smooth pixel art option.
@@ -282,7 +286,7 @@ var SubmitterQuad = new Class({
         {
             smoothPixelArt = gameObject.scene.sys.game.config.smoothPixelArt;
         }
-        this._renderOptions.smoothPixelArt = smoothPixelArt;
+        renderOptions.smoothPixelArt = smoothPixelArt;
     }
 });
 

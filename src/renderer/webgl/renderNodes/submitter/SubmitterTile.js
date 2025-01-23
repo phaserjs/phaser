@@ -112,6 +112,8 @@ var SubmitterTile = new Class({
 
         this.setRenderOptions(gameObject, normalMap, normalMapRotation);
 
+        this._renderOptions.roundPixels = !!transformerNode.onlyTranslate && drawingContext.camera.roundPixels;
+
         (
             gameObject.customRenderNodes[this.batchHandler] ||
             gameObject.defaultRenderNodes[this.batchHandler]

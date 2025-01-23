@@ -52,6 +52,15 @@ var TransformerStamp = new Class({
          * @since 4.0.0
          */
         this.quad = this._spriteMatrix.quad;
+
+        /**
+         * Whether the transform only translates.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerStamp#onlyTranslate
+         * @type {boolean}
+         * @since 4.0.0
+         */
+        this.onlyTranslate = false;
     },
 
     defaultConfig: {
@@ -117,6 +126,10 @@ var TransformerStamp = new Class({
         var spriteMatrix = this._spriteMatrix;
 
         spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
+
+        // Determine whether the matrix does not rotate, scale, or skew.
+        var m = spriteMatrix.matrix;
+        this.onlyTranslate = m[0] === 1 && m[1] === 0 && m[2] === 0 && m[3] === 1;
 
         // Store the output quad.
         spriteMatrix.setQuad(

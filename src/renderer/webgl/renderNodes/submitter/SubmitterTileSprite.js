@@ -123,6 +123,8 @@ var SubmitterTileSprite = new Class({
 
         this.setRenderOptions(gameObject, normalMap, normalMapRotation);
 
+        this._renderOptions.roundPixels = !!transformerNode.onlyTranslate && drawingContext.camera.roundPixels;
+
         // Normal map rotation must include the texture rotation.
         this._lightingOptions.normalMapRotation += gameObject.tileRotation;
 

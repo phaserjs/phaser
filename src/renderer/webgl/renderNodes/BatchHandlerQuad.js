@@ -56,7 +56,8 @@ var BatchHandlerQuad = new Class({
             selfShadow: false,
             selfShadowPenumbra: 0,
             selfShadowThreshold: 0,
-            smoothPixelArt: false
+            smoothPixelArt: false,
+            roundPixels: false
         };
 
         BatchHandler.call(this, manager, this.defaultConfig, config);
@@ -267,7 +268,7 @@ var BatchHandlerQuad = new Class({
         // Standard uniforms.
         programManager.setUniform(
             'uRoundPixels',
-            drawingContext.camera.roundPixels
+            renderOptions.roundPixels
         );
 
         programManager.setUniform(
@@ -392,6 +393,13 @@ var BatchHandlerQuad = new Class({
             changed = true;
         }
 
+        var roundPixels = !!renderOptions.roundPixels;
+        if (roundPixels !== oldRenderOptions.roundPixels)
+        {
+            newRenderOptions.roundPixels = roundPixels;
+            changed = true;
+        }
+
         this._renderOptionsChanged = changed;
     },
 
@@ -486,6 +494,14 @@ var BatchHandlerQuad = new Class({
             {
                 texResAddition.disable = !texRes;
             }
+        }
+
+        if (oldRenderOptions.roundPixels !== newRenderOptions.roundPixels)
+        {
+            var roundPixels = newRenderOptions.roundPixels;
+            oldRenderOptions.roundPixels = roundPixels;
+
+            // Do not update the shader; this will be set as a uniform.
         }
     },
 
