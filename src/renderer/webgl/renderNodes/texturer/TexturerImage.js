@@ -104,6 +104,10 @@ var TexturerImage = new Class({
             this.frameHeight = crop.height;
         }
 
+        var resolution = frame.source.resolution;
+        this.frameWidth /= resolution;
+        this.frameHeight /= resolution;
+
         this.onRunEnd(drawingContext);
     }
 });

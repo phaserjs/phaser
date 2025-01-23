@@ -1323,6 +1323,7 @@ var Text = new Class({
             // Because this is a dedicated texture for this Text object,
             // we know this is a simple resize.
             this.frame.source.updateSize(w, h);
+            this.frame.source.resolution = resolution;
             this.frame.updateUVs();
 
             //  Because resizing the canvas resets the context
