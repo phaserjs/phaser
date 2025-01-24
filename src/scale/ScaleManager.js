@@ -1225,6 +1225,11 @@ var ScaleManager = new Class({
         {
             offsetX = 0;
         }
+        else
+        {
+            offsetX = 0;
+            offsetY = 0;
+        }
 
         style.marginLeft = offsetX + 'px';
         style.marginTop = offsetY + 'px';
