@@ -39,6 +39,7 @@
 * Merged pull request #7009 from @samme that prevents hanging timer events with repeats and negative delays. Fix #7004(thanks @Stever1388)
 * When adding a new tween, passing an event listener callback outside the `Phaser.Types.Tweens.TweenBuilderConfig` object is correctly executed without errors. Fix #7003 (thanks @Stever1388)
 * `Phaser.GameObjects.GameObject.Text` created with `wordwrap` and have `letterSpacing` applied now takes into account the provided `letterSpacing` value to correctly wrap lines. Fix #7002. (thanks @Stever1388)
+* Creating new `Phaser.GameObjects.GameObject.DOMElement` sets the GameObject's `displayWidth` and `displayHeight` using its `scaleX` and `scaleY` values instead of the DOM element's `getBoundingClientRect()` values. Fix #6871 (thanks @HawkenKing)
 * Setting scale `mode` to `Phaser.Scale.FIT` and `autoCenter` to `Phaser.Scale.CENTER_BOTH` correctly centres canvas on iOS devices. Fix #6862 (thanks @HawkenKing)
 
 
