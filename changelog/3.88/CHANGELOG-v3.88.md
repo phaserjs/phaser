@@ -41,7 +41,7 @@
 * `Phaser.GameObjects.GameObject.Text` created with `wordwrap` and have `letterSpacing` applied now takes into account the provided `letterSpacing` value to correctly wrap lines. Fix #7002. (thanks @Stever1388)
 * Creating new `Phaser.GameObjects.GameObject.DOMElement` sets the GameObject's `displayWidth` and `displayHeight` using its `scaleX` and `scaleY` values instead of the DOM element's `getBoundingClientRect()` values. Fix #6871 (thanks @HawkenKing)
 * Setting scale `mode` to `Phaser.Scale.FIT` and `autoCenter` to `Phaser.Scale.CENTER_BOTH` correctly centres canvas on iOS devices. Fix #6862 (thanks @HawkenKing)
-
+* On hex maps, creating a blank layer with `Phaser.Tilemaps.Tilemap#createBlankLayer` correctly sets `hexSideLength` loaded from the hex tilemap. Fix #6074 (thanks @wwoods)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
