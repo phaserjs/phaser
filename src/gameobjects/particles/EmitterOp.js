@@ -469,6 +469,7 @@ var EmitterOp = new Class({
             case 3:
                 this._onEmit = value;
                 onEmit = this.proxyEmit;
+                current = this.defaultValue;
                 break;
 
             //  Stepped start/end
@@ -522,6 +523,7 @@ var EmitterOp = new Class({
                 this._onUpdate = (this.has(value, 'onUpdate')) ? value.onUpdate : this.defaultUpdate;
                 onEmit = this.proxyEmit;
                 onUpdate = this.proxyUpdate;
+                current = this.defaultValue;
                 break;
 
             //  Interpolation
