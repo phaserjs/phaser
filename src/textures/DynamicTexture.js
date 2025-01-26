@@ -5,7 +5,7 @@
  */
 
 var BlendModes = require('../renderer/BlendModes');
-var Camera = require('../cameras/2d/BaseCamera');
+var Camera = require('../cameras/2d/Camera');
 var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var CONST = require('../const');
