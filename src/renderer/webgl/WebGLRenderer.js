@@ -27,7 +27,6 @@ var WebGLTextureWrapper = require('./wrappers/WebGLTextureWrapper');
 var WebGLTextureUnitsWrapper = require('./wrappers/WebGLTextureUnitsWrapper');
 var WebGLFramebufferWrapper = require('./wrappers/WebGLFramebufferWrapper');
 var WebGLVAOWrapper = require('./wrappers/WebGLVAOWrapper');
-var WebGLAttribLocationWrapper = require('./wrappers/WebGLAttribLocationWrapper');
 var WebGLBlendParametersFactory = require('./parameters/WebGLBlendParametersFactory');
 var WebGLGlobalParametersFactory = require('./parameters/WebGLGlobalParametersFactory');
 var RenderNodeManager = require('./renderNodes/RenderNodeManager');
@@ -305,15 +304,6 @@ var WebGLRenderer = new Class({
         this.glFramebufferWrappers = [];
 
         /**
-         * A list of all WebGLAttribLocationWrappers that have been created by this renderer.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#glAttribLocationWrappers
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper[]}
-         * @since 3.80.0
-         */
-        this.glAttribLocationWrappers = [];
-
-        /**
          * A list of all WebGLVAOWrappers that have been created by this renderer.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glVAOWrappers
@@ -371,53 +361,6 @@ var WebGLRenderer = new Class({
          * @since 4.0.0
          */
         this.drawingContextPool = new DrawingContextPool(this, 1000, 1024);
-
-        /**
-         * Current WebGLProgram in use.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentProgram
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper}
-         * @default null
-         * @since 3.0.0
-         */
-        this.currentProgram = null;
-
-        /**
-         * Current blend mode in use
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentBlendMode
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.currentBlendMode = Infinity;
-
-        /**
-         * Indicates if the the scissor state is enabled in WebGLRenderingContext
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentScissorEnabled
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.currentScissorEnabled = false;
-
-        /**
-         * Stores the current scissor data
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentScissor
-         * @type {Uint32Array}
-         * @since 3.0.0
-         */
-        this.currentScissor = null;
-
-        /**
-         * Stack of scissor data
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#scissorStack
-         * @type {Uint32Array}
-         * @since 3.0.0
-         */
-        this.scissorStack = [];
 
         /**
          * The handler to invoke when the context is lost.
@@ -613,45 +556,6 @@ var WebGLRenderer = new Class({
          * @since 4.0.0
          */
         this.shaderSetters = null;
-
-        /**
-         * The `type` of the Game Object being currently rendered.
-         * This can be used by advanced render functions for batching look-ahead.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentType
-         * @type {string}
-         * @since 3.19.0
-         */
-        this.currentType = '';
-
-        /**
-         * Is the `type` of the Game Object being currently rendered different than the
-         * type of the object before it in the display list? I.e. it's a 'new' type.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#newType
-         * @type {boolean}
-         * @since 3.19.0
-         */
-        this.newType = false;
-
-        /**
-         * Does the `type` of the next Game Object in the display list match that
-         * of the object being currently rendered?
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#nextTypeMatch
-         * @type {boolean}
-         * @since 3.19.0
-         */
-        this.nextTypeMatch = false;
-
-        /**
-         * Is the Game Object being currently rendered the final one in the list?
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#finalType
-         * @type {boolean}
-         * @since 3.50.0
-         */
-        this.finalType = false;
 
         /**
          * The mipmap magFilter to be used when creating textures.
@@ -871,9 +775,6 @@ var WebGLRenderer = new Class({
             // Force update the GL state.
             _this.glWrapper.update(WebGLGlobalParametersFactory.getDefault(_this), true);
             _this.glTextureUnits.init();
-
-            // Clear "current" settings so they can be set again.
-            _this.currentProgram = null;
 
             // Re-enable compressed texture formats.
             _this.compression = _this.getCompressedTextures();
@@ -1810,23 +1711,6 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Creates a WebGLAttribLocationWrapper instance based on the given WebGLProgramWrapper and attribute name.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#createAttribLocation
-     * @since 3.80.0
-     *
-     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} program - The WebGLProgramWrapper instance.
-     * @param {string} name - The name of the attribute.
-     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper} The wrapped attribute location.
-     */
-    createAttribLocation: function (program, name)
-    {
-        var attrib = new WebGLAttribLocationWrapper(this.gl, program, name);
-        this.glAttribLocationWrappers.push(attrib);
-        return attrib;
-    },
-
-    /**
      * Wrapper for creating a vertex buffer.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createIndexBuffer
@@ -1920,24 +1804,6 @@ var WebGLRenderer = new Class({
         {
             ArrayRemove(this.glProgramWrappers, program);
             program.destroy();
-        }
-
-        return this;
-    },
-
-    /**
-     * Deletes a shader attribute location from the GL instance.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteAttribLocation
-     * @param {Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper} attrib - The attrib location to be deleted.
-     * @since 3.80.0
-     */
-    deleteAttribLocation: function (attrib)
-    {
-        if (attrib)
-        {
-            ArrayRemove(this.glAttribLocationWrappers, attrib);
-            attrib.destroy();
         }
 
         return this;
@@ -2601,24 +2467,7 @@ var WebGLRenderer = new Class({
         {
             this.spector = null;
         }
-    },
-
-    /**
-     * An array of the available WebGL texture units, used to populate the uSampler uniforms.
-     *
-     * @name Phaser.Renderer.WebGL.WebGLRenderer#textureIndexes
-     * @type {number[]}
-     * @readonly
-     * @since 3.50.0
-     * @deprecated since version 3.90.0: Use `glTextureUnits.unitIndices` instead.
-     */
-    textureIndexes: {
-        get: function ()
-        {
-            return this.glTextureUnits.unitIndices;
-        }
     }
-
 });
 
 module.exports = WebGLRenderer;

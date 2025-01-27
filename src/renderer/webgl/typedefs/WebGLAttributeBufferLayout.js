@@ -9,7 +9,6 @@
  * @since 4.0.0
  *
  * @property {string} name - The name of the attribute, as defined in the shader.
- * @property {Phaser.Renderer.WebGL.Wrappers.WebGLAttribLocationWrapper} location - The location of the attribute.
  * @property {number} size - The number of components per vertex attribute.
  * @property {GLenum|string} type - The data type of each component in the array. This can differ from the type in the shader, so long as WebGL can convert the types. If the type is a string, it will be converted to the appropriate GLenum, e.g. 'FLOAT' to gl.FLOAT.
  * @property {boolean} normalized - Whether integer data values should be normalized when being cast to a float.

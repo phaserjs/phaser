@@ -20,7 +20,7 @@ var BaseFilter = require('./BaseFilter');
  * @extends Phaser.Renderer.WebGL.RenderNodes.BaseFilter
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
- * @since 3.90.0
+ * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
 var FilterParallelFilters = new Class({

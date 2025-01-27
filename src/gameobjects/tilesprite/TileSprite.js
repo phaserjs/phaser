@@ -31,12 +31,12 @@ var _FLAG = 8; // 1000
  * consume huge amounts of memory and cause performance issues. Remember: use `tilePosition` to scroll your texture and `tileScale` to
  * adjust the scale of the texture - don't resize the sprite itself or make it larger than it needs.
  *
- * Prior to Phaser 3.90, TileSprite did not support rotation.
+ * Prior to Phaser 4, TileSprite did not support rotation.
  * In WebGL, it required the texture to be a power of two in size,
  * and did not support compressed textures or DynamicTextures.
  * It could introduce aliasing artifacts for textures that were not
  * a power of two in size.
- * These restrictions have been lifted in 3.90.
+ * These restrictions have been lifted in v4.
  *
  * @class TileSprite
  * @extends Phaser.GameObjects.GameObject

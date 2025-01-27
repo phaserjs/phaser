@@ -58,7 +58,7 @@ var Controller = new Class({
          *
          * @name Phaser.Filters.Controller#paddingOverride
          * @type {Phaser.Geom.Rectangle}
-         * @since 3.90
+         * @since 4.0.0
          */
         this.paddingOverride = new Rectangle();
 

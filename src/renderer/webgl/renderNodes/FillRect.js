@@ -54,7 +54,7 @@ var FillRect = new Class({
          * @name Phaser.Renderer.WebGL.RenderNodes.FillRect#_indexedTriangles
          * @type {number[]}
          * @private
-         * @since 3.90
+         * @since 4.0.0
          * @default [0, 1, 2, 2, 3, 0]
          * @readonly
          */

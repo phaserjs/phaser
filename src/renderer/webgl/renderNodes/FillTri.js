@@ -31,7 +31,7 @@ var FillTri = new Class({
          * @name Phaser.Renderer.WebGL.RenderNodes.FillTri#_indexedTriangles
          * @type {number[]}
          * @private
-         * @since 3.90
+         * @since 4.0.0
          * @default [0, 1, 2]
          * @readonly
          */
