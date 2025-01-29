@@ -642,9 +642,9 @@ var Frame = new Class({
         //  Map the given coordinates into UV space, clamping to the 0-1 range.
 
         crop.u0 = Math.max(0, ox / tw);
-        crop.v0 = Math.max(0, oy / th);
+        crop.v0 = 1 - Math.max(0, oy / th);
         crop.u1 = Math.min(1, (ox + ow) / tw);
-        crop.v1 = Math.min(1, (oy + oh) / th);
+        crop.v1 = 1 - Math.min(1, (oy + oh) / th);
 
         crop.x = x;
         crop.y = y;
@@ -747,10 +747,10 @@ var Frame = new Class({
         var th = this.source.height;
 
         this.u0 = cx / tw;
-        this.v0 = cy / th;
+        this.v0 = 1 - cy / th;
 
         this.u1 = (cx + cw) / tw;
-        this.v1 = (cy + ch) / th;
+        this.v1 = 1 - (cy + ch) / th;
 
         return this;
     },
@@ -769,10 +769,10 @@ var Frame = new Class({
         var th = this.source.height;
 
         this.u0 = (this.cutX + this.cutHeight) / tw;
-        this.v0 = this.cutY / th;
+        this.v0 = 1 - this.cutY / th;
 
         this.u1 = this.cutX / tw;
-        this.v1 = (this.cutY + this.cutWidth) / th;
+        this.v1 = 1 - (this.cutY + this.cutWidth) / th;
 
         return this;
     },

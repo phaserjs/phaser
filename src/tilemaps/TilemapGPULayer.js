@@ -227,7 +227,7 @@ var TilemapGPULayer = new Class({
             this.layerDataTexture.destroy();
         }
         var u8 = new Uint8Array(u32.buffer);
-        this.layerDataTexture = renderer.createUint8ArrayTexture(u8, layer.width, layer.height, false);
+        this.layerDataTexture = renderer.createUint8ArrayTexture(u8, layer.width, layer.height, false, true);
     }
 });
 

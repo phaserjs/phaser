@@ -65,6 +65,9 @@ Tile getLayerData (vec2 coord)
     vec2 tile = floor(texelCoord);
     vec2 uv = fract(texelCoord);
 
+    // Invert Y, as textures are flipped in GL.
+    uv.y = 1.0 - uv.y;
+
     vec4 texel = texture2D(uLayerSampler, (tile + 0.5) / uLayerResolution) * 255.0;
 
     float flags = texel.a;
@@ -201,7 +204,11 @@ Samples getColorSamples (vec2 texCoord)
 {
     Samples samples;
 
-    samples.color = texture2D(uMainSampler, texCoord);
+    samples.color = texture2D(
+        uMainSampler,
+        // Flip Y to convert from texel space to GL texture space.
+        vec2(texCoord.x, 1.0 - texCoord.y)
+    );
 
     #pragma phaserTemplate(getSamples)
 

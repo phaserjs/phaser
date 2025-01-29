@@ -488,25 +488,25 @@ var SubmitterTilemapGPULayer = new Class({
         vertexF32[offset32++] = quad[2];
         vertexF32[offset32++] = quad[3];
         vertexF32[offset32++] = 0;
-        vertexF32[offset32++] = 1;
+        vertexF32[offset32++] = 0;
 
         // Top Left.
         vertexF32[offset32++] = quad[0];
         vertexF32[offset32++] = quad[1];
         vertexF32[offset32++] = 0;
-        vertexF32[offset32++] = 0;
+        vertexF32[offset32++] = 1;
 
         // Bottom Right.
         vertexF32[offset32++] = quad[4];
         vertexF32[offset32++] = quad[5];
         vertexF32[offset32++] = 1;
-        vertexF32[offset32++] = 1;
+        vertexF32[offset32++] = 0;
 
         // Top Right.
         vertexF32[offset32++] = quad[6];
         vertexF32[offset32++] = quad[7];
         vertexF32[offset32++] = 1;
-        vertexF32[offset32++] = 0;
+        vertexF32[offset32++] = 1;
 
         // Update vertex buffer.
         // Because we are probably using a generic vertex buffer

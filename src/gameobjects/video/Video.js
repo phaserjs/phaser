@@ -199,15 +199,15 @@ var Video = new Class({
 
         /**
          * If you have saved this video to a texture via the `saveTexture` method, this controls if the video
-         * is rendered with `flipY` in WebGL or not. You often need to set this if you wish to use the video texture
-         * as the input source for a shader. If you find your video is appearing upside down within a shader or
+         * is rendered with `flipY` in WebGL or not.
+         * If you find your video is appearing upside down within a shader or
          * custom renderer, flip this property.
          *
-         * @name Phaser.GameObjects.Video#flipY
+         * @name Phaser.GameObjects.Video#glFlipY
          * @type {boolean}
-         * @since 3.20.0
+         * @since 4.0.0
          */
-        this.flipY = false;
+        this.glFlipY = true;
 
         /**
          * The key used by the texture as stored in the Texture Manager.
@@ -890,7 +890,7 @@ var Video = new Class({
                 this.videoTexture = texture;
                 this.videoTextureSource = texture.source[0];
 
-                this.videoTextureSource.setFlipY(this.flipY);
+                this.videoTextureSource.setFlipY(this.glFlipY);
 
                 this.emit(Events.VIDEO_TEXTURE, this, texture);
             }
@@ -2224,20 +2224,20 @@ var Video = new Class({
      * by using the `Texture.add` method. After doing this, you can then allow Game Objects
      * to use a specific frame.
      *
-     * If you intend to save the texture so you can use it as the input for a Shader, you may need to set the
-     * `flipY` parameter to `true` if you find the video renders upside down in your shader.
+     * If you intend to save the texture so you can use it as the input for a Shader, you may need to toggle the
+     * `flipY` parameter if you find the video renders upside down in your shader.
      *
      * @method Phaser.GameObjects.Video#saveTexture
      * @since 3.20.0
      *
      * @param {string} key - The unique key to store the texture as within the global Texture Manager.
-     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y` during upload?
+     * @param {boolean} [flipY=true] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y` during upload?
      *
      * @return {boolean} Returns `true` if the texture is available immediately, otherwise returns `false` and you should listen for the `TEXTURE_READY` event.
      */
     saveTexture: function (key, flipY)
     {
-        if (flipY === undefined) { flipY = false; }
+        if (flipY === undefined) { flipY = true; }
 
         if (this.videoTexture)
         {
@@ -2246,7 +2246,7 @@ var Video = new Class({
         }
 
         this._key = key;
-        this.flipY = flipY;
+        this.glFlipY = flipY;
 
         return (this.videoTexture) ? true : false;
     },

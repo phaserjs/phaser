@@ -102,9 +102,9 @@ var ParseXMLBitmapFont = function (xml, frame, xSpacing, ySpacing, texture)
         }
 
         var u0 = (textureX + gx) / textureWidth;
-        var v0 = (textureY + gy) / textureHeight;
+        var v0 = 1 - (textureY + gy) / textureHeight;
         var u1 = (textureX + gx + gw) / textureWidth;
-        var v1 = (textureY + gy + gh) / textureHeight;
+        var v1 = 1 - (textureY + gy + gh) / textureHeight;
 
         data.chars[charCode] =
         {

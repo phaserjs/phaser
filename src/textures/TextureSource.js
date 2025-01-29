@@ -27,7 +27,7 @@ var WebGLTextureWrapper = require('../renderer/webgl/wrappers/WebGLTextureWrappe
  * @param {(HTMLImageElement|HTMLCanvasElement|HTMLVideoElement|Phaser.GameObjects.RenderTexture|Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper|Phaser.Types.Textures.CompressedTextureData|Phaser.Textures.DynamicTexture)} source - The source image data.
  * @param {number} [width] - Optional width of the source image. If not given it's derived from the source itself.
  * @param {number} [height] - Optional height of the source image. If not given it's derived from the source itself.
- * @param {boolean} [flipY=false] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
+ * @param {boolean} [flipY=true] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
  */
 var TextureSource = new Class({
 
@@ -35,7 +35,7 @@ var TextureSource = new Class({
 
     function TextureSource (texture, source, width, height, flipY)
     {
-        if (flipY === undefined) { flipY = false; }
+        if (flipY === undefined) { flipY = true; }
 
         var game = texture.manager.game;
 

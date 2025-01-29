@@ -77,9 +77,9 @@ var ParseRetroFont = function (scene, config)
         var charCode = letters.charCodeAt(i);
 
         var u0 = (textureX + x) / textureWidth;
-        var v0 = (textureY + y) / textureHeight;
+        var v0 = 1 - (textureY + y) / textureHeight;
         var u1 = (textureX + x + w) / textureWidth;
-        var v1 = (textureY + y + h) / textureHeight;
+        var v1 = 1 - (textureY + y + h) / textureHeight;
 
         data.chars[charCode] =
         {

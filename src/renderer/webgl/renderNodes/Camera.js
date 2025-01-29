@@ -280,7 +280,7 @@ var Camera = new Class({
                     quad[4] - externalX, quad[5] - externalY,
 
                     // Texture coordinates in X, Y, Width, Height:
-                    0, 0, 1, 1,
+                    0, 1, 1, -1,
 
                     // Tint color:
                     tint,

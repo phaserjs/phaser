@@ -626,8 +626,7 @@ var WebGLRenderer = new Class({
         /**
          * The cached flipY state of the Projection matrix.
          *
-         * This is set to `true` when rendering to a Framebuffer,
-         * and `false` when rendering to the canvas.
+         * This is usually `false`, preserving WebGL coordinate space.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#projectionFlipY
          * @type {boolean}
@@ -1352,13 +1351,13 @@ var WebGLRenderer = new Class({
             this.projectionHeight = height;
             this.projectionFlipY = !!flipY;
 
-            if (!flipY)
+            if (flipY)
             {
-                this.projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
+                this.projectionMatrix.ortho(0, width, 0, height, -1000, 1000);
             }
             else
             {
-                this.projectionMatrix.ortho(0, width, 0, height, -1000, 1000);
+                this.projectionMatrix.ortho(0, width, height, 0, -1000, 1000);
             }
         }
 
@@ -1380,7 +1379,7 @@ var WebGLRenderer = new Class({
         return this.setProjectionMatrix(
             drawingContext.width,
             drawingContext.height,
-            !drawingContext.framebuffer.useCanvas
+            false
         );
     },
 
@@ -1623,7 +1622,7 @@ var WebGLRenderer = new Class({
      * @param {?number} height - Height of the texture in pixels. If not supplied, it must be derived from `pixels`.
      * @param {boolean} [pma=true] - Does the texture have premultiplied alpha?
      * @param {boolean} [forceSize=false] - If `true` it will use the width and height passed to this method, regardless of the pixels dimension.
-     * @param {boolean} [flipY=false] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
+     * @param {boolean} [flipY=true] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The WebGLTextureWrapper that was created.
      */
@@ -2164,14 +2163,14 @@ var WebGLRenderer = new Class({
      * @param {HTMLCanvasElement} srcCanvas - The Canvas to create the WebGL Texture from
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [dstTexture] - The destination WebGLTextureWrapper to set.
      * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT` (such as for Text objects?)
-     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * @param {boolean} [flipY=true] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created, or updated, WebGLTextureWrapper.
      */
     canvasToTexture: function (srcCanvas, dstTexture, noRepeat, flipY)
     {
         if (noRepeat === undefined) { noRepeat = false; }
-        if (flipY === undefined) { flipY = false; }
+        if (flipY === undefined) { flipY = true; }
 
         var gl = this.gl;
         var minFilter = gl.NEAREST;
@@ -2215,14 +2214,14 @@ var WebGLRenderer = new Class({
      *
      * @param {HTMLCanvasElement} srcCanvas - The Canvas to create the WebGL Texture from.
      * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT` (such as for Text objects?)
-     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * @param {boolean} [flipY=true] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created WebGLTextureWrapper.
      */
     createCanvasTexture: function (srcCanvas, noRepeat, flipY)
     {
         if (noRepeat === undefined) { noRepeat = false; }
-        if (flipY === undefined) { flipY = false; }
+        if (flipY === undefined) { flipY = true; }
 
         return this.canvasToTexture(srcCanvas, null, noRepeat, flipY);
     },
@@ -2235,14 +2234,14 @@ var WebGLRenderer = new Class({
      *
      * @param {HTMLCanvasElement} srcCanvas - The Canvas to update the WebGL Texture from.
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} dstTexture - The destination WebGLTextureWrapper to update.
-     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * @param {boolean} [flipY=true] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT` (such as for Text objects?)
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The updated WebGLTextureWrapper. This is the same wrapper object as `dstTexture`.
      */
     updateCanvasTexture: function (srcCanvas, dstTexture, flipY, noRepeat)
     {
-        if (flipY === undefined) { flipY = false; }
+        if (flipY === undefined) { flipY = true; }
         if (noRepeat === undefined) { noRepeat = false; }
 
         return this.canvasToTexture(srcCanvas, dstTexture, noRepeat, flipY);
@@ -2259,14 +2258,14 @@ var WebGLRenderer = new Class({
      * @param {HTMLVideoElement} srcVideo - The Video to create the WebGL Texture from
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [dstTexture] - The destination WebGLTextureWrapper to set.
      * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT`?
-     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * @param {boolean} [flipY=true] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created, or updated, WebGLTextureWrapper.
      */
     videoToTexture: function (srcVideo, dstTexture, noRepeat, flipY)
     {
         if (noRepeat === undefined) { noRepeat = false; }
-        if (flipY === undefined) { flipY = false; }
+        if (flipY === undefined) { flipY = true; }
 
         var gl = this.gl;
         var minFilter = gl.NEAREST;
@@ -2310,14 +2309,14 @@ var WebGLRenderer = new Class({
      *
      * @param {HTMLVideoElement} srcVideo - The Video to create the WebGL Texture from
      * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT`?
-     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * @param {boolean} [flipY=true] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created WebGLTextureWrapper.
      */
     createVideoTexture: function (srcVideo, noRepeat, flipY)
     {
         if (noRepeat === undefined) { noRepeat = false; }
-        if (flipY === undefined) { flipY = false; }
+        if (flipY === undefined) { flipY = true; }
 
         return this.videoToTexture(srcVideo, null, noRepeat, flipY);
     },
@@ -2330,14 +2329,14 @@ var WebGLRenderer = new Class({
      *
      * @param {HTMLVideoElement} srcVideo - The Video to update the WebGL Texture with.
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} dstTexture - The destination WebGLTextureWrapper to update.
-     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
+     * @param {boolean} [flipY=true] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      * @param {boolean} [noRepeat=false] - Should this canvas be allowed to set `REPEAT`?
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The updated WebGLTextureWrapper. This is the same wrapper object as `dstTexture`.
      */
     updateVideoTexture: function (srcVideo, dstTexture, flipY, noRepeat)
     {
-        if (flipY === undefined) { flipY = false; }
+        if (flipY === undefined) { flipY = true; }
         if (noRepeat === undefined) { noRepeat = false; }
 
         return this.videoToTexture(srcVideo, dstTexture, noRepeat, flipY);
@@ -2356,9 +2355,10 @@ var WebGLRenderer = new Class({
      * @param {number} width - The width of the texture.
      * @param {number} height - The height of the texture.
      * @param {boolean} [pma = true] - Should the texture be set as having premultiplied alpha?
+     * @param {boolean} [flipY = true] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created WebGLTextureWrapper.
      */
-    createUint8ArrayTexture: function (data, width, height, pma)
+    createUint8ArrayTexture: function (data, width, height, pma, flipY)
     {
         var gl = this.gl;
         var minFilter = gl.NEAREST;
@@ -2373,8 +2373,9 @@ var WebGLRenderer = new Class({
         }
 
         if (pma === undefined) { pma = true; }
+        if (flipY === undefined) { flipY = true; }
 
-        return this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, data, width, height, pma);
+        return this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, data, width, height, pma, false, flipY);
     },
 
     /**

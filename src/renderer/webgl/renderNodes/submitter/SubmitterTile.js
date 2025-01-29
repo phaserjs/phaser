@@ -142,10 +142,10 @@ var SubmitterTile = new Class({
             this._renderOptions,
 
             // Frame coordinates in order TL, BL, TR, BR:
-            u0, v0,
             u0, v1,
-            u1, v0,
-            u1, v1
+            u0, v0,
+            u1, v1,
+            u1, v0
         );
 
         this.onRunEnd(drawingContext);

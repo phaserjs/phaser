@@ -213,17 +213,6 @@ var BaseFilterShader = new Class({
             yBR += paddingBottom;
         }
 
-        if (outputDrawingContext.useCanvas)
-        {
-            // Flip top and bottom.
-            var temp = yTL;
-            yTL = yBL;
-            yBL = temp;
-            temp = yTR;
-            yTR = yBR;
-            yBR = temp;
-        }
-
         // Populate vertex buffer.
         var stride = this.vertexBufferLayout.layout.stride;
         var vertexBuffer = this.vertexBufferLayout.buffer;

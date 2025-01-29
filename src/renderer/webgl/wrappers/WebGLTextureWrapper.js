@@ -34,7 +34,7 @@ var IsSizePowerOfTwo = require('../../../math/pow2/IsSizePowerOfTwo');
  * @param {number} height - Height of the texture in pixels.
  * @param {boolean} [pma=true] - Does the texture have premultiplied alpha?
  * @param {boolean} [forceSize=false] - If `true` it will use the width and height passed to this method, regardless of the pixels dimension.
- * @param {boolean} [flipY=false] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
+ * @param {boolean} [flipY=true] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
  */
 var WebGLTextureWrapper = new Class({
 
@@ -42,6 +42,8 @@ var WebGLTextureWrapper = new Class({
 
     function WebGLTextureWrapper (renderer, mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY)
     {
+        if (flipY === undefined) { flipY = true; }
+
         /**
          * The WebGLRenderer this WebGLTexture belongs to.
          *
