@@ -401,7 +401,7 @@ var SpriteGPULayer = new Class({
      *
      * @method Phaser.GameObjects.SpriteGPULayer#setAnimations
      * @since 4.0.0
-     * @param {(Phaser.Animations.Animation|{name: string, duration: number, frames: (string|number)[]})[]}
+     * @param {Phaser.Animations.Animation[]|Phaser.Types.GameObjects.SpriteGPULayer.SetAnimation[]} animations - An array of animations to set.
      * @returns {this} This SpriteGPULayer object.
      */
     setAnimations: function (animations)
