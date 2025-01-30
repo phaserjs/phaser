@@ -18,7 +18,7 @@ var SpriteGPULayer = require('./SpriteGPULayer');
  * @method Phaser.GameObjects.GameObjectCreator#spriteGPULayer
  * @since 4.0.0
  *
- * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} config - The configuration object this Game Object will use to create itself. Must include `{ size: number }`.
+ * @param {Phaser.Types.GameObjects.SpriteGPULayer.SpriteGPULayerConfig} config - The configuration object this Game Object will use to create itself. Must include `{ size: number }`.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.SpriteGPULayer} The Game Object that was created.
