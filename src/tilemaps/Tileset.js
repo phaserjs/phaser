@@ -674,7 +674,7 @@ var Tileset = new Class({
         }
 
         var u8 = new Uint8Array(u32.buffer);
-        this._animationDataTexture = renderer.createUint8ArrayTexture(u8, width, height, false);
+        this._animationDataTexture = renderer.createUint8ArrayTexture(u8, width, height, false, true);
         this._animationDataIndexMap = indexToAnimMap;
         this.maxAnimationLength = maxLength;
     }
