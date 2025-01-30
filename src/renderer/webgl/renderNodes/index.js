@@ -50,6 +50,7 @@ var RenderNodes = {
     RenderNode: require('./RenderNode'),
     StrokePath: require('./StrokePath'),
     SubmitterQuad: require('./submitter/SubmitterQuad'),
+    SubmitterSpriteGPULayer: require('./submitter/SubmitterSpriteGPULayer'),
     SubmitterTile: require('./submitter/SubmitterTile'),
     SubmitterTilemapGPULayer: require('./submitter/SubmitterTilemapGPULayer'),
     SubmitterTileSprite: require('./submitter/SubmitterTileSprite'),

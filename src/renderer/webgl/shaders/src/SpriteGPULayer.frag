@@ -1,0 +1,31 @@
+#pragma phaserTemplate(shaderName)
+
+#pragma phaserTemplate(extensions)
+
+#pragma phaserTemplate(features)
+
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+
+#pragma phaserTemplate(fragmentDefine)
+
+uniform vec2 uResolution;
+
+varying vec2 outTexCoord;
+varying float outTintEffect;
+varying vec4 outTint;
+
+#pragma phaserTemplate(outVariables)
+
+#pragma phaserTemplate(fragmentHeader)
+
+void main ()
+{
+    #pragma phaserTemplate(fragmentProcess)
+
+    // The fragment process must insert `fragColor`, e.g. `vec4 fragColor = getTexture();`.
+    gl_FragColor = fragColor;
+}

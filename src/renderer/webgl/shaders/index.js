@@ -43,6 +43,8 @@ module.exports = {
     ShaderQuadFrag: require('./ShaderQuad-frag.js'),
     ShaderQuadVert: require('./ShaderQuad-vert.js'),
     SimpleTextureVert: require('./SimpleTexture-vert.js'),
+    SpriteGPULayerFrag: require('./SpriteGPULayer-frag.js'),
+    SpriteGPULayerVert: require('./SpriteGPULayer-vert.js'),
     TilemapGPULayerFrag: require('./TilemapGPULayer-frag.js'),
     TilemapGPULayerVert: require('./TilemapGPULayer-vert.js')
 
