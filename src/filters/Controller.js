@@ -13,6 +13,10 @@ var Rectangle = require('../geom/rectangle/Rectangle');
  *
  * You should not normally create an instance of this class directly, but instead use one of the built-in filters that extend it.
  *
+ * You should not use a Controller for more than one Camera.
+ * Create a new instance for each Camera that you wish to apply the filter to.
+ * If you share Controllers, and destroy one owner, the Controller will be destroyed.
+ *
  * @class Controller
  * @memberof Phaser.Filters
  * @constructor

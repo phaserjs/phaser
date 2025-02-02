@@ -925,6 +925,13 @@ var GameObject = new Class({
             this.body = undefined;
         }
 
+        if (this.filterCamera)
+        {
+            this.filterCamera.destroy();
+
+            this.filterCamera = undefined;
+        }
+
         this.active = false;
         this.visible = false;
 
