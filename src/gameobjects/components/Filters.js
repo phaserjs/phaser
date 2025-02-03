@@ -326,14 +326,25 @@ if (typeof WEBGL_RENDERER)
 
             var flipX = gameObject.flipX ? -1 : 1;
             var flipY = gameObject.flipY ? -1 : 1;
+            var scrollFactorX = gameObject.scrollFactorX;
+            var scrollFactorY = gameObject.scrollFactorY;
 
-            transformMatrix.applyITRS(
-                gameObject.x,
-                gameObject.y,
-                gameObject.rotation,
-                gameObject.scaleX * flipX,
-                gameObject.scaleY * flipY
-            );
+            if (gameObject.type === 'Layer')
+            {
+                transformMatrix.loadIdentity();
+                scrollFactorX = 1;
+                scrollFactorY = 1;
+            }
+            else
+            {
+                transformMatrix.applyITRS(
+                    gameObject.x,
+                    gameObject.y,
+                    gameObject.rotation,
+                    gameObject.scaleX * flipX,
+                    gameObject.scaleY * flipY
+                );
+            }
 
             // Offset origin.
             var width = filterCamera.width;
@@ -349,14 +360,14 @@ if (typeof WEBGL_RENDERER)
                 cameraMatrix = new TransformMatrix().copyFrom(camera.matrix);
                 cameraMatrix.multiplyWithOffset(
                     parentMatrix,
-                    -camera.scrollX * gameObject.scrollFactorX,
-                    -camera.scrollY * gameObject.scrollFactorY
+                    -camera.scrollX * scrollFactorX,
+                    -camera.scrollY * scrollFactorY
                 );
             }
             else
             {
-                transformMatrix.e -= camera.scrollX * gameObject.scrollFactorX;
-                transformMatrix.f -= camera.scrollY * gameObject.scrollFactorY;
+                transformMatrix.e -= camera.scrollX * scrollFactorX;
+                transformMatrix.f -= camera.scrollY * scrollFactorY;
             }
 
             //  Multiply the camera by the transform, store result in transformMatrix
@@ -413,6 +424,7 @@ if (typeof WEBGL_RENDERER)
             if (!camera)
             {
                 if (!(
+                    this.type === 'Layer' ||
                     isNaN(posX) || isNaN(posY) ||
                     isNaN(width) || isNaN(height) ||
                     isNaN(originX) || isNaN(originY) ||
@@ -430,6 +442,12 @@ if (typeof WEBGL_RENDERER)
             {
                 if (camera)
                 {
+                    posX = posX || 0;
+                    posY = posY || 0;
+                    rotation = rotation || 0;
+                    scaleX = scaleX || 1;
+                    scaleY = scaleY || 1;
+
                     width = camera.width;
                     height = camera.height;
                     centerX = camera.scrollX + width / 2;
