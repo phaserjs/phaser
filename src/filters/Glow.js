@@ -49,7 +49,7 @@ var Controller = require('./Controller');
 var Glow = new Class({
     Extends: Controller,
 
-    initialize: function (camera, color, outerStrength, innerStrength, scale, knockout, quality, distance)
+    initialize: function Glow (camera, color, outerStrength, innerStrength, scale, knockout, quality, distance)
     {
         if (outerStrength === undefined) { outerStrength = 4; }
         if (innerStrength === undefined) { innerStrength = 0; }
