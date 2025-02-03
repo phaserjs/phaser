@@ -93,6 +93,21 @@ var Controller = new Class({
          * @readonly
          */
         this.allowBaseDraw = true;
+
+        /**
+         * Whether this filter controller will be destroyed when the FilterList
+         * that owns it is destroyed. If you enable this, you must ensure that
+         * you clean up the filter controller at an appropriate time.
+         * This allows you to reuse a controller for multiple objects;
+         * this is not recommended unless you know what you're doing.
+         * It tends to work best with external filters.
+         *
+         * @name Phaser.Filters.Controller#ignoreDestroy
+         * @type {boolean}
+         * @since 4.0.0
+         * @default false
+         */
+        this.ignoreDestroy = false;
     },
 
     /**

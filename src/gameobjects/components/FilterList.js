@@ -124,7 +124,11 @@ var FilterList = new Class({
     {
         for (var i = 0; i < this.list.length; i++)
         {
-            this.list[i].destroy();
+            var filter = this.list[i];
+            if (!filter.ignoreDestroy)
+            {
+                filter.destroy();
+            }
         }
 
         this.list.length = 0;
@@ -164,17 +168,21 @@ var FilterList = new Class({
      * @since 4.0.0
      *
      * @param {Phaser.Filters.Controller} filter - The filter to remove.
+     * @param {boolean} [forceDestroy=false] - If `true`, the filter will be destroyed even if it has the `ignoreDestroy` flag set.
      *
      * @return {this} This FilterList instance.
      */
-    remove: function (filter)
+    remove: function (filter, forceDestroy)
     {
         var index = this.list.indexOf(filter);
 
         if (index !== -1)
         {
             this.list.splice(index, 1);
-            filter.destroy();
+            if (!filter.ignoreDestroy || forceDestroy)
+            {
+                filter.destroy();
+            }
         }
 
         return this;
