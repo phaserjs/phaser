@@ -788,7 +788,6 @@ var WebGLRenderer = new Class({
             ArrayEach(_this.glBufferWrappers, wrapperCreateResource);
             ArrayEach(_this.glFramebufferWrappers, wrapperCreateResource);
             ArrayEach(_this.glProgramWrappers, wrapperCreateResource);
-            ArrayEach(_this.glAttribLocationWrappers, wrapperCreateResource);
             ArrayEach(_this.glVAOWrappers, wrapperCreateResource);
 
             // Restore texture unit assignment.
@@ -2449,7 +2448,6 @@ var WebGLRenderer = new Class({
         {
             wrapper.destroy();
         };
-        ArrayEach(this.glAttribLocationWrappers, wrapperDestroy);
         ArrayEach(this.glBufferWrappers, wrapperDestroy);
         ArrayEach(this.glFramebufferWrappers, wrapperDestroy);
         ArrayEach(this.glProgramWrappers, wrapperDestroy);
