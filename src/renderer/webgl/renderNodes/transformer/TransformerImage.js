@@ -151,10 +151,6 @@ var TransformerImage = new Class({
             //  Multiply the camera by the parent matrix
             camMatrix.copyFrom(camera.matrix);
             camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * gameObject.scrollFactorX, -camera.scrollY * gameObject.scrollFactorY);
-
-            //  Undo the camera scroll
-            spriteMatrix.e = gx;
-            spriteMatrix.f = gy;
         }
         else
         {

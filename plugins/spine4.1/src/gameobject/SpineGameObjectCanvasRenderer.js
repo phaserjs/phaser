@@ -45,10 +45,6 @@ var SpineGameObjectCanvasRenderer = function (renderer, src, camera, parentMatri
         //  Multiply the camera by the parent matrix
         camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
 
-        //  Undo the camera scroll
-        spriteMatrix.e = src.x;
-        spriteMatrix.f = src.y;
-
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
     }

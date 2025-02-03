@@ -73,7 +73,7 @@ var Camera = new Class({
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
      * @param {Phaser.GameObjects.GameObject[]} children - The list of children to render.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - Current Camera.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - This transform matrix is defined if the game object is nested
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - This transform matrix is defined if the camera is focused on a filtered object.
      * @param {boolean} [forceFramebuffer=false] - Should the camera always draw to a new framebuffer? This will also be activated if the camera has filters enabled.
      * @param {number} [renderStep=0] - Which step of the rendering process is this? This is the index of the currently running function in a list of functions.
      */

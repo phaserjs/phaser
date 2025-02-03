@@ -54,10 +54,6 @@ var TilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
         //  Multiply the camera by the parent matrix
         camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
 
-        //  Undo the camera scroll
-        layerMatrix.e = src.x;
-        layerMatrix.f = src.y;
-
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(layerMatrix, calcMatrix);
 

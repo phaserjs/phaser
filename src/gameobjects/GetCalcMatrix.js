@@ -45,10 +45,6 @@ var GetCalcMatrix = function (src, camera, parentMatrix)
     {
         //  Multiply the camera by the parent matrix
         camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        spriteMatrix.e = src.x;
-        spriteMatrix.f = src.y;
     }
     else
     {

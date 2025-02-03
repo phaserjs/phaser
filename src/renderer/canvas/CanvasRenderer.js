@@ -790,10 +790,6 @@ var CanvasRenderer = new Class({
         {
             //  Multiply the camera by the parent matrix
             camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * sprite.scrollFactorX, -camera.scrollY * sprite.scrollFactorY);
-
-            //  Undo the camera scroll
-            spriteMatrix.e = gx;
-            spriteMatrix.f = gy;
         }
         else
         {

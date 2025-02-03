@@ -91,10 +91,6 @@ var ParticleEmitterCanvasRenderer = function (renderer, emitter, camera, parentM
 
         camMatrix.multiplyWithOffset(managerMatrix, -camera.scrollX * scrollFactorX, -camera.scrollY * scrollFactorY);
 
-        //  Undo the camera scroll
-        particleMatrix.e = particle.x;
-        particleMatrix.f = particle.y;
-
         //  Multiply by the particle matrix, store result in calcMatrix
         camMatrix.multiply(particleMatrix, calcMatrix);
 

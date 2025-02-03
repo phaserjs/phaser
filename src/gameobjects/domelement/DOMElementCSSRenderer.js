@@ -79,10 +79,6 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
         //  Multiply the camera by the parent matrix
         camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
 
-        //  Undo the camera scroll
-        srcMatrix.e = src.x - dx;
-        srcMatrix.f = src.y - dy;
-
         //  Multiply by the src matrix, store result in calcMatrix
         camMatrix.multiply(srcMatrix, calcMatrix);
     }

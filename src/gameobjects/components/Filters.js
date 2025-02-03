@@ -252,7 +252,9 @@ if (typeof WEBGL_RENDERER)
             if (
                 !this.getBounds ||
                 this.width === undefined ||
-                this.height === undefined
+                this.height === undefined ||
+                this.width === 0 ||
+                this.height === 0
             )
             {
                 this.filtersFocusContext = true;
@@ -350,10 +352,6 @@ if (typeof WEBGL_RENDERER)
                     -camera.scrollX * gameObject.scrollFactorX,
                     -camera.scrollY * gameObject.scrollFactorY
                 );
-
-                // Undo the camera scroll.
-                transformMatrix.e = gameObject.x;
-                transformMatrix.f = gameObject.y;
             }
             else
             {
