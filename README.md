@@ -76,6 +76,7 @@ Other changes also include the following:
 * The functions `Geom.Rectangle.ContainsPoint`, `Rectangle.GetCenter`, `Rectangle.GetPoint`, `Rectangle.GetPoints`, `Rectangle.GetSize`, `Rectangle.MarchingAnts`, `Rectangle.MergePoints`, `Rectangle.OffsetPoint`, `Rectangle.PerimeterPoint`, `Rectangle.Random` and `Rectangle.RandomOutside` all now take and in some cases return Vector2 instances instead of Point objects.
 * `Geom.Triangle.getPoint`, `getPoints` and `getRandomPoint` now all return Vector2 objects instead of Point.
 * The functions `Geom.Triangle.Centroid`, `Triangle.CircumCenter`, `Triangle.ContainsArray`, `Triangle.ContainsPoint`, `Triangle.GetPoint`, `Triangle.GetPoints`, `Triangle.InCenter`, `Triangle.Random` and `Triangle.RotateAroundPoint` all now take and in some cases return Vector2 instances instead of Point objects.
+* `DynamicTexture` and `RenderTexture` must call `render()` to actually draw.
 
 v4.0.0 Beta 2 Updates:
 
