@@ -10,6 +10,9 @@ precision highp float;
 precision mediump float;
 #endif
 
+// Bias to avoid floating-point rounding errors around 0.5.
+#define ROUND_BIAS 0.5001
+
 #pragma phaserTemplate(vertexDefine)
 
 uniform mat4 uProjectionMatrix;
@@ -580,12 +583,13 @@ void main ()
     alpha *= uCameraScrollAndAlpha.z;
     tint.a *= alpha;
 
-    gl_Position = uProjectionMatrix * vec4(position.xy, 1.0, 1.0);
-
-    if (uRoundPixels == 1)
+    // Round corner coordinates if the quad is not transformed.
+    if (uRoundPixels == 1 && rotation == 0.0 && scaleX == 1.0 && scaleY == 1.0)
     {
-        gl_Position.xy = floor(((gl_Position.xy + 1.0) * 0.5 * uResolution) + 0.5) / uResolution * 2.0 - 1.0;
+        position.xy = floor(position.xy + ROUND_BIAS);
     }
+
+    gl_Position = uProjectionMatrix * vec4(position.xy, 1.0, 1.0);
 
     outTexCoord = vec2(u, 1.0 - v);
     outTint = mix(vec4(1.0, 1.0, 1.0, tint.a), tint, tintBlend);

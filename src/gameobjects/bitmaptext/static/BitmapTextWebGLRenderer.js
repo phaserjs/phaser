@@ -55,8 +55,6 @@ var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMat
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
 
-    var roundPixels = camera.roundPixels;
-
     var charColors = src.charColors;
 
     var getTint = Utils.getTintAppendFloatAlpha;
@@ -102,7 +100,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMat
                 continue;
             }
 
-            BatchChar(drawingContext, submitterNode, src, char, glyph, dropShadowX, dropShadowY, calcMatrix, roundPixels, tempTintData2);
+            BatchChar(drawingContext, submitterNode, src, char, glyph, dropShadowX, dropShadowY, calcMatrix, tempTintData2);
         }
     }
 
@@ -126,11 +124,11 @@ var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMat
             tempTintData2.tintBottomLeft = getTint(color.tintBL, src._alphaBL);
             tempTintData2.tintBottomRight = getTint(color.tintBR, src._alphaBR);
 
-            BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, roundPixels, tempTintData2);
+            BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, tempTintData2);
         }
         else
         {
-            BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, roundPixels, tempTintData1);
+            BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, tempTintData1);
         }
     }
 };

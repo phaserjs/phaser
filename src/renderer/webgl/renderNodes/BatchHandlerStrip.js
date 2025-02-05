@@ -198,7 +198,6 @@ var BatchHandlerStrip = new Class({
         var vertexViewF32 = vertexBuffer.viewF32;
         var vertexViewU32 = vertexBuffer.viewU32;
 
-        var roundPixels = drawingContext.camera.roundPixels;
         var repeatFirstVertex = false;
 
         // Add degenerate triangles between strips.
@@ -240,12 +239,6 @@ var BatchHandlerStrip = new Class({
 
             var tx = x * a + y * c + e;
             var ty = x * b + y * d + f;
-
-            if (roundPixels)
-            {
-                tx = Math.round(tx);
-                ty = Math.round(ty);
-            }
 
             vertexViewF32[vertexOffset32++] = tx;
             vertexViewF32[vertexOffset32++] = ty;

@@ -28,7 +28,6 @@ var tempTransformData = {
  * @param {number} offsetX - The x offset.
  * @param {number} offsetY - The y offset.
  * @param {Phaser.GameObjects.Components.TransformMatrix} calcMatrix - The transform matrix.
- * @param {boolean} roundPixels - Round the transform values or not?
  * @param {object} tintData - The tint data to pass to the submitter node.
  * @param {number} tintData.tintFill - The tint effect mode.
  * @param {number} tintData.tintTopLeft - The top-left tint value.
@@ -36,7 +35,7 @@ var tempTransformData = {
  * @param {number} tintData.tintBottomLeft - The bottom-left tint value.
  * @param {number} tintData.tintBottomRight - The bottom-right tint value.
  */
-var BatchChar = function (drawingContext, submitterNode, src, char, glyph, offsetX, offsetY, calcMatrix, roundPixels, tintData)
+var BatchChar = function (drawingContext, submitterNode, src, char, glyph, offsetX, offsetY, calcMatrix, tintData)
 {
     tempTextureData.frame = src.frame;
     tempTextureData.uvSource = glyph;
@@ -47,17 +46,17 @@ var BatchChar = function (drawingContext, submitterNode, src, char, glyph, offse
     var xw = x + char.w;
     var yh = y + char.h;
 
-    tempTransformData.quad[0] = calcMatrix.getXRound(x, y, roundPixels);
-    tempTransformData.quad[1] = calcMatrix.getYRound(x, y, roundPixels);
+    tempTransformData.quad[0] = calcMatrix.getX(x, y);
+    tempTransformData.quad[1] = calcMatrix.getY(x, y);
 
-    tempTransformData.quad[2] = calcMatrix.getXRound(x, yh, roundPixels);
-    tempTransformData.quad[3] = calcMatrix.getYRound(x, yh, roundPixels);
+    tempTransformData.quad[2] = calcMatrix.getX(x, yh);
+    tempTransformData.quad[3] = calcMatrix.getY(x, yh);
 
-    tempTransformData.quad[4] = calcMatrix.getXRound(xw, yh, roundPixels);
-    tempTransformData.quad[5] = calcMatrix.getYRound(xw, yh, roundPixels);
+    tempTransformData.quad[4] = calcMatrix.getX(xw, yh);
+    tempTransformData.quad[5] = calcMatrix.getY(xw, yh);
 
-    tempTransformData.quad[6] = calcMatrix.getXRound(xw, y, roundPixels);
-    tempTransformData.quad[7] = calcMatrix.getYRound(xw, y, roundPixels);
+    tempTransformData.quad[6] = calcMatrix.getX(xw, y);
+    tempTransformData.quad[7] = calcMatrix.getY(xw, y);
 
     submitterNode.run(
         drawingContext,
