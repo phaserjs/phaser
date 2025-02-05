@@ -1481,8 +1481,8 @@ var InputPlugin = new Class({
             {
                 input.dragState = 0;
 
-                input.dragX = gameObject.x + input.localX - gameObject.displayOriginX;
-                input.dragY = gameObject.y + input.localY - gameObject.displayOriginY;
+                input.dragX = input.localX - gameObject.displayOriginX;
+                input.dragY = input.localY - gameObject.displayOriginY;
 
                 input.dragStartCamera = null;
 
