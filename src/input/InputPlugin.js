@@ -2378,25 +2378,16 @@ var InputPlugin = new Class({
         {
             var config = hitArea;
 
-            // Check if any supplied Game Object is a Mesh based Game Object
-            var isMesh = gameObjects.some(function (gameObject)
+            hitArea = GetFastValue(config, 'hitArea', null);
+            hitAreaCallback = GetFastValue(config, 'hitAreaCallback', null);
+
+            pixelPerfect = GetFastValue(config, 'pixelPerfect', false);
+            var alphaTolerance = GetFastValue(config, 'alphaTolerance', 1);
+
+            if (pixelPerfect)
             {
-                return gameObject.hasOwnProperty('faces');
-            });
-
-            if (!isMesh)
-            {
-                hitArea = GetFastValue(config, 'hitArea', null);
-                hitAreaCallback = GetFastValue(config, 'hitAreaCallback', null);
-
-                pixelPerfect = GetFastValue(config, 'pixelPerfect', false);
-                var alphaTolerance = GetFastValue(config, 'alphaTolerance', 1);
-
-                if (pixelPerfect)
-                {
-                    hitArea = {};
-                    hitAreaCallback = this.makePixelPerfect(alphaTolerance);
-                }
+                hitArea = {};
+                hitAreaCallback = this.makePixelPerfect(alphaTolerance);
             }
 
             draggable = GetFastValue(config, 'draggable', false);
