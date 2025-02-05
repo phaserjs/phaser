@@ -83,7 +83,7 @@ var SubmitterSpriteGPULayer = new Class({
          * The instance buffer layout for this RenderNode.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterSpriteGPULayer#instanceBufferLayout
-         * @type {Phaser.Renderer.WebGL.WebGLVertexBufferLayoutWrapper}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper}
          * @since 4.0.0
          * @readonly
          */
@@ -99,7 +99,7 @@ var SubmitterSpriteGPULayer = new Class({
          * This consists of 4 bytes, 0-3, forming corners of a quad instance.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterSpriteGPULayer#vertexBufferLayout
-         * @type {Phaser.Renderer.WebGL.WebGLVertexBufferLayoutWrapper}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper}
          * @since 4.0.0
          * @readonly
          */

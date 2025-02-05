@@ -230,7 +230,7 @@ var SpriteGPULayer = new Class({
          * regenerate this by calling `generateFrameDataTexture`.
          *
          * @name Phaser.GameObjects.SpriteGPULayer#frameDataTexture
-         * @type {Phaser.Renderer.WebGL.WebGLTextureWrapper}
+         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @since 4.0.0
          */
         this.frameDataTexture = null;
