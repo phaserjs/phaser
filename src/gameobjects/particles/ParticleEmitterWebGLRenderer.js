@@ -99,7 +99,7 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, drawingContext, 
         var x = -frame.halfWidth;
         var y = -frame.halfHeight;
 
-        calcMatrix.setQuad(x, y, x + frame.width, y + frame.height, false, tempTransformer.quad);
+        calcMatrix.setQuad(x, y, x + frame.width, y + frame.height, tempTransformer.quad);
 
         if (tempTexturer.frame !== frame)
         {

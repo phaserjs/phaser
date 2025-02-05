@@ -42,7 +42,6 @@ var NineSliceWebGLRenderer = function (renderer, src, drawingContext, parentMatr
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, false).calc;
     var color = Utils.getTintAppendFloatAlpha(src.tint, alpha);
     var glTexture = src.frame.source.glTexture;
-    var roundPixels = camera.roundPixels;
     var tintEffect = src.tintFill;
 
     var quad, vtl, vbr;
@@ -56,8 +55,7 @@ var NineSliceWebGLRenderer = function (renderer, src, drawingContext, parentMatr
 
         quad = calcMatrix.setQuad(
             vtl.vx, vtl.vy,
-            vbr.vx, vbr.vy,
-            roundPixels
+            vbr.vx, vbr.vy
         );
 
         batchHandler.batch(

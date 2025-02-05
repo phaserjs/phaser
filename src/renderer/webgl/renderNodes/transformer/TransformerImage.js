@@ -173,7 +173,6 @@ var TransformerImage = new Class({
             y,
             x + texturerNode.frameWidth,
             y + texturerNode.frameHeight,
-            false,
             this.quad
         );
 

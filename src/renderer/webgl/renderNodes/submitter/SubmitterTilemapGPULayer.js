@@ -474,7 +474,6 @@ var SubmitterTilemapGPULayer = new Class({
             y,
             x + width,
             y + height,
-            false,
             quad
         );
 

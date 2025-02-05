@@ -90,7 +90,7 @@ var BlitterWebGLRenderer = function (renderer, src, drawingContext, parentMatrix
             y += frame.height;
         }
 
-        calcMatrix.setQuad(x, y, x + width, y + height, false, tempTransformer.quad);
+        calcMatrix.setQuad(x, y, x + width, y + height, tempTransformer.quad);
 
         tempTexturer.frame = frame;
         tempTexturer.uvSource = frame;
