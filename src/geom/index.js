@@ -17,7 +17,6 @@ var Geom = {
     Ellipse: require('./ellipse'),
     Intersects: require('./intersects'),
     Line: require('./line'),
-    Mesh: require('./mesh'),
     Polygon: require('./polygon'),
     Rectangle: require('./rectangle'),
     Triangle: require('./triangle')

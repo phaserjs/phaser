@@ -9,7 +9,7 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var NineSliceRender = require('./NineSliceRender');
-var Vertex = require('../../geom/mesh/Vertex');
+var Vertex = require('./NineSliceVertex');
 
 /**
  * @classdesc
@@ -226,7 +226,7 @@ var NineSlice = new Class({
          * You should never modify this array once it has been populated.
          *
          * @name Phaser.GameObjects.NineSlice#vertices
-         * @type {Phaser.Geom.Mesh.Vertex[]}
+         * @type {Phaser.GameObjects.NineSliceVertex[]}
          * @since 3.60.0
          */
         this.vertices = [];
