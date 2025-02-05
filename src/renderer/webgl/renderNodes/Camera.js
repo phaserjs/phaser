@@ -16,8 +16,6 @@ function getAlphaTint (alpha)
     return Utils.getTintAppendFloatAlpha(0xffffff, alpha);
 }
 
-var blankRenderOptions = {};
-
 /**
  * @class Camera
  * @memberof Phaser.Renderer.WebGL.RenderNodes
@@ -163,7 +161,10 @@ var Camera = new Class({
             var index, filter, padding, renderNode, tint;
 
             // Set up render options.
-            blankRenderOptions.smoothPixelArt = manager.renderer.game.config.smoothPixelArt;
+            var renderOptions = {
+                smoothPixelArt: manager.renderer.game.config.smoothPixelArt,
+                roundPixels: camera.roundPixels
+            };
 
             // Draw internal filters.
             var coverageInternal = new Rectangle(0, 0, currentContext.width, currentContext.height);
@@ -289,7 +290,7 @@ var Camera = new Class({
                     tint, tint, tint, tint,
 
                     // Render options:
-                    blankRenderOptions
+                    renderOptions
                 );
             }
 
@@ -375,7 +376,7 @@ var Camera = new Class({
                         tint, tint, tint, tint,
 
                         // Render options:
-                        blankRenderOptions
+                        renderOptions
                     );
 
                     currentContext.release();
