@@ -362,7 +362,7 @@ var Animation = new Class({
         //  When is the first update due?
         state.accumulator = 0;
 
-        state.nextTick = (state.currentFrame.duration) ? state.currentFrame.duration : state.msPerFrame;
+        state.nextTick = state.msPerFrame || state.currentFrame.duration;
     },
 
     /**
@@ -515,7 +515,7 @@ var Animation = new Class({
     {
         state.accumulator -= state.nextTick;
 
-        state.nextTick = (state.currentFrame.duration) ? state.currentFrame.duration : state.msPerFrame;
+        state.nextTick = state.msPerFrame || state.currentFrame.duration;
     },
 
     /**
