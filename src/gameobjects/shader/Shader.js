@@ -436,6 +436,7 @@ var Shader = new Class({
      * and are commonly used to drive generative output.
      *
      * By default, the shader uses the whole texture, the range 0-1.
+     * The coordinates are in WebGL texture space, which is 0,0 in the bottom-left.
      * This method allows you to specify a region of the texture to use,
      * or even go outside the 0-1 bounds.
      * This can be useful if you want to use a single frame from a texture,
@@ -454,13 +455,13 @@ var Shader = new Class({
      * @method Phaser.GameObjects.Shader#setTextureCoordinates
      * @since 4.0.0
      * @param {number} [topLeftX=0] - The top-left x coordinate of the texture.
-     * @param {number} [topLeftY=0] - The top-left y coordinate of the texture.
+     * @param {number} [topLeftY=1] - The top-left y coordinate of the texture.
      * @param {number} [topRightX=1] - The top-right x coordinate of the texture.
-     * @param {number} [topRightY=0] - The top-right y coordinate of the texture.
+     * @param {number} [topRightY=1] - The top-right y coordinate of the texture.
      * @param {number} [bottomLeftX=0] - The bottom-left x coordinate of the texture.
-     * @param {number} [bottomLeftY=1] - The bottom-left y coordinate of the texture.
+     * @param {number} [bottomLeftY=0] - The bottom-left y coordinate of the texture.
      * @param {number} [bottomRightX=1] - The bottom-right x coordinate of the texture.
-     * @param {number} [bottomRightY=1] - The bottom-right y coordinate of the texture.
+     * @param {number} [bottomRightY=0] - The bottom-right y coordinate of the texture.
      * @return {this} This Shader instance
      */
     setTextureCoordinates: function (
@@ -471,13 +472,13 @@ var Shader = new Class({
     )
     {
         if (topLeftX === undefined) { topLeftX = 0; }
-        if (topLeftY === undefined) { topLeftY = 0; }
+        if (topLeftY === undefined) { topLeftY = 1; }
         if (topRightX === undefined) { topRightX = 1; }
-        if (topRightY === undefined) { topRightY = 0; }
+        if (topRightY === undefined) { topRightY = 1; }
         if (bottomLeftX === undefined) { bottomLeftX = 0; }
-        if (bottomLeftY === undefined) { bottomLeftY = 1; }
+        if (bottomLeftY === undefined) { bottomLeftY = 0; }
         if (bottomRightX === undefined) { bottomRightX = 1; }
-        if (bottomRightY === undefined) { bottomRightY = 1; }
+        if (bottomRightY === undefined) { bottomRightY = 0; }
 
         this.textureCoordinateTopLeft.set(topLeftX, topLeftY);
         this.textureCoordinateTopRight.set(topRightX, topRightY);
