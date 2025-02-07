@@ -276,6 +276,8 @@ var Shader = new Class({
      * where N is `textures.length - 1`.
      * You must set the uniforms in your shader to match these texture units.
      *
+     * Calling this method will replace the existing textures array with the new one.
+     *
      * @example
      * // In the shader source, use the `sampler2D` type.
      * sampler2D uMainSampler;
@@ -298,6 +300,8 @@ var Shader = new Class({
     setTextures: function (textures)
     {
         if (textures === undefined) { textures = []; }
+
+        this.textures.length = 0;
 
         for (var i = 0; i < textures.length; i++)
         {
@@ -342,6 +346,18 @@ var Shader = new Class({
      * By default it will create a single base texture. You can add frames to the texture
      * by using the `Texture.add` method. After doing this, you can then allow Game Objects
      * to use a specific frame from a Render Texture.
+     *
+     * If you want to update a texture only sporadically, don't use this method.
+     * Instead, use a DynamicTexture:
+     *
+     * ```javascript
+     * var shader = this.add.shader('myShader', x, y, width, height);
+     *
+     * var dynamic = this.textures.addDynamicTexture('myTexture', shader.width, shader.height);
+     * 
+     * // To update the texture:
+     * dynamic.clear().draw(shader).render();
+     * ```
      *
      * @method Phaser.GameObjects.Shader#setRenderToTexture
      * @since 3.19.0
