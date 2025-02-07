@@ -15,7 +15,7 @@ precision mediump float;
 
 // The position of the fragment within the quad.
 // This is a value between 0 and 1 across the quad.
-// 0,0 is the top-left, 1,1 is the bottom right.
+// 0,1 is the top-left, 1,0 is the bottom right.
 varying vec2 outTexCoord;
 
 #pragma phaserTemplate(outVariables)

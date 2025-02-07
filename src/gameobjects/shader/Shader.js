@@ -45,17 +45,11 @@ var ShaderRender = require('./ShaderRender');
  * a custom RenderNode instead. However, for background or special masking effects,
  * they are extremely effective.
  *
- * Note: be careful when using `gl_FragCoord` in shader code.
- * This built-in variable gives you the "window relative" coordinate
- * of the pixel being processed.
- * But this is actually relative to the framebuffer size,
- * and Phaser treats all framebuffers except the main canvas
- * as being vertically flipped.
- * This means that `gl_FragCoord.y = 0` in a shader will be the bottom of a framebuffer,
- * but the top of the canvas.
- * This means `gl_FragCoord` gives different results when it's inside a
- * framebuffer (like a Render Texture or Filter) compared to the main canvas.
- * Be aware of this restriction when writing shaders.
+ * Note: be careful when using texture coordinates in shader code.
+ * The built-in variable `gl_FragCoord` and the default uniform `outTexCoord`
+ * both use WebGL coordinates, which are `0,0` in the bottom-left.
+ * Additionally, `gl_FragCoord` says it's in "window relative" coordinates.
+ * But this is actually relative to the framebuffer size.
  *
  * @example
  * // Loading a shader from the cache (good for simple shaders)
@@ -210,43 +204,43 @@ var Shader = new Class({
 
         /**
          * The top-left texture coordinate of the shader.
-         * This is set to 0,0 by default.
+         * This is set to 0,1 by default. It uses WebGL texture coordinates.
          *
          * @name Phaser.GameObjects.Shader#textureCoordinateTopLeft
          * @type {Phaser.Math.Vector2}
          * @since 4.0.0
          */
-        this.textureCoordinateTopLeft = new Vector2(0, 0);
+        this.textureCoordinateTopLeft = new Vector2(0, 1);
 
         /**
          * The top-right texture coordinate of the shader.
-         * This is set to 1,0 by default.
+         * This is set to 1,1 by default. It uses WebGL texture coordinates.
          *
          * @name Phaser.GameObjects.Shader#textureCoordinateTopRight
          * @type {Phaser.Math.Vector2}
          * @since 4.0.0
          */
-        this.textureCoordinateTopRight = new Vector2(1, 0);
+        this.textureCoordinateTopRight = new Vector2(1, 1);
 
         /**
          * The bottom-left texture coordinate of the shader.
-         * This is set to 0,1 by default.
+         * This is set to 0,0 by default. It uses WebGL texture coordinates.
          *
          * @name Phaser.GameObjects.Shader#textureCoordinateBottomLeft
          * @type {Phaser.Math.Vector2}
          * @since 4.0.0
          */
-        this.textureCoordinateBottomLeft = new Vector2(0, 1);
+        this.textureCoordinateBottomLeft = new Vector2(0, 0);
 
         /**
          * The bottom-right texture coordinate of the shader.
-         * This is set to 1,1 by default.
+         * This is set to 1,0 by default. It uses WebGL texture coordinates.
          *
          * @name Phaser.GameObjects.Shader#textureCoordinateBottomRight
          * @type {Phaser.Math.Vector2}
          * @since 4.0.0
          */
-        this.textureCoordinateBottomRight = new Vector2(1, 1);
+        this.textureCoordinateBottomRight = new Vector2(1, 0);
 
         this.setTextures(textures);
         this.setPosition(x, y);
