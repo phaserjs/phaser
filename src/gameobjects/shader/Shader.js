@@ -97,7 +97,7 @@ var ShaderRender = require('./ShaderRender');
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [width=128] - The width of the Game Object.
  * @param {number} [height=128] - The height of the Game Object.
- * @param {string[]|Phaser.Textures.Texture[]} [textures] - The textures that the shader uses, if any.
+ * @param {string[]|Phaser.Textures.Texture[]} [textures] - The textures that the shader uses, if any. If you intend to define the textures later, use `'__DEFAULT'` as a placeholder, to avoid initialization errors.
  */
 var Shader = new Class({
     Extends: GameObject,
