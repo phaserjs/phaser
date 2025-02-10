@@ -45,6 +45,7 @@
 * On hex maps, creating a blank layer with `Phaser.Tilemaps.Tilemap#createBlankLayer` correctly sets `hexSideLength` loaded from the hex tilemap. Fix #6074 (thanks @wwoods)
 * `Phaser.Input.InputPlugin#processDragUpEvent` correctly returns `x` and `y` coordinates in world space.
 * `Phaser.Animations.AnimationState#play` method prioritises `frameRate` when it is set in the `PlayAnimationConfig` object over animation data loaded from an external file.
+* Fixed an issue where sounds / music would stop playing in iOS 17.5.1+ or iOS18+ after losing/gaining focus in Safari. The Web Audio Sound Manager will now listen for the 'visible' event and suspend and resume the context as a result. Fix #6829 (thanks @JanAmbrozic @condeagustin)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
