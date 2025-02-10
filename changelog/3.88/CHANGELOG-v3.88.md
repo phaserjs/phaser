@@ -44,6 +44,7 @@
 * Setting scale `mode` to `Phaser.Scale.FIT` and `autoCenter` to `Phaser.Scale.CENTER_BOTH` correctly centres canvas on iOS devices. Fix #6862 (thanks @HawkenKing)
 * On hex maps, creating a blank layer with `Phaser.Tilemaps.Tilemap#createBlankLayer` correctly sets `hexSideLength` loaded from the hex tilemap. Fix #6074 (thanks @wwoods)
 * `Phaser.Input.InputPlugin#processDragUpEvent` correctly returns `x` and `y` coordinates in world space.
+* `Phaser.Animations.AnimationState#play` method prioritises `frameRate` when it is set in the `PlayAnimationConfig` object over animation data loaded from an external file.
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
