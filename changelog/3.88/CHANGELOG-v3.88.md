@@ -20,6 +20,7 @@
 * `Phaser.Tilemaps.Parsers.Tiled.ParseTilesets`, `Phaser.Tilemaps.Parsers.Tiled.BuildTilesetIndex` and `Phaser.Tilemaps.ImageCollection#addImage` updated to include `width` and `height` of each individual image. Fix #6990 (thanks @stickleprojects)
 * `Phaser.Tilemaps.Components.RenderDebug` and `Phaser.Tilemaps.Parsers.Tiled.BuildTilesetIndex` updated to include `width` and `height` offsets in Image Collections.
 * Added a warning to `Phaser.Tilemaps.Components.GetTilesWithinShape` when attempting to use this method with non orthogonal tilemaps.
+* Changed `Phaser.Cameras.Scene2D.Camera#preRender` method from protected to public.
 
 ## Bug Fixes
 
