@@ -58,6 +58,7 @@ var Utils = require('../renderer/webgl/Utils');
  * @param {string} key - The unique string-based key of this Texture.
  * @param {number} [width=256] - The width of this Dymamic Texture in pixels. Defaults to 256 x 256.
  * @param {number} [height=256] - The height of this Dymamic Texture in pixels. Defaults to 256 x 256.
+ * @param {boolean} [forceEven=true] - Force the given width and height to be rounded to even values. This significantly improves the rendering quality. Set to false if you know you need an odd sized texture.
  */
 var DynamicTexture = new Class({
 
@@ -65,10 +66,11 @@ var DynamicTexture = new Class({
 
     initialize:
 
-    function DynamicTexture (manager, key, width, height)
+    function DynamicTexture (manager, key, width, height, forceEven)
     {
         if (width === undefined) { width = 256; }
         if (height === undefined) { height = 256; }
+        if (forceEven === undefined) { forceEven = true; }
 
         /**
          * The internal data type of this object.
@@ -226,7 +228,7 @@ var DynamicTexture = new Class({
          */
         this.pipeline = (!isCanvas) ? renderer.pipelines.get(PIPELINES.SINGLE_PIPELINE) : null;
 
-        this.setSize(width, height);
+        this.setSize(width, height, forceEven);
     },
 
     /**
@@ -244,12 +246,30 @@ var DynamicTexture = new Class({
      *
      * @param {number} width - The new width of this Dynamic Texture.
      * @param {number} [height=width] - The new height of this Dynamic Texture. If not specified, will be set the same as the `width`.
+     * @param {boolean} [forceEven=true] - Force the given width and height to be rounded to even values. This significantly improves the rendering quality. Set to false if you know you need an odd sized texture.
      *
      * @return {this} This Dynamic Texture.
      */
-    setSize: function (width, height)
+    setSize: function (width, height, forceEven)
     {
         if (height === undefined) { height = width; }
+        if (forceEven === undefined) { forceEven = true; }
+
+        if (forceEven)
+        {
+            width = Math.floor(width);
+            height = Math.floor(height);
+
+            if (width % 2 !== 0)
+            {
+                width++;
+            }
+
+            if (height % 2 !== 0)
+            {
+                height++;
+            }
+        }
 
         var frame = this.get();
         var source = frame.source;
