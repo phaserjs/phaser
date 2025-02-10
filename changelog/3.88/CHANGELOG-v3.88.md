@@ -4,6 +4,7 @@
 
 * `Transform.getWorldPoint` is a new method that will return the World point as a Vector2 of a Game Object, factoring in parents if applicable (thanks @samme)
 * `Phaser.Utils.Array.GetFirst` can now search from the end of the array when setting `startIndex` to -1.
+* `DynamicTexture` and by extension `RenderTexture` now have a new boolean property `forceEvent` in their constructors and `setSize` and `resize` methods. This will force the given width and height values to be rounded up to the nearest even value. This significantly improves the rendering quality of the render texture in most circumstances, so the flag is `true` by default. This is potentially a 'breaking' change, so if you know you need an odd sized texture, please set the value to `false`. Fix #6988 (thanks @rexrainbow)
 
 ## Updates
 
