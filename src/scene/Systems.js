@@ -124,7 +124,7 @@ var Systems = new Class({
         this.anims;
 
         /**
-         * A reference to the global Cache. The Cache stores all files bought in to Phaser via
+         * A reference to the global Cache. The Cache stores all files brought in to Phaser via
          * the Loader, with the exception of images. Images are stored in the Texture Manager.
          *
          * In the default set-up you can access this from within a Scene via the `this.cache` property.
@@ -196,7 +196,7 @@ var Systems = new Class({
         /**
          * A reference to the Scene's Game Object Factory.
          *
-         * Use this to quickly and easily create new Game Object's.
+         * Use this to quickly and easily create new Game Objects.
          *
          * In the default set-up you can access this from within a Scene via the `this.add` property.
          *
@@ -248,7 +248,7 @@ var Systems = new Class({
         /**
          * A reference to the Scene's Game Object Creator.
          *
-         * Use this to quickly and easily create new Game Object's. The difference between this and the
+         * Use this to quickly and easily create new Game Objects. The difference between this and the
          * Game Object Factory, is that the Creator just creates and returns Game Object instances, it
          * doesn't then add them to the Display List or Update List.
          *
@@ -263,7 +263,7 @@ var Systems = new Class({
         /**
          * A reference to the Scene Manager Plugin.
          *
-         * Use this to manipulate both this and other Scene's in your game, for example to launch a parallel Scene,
+         * Use this to manipulate both this and other Scenes in your game. For example, to launch a parallel Scene,
          * or pause or resume a Scene, or switch from this Scene to another.
          *
          * In the default set-up you can access this from within a Scene via the `this.scene` property.
@@ -280,7 +280,7 @@ var Systems = new Class({
          * Use this to organize the children contained in the update list.
          *
          * The Update List is responsible for managing children that need their `preUpdate` methods called,
-         * in order to process so internal components, such as Sprites with Animations.
+         * in order to process internal components - such as Sprites with Animations.
          *
          * In the default set-up there is no reference to this from within the Scene itself.
          *
@@ -786,7 +786,7 @@ var Systems = new Class({
     },
 
     /**
-     * Destroy this Scene and send a destroy event all of its systems.
+     * Destroy this Scene and send a destroy event to all of its systems.
      * A destroyed Scene cannot be restarted.
      * You should not call this directly, instead use `SceneManager.remove`.
      *
