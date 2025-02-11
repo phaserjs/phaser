@@ -948,7 +948,7 @@ var SpriteGPULayer = new Class({
 
         var member = {};
 
-        var offset = byteOffset;
+        var offset = byteOffset / f32.BYTES_PER_ELEMENT;
 
         member.x = this._getAnimatedValue(offset);
         offset += 4;
@@ -1092,7 +1092,10 @@ var SpriteGPULayer = new Class({
             out = this.nextMemberU32;
         }
 
-        out.set(buffer.viewU32.subarray(byteOffset / 4, byteOffset / 4 + stride / 4));
+        var viewU32 = buffer.viewU32;
+        var bytesPerElement = viewU32.BYTES_PER_ELEMENT;
+
+        out.set(viewU32.subarray(byteOffset / bytesPerElement, byteOffset / bytesPerElement + stride / bytesPerElement));
 
         return out;
     },
