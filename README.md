@@ -57,15 +57,15 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include _either_ of the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.87.0/dist/phaser.js"></script>
-<script src="//cdn.jsdelivr.net/npm/phaser@3.87.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.88.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.88.0/dist/phaser.min.js"></script>
 ```
 
 It is also available from Cloudflare's [cdnjs](https://cdnjs.com/libraries/phaser):
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.87.0/phaser.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.87.0/phaser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.88.0/phaser.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.88.0/phaser.min.js"></script>
 ```
 
 ## Phaser TypeScript Definitions
@@ -84,7 +84,7 @@ Depending on your project, you may need to add the following to your `tsconfig.j
 
 Read our full API Documentation at https://docs.phaser.io/. Use the links at the top of the page to navigate the namespaces, classes, events and Game Objects and also to use the search box.
 
-We maintain documentation for the 10 most recent versions on this site.
+We maintain documentation for the most recent versions of Phaser on this site.
 
 ## Getting Started with Phaser
 
@@ -136,8 +136,8 @@ Read more about [Phaser Compressor](https://phaser.io/news/2024/05/phaser-compre
 
 We meticulously keep track of new features, updates and bug fixes in our change logs. Each version of Phaser has its own change log:
 
-* [v3.87 Change Log](changelog/3.87/CHANGELOG-v3.87.md)
-* [v3.0.0 to v3.86 Change Logs](CHANGELOG.md)
+* [v3.88 Change Log](changelog/3.87/CHANGELOG-v3.88.md)
+* [v3.0.0 to v3.87 Change Logs](CHANGELOG.md)
 
 ## Have fun!
 
