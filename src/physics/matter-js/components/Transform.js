@@ -68,8 +68,6 @@ var Transform = {
 
     },
 
-
-
     /**
      * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
      * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
@@ -77,14 +75,9 @@ var Transform = {
      * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
      * isn't the case, use the `scaleX` or `scaleY` properties instead.
      *
-     * @method Phaser.Physics.Matter.Components.Transform#scale
-     * @since 3.0.0
-     *
-     * @param {number} [x=1] - The horizontal scale of this Game Object.
-     * @param {number} [y=x] - The vertical scale of this Game Object. If not set it will use the x value.
-     * @param {Phaser.Math.Vector2} [point] - The point (Vector2) from which scaling will occur.
-     *
-     * @return {this} This Game Object instance.
+     * @name Phaser.Physics.Matter.Components.Transform#scale
+     * @type {number}
+     * @since 3.88.0
      */
     scale: {
 
