@@ -136,7 +136,7 @@ Read more about [Phaser Compressor](https://phaser.io/news/2024/05/phaser-compre
 
 We meticulously keep track of new features, updates and bug fixes in our change logs. Each version of Phaser has its own change log:
 
-* [v3.88 Change Log](changelog/3.87/CHANGELOG-v3.88.md)
+* [v3.88 Change Log](changelog/3.88/CHANGELOG-v3.88.md)
 * [v3.0.0 to v3.87 Change Logs](CHANGELOG.md)
 
 ## Have fun!
