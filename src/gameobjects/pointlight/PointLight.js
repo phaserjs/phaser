@@ -26,7 +26,7 @@ var Render = require('./PointLightRender');
  * ensuring they follow each other consecutively on the display list. Ideally, use a Layer
  * Game Object and then add just Point Lights to it, so that it can batch together the rendering
  * of the lights. You don't _have_ to do this, and if you've only a handful of Point Lights in
- * your game then it's perfectly safe to mix them into the dislay list as normal. However, if
+ * your game then it's perfectly safe to mix them into the display list as normal. However, if
  * you're using a large number of them, please consider how they are mixed into the display list.
  *
  * The renderer will automatically cull Point Lights. Those with a radius that does not intersect
