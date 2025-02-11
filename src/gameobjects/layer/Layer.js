@@ -930,7 +930,7 @@ var Layer = new Class({
      * and difficult to debug issues in your game.
      *
      * @method Phaser.GameObjects.Layer#getDisplayList
-     * @since 3.85.0
+     * @since 3.88.0
      *
      * @return {?Phaser.GameObjects.GameObject[]} The internal Display List array of Game Objects, or `null`.
      */
