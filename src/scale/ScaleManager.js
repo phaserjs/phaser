@@ -1208,9 +1208,6 @@ var ScaleManager = new Class({
 
         var bounds = canvas.getBoundingClientRect();
 
-        // var width = parseInt(canvas.style.width, 10) || canvas.width;
-        // var height = parseInt(canvas.style.height, 10) || canvas.height;
-
         var width = bounds.width;
         var height = bounds.height;
 
@@ -1224,11 +1221,6 @@ var ScaleManager = new Class({
         else if (autoCenter === CONST.CENTER.CENTER_VERTICALLY)
         {
             offsetX = 0;
-        }
-        else
-        {
-            offsetX = 0;
-            offsetY = 0;
         }
 
         style.marginLeft = offsetX + 'px';
