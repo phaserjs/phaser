@@ -286,8 +286,6 @@ var DynamicTexture = new Class({
             this._renderCanvas();
         }
 
-        this.commandBuffer.length = 0;
-
         return this;
     },
 
@@ -325,6 +323,7 @@ var DynamicTexture = new Class({
         // Traverse commands.
         var commandBuffer = this.commandBuffer;
         var commandBufferLength = commandBuffer.length;
+        var preserveBuffer = false;
         var eraseMode = false;
 
         for (var index = 0; index < commandBufferLength; index++)
@@ -493,7 +492,25 @@ var DynamicTexture = new Class({
                     eraseMode = !!commandBuffer[++index];
                     break;
                 }
+
+                case DynamicTextureCommands.PRESERVE:
+                {
+                    preserveBuffer = commandBuffer[++index];
+                    break;
+                }
+
+                case DynamicTextureCommands.CALLBACK:
+                {
+                    var callback = commandBuffer[++index];
+                    callback();
+                    break;
+                }
             }
+        }
+
+        if (!preserveBuffer)
+        {
+            commandBuffer.length = 0;
         }
 
         // Finish rendering.
@@ -829,6 +846,46 @@ var DynamicTexture = new Class({
             width, height,
             tilePositionX, tilePositionY, tileRotation, tileScaleX, tileScaleY
         );
+
+        return this;
+    },
+
+    /**
+     * Sets the preserve flag for this Dynamic Texture.
+     * Ordinarily, after each render, the command buffer is cleared.
+     * When this flag is set to `true`, the command buffer is preserved between renders.
+     * This makes it possible to repeat the same drawing commands on each render.
+     *
+     * Make sure to call `clear()` at the start if you don't want to accumulate
+     * drawing detail over the top of itself.
+     *
+     * @method Phaser.Textures.DynamicTexture#preserve
+     * @since 4.0.0
+     * @param {boolean} preserve - Whether to preserve the command buffer after rendering.
+     * @returns {this} This Dynamic Texture instance.
+     */
+    preserve: function (preserve)
+    {
+        this.commandBuffer.push(DynamicTextureCommands.PRESERVE, preserve);
+
+        return this;
+    },
+
+    /**
+     * Adds a callback to run during the render process.
+     * This callback runs as a step in the command buffer.
+     * It can be used to set up conditions for the next draw step.
+     *
+     * Note that this will only execute after `render()` is called.
+     *
+     * @method Phaser.Textures.DynamicTexture#callback
+     * @since 4.0.0
+     * @param {Function} callback - A callback function to run during the render process.
+     * @returns {this} This Dynamic Texture instance.
+     */
+    callback: function (callback)
+    {
+        this.commandBuffer.push(DynamicTextureCommands.CALLBACK, callback);
 
         return this;
     },

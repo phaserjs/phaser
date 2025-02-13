@@ -7,6 +7,8 @@
 var Class = require('../../utils/Class');
 var UUID = require('../../utils/string/UUID');
 var Image = require('../image/Image');
+var RenderTextureRender = require('./RenderTextureRender');
+var RenderTextureRenderModes = require('./RenderTextureRenderModes');
 
 /**
  * @classdesc
@@ -61,6 +63,10 @@ var RenderTexture = new Class({
 
     Extends: Image,
 
+    Mixins: [
+        RenderTextureRender
+    ],
+
     initialize:
 
     function RenderTexture (scene, x, y, width, height)
@@ -101,6 +107,23 @@ var RenderTexture = new Class({
          * @since 3.12.0
          */
         this._saved = false;
+
+        /**
+         * The render mode of this Render Texture.
+         * Set this property to change how the Render Texture is rendered.
+         *
+         * - 'render' mode draws the contents of the Render Texture to each frame.
+         * - 'redraw' mode calls `render()` and redraws the texture every frame,
+         *   but does not render itself. This is useful for updating textures
+         *   for reuse by other objects.
+         * - 'all' mode calls `render()` then draws the texture to the frame.
+         *
+         * @name Phaser.GameObjects.RenderTexture#renderMode
+         * @type {'render'|'redraw'|'all'} - The render mode of this Render Texture.
+         * @default 'render'
+         * @since 4.0.0
+         */
+        this.renderMode = RenderTextureRenderModes.RENDER;
     },
 
     /**
@@ -214,6 +237,34 @@ var RenderTexture = new Class({
         }
 
         return texture;
+    },
+
+    /**
+     * Set the `renderMode` of this Render Texture.
+     * Set this to change how the Render Texture is rendered.
+     *
+     * - 'render' mode draws the contents of the Render Texture to each frame.
+     * - 'redraw' mode calls `render()` and redraws the texture every frame,
+     *   but does not render itself. This is useful for updating textures
+     *   for reuse by other objects.
+     * - 'all' mode calls `render()` then draws the texture to the frame.
+     *
+     * @method Phaser.GameObjects.RenderTexture#setRenderMode
+     * @since 4.0.0
+     * @param {'render'|'redraw'|'all'} mode - The render mode to set.
+     * @param {boolean} [preserve=false] - Whether to call `preserve(true)` to preserve the current command buffer.
+     * @returns {this} This Render Texture instance.
+     */
+    setRenderMode: function (mode, preserve)
+    {
+        this.renderMode = mode;
+
+        if (preserve)
+        {
+            this.texture.preserve(true);
+        }
+
+        return this;
     },
 
     /**
@@ -415,6 +466,46 @@ var RenderTexture = new Class({
     repeat: function (key, frame, x, y, width, height, config)
     {
         this.texture.repeat(key, frame, x, y, width, height, config);
+
+        return this;
+    },
+
+    /**
+     * Sets the preserve flag for this Dynamic Texture.
+     * Ordinarily, after each render, the command buffer is cleared.
+     * When this flag is set to `true`, the command buffer is preserved between renders.
+     * This makes it possible to repeat the same drawing commands on each render.
+     *
+     * Make sure to call `clear()` at the start if you don't want to accumulate
+     * drawing detail over the top of itself.
+     *
+     * @method Phaser.GameObjects.RenderTexture#preserve
+     * @since 4.0.0
+     * @param {boolean} preserve - Whether to preserve the command buffer after rendering.
+     * @returns {this} This Render Texture instance.
+     */
+    preserve: function (preserve)
+    {
+        this.texture.preserve(preserve);
+
+        return this;
+    },
+
+    /**
+     * Adds a callback to run during the render process.
+     * This callback runs as a step in the command buffer.
+     * It can be used to set up conditions for the next draw step.
+     *
+     * Note that this will only execute after `render()` is called.
+     *
+     * @method Phaser.GameObjects.RenderTexture#callback
+     * @since 4.0.0
+     * @param {Function} callback - A callback function to run during the render process.
+     * @returns {this} This Render Texture instance.
+     */
+    callback: function (callback)
+    {
+        this.texture.callback(callback);
 
         return this;
     },

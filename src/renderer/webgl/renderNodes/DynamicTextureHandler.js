@@ -89,6 +89,7 @@ var DynamicTextureHandler = new Class({
 
         var eraseMode = false;
         var eraseContext = null;
+        var preserveBuffer = false;
         var currentContext = drawingContext;
 
         for (var index = 0; index < commandBufferLength; index++)
@@ -254,11 +255,27 @@ var DynamicTextureHandler = new Class({
                     }
                     break;
                 }
+
+                case DynamicTextureCommands.PRESERVE:
+                {
+                    preserveBuffer = commandBuffer[++index];
+                    break;
+                }
+
+                case DynamicTextureCommands.CALLBACK:
+                {
+                    var callback = commandBuffer[++index];
+                    callback();
+                    break;
+                }
             }
         }
 
-        // Clear the command buffer.
-        commandBuffer.length = 0;
+        if (!preserveBuffer)
+        {
+            // Clear the command buffer.
+            commandBuffer.length = 0;
+        }
 
         // Finish rendering.
         currentContext.release();

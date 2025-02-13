@@ -6,13 +6,8 @@
 
 module.exports = {
 
-    CLEAR: 0,
-    FILL: 1,
-    STAMP: 2,
-    REPEAT: 3,
-    DRAW: 4,
-    SET_ERASE: 5,
-    PRESERVE: 6,
-    CALLBACK: 7
+    RENDER: 'render',
+    REDRAW: 'redraw',
+    ALL: 'all'
 
 };
