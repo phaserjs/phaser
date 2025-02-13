@@ -7,6 +7,7 @@ Please select a version to read that specific change log:
 | Version | Name | Release Date |
 | ------- | ---- | ------------ |
 | [3.89](changelog/3.89/CHANGELOG-v3.89.md) | Tsugumi | in dev |
+| [3.88.2](changelog/3.88.2/CHANGELOG-v3.88.2.md) | Minami | 13th February 2025 |
 | [3.88.1](changelog/3.88.1/CHANGELOG-v3.88.1.md) | Minami | 12th February 2025 |
 | [3.88](changelog/3.88/CHANGELOG-v3.88.md) | Minami | 11th February 2025 |
 | [3.87](changelog/3.87/CHANGELOG-v3.87.md) | Hanabi | 14th November 2024 |

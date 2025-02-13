@@ -57,15 +57,15 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include _either_ of the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.88.1/dist/phaser.js"></script>
-<script src="//cdn.jsdelivr.net/npm/phaser@3.88.1/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.88.2/dist/phaser.min.js"></script>
 ```
 
 It is also available from Cloudflare's [cdnjs](https://cdnjs.com/libraries/phaser):
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.88.1/phaser.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.88.1/phaser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.88.2/phaser.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.88.2/phaser.min.js"></script>
 ```
 
 ## Phaser TypeScript Definitions

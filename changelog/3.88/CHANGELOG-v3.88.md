@@ -44,7 +44,6 @@
 * Creating new `GameObjects.DOMElement` sets the GameObject's `displayWidth` and `displayHeight` using its `scaleX` and `scaleY` values instead of the DOM elements `getBoundingClientRect()` values. Fix #6871 (thanks @HawkenKing)
 * Setting scale `mode` to `Phaser.Scale.FIT` and `autoCenter` to `Phaser.Scale.CENTER_BOTH` correctly centres canvas on iOS devices. Fix #6862 (thanks @HawkenKing)
 * On hex maps, creating a blank layer with the `Tilemaps.Tilemap.createBlankLayer` method now correctly sets the `hexSideLength` as loaded from the hex tilemap. Fix #6074 (thanks @wwoods)
-* The `Input.InputPlugin.processDragUpEvent` now correctly returns `x` and `y` coordinates in world space.
 * `Animations.AnimationState.play` method now prioritises the `frameRate` property when it is set in the `PlayAnimationConfig` object over animation data loaded from an external file.
 * Fixed an issue where sounds / music would stop playing in iOS 17.5.1+ or iOS18+ after losing/gaining focus in Safari. The Web Audio Sound Manager will now listen for the 'visible' event and suspend and resume the context as a result. Fix #6829 (thanks @JanAmbrozic @condeagustin)
 * The `Layer` Game Object method `setToTop` would throw an exception: `getDisplayList is not a function`. This method has now been added to the Game Object. Fix #7014 (thanks @leha-games @rexrainbow)
