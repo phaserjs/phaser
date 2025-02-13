@@ -465,6 +465,16 @@ if (typeof WEBGL_RENDERER)
             // Set the filter camera size to match the object.
             this.setFilterSize(width, height);
 
+            // Handle flip.
+            if (this.flipX)
+            {
+                scaleX *= -1;
+            }
+            if (this.flipY)
+            {
+                scaleY *= -1;
+            }
+
             // Set the filter camera to match the object.
             this.filterCamera
                 .centerOn(centerX, centerY)

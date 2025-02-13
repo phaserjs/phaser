@@ -23,8 +23,8 @@ var Controller = require('./Controller');
  * ```js
  * const camera = this.cameras.main;
  *
- * camera.filters.internal.add('Sampler', callback, region);
- * camera.filters.external.add('Sampler', callback, region);
+ * camera.filters.internal.addSampler(callback, region);
+ * camera.filters.external.addSampler(callback, region);
  * ```
  *
  * @class Sampler
