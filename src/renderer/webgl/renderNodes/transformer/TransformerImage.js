@@ -164,6 +164,7 @@ var TransformerImage = new Class({
         camMatrix.multiply(spriteMatrix, calcMatrix);
 
         // Determine whether the matrix does not rotate, scale, or skew.
+        // Keyword: #OnlyTranslate
         var cmm = calcMatrix.matrix;
         this.onlyTranslate = cmm[0] === 1 && cmm[1] === 0 && cmm[2] === 0 && cmm[3] === 1;
 
