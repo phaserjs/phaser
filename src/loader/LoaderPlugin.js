@@ -1147,7 +1147,7 @@ var LoaderPlugin = new Class({
         this.systems.events.off(SceneEvents.UPDATE, this.update, this);
 
         //  Call 'destroy' on each file ready for deletion
-        this._deleteQueue.forEach(function(file)
+        this._deleteQueue.forEach(function (file)
         {
             file.destroy();
         });

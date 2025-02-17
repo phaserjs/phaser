@@ -110,7 +110,7 @@ var FontFile = new Class({
         font.load().then(function ()
         {
             document.fonts.add(font);
-            document.body.classList.add("fonts-loaded");
+            document.body.classList.add('fonts-loaded');
             
             _this.onProcessComplete();
 

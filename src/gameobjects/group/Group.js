@@ -564,7 +564,7 @@ var Group = new Class({
                 child.update(time, delta);
             }
         });
-   },
+    },
 
     /**
      * Adds a Game Object to this group.
