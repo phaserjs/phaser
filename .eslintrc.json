@@ -27,7 +27,6 @@
         "es5/no-computed-properties": 2,
         "es5/no-default-parameters": 2,
         "es5/no-destructuring": 2,
-        "es5/no-es6-static-methods": 2,
         "es5/no-for-of": 2,
         "es5/no-generators": 2,
         "es5/no-modules": 2,
