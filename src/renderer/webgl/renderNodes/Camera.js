@@ -284,7 +284,7 @@ var Camera = new Class({
                     0, 1, 1, -1,
 
                     // Tint color:
-                    tint,
+                    false,
 
                     // Tint colors in order TL, BL, TR, BR:
                     tint, tint, tint, tint,
@@ -370,7 +370,7 @@ var Camera = new Class({
                         0, 0, 1, 1,
 
                         // Tint color:
-                        tint,
+                        false,
 
                         // Tint colors in order TL, BL, TR, BR:
                         tint, tint, tint, tint,
