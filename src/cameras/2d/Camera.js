@@ -582,12 +582,12 @@ var Camera = new Class({
         var displayWidth = width / zoomX;
         var displayHeight = height / zoomY;
 
-        var vwx = Math.floor(midX - (displayWidth / 2));
-        var vwy = Math.floor(midY - (displayHeight / 2));
+        var vwx = midX - (displayWidth / 2);
+        var vwy = midY - (displayHeight / 2);
 
         this.worldView.setTo(vwx, vwy, displayWidth, displayHeight);
 
-        matrix.applyITRS(Math.floor(this.x + originX), Math.floor(this.y + originY), this.rotation, zoomX, zoomY);
+        matrix.applyITRS(this.x + originX, this.y + originY, this.rotation, zoomX, zoomY);
 
         matrix.translate(-originX, -originY);
 
