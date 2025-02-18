@@ -98,6 +98,7 @@ var Camera = new Class({
 
         var useFramebuffers = forceFramebuffer || internalFilters.length || externalFilters.length || alpha < 1;
 
+        var camMatrix = camera.matrix.matrix;
         var cx = camera.x;
         var cy = camera.y;
         var cw = camera.width;
@@ -112,12 +113,24 @@ var Camera = new Class({
             baseContext.setScissorBox(0, 0, drawingContext.width, drawingContext.height);
             currentContext = drawingContextPool.get(cw, ch);
             currentContext.setCamera(camera);
+
+            // Set the scissor to the camera dimensions.
+            currentContext.setScissorBox(0, 0, cw, ch);
+
+            // Temporarily remove camera translation.
+            // The camera translation should only be applied to the final draw.
+            // Because the camera matrix is only updated during `preRender`,
+            // we must modify it directly here.
+            camera.x = 0;
+            camera.y = 0;
+            camMatrix[4] = 0;
+            camMatrix[5] = 0;
         }
         else
         {
             currentContext = baseContext;
+            currentContext.setScissorBox(cx, cy, cw, ch);
         }
-        currentContext.setScissorBox(cx, cy, cw, ch);
 
         // Enter drawing context.
         currentContext.use();
@@ -159,6 +172,12 @@ var Camera = new Class({
         if (useFramebuffers)
         {
             var index, filter, padding, renderNode, tint;
+
+            // Restore camera translation.
+            camera.x = cx;
+            camera.y = cy;
+            camMatrix[4] = cx;
+            camMatrix[5] = cy;
 
             // Determine whether to use round vertex coordinates.
             // Keyword: #OnlyTranslate
@@ -254,10 +273,14 @@ var Camera = new Class({
                 else
                 {
                     // We're drawing a camera.
-                    var offsetX = (currentContext.width - outputContext.width) / 2;
-                    var offsetY = (currentContext.height - outputContext.height) / 2;
-                    var w = currentContext.width - offsetX;
-                    var h = currentContext.height - offsetY;
+                    var offsetX = coverageInternal.x;
+                    var offsetY = coverageInternal.y;
+                    var w = coverageInternal.width - offsetX;
+                    var h = coverageInternal.height - offsetY;
+                    offsetX += camera.x;
+                    offsetY += camera.y;
+                    w += camera.x;
+                    h += camera.y;
                     quad = [
                         offsetX, offsetY,
                         offsetX, h,
