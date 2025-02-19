@@ -45,6 +45,40 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * because creating millions of objects has a major performance cost
  * and may cause garbage collection issues.
  *
+ * Notes on modifying the SpriteGPULayer:
+ *
+ * The following operations are expensive. They require some or all of the
+ * buffer to be updated:
+ *
+ * - `addData`
+ * - `addMember`
+ * - `editMember`
+ * - `patchMember`
+ * - `resize`
+ * - `removeMembers`
+ *
+ * Members are added at the end of the buffer. Removed members are spliced out
+ * of the buffer, causing the whole buffer to be updated.
+ * The index of later members will change if you remove an earlier member.
+ * If you need to maintain a structure, such as a grid of tiles,
+ * it's best to "remove" a member by setting its scaleX, scaleY, and alpha to 0.
+ * It is still rendered, but it does not fill any pixels.
+ *
+ * Changes to a small segment of the buffer are less expensive.
+ * The buffer is split into 32 segments, and each segment can be updated
+ * independently. Editing and patching members will only update the segments
+ * that contain the members being edited.
+ * Updating occurs at render time, so edits all happen at once.
+ * This can reduce the amount of data that needs to be updated,
+ * but it is still more expensive than not updating the buffer at all.
+ * If you're updating a large number of segments, it may be more efficient
+ * to call `setAllSegmentsNeedUpdate` and update the whole buffer at once
+ * rather than make several segment updates in a row.
+ *
+ * The animations in the initial member data are used to compile the shader
+ * and `frameDataTexture`. If you add new animations after the initial
+ * compilation, the shader and texture will be rebuilt, which is expensive.
+ *
  * Notes on textures:
  *
  * This layer gains much of its speed from inflexibility. It can only use one
@@ -633,6 +667,8 @@ var SpriteGPULayer = new Class({
      * It takes raw data as a buffer, which is very efficient,
      * but `addMember` is easier to use.
      *
+     * This is a buffer modification, and is expensive.
+     *
      * @method Phaser.GameObjects.SpriteGPULayer#addData
      * @since 4.0.0
      * @param {Float32Array} member - The raw data to add to the buffer.
@@ -659,6 +695,9 @@ var SpriteGPULayer = new Class({
 
     /**
      * Adds a member to the SpriteGPULayer.
+     * This is the easiest way to add a member to the SpriteGPULayer.
+     *
+     * This is a buffer modification, and is expensive.
      *
      * @method Phaser.GameObjects.SpriteGPULayer#addMember
      * @since 4.0.0
@@ -862,6 +901,7 @@ var SpriteGPULayer = new Class({
     /**
      * Update a member of the SpriteGPULayer with raw data.
      * This will update the member's data in the GPU buffer.
+     * This is an expensive operation, as it requires the whole buffer to be updated.
      *
      * You can supply a mask to control which properties are updated.
      * This can be useful for updating only a subset of properties.
