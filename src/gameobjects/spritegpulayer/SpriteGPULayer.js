@@ -65,7 +65,7 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * It is still rendered, but it does not fill any pixels.
  *
  * Changes to a small segment of the buffer are less expensive.
- * The buffer is split into 32 segments, and each segment can be updated
+ * The buffer is split into several segments, and each segment can be updated
  * independently. Editing and patching members will only update the segments
  * that contain the members being edited.
  * Updating occurs at render time, so edits all happen at once.
@@ -650,7 +650,7 @@ var SpriteGPULayer = new Class({
         if (
             index < 0 ||
             index >= this.size ||
-            this.bufferUpdateSegments === 0xffffffff
+            this.bufferUpdateSegments === 0xffffff
         )
         {
             return;
@@ -667,7 +667,7 @@ var SpriteGPULayer = new Class({
      */
     setAllSegmentsNeedUpdate: function ()
     {
-        this.bufferUpdateSegments = 0xffffffff;
+        this.bufferUpdateSegments = 0xffffff;
     },
 
     /**
