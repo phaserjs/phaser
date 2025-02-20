@@ -1210,6 +1210,67 @@ var SpriteGPULayer = new Class({
     },
 
     /**
+     * Inserts members into the SpriteGPULayer.
+     * This will update the GPU buffer.
+     * This is an expensive operation, as it requires the whole buffer to be
+     * updated after the insertion point.
+     *
+     * @method Phaser.GameObjects.SpriteGPULayer#insertMembers
+     * @since 4.0.0
+     * @param {number} index - The index at which to insert members.
+     * @param {Phaser.Types.GameObjects.SpriteGPULayer.Member|Phaser.Types.GameObjects.SpriteGPULayer.Member[]} members - The members to insert.
+     * @returns {this} This SpriteGPULayer object.
+     */
+    insertMembers: function (index, members)
+    {
+        if (index < 0 || index > this.memberCount)
+        {
+            return this;
+        }
+
+        if (!Array.isArray(members))
+        {
+            members = [ members ];
+        }
+
+        var oldMemberCount = this.memberCount;
+        var layout = this.submitterNode.instanceBufferLayout;
+        var stride = layout.layout.stride;
+        var byteOffset = index * stride;
+        var byteLength = members.length * stride;
+
+        // Determine whether any data will be lost at the end.
+        var newCount = this.memberCount + members.length;
+        var lostCount = Math.max(0, newCount - this.size);
+
+        // Copy out the data after the insertion point.
+        var bytesAfterInsertPoint = (oldMemberCount - lostCount) * stride - byteOffset;
+        var u8 = layout.buffer.viewU8;
+        var tempBuffer = new Uint8Array(bytesAfterInsertPoint);
+        tempBuffer.set(u8.subarray(byteOffset, byteOffset + bytesAfterInsertPoint));
+
+        // Insert members.
+        this.memberCount = index;
+        for (var i = 0; i < members.length; i++)
+        {
+            this.addMember(members[i]);
+        }
+
+        // Copy back the data after the insertion point.
+        u8.set(tempBuffer, byteOffset + byteLength);
+
+        this.memberCount = Math.min(this.size, oldMemberCount + members.length);
+
+        // Mark segments for update.
+        for (i = index; i < this.memberCount; i += this.bufferUpdateSegmentSize)
+        {
+            this.setSegmentNeedsUpdate(i);
+        }
+
+        return this;
+    },
+
+    /**
      * Sets the values of an animation for a member of this SpriteGPULayer.
      * The values are set on `nextMember`, used to add data.
      *
