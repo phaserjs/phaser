@@ -163,8 +163,30 @@ var SpriteGPULayer = new Class({
         this.size = Math.max(size, 0);
 
         /**
+         * The number of segments in the buffer.
+         * This helps to optimize buffer updates by dividing them into smaller segments.
+         * This is a constant value and should not be altered.
+         * If you do, all hell will break loose.
+         *
+         * Segments divide the buffer into sequential chunks.
+         * Only updated segments will be uploaded to the GPU.
+         * Each upload has a fixed cost, but reducing the total amount of data
+         * can improve performance.
+         *
+         * Don't change this value to anything higher than 31.
+         * Segment logic uses bitwise operations, which are limited to 32 bits,
+         * so going that high will cause overflows and break everything.
+         *
+         * @name Phaser.GameObjects.SpriteGPULayer#_segments
+         * @type {number}
+         * @since 4.0.0
+         * @private
+         */
+        this._segments = 24;
+
+        /**
          * Which segments of the buffer require updates.
-         * This is a bitfield of 32 segments.
+         * This is a bitfield with segments equal to `_segments`.
          *
          * @name Phaser.GameObjects.SpriteGPULayer#bufferUpdateSegments
          * @type {number}
@@ -179,7 +201,7 @@ var SpriteGPULayer = new Class({
          * @type {number}
          * @since 4.0.0
          */
-        this.bufferUpdateSegmentSize = Math.ceil(this.size / 32);
+        this.bufferUpdateSegmentSize = Math.ceil(this.size / this._segments);
 
         /**
          * The gravity used by member animations in 'Gravity' mode.
@@ -610,7 +632,7 @@ var SpriteGPULayer = new Class({
             this.memberCount = Math.min(this.memberCount, count);
         }
 
-        this.bufferUpdateSegmentSize = Math.ceil(this.size / 32);
+        this.bufferUpdateSegmentSize = Math.ceil(this.size / this._segments);
         this.setAllSegmentsNeedUpdate();
 
         return this;
