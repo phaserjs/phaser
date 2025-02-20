@@ -35,7 +35,7 @@ var BuildTilesetIndex = function (mapData)
                 y: image.height - mapData.tileHeight
             };
             
-            set = new Tileset(image.image, image.gid, image.width, image.height, 0, 0, null, null, offset);
+            set = new Tileset(image.image, image.gid, image.width, image.height, 0, 0, undefined, undefined, offset);
 
             set.updateTileData(image.width, image.height);
 
