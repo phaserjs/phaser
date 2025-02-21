@@ -1239,15 +1239,18 @@ var SpriteGPULayer = new Class({
         var byteOffset = index * stride;
         var byteLength = members.length * stride;
 
-        // Determine whether any data will be lost at the end.
-        var newCount = this.memberCount + members.length;
-        var lostCount = Math.max(0, newCount - this.size);
+        // Move the data after the insertion point.
+        layout.buffer.viewU8.copyWithin(
 
-        // Copy out the data after the insertion point.
-        var bytesAfterInsertPoint = (oldMemberCount - lostCount) * stride - byteOffset;
-        var u8 = layout.buffer.viewU8;
-        var tempBuffer = new Uint8Array(bytesAfterInsertPoint);
-        tempBuffer.set(u8.subarray(byteOffset, byteOffset + bytesAfterInsertPoint));
+            // Target
+            byteOffset + byteLength,
+            
+            // Source
+            byteOffset,
+            
+            // End
+            oldMemberCount * stride
+        );
 
         // Insert members.
         this.memberCount = index;
@@ -1256,13 +1259,70 @@ var SpriteGPULayer = new Class({
             this.addMember(members[i]);
         }
 
-        // Copy back the data after the insertion point.
-        u8.set(tempBuffer, byteOffset + byteLength);
-
         this.memberCount = Math.min(this.size, oldMemberCount + members.length);
 
         // Mark segments for update.
         for (i = index; i < this.memberCount; i += this.bufferUpdateSegmentSize)
+        {
+            this.setSegmentNeedsUpdate(i);
+        }
+
+        return this;
+    },
+
+    /**
+     * Inserts raw data into the SpriteGPULayer.
+     * This will update the GPU buffer.
+     * This is an expensive operation, as it requires the whole buffer to be
+     * updated after the insertion point.
+     *
+     * The data must be passed in as a Uint32Array.
+     * This will preserve data that other TypedArrays would not.
+     * As it uses an underlying ArrayBuffer, you can work on the data
+     * with any TypedArray view before submitting it.
+     *
+     * The buffer can contain 1 or more members.
+     * Ensure that the buffer is the correct size for the number of members.
+     * See `getMemberData` for the structure of the data.
+     *
+     * @method Phaser.GameObjects.SpriteGPULayer#insertMembersData
+     * @since 4.0.0
+     * @param {number} index - The index at which to insert members.
+     * @param {Uint32Array} data - The members to insert.
+     * @returns {this} This SpriteGPULayer object.
+     */
+    insertMembersData: function (index, data)
+    {
+        if (index < 0 || index > this.memberCount)
+        {
+            return this;
+        }
+
+        var byteLength = data.length * data.BYTES_PER_ELEMENT;
+        var layout = this.submitterNode.instanceBufferLayout;
+        var stride = layout.layout.stride;
+        var byteOffset = index * stride;
+
+        // Move the data after the insertion point.
+        layout.buffer.viewU8.copyWithin(
+
+            // Target
+            byteOffset + byteLength,
+
+            // Source
+            byteOffset,
+
+            // End
+            this.memberCount * stride
+        );
+
+        // Insert members.
+        layout.buffer.viewU32.set(data, byteOffset / data.BYTES_PER_ELEMENT);
+
+        this.memberCount = Math.min(this.size, this.memberCount + byteLength / stride);
+
+        // Mark segments for update.
+        for (var i = index; i < this.memberCount; i += this.bufferUpdateSegmentSize)
         {
             this.setSegmentNeedsUpdate(i);
         }
