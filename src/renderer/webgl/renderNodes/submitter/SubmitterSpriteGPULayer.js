@@ -548,7 +548,7 @@ var SubmitterSpriteGPULayer = new Class({
             }
 
             if (
-                segments === 0xffffffff ||
+                segments === layer.MAX_BUFFER_UPDATE_SEGMENTS_FULL ||
                 memberCount <= layer.bufferUpdateSegmentSize ||
                 occupiedSegmentsAllUpdated
             )

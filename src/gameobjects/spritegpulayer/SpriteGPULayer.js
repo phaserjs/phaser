@@ -180,9 +180,23 @@ var SpriteGPULayer = new Class({
          * @name Phaser.GameObjects.SpriteGPULayer#_segments
          * @type {number}
          * @since 4.0.0
+         * @readonly
          * @private
          */
         this._segments = 24;
+
+        /**
+         * The state of `bufferUpdateSegments` when it's full.
+         * This is a constant value and should not be altered.
+         * If you do, all hell will break loose.
+         *
+         * @name Phaser.GameObjects.SpriteGPULayer#MAX_BUFFER_UPDATE_SEGMENTS_FULL
+         * @type {number}
+         * @since 4.0.0
+         * @readonly
+         * @default 0xffffff
+         */
+        this.MAX_BUFFER_UPDATE_SEGMENTS_FULL = 0xffffff;
 
         /**
          * Which segments of the buffer require updates.
@@ -650,7 +664,7 @@ var SpriteGPULayer = new Class({
         if (
             index < 0 ||
             index >= this.size ||
-            this.bufferUpdateSegments === 0xffffff
+            this.bufferUpdateSegments === this.MAX_BUFFER_UPDATE_SEGMENTS_FULL
         )
         {
             return;
@@ -667,7 +681,7 @@ var SpriteGPULayer = new Class({
      */
     setAllSegmentsNeedUpdate: function ()
     {
-        this.bufferUpdateSegments = 0xffffff;
+        this.bufferUpdateSegments = this.MAX_BUFFER_UPDATE_SEGMENTS_FULL;
     },
 
     /**
