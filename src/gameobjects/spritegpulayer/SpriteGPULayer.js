@@ -798,6 +798,8 @@ var SpriteGPULayer = new Class({
 
         f32[offset++] = member.tintFill ? 1 : 0;
 
+        f32[offset++] = member.creationTime || this.timeElapsed;
+
         f32[offset++] = member.scrollFactorX === undefined ? 1 : member.scrollFactorX;
         f32[offset++] = member.scrollFactorY === undefined ? 1 : member.scrollFactorY;
 
@@ -1050,6 +1052,7 @@ var SpriteGPULayer = new Class({
         member.originX = f32[offset++];
         member.originY = f32[offset++];
         member.tintFill = !!f32[offset++];
+        member.creationTime = f32[offset++];
 
         member.scrollFactorX = f32[offset++];
         member.scrollFactorY = f32[offset++];
@@ -1136,20 +1139,21 @@ var SpriteGPULayer = new Class({
      * - 20: originX
      * - 21: originY
      * - 22: tintFill
-     * - 23: scrollFactorX
-     * - 24: scrollFactorY
-     * - 25-28: frame index (animation)
-     * - 29-32: tintBlend (animation)
-     * - 33-36: no data
-     * - 37-40: alpha (animation)
+     * - 23: creationTime
+     * - 25: scrollFactorX
+     * - 26: scrollFactorY
+     * - 27-29: frame index (animation)
+     * - 30-33: tintBlend (animation)
+     * - 34-37: no data
+     * - 38-41: alpha (animation)
      *
      * Elements 33-36 are only visible in the Uint32Array view.
      * They store 32-bit RGBA values for the four corners of the tint:
      *
-     * - 33: bottom-left
-     * - 34: top-left
-     * - 35: bottom-right
-     * - 36: top-right
+     * - 34: bottom-left
+     * - 35: top-left
+     * - 36: bottom-right
+     * - 37: top-right
      *
      * If the ease for an animation is 'Gravity', the amplitude is replaced
      * with a two-part value: the integer part is the `velocity`,

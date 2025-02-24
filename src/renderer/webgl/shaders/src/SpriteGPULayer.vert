@@ -37,7 +37,7 @@ attribute vec4 inPositionY;
 attribute vec4 inRotation;
 attribute vec4 inScaleX;
 attribute vec4 inScaleY;
-attribute vec3 inOriginAndTintFill;
+attribute vec4 inOriginAndTintFillAndCreationTime;
 attribute vec2 inScrollFactor;
 attribute vec4 inFrame;
 attribute vec4 inTintBlend;
@@ -82,7 +82,7 @@ float animate (vec4 anim)
     float duration = b;
     float delay = mod(c, 1.0) * 2.0;
 
-    float rawTime = (uTime / duration) - delay;
+    float rawTime = ((uTime - inOriginAndTintFillAndCreationTime.w) / duration) - delay;
     float time = mod(rawTime, 1.0);
     if (yoyo && (mod(rawTime, 2.0) >= 1.0))
     {
@@ -566,8 +566,8 @@ void main ()
     float tintBlend = animate(inTintBlend);
     float alpha = animate(inAlpha);
 
-    vec2 origin = inOriginAndTintFill.xy;
-    float tintFill = inOriginAndTintFill.z;
+    vec2 origin = inOriginAndTintFillAndCreationTime.xy;
+    float tintFill = inOriginAndTintFillAndCreationTime.z;
     float scrollFactorX = inScrollFactor.x;
     float scrollFactorY = inScrollFactor.y;
 

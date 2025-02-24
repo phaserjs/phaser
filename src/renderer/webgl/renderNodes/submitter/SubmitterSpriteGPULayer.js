@@ -228,8 +228,8 @@ var SubmitterSpriteGPULayer = new Class({
                     size: 4
                 },
                 {
-                    name: 'inOriginAndTintFill',
-                    size: 3
+                    name: 'inOriginAndTintFillAndCreationTime',
+                    size: 4
                 },
                 {
                     name: 'inScrollFactor',
