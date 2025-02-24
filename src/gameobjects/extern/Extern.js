@@ -34,6 +34,23 @@ var ExternRender = require('./ExternRender');
  * Although this object has lots of properties such as Alpha, Blend Mode and Tint, none of
  * them are used during rendering unless you take advantage of them in your own render code.
  *
+ * @example
+ * extern.render = (webGLRenderer, drawingContext, calcMatrix) => {
+ *         // Set GL state to default values.
+ *         renderer.resetState();
+ * 
+ *         // Ensure the DrawingContext framebuffer is bound.
+ *         // This allows you to use Filters on the external render.
+ *         webGLRenderer.glWrapper.updateBindingsFramebuffer({
+ *             bindings: {
+ *                 framebuffer: drawingContext.framebuffer
+ *             }
+ *         }, true);
+ * 
+ *         // Run the external render method.
+ *         // ...
+ *     };
+ *
  * @class Extern
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects
