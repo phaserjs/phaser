@@ -388,7 +388,7 @@ var SpriteGPULayer = new Class({
          * @type {ArrayBuffer}
          * @since 4.0.0
          */
-        this.nextMember = new ArrayBuffer(this.submitterNode.instanceBufferLayout.layout.stride);
+        this.nextMember = new ArrayBuffer(this.getDataByteSize());
 
         /**
          * A Float32Array view of the next member buffer.
@@ -426,6 +426,19 @@ var SpriteGPULayer = new Class({
     preUpdate: function (time, delta)
     {
         this.updateTimer(time, delta);
+    },
+
+    /**
+     * Get the number of bytes used to define a member.
+     * If you are directly editing the buffer, you will need this value
+     * as a 'stride' to move through the buffer.
+     *
+     * @method Phaser.GameObjects.SpriteGPULayer#getDataByteSize
+     * @returns {number} The number of bytes used for each member.
+     */
+    getDataByteSize: function ()
+    {
+        return this.submitterNode.instanceBufferLayout.layout.stride;
     },
 
     /**
