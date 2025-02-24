@@ -1124,7 +1124,7 @@ var SpriteGPULayer = new Class({
      * - 0: base value
      * - 1: amplitude
      * - 2: duration (if negative, the animation will yoyo)
-     * - 3: delay (the integer part is the easing, the decimal part is the delay divided by 2 * duration)
+     * - 3: delay (the integer part is the easing, the decimal part is the delay divided by 2 * duration; if negative, the animation will not loop)
      *
      * The overall structure is thus:
      *
@@ -1402,6 +1402,7 @@ var SpriteGPULayer = new Class({
             var duration = Math.abs(value.duration || 0);
             var delay = value.delay || 0;
             var yoyo = value.yoyo !== undefined ? value.yoyo : true;
+            var loop = value.loop !== undefined ? value.loop : true;
 
             if (typeof ease === 'string')
             {
@@ -1461,6 +1462,12 @@ var SpriteGPULayer = new Class({
                 duration = -duration;
             }
 
+            // Encode loop in the sign of delay, which must be positive.
+            if (!loop)
+            {
+                delay = -delay;
+            }
+
             f32[index++] = base;
             f32[index++] = amplitude;
             f32[index++] = duration;
@@ -1486,11 +1493,16 @@ var SpriteGPULayer = new Class({
         var amplitude = f32[index++];
         var duration = f32[index++];
         var delay = f32[index];
-        var ease = Math.floor(delay);
 
         if (amplitude === 0 || duration === 0 || ease === 0)
         {
             return base;
+        }
+
+        var loop = delay > 0;
+        if (!loop)
+        {
+            delay = -delay;
         }
 
         var yoyo = duration < 0;
@@ -1500,6 +1512,7 @@ var SpriteGPULayer = new Class({
         }
 
         // Negate ease after duration, so duration has the correct sign.
+        var ease = Math.floor(delay);
         delay -= ease;
         delay = (delay * duration * 2) % duration;
 

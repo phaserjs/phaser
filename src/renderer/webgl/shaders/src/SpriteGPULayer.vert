@@ -66,8 +66,10 @@ float animate (vec4 anim)
 {
     float value = anim.x;
     float a = anim.y;
-    float b = anim.z;
-    float c = anim.w;
+    float b = abs(anim.z);
+    float c = abs(anim.w);
+    bool yoyo = anim.z < 0.0;
+    bool loop = anim.w > 0.0;
 
     int type = int(floor(c));
 
@@ -77,9 +79,8 @@ float animate (vec4 anim)
         return value;
     }
 
-    float duration = abs(b);
+    float duration = b;
     float delay = mod(c, 1.0) * 2.0;
-    bool yoyo = b < 0.0;
 
     float rawTime = (uTime / duration) - delay;
     float time = mod(rawTime, 1.0);
@@ -88,11 +89,14 @@ float animate (vec4 anim)
         time = 1.0 - time;
     }
 
+    float repeats = loop ? 0.0 : floor(a);
+    float timeContinuous = loop ? time : rawTime;
+
     #ifdef FEATURE_LINEAR
     if (type == 1)
     {
         // Linear
-        return value + a * time;
+        return value + a * timeContinuous;
     }
     #endif
     #ifdef FEATURE_GRAVITY
@@ -107,7 +111,7 @@ float animate (vec4 anim)
         {
             gravityFactor = 1.0;
         }
-        float seconds = time * duration / 1000.0;
+        float seconds = timeContinuous * duration / 1000.0;
         float accel = uGravity * gravityFactor;
 
         // Compute distance from acceleration and velocity.
@@ -120,14 +124,16 @@ float animate (vec4 anim)
     if (type == 10)
     {
         // Quad_easeOut
-        return value + a * time * (2.0 - time);
+        return value + a * time * (2.0 - time)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_QUAD_EASEIN
     if (type == 11)
     {
         // Quad_easeIn
-        return value + a * time * time;
+        return value + a * time * time
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_QUAD_EASEINOUT
@@ -137,10 +143,12 @@ float animate (vec4 anim)
         time *= 2.0;
         if (time < 1.0)
         {
-            return value + a * time * time * 0.5;
+            return value + a * time * time * 0.5
+                + repeats * a;
         }
         time -= 1.0;
-        return value + a * -0.5 * (time * (time - 2.0) - 1.0);
+        return value + a * -0.5 * (time * (time - 2.0) - 1.0)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_CUBIC_EASEOUT
@@ -148,14 +156,16 @@ float animate (vec4 anim)
     {
         // Cubic_easeOut
         time -= 1.0;
-        return value + a * (time * time * time + 1.0);
+        return value + a * (time * time * time + 1.0)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_CUBIC_EASEIN
     if (type == 21)
     {
         // Cubic_easeIn
-        return value + a * time * time * time;
+        return value + a * time * time * time
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_CUBIC_EASEINOUT
@@ -165,10 +175,12 @@ float animate (vec4 anim)
         time *= 2.0;
         if (time < 1.0)
         {
-            return value + a * time * time * time * 0.5;
+            return value + a * time * time * time * 0.5
+                + repeats * a;
         }
         time -= 2.0;
-        return value + a * 0.5 * (time * time * time + 2.0);
+        return value + a * 0.5 * (time * time * time + 2.0)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_QUART_EASEOUT
@@ -176,14 +188,16 @@ float animate (vec4 anim)
     {
         // Quart_easeOut
         time -= 1.0;
-        return value + a * (1.0 - time * time * time * time);
+        return value + a * (1.0 - time * time * time * time)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_QUART_EASEIN
     if (type == 31)
     {
         // Quart_easeIn
-        return value + a * time * time * time * time;
+        return value + a * time * time * time * time
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_QUART_EASEINOUT
@@ -193,10 +207,12 @@ float animate (vec4 anim)
         time *= 2.0;
         if (time < 1.0)
         {
-            return value + a * time * time * time * time * 0.5;
+            return value + a * time * time * time * time * 0.5
+                + repeats * a;
         }
         time -= 2.0;
-        return value + a * -0.5 * (time * time * time * time - 2.0);
+        return value + a * -0.5 * (time * time * time * time - 2.0)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_QUINT_EASEOUT
@@ -204,14 +220,16 @@ float animate (vec4 anim)
     {
         // Quint_easeOut
         time -= 1.0;
-        return value + a * (time * time * time * time * time + 1.0);
+        return value + a * (time * time * time * time * time + 1.0)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_QUINT_EASEIN
     if (type == 41)
     {
         // Quint_easeIn
-        return value + a * time * time * time * time * time;
+        return value + a * time * time * time * time * time
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_QUINT_EASEINOUT
@@ -221,45 +239,52 @@ float animate (vec4 anim)
         time *= 2.0;
         if (time < 1.0)
         {
-            return value + a * time * time * time * time * time * 0.5;
+            return value + a * time * time * time * time * time * 0.5
+                + repeats * a;
         }
         time -= 2.0;
-        return value + a * 0.5 * (time * time * time * time * time + 2.0);
+        return value + a * 0.5 * (time * time * time * time * time + 2.0)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_SINE_EASEOUT
     if (type == 50)
     {
         // Sine_easeOut
-        return value + a * sin(time * HALF_PI);
+        return value + a * sin(time * HALF_PI)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_SINE_EASEIN
     if (type == 51)
     {
         // Sine_easeIn
-        return value + a * (1.0 - cos(time * HALF_PI));
+        return value + a * (1.0 - cos(time * HALF_PI))
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_SINE_EASEINOUT
     if (type == 52)
     {
         // Sine_easeInOut
-        return value + a * 0.5 * (1.0 - cos(PI * time));
+        return value + a * 0.5 * (1.0 - cos(PI * time))
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_EXPO_EASEOUT
     if (type == 60)
     {
         // Expo_easeOut
-        return value + a * (1.0 - pow(2.0, -10.0 * time));
+        return value + a * (1.0 - pow(2.0, -10.0 * time))
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_EXPO_EASEIN
     if (type == 61)
     {
         // Expo_easeIn
-        return value + a * pow(2.0, 10.0 * (time - 1.0) - 0.001);
+        return value + a * pow(2.0, 10.0 * (time - 1.0) - 0.001)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_EXPO_EASEINOUT
@@ -269,10 +294,12 @@ float animate (vec4 anim)
         time *= 2.0;
         if (time < 1.0)
         {
-            return value + a * 0.5 * pow(2.0, 10.0 * (time - 1.0));
+            return value + a * 0.5 * pow(2.0, 10.0 * (time - 1.0))
+                + repeats * a;
         }
         time -= 1.0;
-        return value + a * 0.5 * (2.0 - pow(2.0, -10.0 * (time - 1.0)));
+        return value + a * 0.5 * (2.0 - pow(2.0, -10.0 * (time - 1.0)))
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_CIRC_EASEOUT
@@ -280,14 +307,16 @@ float animate (vec4 anim)
     {
         // Circ_easeOut
         time -= 1.0;
-        return value + a * sqrt(1.0 - time * time);
+        return value + a * sqrt(1.0 - time * time)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_CIRC_EASEIN
     if (type == 71)
     {
         // Circ_easeIn
-        return value + a * (1.0 - sqrt(1.0 - time * time));
+        return value + a * (1.0 - sqrt(1.0 - time * time))
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_CIRC_EASEINOUT
@@ -297,10 +326,12 @@ float animate (vec4 anim)
         time *= 2.0;
         if (time < 1.0)
         {
-            return value + a * -0.5 * (sqrt(1.0 - time * time) - 1.0);
+            return value + a * -0.5 * (sqrt(1.0 - time * time) - 1.0)
+                + repeats * a;
         }
         time -= 2.0;
-        return value + a * 0.5 * (sqrt(1.0 - time * time) + 1.0);
+        return value + a * 0.5 * (sqrt(1.0 - time * time) + 1.0)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_BACK_EASEOUT
@@ -308,14 +339,16 @@ float animate (vec4 anim)
     {
         // Back_easeOut
         time -= 1.0;
-        return value + a * (time * time * (BOUNCE_OVERSHOOT_PLUS * time + BOUNCE_OVERSHOOT) + 1.0);
+        return value + a * (time * time * (BOUNCE_OVERSHOOT_PLUS * time + BOUNCE_OVERSHOOT) + 1.0)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_BACK_EASEIN
     if (type == 91)
     {
         // Back_easeIn
-        return value + a * time * time * (BOUNCE_OVERSHOOT_PLUS * time - BOUNCE_OVERSHOOT);
+        return value + a * time * time * (BOUNCE_OVERSHOOT_PLUS * time - BOUNCE_OVERSHOOT)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_BACK_EASEINOUT
@@ -325,10 +358,12 @@ float animate (vec4 anim)
         time *= 2.0;
         if (time < 1.0)
         {
-            return value + a * 0.5 * (time * time * (BOUNCE_OVERSHOOT_IN_OUT_PLUS * time - BOUNCE_OVERSHOOT_IN_OUT));
+            return value + a * 0.5 * (time * time * (BOUNCE_OVERSHOOT_IN_OUT_PLUS * time - BOUNCE_OVERSHOOT_IN_OUT))
+                + repeats * a;
         }
         time -= 2.0;
-        return value + a * 0.5 * (time * time * (BOUNCE_OVERSHOOT_IN_OUT_PLUS * time + BOUNCE_OVERSHOOT_IN_OUT) + 2.0);
+        return value + a * 0.5 * (time * time * (BOUNCE_OVERSHOOT_IN_OUT_PLUS * time + BOUNCE_OVERSHOOT_IN_OUT) + 2.0)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_BOUNCE_EASEOUT
@@ -337,22 +372,26 @@ float animate (vec4 anim)
         // Bounce_easeOut
         if (time < 1.0 / 2.75)
         {
-            return value + a * (7.5625 * time * time);
+            return value + a * (7.5625 * time * time)
+                + repeats * a;
         }
         else if (time < 2.0 / 2.75)
         {
             time -= 1.5 / 2.75;
-            return value + a * (7.5625 * time * time + 0.75);
+            return value + a * (7.5625 * time * time + 0.75)
+                + repeats * a;
         }
         else if (time < 2.5 / 2.75)
         {
             time -= 2.25 / 2.75;
-            return value + a * (7.5625 * time * time + 0.9375);
+            return value + a * (7.5625 * time * time + 0.9375)
+                + repeats * a;
         }
         else
         {
             time -= 2.625 / 2.75;
-            return value + a * (7.5625 * time * time + 0.984375);
+            return value + a * (7.5625 * time * time + 0.984375)
+                + repeats * a;
         }
     }
     #endif
@@ -363,22 +402,26 @@ float animate (vec4 anim)
         time = 1.0 - time;
         if (time < 1.0 / 2.75)
         {
-            return value + a * (1.0 - 7.5625 * time * time);
+            return value + a * (1.0 - 7.5625 * time * time)
+                + repeats * a;
         }
         else if (time < 2.0 / 2.75)
         {
             time -= 1.5 / 2.75;
-            return value + a * (1.0 - (7.5625 * time * time + 0.75));
+            return value + a * (1.0 - (7.5625 * time * time + 0.75))
+                + repeats * a;
         }
         else if (time < 2.5 / 2.75)
         {
             time -= 2.25 / 2.75;
-            return value + a * (1.0 - (7.5625 * time * time + 0.9375));
+            return value + a * (1.0 - (7.5625 * time * time + 0.9375))
+                + repeats * a;
         }
         else
         {
             time -= 2.625 / 2.75;
-            return value + a * (1.0 - (7.5625 * time * time + 0.984375));
+            return value + a * (1.0 - (7.5625 * time * time + 0.984375))
+                + repeats * a;
         }
     }
     #endif
@@ -415,37 +458,43 @@ float animate (vec4 anim)
 
         if (reverse)
         {
-            return value + a * (1.0 - time) * 0.5;
+            return value + a * (1.0 - time) * 0.5
+                + repeats * a;
         }
-        return value + a * time * 0.5 + 0.5;
+        return value + a * time * 0.5 + 0.5
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_STEPPED
     if (type == 110)
     {
         // Stepped
-        return value + a * floor(time + 0.5);
+        return value + a * floor(time + 0.5)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_SMOOTHSTEP_EASEOUT
     if (type == 120)
     {
         // Smoothstep_easeOut
-        return value + a * (smoothstep(0.0, 1.0, time / 2.0 + 0.5) * 2.0 - 1.0);
+        return value + a * (smoothstep(0.0, 1.0, time / 2.0 + 0.5) * 2.0 - 1.0)
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_SMOOTHSTEP_EASEIN
     if (type == 121)
     {
         // Smoothstep_easeIn
-        return value + a * smoothstep(0.0, 1.0, time / 2.0) * 2.0;
+        return value + a * smoothstep(0.0, 1.0, time / 2.0) * 2.0
+            + repeats * a;
     }
     #endif
     #ifdef FEATURE_SMOOTHSTEP_EASEINOUT
     if (type == 122)
     {
         // Smoothstep_easeInOut
-        return value + a * smoothstep(0.0, 1.0, time);
+        return value + a * smoothstep(0.0, 1.0, time)
+            + repeats * a;
     }
     #endif
 
