@@ -9,5 +9,5 @@
  * @property {number} [delay=0] - The delay of the animation, in milliseconds.
  * @property {boolean} [yoyo=true] - Whether the animation runs backwards when it completes. If false, it starts over from the beginning.
  * @property {number} [gravityFactor=1] - The gravity factor of the animation. This is used instead of `amplitude` if the ease is 'Gravity'.
- * @property {number} [velocity=0] - The velocity of the animation. This is used instead of `amplitude` if the ease is 'Velocity'.
+ * @property {number} [velocity=0] - The velocity of the animation. Must be an integer. This is used instead of `amplitude` if the ease is 'Gravity'.
  */

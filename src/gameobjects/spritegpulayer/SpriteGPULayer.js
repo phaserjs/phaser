@@ -1151,6 +1151,10 @@ var SpriteGPULayer = new Class({
      * - 35: bottom-right
      * - 36: top-right
      *
+     * If the ease for an animation is 'Gravity', the amplitude is replaced
+     * with a two-part value: the integer part is the `velocity`,
+     * and the fractional part is the `gravityFactor`.
+     *
      * @method Phaser.GameObjects.SpriteGPULayer#getMemberData
      * @since 4.0.0
      * @param {number} index - The index of the member to get.
@@ -1425,6 +1429,9 @@ var SpriteGPULayer = new Class({
                     gravityFactor = 0;
                 }
 
+                // Map gravityFactor range [-1,1] to [0,1].
+                gravityFactor = (gravityFactor + 1) / 2;
+
                 // Encode values into amplitude.
                 amplitude = Math.floor(velocity) + gravityFactor;
             }
@@ -1500,7 +1507,7 @@ var SpriteGPULayer = new Class({
         if (ease === EasingEncoding.Gravity)
         {
             var velocity = Math.floor(amplitude);
-            var gravityFactor = amplitude - velocity;
+            var gravityFactor = (amplitude - velocity) * 2 - 1;
             if (gravityFactor === 0)
             {
                 gravityFactor = 1;

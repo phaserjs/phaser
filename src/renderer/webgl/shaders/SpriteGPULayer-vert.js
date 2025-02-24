@@ -75,7 +75,7 @@ module.exports = [
     '    if (type == 2)',
     '    {',
     '        float v = floor(a);',
-    '        float gravityFactor = a - v;',
+    '        float gravityFactor = (a - v) * 2.0 - 1.0;',
     '        if (gravityFactor == 0.0)',
     '        {',
     '            gravityFactor = 1.0;',

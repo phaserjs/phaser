@@ -102,7 +102,7 @@ float animate (vec4 anim)
 
         // Split amplitude into integer velocity and fractional acceleration.
         float v = floor(a);
-        float gravityFactor = a - v;
+        float gravityFactor = (a - v) * 2.0 - 1.0;
         if (gravityFactor == 0.0)
         {
             gravityFactor = 1.0;
