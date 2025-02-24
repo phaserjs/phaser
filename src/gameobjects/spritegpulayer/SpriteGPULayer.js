@@ -703,6 +703,12 @@ var SpriteGPULayer = new Class({
      * It takes raw data as a buffer, which is very efficient,
      * but `addMember` is easier to use.
      *
+     * Note that, if you add a member with an animation,
+     * the animation must either already be enabled,
+     * or you must enable it with `setAnimationEnabled`,
+     * e.g. `layer.setAnimationEnabled('Linear', true)` or
+     * `layer.setAnimationEnabled(layer.EASE_CODES[layer.EASE.Linear], true)`.
+     *
      * This is a buffer modification, and is expensive.
      *
      * @method Phaser.GameObjects.SpriteGPULayer#addData
@@ -1299,6 +1305,12 @@ var SpriteGPULayer = new Class({
      * Ensure that the buffer is the correct size for the number of members.
      * See `getMemberData` for the structure of the data.
      *
+     * Note that, if you add a member with an animation,
+     * the animation must either already be enabled,
+     * or you must enable it with `setAnimationEnabled`,
+     * e.g. `layer.setAnimationEnabled('Linear', true)` or
+     * `layer.setAnimationEnabled(layer.EASE_CODES[layer.EASE.Linear], true)`.
+     *
      * @method Phaser.GameObjects.SpriteGPULayer#insertMembersData
      * @since 4.0.0
      * @param {number} index - The index at which to insert members.
@@ -1517,8 +1529,8 @@ var SpriteGPULayer = new Class({
     /**
      * Set the enabled state of an animation.
      * This will enable or disable the animation in the shader program.
-     * This method is called automatically when animations are added,
-     * so you should not need to call it manually.
+     * This method is called automatically when animations are added with
+     * `addMember`, so you should not need to call it manually.
      *
      * Every enabled animation has a cost in the shader program.
      * In particular, low-end devices may be unable to compile a large number
