@@ -1442,9 +1442,9 @@ var SpriteGPULayer = new Class({
                 {
                     gravityFactor = 0;
                 }
-                else if (gravityFactor < 0)
+                else if (gravityFactor < -1)
                 {
-                    gravityFactor = 0;
+                    gravityFactor = -0.999;
                 }
 
                 // Map gravityFactor range [-1,1] to [0,1].
