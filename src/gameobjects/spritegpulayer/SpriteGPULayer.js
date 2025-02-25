@@ -806,15 +806,8 @@ var SpriteGPULayer = new Class({
         this._setAnimatedValue(member.scaleY, offset, 1);
         offset += 4;
 
-        f32[offset++] = member.originX === undefined ? 0.5 : member.originX;
-        f32[offset++] = member.originY === undefined ? 0.5 : member.originY;
-
-        f32[offset++] = member.tintFill ? 1 : 0;
-
-        f32[offset++] = member.creationTime || this.timeElapsed;
-
-        f32[offset++] = member.scrollFactorX === undefined ? 1 : member.scrollFactorX;
-        f32[offset++] = member.scrollFactorY === undefined ? 1 : member.scrollFactorY;
+        this._setAnimatedValue(member.alpha, offset, 1);
+        offset += 4;
 
         var animation = member.animation;
         if (animation)
@@ -921,8 +914,15 @@ var SpriteGPULayer = new Class({
             alphaTopRight
         );
 
-        this._setAnimatedValue(member.alpha, offset, 1);
-        offset += 4;
+        f32[offset++] = member.originX === undefined ? 0.5 : member.originX;
+        f32[offset++] = member.originY === undefined ? 0.5 : member.originY;
+
+        f32[offset++] = member.tintFill ? 1 : 0;
+
+        f32[offset++] = member.creationTime || this.timeElapsed;
+
+        f32[offset++] = member.scrollFactorX === undefined ? 1 : member.scrollFactorX;
+        f32[offset++] = member.scrollFactorY === undefined ? 1 : member.scrollFactorY;
 
         this.addData(this.nextMemberF32);
 
@@ -1062,13 +1062,8 @@ var SpriteGPULayer = new Class({
         member.scaleY = this._getAnimatedValue(offset);
         offset += 4;
 
-        member.originX = f32[offset++];
-        member.originY = f32[offset++];
-        member.tintFill = !!f32[offset++];
-        member.creationTime = f32[offset++];
-
-        member.scrollFactorX = f32[offset++];
-        member.scrollFactorY = f32[offset++];
+        member.alpha = this._getAnimatedValue(offset);
+        offset += 4;
 
         // Determine frame or animation values.
         var frame = this._getAnimatedValue(offset);
@@ -1111,8 +1106,13 @@ var SpriteGPULayer = new Class({
         member.tintBottomRight &= 0xffffff;
         member.tintTopRight &= 0xffffff;
 
-        member.alpha = this._getAnimatedValue(offset);
-        offset += 4;
+        member.originX = f32[offset++];
+        member.originY = f32[offset++];
+        member.tintFill = !!f32[offset++];
+        member.creationTime = f32[offset++];
+
+        member.scrollFactorX = f32[offset++];
+        member.scrollFactorY = f32[offset++];
 
         return member;
     },
@@ -1134,7 +1134,7 @@ var SpriteGPULayer = new Class({
      * If you provide an `out` parameter, the data will be copied to that array,
      * and you must construct your own views.
      *
-     * The primary data view is a 40-element array of 32-bit floats.
+     * The primary data view is a 41-element array of 32-bit floats.
      * Some values are grouped to form animations, of the form:
      *
      * - 0: base value
@@ -1149,24 +1149,24 @@ var SpriteGPULayer = new Class({
      * - 8-11: rotation (animation)
      * - 12-15: scaleX (animation)
      * - 16-19: scaleY (animation)
-     * - 20: originX
-     * - 21: originY
-     * - 22: tintFill
-     * - 23: creationTime
-     * - 25: scrollFactorX
-     * - 26: scrollFactorY
-     * - 27-29: frame index (animation)
-     * - 30-33: tintBlend (animation)
-     * - 34-37: no data
-     * - 38-41: alpha (animation)
+     * - 20-23: alpha (animation)
+     * - 24-27: frame index (animation)
+     * - 28-31: tintBlend (animation)
+     * - 32-35: no data
+     * - 36: originX
+     * - 37: originY
+     * - 38: tintFill
+     * - 39: creationTime
+     * - 40: scrollFactorX
+     * - 41: scrollFactorY
      *
-     * Elements 33-36 are only visible in the Uint32Array view.
+     * Elements 32-35 are only visible in the Uint32Array view.
      * They store 32-bit RGBA values for the four corners of the tint:
      *
-     * - 34: bottom-left
-     * - 35: top-left
-     * - 36: bottom-right
-     * - 37: top-right
+     * - 32: bottom-left
+     * - 33: top-left
+     * - 34: bottom-right
+     * - 35: top-right
      *
      * If the ease for an animation is 'Gravity', the amplitude is replaced
      * with a two-part value: the integer part is the `velocity`,

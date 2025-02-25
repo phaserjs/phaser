@@ -228,12 +228,8 @@ var SubmitterSpriteGPULayer = new Class({
                     size: 4
                 },
                 {
-                    name: 'inOriginAndTintFillAndCreationTime',
+                    name: 'inAlpha',
                     size: 4
-                },
-                {
-                    name: 'inScrollFactor',
-                    size: 2
                 },
                 {
                     name: 'inFrame',
@@ -268,8 +264,12 @@ var SubmitterSpriteGPULayer = new Class({
                     normalized: true
                 },
                 {
-                    name: 'inAlpha',
+                    name: 'inOriginAndTintFillAndCreationTime',
                     size: 4
+                },
+                {
+                    name: 'inScrollFactor',
+                    size: 2
                 }
             ]
         },
