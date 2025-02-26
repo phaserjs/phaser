@@ -236,7 +236,7 @@ var TextureSource = new Class({
                 }
                 else if (this.isRenderTexture)
                 {
-                    this.glTexture = renderer.createTextureFromSource(null, width, height, scaleMode);
+                    this.glTexture = renderer.createTextureFromSource(null, width, height, scaleMode, undefined, flipY);
                 }
                 else if (this.isGLTexture)
                 {
@@ -244,15 +244,15 @@ var TextureSource = new Class({
                 }
                 else if (this.compressionAlgorithm)
                 {
-                    this.glTexture = renderer.createTextureFromSource(source, undefined, undefined, scaleMode);
+                    this.glTexture = renderer.createTextureFromSource(source, undefined, undefined, scaleMode, undefined, flipY);
                 }
                 else if (source instanceof Uint8Array)
                 {
-                    this.glTexture = renderer.createUint8ArrayTexture(source, width, height, scaleMode);
+                    this.glTexture = renderer.createUint8ArrayTexture(source, width, height, scaleMode, undefined, flipY);
                 }
                 else
                 {
-                    this.glTexture = renderer.createTextureFromSource(image, width, height, scaleMode);
+                    this.glTexture = renderer.createTextureFromSource(image, width, height, scaleMode, undefined, flipY);
                 }
 
                 if (typeof WEBGL_DEBUG)
@@ -328,13 +328,31 @@ var TextureSource = new Class({
         var flipY = this.flipY;
         var gl = renderer.gl;
 
-        if (gl && this.isCanvas)
+        if (gl)
         {
-            renderer.updateCanvasTexture(image, this.glTexture, flipY);
-        }
-        else if (gl && this.isVideo)
-        {
-            renderer.updateVideoTexture(image, this.glTexture, flipY);
+            var textureWrapper = this.glTexture;
+            if (this.isCanvas)
+            {
+                renderer.updateCanvasTexture(image, textureWrapper, flipY);
+            }
+            else if (this.isVideo)
+            {
+                renderer.updateVideoTexture(image, textureWrapper, flipY);
+            }
+            else
+            {
+                textureWrapper.update(
+                    image,
+                    this.width,
+                    this.height,
+                    flipY,
+                    textureWrapper.wrapS,
+                    textureWrapper.wrapT,
+                    textureWrapper.magFilter,
+                    textureWrapper.minFilter,
+                    textureWrapper.format
+                );
+            }
         }
     },
 

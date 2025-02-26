@@ -1556,10 +1556,11 @@ var WebGLRenderer = new Class({
      * @param {number} height - The height of the texture.
      * @param {number} scaleMode - The scale mode to be used by the texture.
      * @param {boolean} [forceClamp=false] - Force the texture to use the CLAMP_TO_EDGE wrap mode, even if a power of two?
+     * @param {boolean} [flipY=true] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
      *
      * @return {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The WebGLTextureWrapper that was created, or `null` if it couldn't be created.
      */
-    createTextureFromSource: function (source, width, height, scaleMode, forceClamp)
+    createTextureFromSource: function (source, width, height, scaleMode, forceClamp, flipY)
     {
         if (forceClamp === undefined) { forceClamp = false; }
 
@@ -1594,11 +1595,11 @@ var WebGLRenderer = new Class({
 
         if (!source && typeof width === 'number' && typeof height === 'number')
         {
-            texture = this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, null, width, height);
+            texture = this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, null, width, height, undefined, undefined, flipY);
         }
         else
         {
-            texture = this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, source);
+            texture = this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, source, undefined, undefined, undefined, undefined, flipY);
         }
 
         return texture;
