@@ -36,8 +36,8 @@ var ExternRender = require('./ExternRender');
  *
  * @example
  * extern.render = (webGLRenderer, drawingContext, calcMatrix) => {
- *         // Set GL state to default values.
- *         renderer.resetState();
+ *         // You may want to initialize the external renderer here.
+ *         // ...
  * 
  *         // Ensure the DrawingContext framebuffer is bound.
  *         // This allows you to use Filters on the external render.
