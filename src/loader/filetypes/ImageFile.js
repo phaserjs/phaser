@@ -178,9 +178,9 @@ var ImageFile = new Class({
             _this.loader.nextFile(_this, true);
         };
 
-        this.data.onerror = function ()
+        this.data.onerror = function (event)
         {
-            _this.loader.nextFile(_this, false);
+            _this.loader.nextFile(_this, false, event);
         };
 
         this.data.src = this.src;
