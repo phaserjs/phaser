@@ -165,7 +165,7 @@ var ArcadePhysics = new Class({
      *
      * If you wish to run the World update at your own rate, or from your own
      * component, then you should call this method to disable the built-in link,
-     * and then call `World.update(delta, time)` accordingly.
+     * and then call `World.update(time, delta)` accordingly.
      *
      * Note that `World.postUpdate` is always automatically called when the Scene
      * emits a `POST_UPDATE` event, regardless of this setting.
