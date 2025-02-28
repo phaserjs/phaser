@@ -370,7 +370,6 @@ var EmitterOp = new Class({
     {
         var value = this.propertyValue;
 
-        //  `moveToX` and `moveToY` are null by default
         if (value === null)
         {
             return 0;
