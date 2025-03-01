@@ -116,6 +116,10 @@ var EmitterColorOp = new Class({
 
             this.active = true;
 
+            this.r.length = 0;
+            this.g.length = 0;
+            this.b.length = 0;
+
             //  Populate the r,g,b arrays
             for (var i = 0; i < value.length; i++)
             {
