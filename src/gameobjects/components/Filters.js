@@ -173,6 +173,7 @@ if (typeof WEBGL_RENDERER)
 
         /**
          * A transform matrix used to render the filters.
+         * It holds the transform of the Game Object.
          *
          * This is only available if you use the `enableFilters` method.
          *
@@ -183,6 +184,20 @@ if (typeof WEBGL_RENDERER)
          * @webglOnly
          */
         _filtersMatrix: null,
+
+        /**
+         * A transform matrix used to render the filters.
+         * It holds the view matrix for the filter camera, adjusted for the Game Object.
+         *
+         * This is only available if you use the `enableFilters` method.
+         *
+         * @name Phaser.GameObjects.Components.Filters#_filtersViewMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 4.0.0
+         * @webglOnly
+         */
+        _filtersViewMatrix: null,
 
         /**
          * Whether this Game Object will render filters.
@@ -247,6 +262,7 @@ if (typeof WEBGL_RENDERER)
             }
 
             this._filtersMatrix = new TransformMatrix();
+            this._filtersViewMatrix = new TransformMatrix();
 
             // Check whether the object is poorly bounded, and needs to focus on the context.
             if (
@@ -322,21 +338,26 @@ if (typeof WEBGL_RENDERER)
 
             // Get transform.
             var transformMatrix = gameObject._filtersMatrix;
-            var cameraMatrix = camera.matrix;
+            var cameraMatrix = gameObject._filtersViewMatrix.copyFrom(camera.matrix);
 
-            var flipX = gameObject.flipX ? -1 : 1;
-            var flipY = gameObject.flipY ? -1 : 1;
-            var scrollFactorX = gameObject.scrollFactorX;
-            var scrollFactorY = gameObject.scrollFactorY;
+            cameraMatrix.translate(
+                camera.scrollX * (1 - gameObject.scrollFactorX),
+                camera.scrollY * (1 - gameObject.scrollFactorY)
+            );
+
+            if (parentMatrix)
+            {
+                parentMatrix.multiply(cameraMatrix, cameraMatrix);
+            }
 
             if (gameObject.type === 'Layer')
             {
                 transformMatrix.loadIdentity();
-                scrollFactorX = 1;
-                scrollFactorY = 1;
             }
             else
             {
+                var flipX = gameObject.flipX ? -1 : 1;
+                var flipY = gameObject.flipY ? -1 : 1;
                 transformMatrix.applyITRS(
                     gameObject.x,
                     gameObject.y,
@@ -354,23 +375,6 @@ if (typeof WEBGL_RENDERER)
                 -height * filterCamera.originY
             );
 
-            // Apply camera.
-            if (parentMatrix)
-            {
-                cameraMatrix = new TransformMatrix().copyFrom(camera.matrix);
-                cameraMatrix.multiplyWithOffset(
-                    parentMatrix,
-                    -camera.scrollX * scrollFactorX,
-                    -camera.scrollY * scrollFactorY
-                );
-            }
-            else
-            {
-                transformMatrix.e -= camera.scrollX * scrollFactorX;
-                transformMatrix.f -= camera.scrollY * scrollFactorY;
-            }
-
-            //  Multiply the camera by the transform, store result in transformMatrix
             cameraMatrix.multiply(transformMatrix, transformMatrix);
 
             // Now we have the transform for the game object.

@@ -126,9 +126,6 @@ var TransformerImage = new Class({
             flipY = -1;
         }
 
-        var gx = gameObject.x;
-        var gy = gameObject.y;
-
         var camera = drawingContext.camera;
         var spriteMatrix = this._spriteMatrix;
         var calcMatrix = this._calcMatrix.copyFrom(camera.matrix);
@@ -143,7 +140,11 @@ var TransformerImage = new Class({
             parentMatrix.multiply(calcMatrix, calcMatrix);
         }
 
-        spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
+        spriteMatrix.applyITRS(
+            gameObject.x, gameObject.y,
+            gameObject.rotation,
+            gameObject.scaleX * flipX, gameObject.scaleY * flipY
+        );
 
         calcMatrix.multiply(spriteMatrix);
 
