@@ -427,16 +427,17 @@ if (typeof WEBGL_RENDERER)
             // Attempt to create bounds from basic object properties.
             if (!camera)
             {
-                if (!(
-                    this.type === 'Layer' ||
-                    isNaN(posX) || isNaN(posY) ||
-                    isNaN(width) || isNaN(height) ||
-                    isNaN(originX) || isNaN(originY) ||
-                    width === 0 || height === 0
-                ))
+                if (
+                    this.type !== 'Layer' &&
+                    !isNaN(posX) && !isNaN(posY) &&
+                    !isNaN(width) && !isNaN(height) &&
+                    !isNaN(originX) && !isNaN(originY) &&
+                    width !== 0 && height !== 0
+                )
                 {
-                    centerX = posX;
-                    centerY = posY;
+                    centerX = posX + width * (0.5 - originX);
+                    centerY = posY + height * (0.5 - originY);
+
                     bounded = true;
                 }
             }
