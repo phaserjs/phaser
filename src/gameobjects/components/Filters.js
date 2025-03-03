@@ -487,6 +487,18 @@ if (typeof WEBGL_RENDERER)
                 .setOrigin(originX, originY)
                 .setZoom(1 / scaleX, 1 / scaleY);
 
+            // Compensate for camera scroll.
+            if (!isNaN(this.scrollFactorX))
+            {
+                // centerX *= this.scrollFactorX;
+                this.filterCamera.scrollX /= this.scrollFactorX;
+            }
+            if (!isNaN(this.scrollFactorY))
+            {
+                // centerY *= this.scrollFactorY;
+                this.filterCamera.scrollY /= this.scrollFactorY;
+            }
+
             return this;
         },
 
