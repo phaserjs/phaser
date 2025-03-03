@@ -42,21 +42,20 @@ var BlitterWebGLRenderer = function (renderer, src, drawingContext, parentMatrix
 
     camera.addToRenderList(src);
 
-    var cameraScrollX = camera.scrollX * src.scrollFactorX;
-    var cameraScrollY = camera.scrollY * src.scrollFactorY;
-
     var calcMatrix = tempMatrix.copyFrom(camera.matrix);
+
+    calcMatrix.translate(
+        camera.scrollX * (1 - src.scrollFactorX),
+        camera.scrollY * (1 - src.scrollFactorY)
+    );
 
     if (parentMatrix)
     {
-        calcMatrix.multiplyWithOffset(parentMatrix, -cameraScrollX, -cameraScrollY);
-
-        cameraScrollX = 0;
-        cameraScrollY = 0;
+        parentMatrix.multiply(calcMatrix, calcMatrix);
     }
 
-    var blitterX = src.x - cameraScrollX;
-    var blitterY = src.y - cameraScrollY;
+    var blitterX = src.x;
+    var blitterY = src.y;
 
     var customRenderNodes = src.customRenderNodes;
     var defaultRenderNodes = src.defaultRenderNodes;
