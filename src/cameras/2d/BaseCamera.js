@@ -346,7 +346,15 @@ var BaseCamera = new Class({
         this._rotation = 0;
 
         /**
-         * A local transform matrix used for internal calculations.
+         * A local transform matrix used to compute the camera view.
+         *
+         * In v3, this contained a combination of the external camera position,
+         * and the internal rotation and zoom.
+         * In v4, it instead contains the internal camera scroll, rotation, and zoom.
+         * Note that these are applied in the order of rotation, scale, then scroll.
+         * This makes it easier to apply scaleFactor to the scroll values.
+         *
+         * See also `matrixExternal` and `matrixCombined`.
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#matrix
          * @type {Phaser.GameObjects.Components.TransformMatrix}
@@ -354,6 +362,24 @@ var BaseCamera = new Class({
          * @since 3.0.0
          */
         this.matrix = new TransformMatrix();
+
+        /**
+         * A local transform matrix combining `matrix` and `matrixExternal`.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#matrixCombined
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 4.0.0
+         */
+        this.matrixCombined = new TransformMatrix();
+
+        /**
+         * A local transform matrix used to compute the camera location.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#matrixExternal
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 4.0.0
+         */
+        this.matrixExternal = new TransformMatrix();
 
         /**
          * Does this Camera have a transparent background?
@@ -758,9 +784,6 @@ var BaseCamera = new Class({
             return renderableObjects;
         }
 
-        var mve = cameraMatrix[4];
-        var mvf = cameraMatrix[5];
-
         var scrollX = this.scrollX;
         var scrollY = this.scrollY;
         var cameraW = this.width;
@@ -790,10 +813,10 @@ var BaseCamera = new Class({
             var objectH = object.height;
             var objectX = (object.x - (scrollX * object.scrollFactorX)) - (objectW * object.originX);
             var objectY = (object.y - (scrollY * object.scrollFactorY)) - (objectH * object.originY);
-            var tx = (objectX * mva + objectY * mvc + mve);
-            var ty = (objectX * mvb + objectY * mvd + mvf);
-            var tw = ((objectX + objectW) * mva + (objectY + objectH) * mvc + mve);
-            var th = ((objectX + objectW) * mvb + (objectY + objectH) * mvd + mvf);
+            var tx = (objectX * mva + objectY * mvc);
+            var ty = (objectX * mvb + objectY * mvd);
+            var tw = ((objectX + objectW) * mva + (objectY + objectH) * mvc);
+            var th = ((objectX + objectW) * mvb + (objectY + objectH) * mvd);
 
             if ((tw > cullLeft && tx < cullRight) && (th > cullTop && ty < cullBottom))
             {
@@ -1552,6 +1575,8 @@ var BaseCamera = new Class({
         this.removeAllListeners();
 
         this.matrix.destroy();
+        this.matrixCombined.destroy();
+        this.matrixExternal.destroy();
 
         this.culledObjects = [];
 

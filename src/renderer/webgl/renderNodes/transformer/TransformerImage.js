@@ -49,16 +49,6 @@ var TransformerImage = new Class({
         this.onlyTranslate = false;
 
         /**
-         * The matrix used internally to compute camera transforms.
-         *
-         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerImage#_camMatrix
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 4.0.0
-         * @private
-         */
-        this._camMatrix = new TransformMatrix();
-
-        /**
          * The matrix used internally to compute sprite transforms.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.TransformerImage#_spriteMatrix
@@ -140,28 +130,22 @@ var TransformerImage = new Class({
         var gy = gameObject.y;
 
         var camera = drawingContext.camera;
-        var calcMatrix = this._calcMatrix;
-        var camMatrix = this._camMatrix;
         var spriteMatrix = this._spriteMatrix;
+        var calcMatrix = this._calcMatrix.copyFrom(camera.matrix);
 
-        spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
+        calcMatrix.translate(
+            camera.scrollX * (1 - gameObject.scrollFactorX),
+            camera.scrollY * (1 - gameObject.scrollFactorY)
+        );
 
         if (parentMatrix)
         {
-            //  Multiply the camera by the parent matrix
-            camMatrix.copyFrom(camera.matrix);
-            camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * gameObject.scrollFactorX, -camera.scrollY * gameObject.scrollFactorY);
-        }
-        else
-        {
-            // camMatrix will not be mutated after this point, so we just take a reference.
-            camMatrix = camera.matrix;
-            spriteMatrix.e -= camera.scrollX * gameObject.scrollFactorX;
-            spriteMatrix.f -= camera.scrollY * gameObject.scrollFactorY;
+            calcMatrix.multiply(parentMatrix);
         }
 
-        // Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
+        spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
+
+        calcMatrix.multiply(spriteMatrix);
 
         // Determine whether the matrix does not rotate, scale, or skew.
         // Keyword: #OnlyTranslate

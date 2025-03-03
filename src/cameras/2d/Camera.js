@@ -508,7 +508,6 @@ var Camera = new Class({
 
         var zoomX = this.zoomX;
         var zoomY = this.zoomY;
-        var matrix = this.matrix;
 
         var originX = width * this.originX;
         var originY = height * this.originY;
@@ -587,9 +586,17 @@ var Camera = new Class({
 
         this.worldView.setTo(vwx, vwy, displayWidth, displayHeight);
 
-        matrix.applyITRS(this.x + originX, this.y + originY, this.rotation, zoomX, zoomY);
+        var matrix = this.matrix;
+        var matrixExternal = this.matrixExternal;
 
-        matrix.translate(-originX, -originY);
+        // Apply view transforms in order IRST.
+        matrix.applyITRS(originX, originY, this.rotation, zoomX, zoomY);
+        matrix.translate(-sx - originX, -sy - originY);
+
+        matrixExternal.applyITRS(this.x + originX, this.y + originY, 0, 1, 1);
+        matrixExternal.translate(-originX, -originY);
+
+        matrix.multiply(matrixExternal, this.matrixCombined);
 
         this.shakeEffect.preRender();
 

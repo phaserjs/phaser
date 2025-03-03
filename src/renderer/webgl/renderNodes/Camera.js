@@ -6,6 +6,7 @@
 
 var CameraEvents = require('../../../cameras/2d/events');
 var GetColor32 = require('../../../display/color/GetColor32');
+var TransformMatrix = require('../../../gameobjects/components/TransformMatrix.js');
 var Rectangle = require('../../../geom/rectangle/Rectangle');
 var Class = require('../../../utils/Class');
 var Utils = require('../Utils.js');
@@ -61,6 +62,17 @@ var Camera = new Class({
          * @since 4.0.0
          */
         this.listCompositorNode = manager.getNode('ListCompositor');
+
+        /**
+         * A temporary TransformMatrix used for the parent context
+         * within which this camera is renderered.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.Camera#_parentTransformMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 4.0.0
+         */
+        this._parentTransformMatrix = new TransformMatrix();
     },
 
     /**
@@ -98,7 +110,15 @@ var Camera = new Class({
 
         var useFramebuffers = forceFramebuffer || internalFilters.length || externalFilters.length || alpha < 1;
 
-        var camMatrix = camera.matrix.matrix;
+        if (!parentTransformMatrix)
+        {
+            parentTransformMatrix = this._parentTransformMatrix.copyFrom(camera.matrixExternal);
+        }
+        else
+        {
+            camera.matrixExternal.multiply(parentTransformMatrix, parentTransformMatrix);
+        }
+
         var cx = camera.x;
         var cy = camera.y;
         var cw = camera.width;
@@ -116,15 +136,6 @@ var Camera = new Class({
 
             // Set the scissor to the camera dimensions.
             currentContext.setScissorBox(0, 0, cw, ch);
-
-            // Temporarily remove camera translation.
-            // The camera translation should only be applied to the final draw.
-            // Because the camera matrix is only updated during `preRender`,
-            // we must modify it directly here.
-            camera.x = 0;
-            camera.y = 0;
-            camMatrix[4] = 0;
-            camMatrix[5] = 0;
         }
         else
         {
@@ -172,12 +183,6 @@ var Camera = new Class({
         if (useFramebuffers)
         {
             var index, filter, padding, renderNode, tint;
-
-            // Restore camera translation.
-            camera.x = cx;
-            camera.y = cy;
-            camMatrix[4] = cx;
-            camMatrix[5] = cy;
 
             // Determine whether to use round vertex coordinates.
             // Keyword: #OnlyTranslate
@@ -236,7 +241,7 @@ var Camera = new Class({
                 }
 
                 // Will the texture need to be repositioned for the external filters?
-                copyInternal = coverageExternal.width !== currentContext.width || coverageExternal.height !== currentContext.height || parentTransformMatrix;
+                copyInternal = coverageExternal.width !== currentContext.width || coverageExternal.height !== currentContext.height;
 
                 if (copyInternal)
                 {
@@ -259,35 +264,14 @@ var Camera = new Class({
                 var externalX = coverageExternal.x;
                 var externalY = coverageExternal.y;
                 var quad;
-                if (parentTransformMatrix)
-                {
-                    // We're drawing a filtered object.
-                    parentTransformMatrix.setQuad(
-                        coverageInternal.x,
-                        coverageInternal.y,
-                        coverageInternal.x + coverageInternal.width,
-                        coverageInternal.y + coverageInternal.height
-                    );
-                    quad = parentTransformMatrix.quad;
-                }
-                else
-                {
-                    // We're drawing a camera.
-                    var offsetX = coverageInternal.x;
-                    var offsetY = coverageInternal.y;
-                    var w = coverageInternal.width - offsetX;
-                    var h = coverageInternal.height - offsetY;
-                    offsetX += camera.x;
-                    offsetY += camera.y;
-                    w += camera.x;
-                    h += camera.y;
-                    quad = [
-                        offsetX, offsetY,
-                        offsetX, h,
-                        w, h,
-                        w, offsetY
-                    ];
-                }
+
+                parentTransformMatrix.setQuad(
+                    coverageInternal.x,
+                    coverageInternal.y,
+                    coverageInternal.x + coverageInternal.width,
+                    coverageInternal.y + coverageInternal.height
+                );
+                quad = parentTransformMatrix.quad;
 
                 tint = drawExternalFilters ? 0xffffffff : getAlphaTint(alpha);
 
