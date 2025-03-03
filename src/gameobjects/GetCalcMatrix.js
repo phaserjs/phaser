@@ -61,7 +61,7 @@ var GetCalcMatrix = function (src, camera, parentMatrix, ignoreCameraPosition)
         camera.scrollY * (1 - src.scrollFactorY)
     );
 
-    camMatrix.multiply(camExternalMatrix, calcMatrix);
+    camExternalMatrix.multiply(camMatrix, calcMatrix);
 
     spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 

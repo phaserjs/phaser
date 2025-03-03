@@ -593,8 +593,7 @@ var Camera = new Class({
         matrix.applyITRS(originX, originY, this.rotation, zoomX, zoomY);
         matrix.translate(-sx - originX, -sy - originY);
 
-        matrixExternal.applyITRS(this.x + originX, this.y + originY, 0, 1, 1);
-        matrixExternal.translate(-originX, -originY);
+        matrixExternal.applyITRS(this.x, this.y, 0, 1, 1);
 
         matrix.multiply(matrixExternal, this.matrixCombined);
 

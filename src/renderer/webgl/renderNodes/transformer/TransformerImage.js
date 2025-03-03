@@ -140,7 +140,7 @@ var TransformerImage = new Class({
 
         if (parentMatrix)
         {
-            calcMatrix.multiply(parentMatrix);
+            parentMatrix.multiply(calcMatrix, calcMatrix);
         }
 
         spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
