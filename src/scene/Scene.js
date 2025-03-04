@@ -37,6 +37,8 @@ var Scene = new Class({
 
         /**
          * A reference to the Phaser.Game instance.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map.
          *
@@ -48,6 +50,8 @@ var Scene = new Class({
 
         /**
          * A reference to the global Animation Manager.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map.
          *
@@ -59,6 +63,8 @@ var Scene = new Class({
 
         /**
          * A reference to the global Cache.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map.
          *
@@ -70,6 +76,8 @@ var Scene = new Class({
 
         /**
          * A reference to the global Data Manager.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map.
          *
@@ -81,6 +89,8 @@ var Scene = new Class({
 
         /**
          * A reference to the Sound Manager.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
@@ -92,6 +102,8 @@ var Scene = new Class({
 
         /**
          * A reference to the Texture Manager.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map.
          *
@@ -103,6 +115,8 @@ var Scene = new Class({
 
         /**
          * A Scene specific Event Emitter.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map.
          *
@@ -114,6 +128,8 @@ var Scene = new Class({
 
         /**
          * The Scene Camera Manager.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map.
          *
@@ -125,6 +141,8 @@ var Scene = new Class({
 
         /**
          * The Scene Game Object Factory.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map.
          *
@@ -136,6 +154,8 @@ var Scene = new Class({
 
         /**
          * The Scene Game Object Creator.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map.
          *
@@ -147,6 +167,8 @@ var Scene = new Class({
 
         /**
          * A reference to the Scene Manager Plugin.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map.
          *
@@ -158,6 +180,8 @@ var Scene = new Class({
 
         /**
          * The Game Object Display List belonging to this Scene.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map.
          *
@@ -169,6 +193,8 @@ var Scene = new Class({
 
         /**
          * The Scene Lights Manager Plugin.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
@@ -180,6 +206,8 @@ var Scene = new Class({
 
         /**
          * A Scene specific Data Manager Plugin.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * See the `registry` property for the global Data Manager.
          *
@@ -193,6 +221,8 @@ var Scene = new Class({
 
         /**
          * The Scene Input Manager Plugin.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
@@ -204,6 +234,8 @@ var Scene = new Class({
 
         /**
          * The Scene Loader Plugin.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
@@ -215,6 +247,8 @@ var Scene = new Class({
 
         /**
          * The Scene Time and Clock Plugin.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
@@ -226,6 +260,8 @@ var Scene = new Class({
 
         /**
          * The Scene Tween Manager Plugin.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map and the plugin is installed.
          *
@@ -237,6 +273,8 @@ var Scene = new Class({
 
         /**
          * The Scene Arcade Physics Plugin.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.
          *
@@ -248,6 +286,8 @@ var Scene = new Class({
 
         /**
          * The Scene Matter Physics Plugin.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.
          *
@@ -261,6 +301,8 @@ var Scene = new Class({
         {
             /**
              * The Facebook Instant Games Plugin.
+             * 
+             * Note: will be undefined in scene's constructor.
              *
              * This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.
              *
@@ -273,6 +315,8 @@ var Scene = new Class({
 
         /**
          * A reference to the global Scale Manager.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * This property will only be available if defined in the Scene Injection Map.
          *
@@ -284,6 +328,8 @@ var Scene = new Class({
 
         /**
          * A reference to the global Plugin Manager.
+         * 
+         * Note: will be undefined in scene's constructor.
          *
          * The Plugin Manager is a global system that allows plugins to register themselves with it, and can then install
          * those plugins into Scenes as required.
@@ -296,6 +342,8 @@ var Scene = new Class({
 
         /**
          * A reference to the renderer instance Phaser is using, either Canvas Renderer or WebGL Renderer.
+         * 
+         *  Note: will be undefined in scene's constructor.
          *
          * @name Phaser.Scene#renderer
          * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
