@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var FillPathWebGL = require('../FillPathWebGL');
 var GetCalcMatrix = require('../../GetCalcMatrix');
 var StrokePathWebGL = require('../StrokePathWebGL');
 var Utils = require('../../../renderer/webgl/Utils');
@@ -27,7 +28,6 @@ var RectangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
     camera.addToRenderList(src);
 
     var pipeline = renderer.pipelines.set(src.pipeline);
-
     var result = GetCalcMatrix(src, camera, parentMatrix);
 
     pipeline.calcMatrix.copyFrom(result.calc);
@@ -38,7 +38,11 @@ var RectangleWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     renderer.pipelines.preBatch(src);
 
-    if (src.isFilled)
+    if (src.isRounded && src.isFilled)
+    {
+        FillPathWebGL(pipeline, result.calc, src, alpha, dx, dy);
+    }
+    else if (src.isFilled)
     {
         var fillTint = pipeline.fillTint;
         var fillTintColor = Utils.getTintAppendFloatAlpha(src.fillColor, src.fillAlpha * alpha);
