@@ -74,7 +74,11 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, drawingContext, 
 
     camMatrix.copyFrom(camera.matrix);
 
-    camMatrix.multiplyWithOffset(managerMatrix, -camera.scrollX * emitter.scrollFactorX, -camera.scrollY * emitter.scrollFactorY);
+    camMatrix.multiplyWithOffset(
+        managerMatrix,
+        camera.scrollX * (1 - emitter.scrollFactorX),
+        camera.scrollY * (1 - emitter.scrollFactorY)
+    );
 
     var tintFill = emitter.tintFill;
 
