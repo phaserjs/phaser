@@ -8,6 +8,7 @@ var CameraEvents = require('../../../cameras/2d/events');
 var GetColor32 = require('../../../display/color/GetColor32');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix.js');
 var Rectangle = require('../../../geom/rectangle/Rectangle');
+var Equal = require('../../../math/fuzzy/Equal.js');
 var Class = require('../../../utils/Class');
 var Utils = require('../Utils.js');
 var RenderNode = require('./RenderNode');
@@ -118,6 +119,15 @@ var Camera = new Class({
         {
             camera.matrixExternal.multiply(parentTransformMatrix, parentTransformMatrix);
         }
+        
+        // Check whether the parentTransformMatrix is the identity matrix.
+        var decomposedParent = parentTransformMatrix.decomposeMatrix();
+        var parentIsIdentity =
+            Equal(decomposedParent.translateX, 0) &&
+            Equal(decomposedParent.translateY, 0) &&
+            Equal(decomposedParent.rotation, 0) &&
+            Equal(decomposedParent.scaleX, 1) &&
+            Equal(decomposedParent.scaleY, 1);
 
         var cx = camera.x;
         var cy = camera.y;
@@ -157,7 +167,7 @@ var Camera = new Class({
         }
 
         // Draw children.
-        this.listCompositorNode.run(currentContext, children, useFramebuffers ? null : parentTransformMatrix, renderStep);
+        this.listCompositorNode.run(currentContext, children, (useFramebuffers || parentIsIdentity) ? null : parentTransformMatrix, renderStep);
 
         // Draw camera post effects.
 
