@@ -6,6 +6,7 @@
 
 var CONST = require('./const');
 var Class = require('../utils/Class');
+var Clamp = require('../math/Clamp');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var GameEvents = require('../core/events');
@@ -1086,13 +1087,51 @@ var ScaleManager = new Class({
         }
         else if (this.scaleMode === CONST.SCALE_MODE.EXPAND)
         {
+            // Expand canvas size to fit game size's width or height
+
             var baseWidth = this.game.config.width;
             var baseHeight = this.game.config.height;
 
-            //  Resize to match parent, like RESIZE mode
+            var windowWidth = this.parentSize.width;
+            var windowHeight = this.parentSize.height;
 
-            //  This will constrain using min/max
-            this.displaySize.setSize(this.parentSize.width, this.parentSize.height);
+            var scaleX = windowWidth / baseWidth;
+            var scaleY = windowHeight / baseHeight;
+
+            var canvasWidth;
+            var canvasHeight;
+
+            if (scaleX < scaleY)
+            {
+                canvasWidth = baseWidth;
+                canvasHeight = (scaleX !== 0)? windowHeight / scaleX : baseHeight;
+            }
+            else
+            {
+                canvasWidth = (scaleY !== 0)? windowWidth / scaleY : baseWidth;
+                canvasHeight = baseHeight;
+            }
+
+            var clampedCanvasWidth = Clamp(canvasWidth, this.displaySize.minWidth, this.displaySize.maxWidth);
+            var clampedCanvasHeight = Clamp(canvasHeight, this.displaySize.minHeight, this.displaySize.maxHeight);
+
+            this.baseSize.setSize(clampedCanvasWidth, clampedCanvasHeight);
+
+            this.gameSize.setSize(clampedCanvasWidth, clampedCanvasHeight);
+            
+            if (autoRound)
+            {
+                clampedCanvasWidth = Math.floor(clampedCanvasWidth);
+                clampedCanvasHeight = Math.floor(clampedCanvasHeight);
+            }
+    
+            this.canvas.width = clampedCanvasWidth;
+            this.canvas.height = clampedCanvasHeight;
+
+            //  Resize to match parent, like RESIZE mode
+            var clampedWindowWidth = windowWidth * (clampedCanvasWidth / canvasWidth);
+            var clampedWindowHeight = windowHeight * (clampedCanvasHeight / canvasHeight);
+            this.displaySize.setSize(clampedWindowWidth, clampedWindowHeight);
 
             styleWidth = this.displaySize.width;
             styleHeight = this.displaySize.height;
@@ -1106,33 +1145,6 @@ var ScaleManager = new Class({
             style.width = styleWidth + 'px';
             style.height = styleHeight + 'px';
 
-            // Expand canvas size to fit game size's width or height
-
-            var scaleX = this.parentSize.width / baseWidth;
-            var scaleY = this.parentSize.height / baseHeight;
-
-            if (scaleX < scaleY && scaleX !== 0)
-            {
-                this.baseSize.setSize(baseWidth, this.parentSize.height / scaleX);
-            }
-            else if (scaleY !== 0)
-            {
-                this.baseSize.setSize(this.displaySize.width / scaleY, baseHeight);
-            }
-
-            this.gameSize.setSize(this.baseSize.width, this.baseSize.height);
-
-            styleWidth = this.baseSize.width;
-            styleHeight = this.baseSize.height;
-
-            if (autoRound)
-            {
-                styleWidth = Math.floor(styleWidth);
-                styleHeight = Math.floor(styleHeight);
-            }
-
-            this.canvas.width = styleWidth;
-            this.canvas.height = styleHeight;
         }
         else
         {
