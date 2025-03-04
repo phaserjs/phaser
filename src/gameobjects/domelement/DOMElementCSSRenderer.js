@@ -61,45 +61,39 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
     var srcMatrix = tempMatrix2;
     var calcMatrix = tempMatrix3;
 
-    var dx = 0;
-    var dy = 0;
+    var dx = src.width * src.originX;
+    var dy = src.height * src.originY;
 
     var tx = '0%';
     var ty = '0%';
 
+    camMatrix.copyFrom(camera.matrix);
+    camMatrix.translate(
+        camera.scrollX * (1 - src.scrollFactorX),
+        camera.scrollY * (1 - src.scrollFactorY)
+    );
+
     if (parentMatrix)
     {
-        dx = (src.width * src.scaleX) * src.originX;
-        dy = (src.height * src.scaleY) * src.originY;
-
-        srcMatrix.applyITRS(src.x - dx, src.y - dy, src.rotation, src.scaleX, src.scaleY);
-
-        camMatrix.copyFrom(camera.matrix);
-
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Multiply by the src matrix, store result in calcMatrix
-        camMatrix.multiply(srcMatrix, calcMatrix);
+        camMatrix.multiply(parentMatrix, camMatrix);
+        dx *= src.scaleX;
+        dy *= src.scaleY;
     }
     else
     {
-        dx = (src.width) * src.originX;
-        dy = (src.height) * src.originY;
-
-        srcMatrix.applyITRS(src.x - dx, src.y - dy, src.rotation, src.scaleX, src.scaleY);
-
-        camMatrix.copyFrom(camera.matrix);
-
         tx = (100 * src.originX) + '%';
         ty = (100 * src.originY) + '%';
-
-        srcMatrix.e -= camera.scrollX * src.scrollFactorX;
-        srcMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the src matrix, store result in calcMatrix
-        camMatrix.multiply(srcMatrix, calcMatrix);
     }
+
+    camMatrix.translate(-dx, -dy);
+
+    srcMatrix.applyITRS(
+        src.x, src.y,
+        src.rotation,
+        src.scaleX, src.scaleY
+    );
+
+    camMatrix.multiply(srcMatrix, calcMatrix);
 
     if (!src.transformOnly)
     {
