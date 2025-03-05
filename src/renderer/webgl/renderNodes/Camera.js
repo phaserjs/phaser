@@ -383,10 +383,10 @@ var Camera = new Class({
                         currentContext.texture,
 
                         // Transformed quad in order TL, BL, TR, BR:
-                        x1, y1,
                         x1, y2,
-                        x2, y1,
+                        x1, y1,
                         x2, y2,
+                        x2, y1,
 
                         // Texture coordinates in X, Y, Width, Height:
                         0, 0, 1, 1,
