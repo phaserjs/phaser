@@ -7,10 +7,10 @@
 var RectangleToRectangle = require('../../geom/intersects/RectangleToRectangle');
 var TransformMatrix = require('../components/TransformMatrix');
 
-var tempMatrix1 = new TransformMatrix();
-var tempMatrix2 = new TransformMatrix();
-var tempMatrix3 = new TransformMatrix();
-var tempMatrix4 = new TransformMatrix();
+var camMatrix = new TransformMatrix();
+var calcMatrix = new TransformMatrix();
+var particleMatrix = new TransformMatrix();
+var managerMatrix = new TransformMatrix();
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -28,23 +28,26 @@ var tempMatrix4 = new TransformMatrix();
  */
 var ParticleEmitterCanvasRenderer = function (renderer, emitter, camera, parentMatrix)
 {
-    var camMatrix = tempMatrix1;
-    var calcMatrix = tempMatrix2;
-    var particleMatrix = tempMatrix3;
-    var managerMatrix = tempMatrix4;
+    camera.addToRenderList(emitter);
+
+    camMatrix.copyFrom(camera.matrixCombined);
+    camMatrix.translate(
+        camera.scrollX * (1 - emitter.scrollFactorX),
+        camera.scrollY * (1 - emitter.scrollFactorY)
+    );
 
     if (parentMatrix)
     {
-        managerMatrix.loadIdentity();
-        managerMatrix.multiply(parentMatrix);
-        managerMatrix.translate(emitter.x, emitter.y);
-        managerMatrix.rotate(emitter.rotation);
-        managerMatrix.scale(emitter.scaleX, emitter.scaleY);
+        parentMatrix.multiply(camMatrix, camMatrix);
     }
-    else
-    {
-        managerMatrix.applyITRS(emitter.x, emitter.y, emitter.rotation, emitter.scaleX, emitter.scaleY);
-    }
+
+    managerMatrix.applyITRS(
+        emitter.x, emitter.y,
+        emitter.rotation,
+        emitter.scaleX, emitter.scaleY
+    );
+
+    camMatrix.multiply(managerMatrix);
 
     var ctx = renderer.currentContext;
     var roundPixels = camera.roundPixels;
@@ -65,11 +68,6 @@ var ParticleEmitterCanvasRenderer = function (renderer, emitter, camera, parentM
         emitter.depthSort();
     }
 
-    camera.addToRenderList(emitter);
-
-    var scrollFactorX = emitter.scrollFactorX;
-    var scrollFactorY = emitter.scrollFactorY;
-
     ctx.save();
 
     ctx.globalCompositeOperation = renderer.blendModes[emitter.blendMode];
@@ -86,14 +84,6 @@ var ParticleEmitterCanvasRenderer = function (renderer, emitter, camera, parentM
         }
 
         particleMatrix.applyITRS(particle.x, particle.y, particle.rotation, particle.scaleX, particle.scaleY);
-
-        camMatrix.copyFrom(camera.matrix);
-
-        camMatrix.multiplyWithOffset(
-            managerMatrix,
-            camera.scrollX * (1 - scrollFactorX),
-            camera.scrollY * (1 - scrollFactorY)
-        );
 
         //  Multiply by the particle matrix, store result in calcMatrix
         camMatrix.multiply(particleMatrix, calcMatrix);
