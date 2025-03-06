@@ -51,9 +51,12 @@ var TransformerTile = new Class({
         var calcMatrix = this._calcMatrix;
         var spriteMatrix = this._spriteMatrix;
 
-        // camMatrix will not be mutated when working with tiles,
-        // so we just take a reference.
-        var camMatrix = camera.matrix;
+        // Get view matrix.
+        calcMatrix.copyFrom(camera.matrixCombined);
+        calcMatrix.translate(
+            camera.scrollX * (1 - gameObject.scrollFactorX),
+            camera.scrollY * (1 - gameObject.scrollFactorY)
+        );
 
         var frameWidth = texturerNode.frameWidth;
         var frameHeight = texturerNode.frameHeight;
@@ -99,11 +102,9 @@ var TransformerTile = new Class({
             sx,
             sy
         );
-        spriteMatrix.e -= camera.scrollX * gameObject.scrollFactorX;
-        spriteMatrix.f -= camera.scrollY * gameObject.scrollFactorY;
 
-        // Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
+        // Multiply by the Sprite matrix
+        calcMatrix.multiply(spriteMatrix);
 
         // Determine whether the matrix does not rotate, scale, or skew.
         var cmm = calcMatrix.matrix;
