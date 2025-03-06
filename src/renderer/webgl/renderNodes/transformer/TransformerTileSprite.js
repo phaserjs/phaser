@@ -81,27 +81,26 @@ var TransformerTileSprite = new Class({
 
         var camera = drawingContext.camera;
         var calcMatrix = this._calcMatrix;
-        var camMatrix = this._camMatrix;
         var spriteMatrix = this._spriteMatrix;
 
-        spriteMatrix.applyITRS(gx, gy, gameObject.rotation, gameObject.scaleX * flipX, gameObject.scaleY * flipY);
+        calcMatrix.copyFrom(camera.matrixCombined);
+        calcMatrix.translate(
+            camera.scrollX * (1 - gameObject.scrollFactorX),
+            camera.scrollY * (1 - gameObject.scrollFactorY)
+        );
 
         if (parentMatrix)
         {
-            //  Multiply the camera by the parent matrix
-            camMatrix.copyFrom(camera.matrix);
-            camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * gameObject.scrollFactorX, -camera.scrollY * gameObject.scrollFactorY);
-        }
-        else
-        {
-            // camMatrix will not be mutated after this point, so we just take a reference.
-            camMatrix = camera.matrix;
-            spriteMatrix.e -= camera.scrollX * gameObject.scrollFactorX;
-            spriteMatrix.f -= camera.scrollY * gameObject.scrollFactorY;
+            parentMatrix.multiply(calcMatrix, calcMatrix);
         }
 
-        // Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(spriteMatrix, calcMatrix);
+        spriteMatrix.applyITRS(
+            gx, gy,
+            gameObject.rotation,
+            gameObject.scaleX * flipX, gameObject.scaleY * flipY
+        );
+
+        calcMatrix.multiply(spriteMatrix);
 
         // Determine whether the matrix does not rotate, scale, or skew.
         var cmm = calcMatrix.matrix;
