@@ -595,7 +595,7 @@ var Camera = new Class({
 
         matrixExternal.applyITRS(this.x, this.y, 0, 1, 1);
 
-        matrix.multiply(matrixExternal, this.matrixCombined);
+        matrixExternal.multiply(matrix, this.matrixCombined);
 
         this.shakeEffect.preRender();
 

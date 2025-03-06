@@ -784,17 +784,16 @@ var CanvasRenderer = new Class({
 
         spriteMatrix.applyITRS(gx, gy, sprite.rotation, sprite.scaleX * flipX, sprite.scaleY * flipY);
 
-        camMatrix.copyFrom(camera.matrix);
+        camMatrix.copyFrom(camera.matrixCombined);
+
+        camMatrix.translate(
+            camera.scrollX * (1 - sprite.scrollFactorX),
+            camera.scrollY * (1 - sprite.scrollFactorY)
+        );
 
         if (parentTransformMatrix)
         {
-            //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * sprite.scrollFactorX, -camera.scrollY * sprite.scrollFactorY);
-        }
-        else
-        {
-            spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
-            spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
+            parentTransformMatrix.multiply(camMatrix, camMatrix);
         }
 
         //  Multiply by the Sprite matrix
