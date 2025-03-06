@@ -6,6 +6,8 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
+
 /**
  * @namespace Phaser.Renderer.WebGL.Utils
  * @since 3.0.0
@@ -195,6 +197,8 @@ module.exports = {
                 lightsCount
             );
 
+            var camMatrix = new TransformMatrix();
+
             for (var i = 0; i < lightsCount; i++)
             {
                 var light = lights[i].light;
@@ -202,9 +206,14 @@ module.exports = {
 
                 var lightName = 'uLights[' + i + '].';
 
-                camera.matrix.transformPoint(
-                    light.x - (camera.scrollX * light.scrollFactorX * camera.zoom),
-                    light.y - (camera.scrollY * light.scrollFactorY * camera.zoom),
+                camMatrix.copyFrom(camera.matrixCombined);
+                camMatrix.translate(
+                    camera.scrollX * (1 - light.scrollFactorX),
+                    camera.scrollY * (1 - light.scrollFactorY)
+                );
+                camMatrix.transformPoint(
+                    light.x,
+                    light.y,
                     vec
                 );
 
