@@ -461,12 +461,16 @@ var SubmitterTilemapGPULayer = new Class({
         var width = tilemapLayer.width;
         var height = tilemapLayer.height;
 
-        spriteMatrix.applyITRS(x, y, 0, tilemapLayer.scaleX, tilemapLayer.scaleY);
-        spriteMatrix.e -= camera.scrollX * tilemapLayer.scrollFactorX;
-        spriteMatrix.f -= camera.scrollY * tilemapLayer.scrollFactorY;
+        calcMatrix.copyFrom(camera.matrixCombined);
+        calcMatrix.translate(
+            camera.scrollX * (1 - tilemapLayer.scrollFactorX),
+            camera.scrollY * (1 - tilemapLayer.scrollFactorY)
+        );
 
-        // Multiply by the Sprite matrix, store result in calcMatrix
-        camera.matrix.multiply(spriteMatrix, calcMatrix);
+        spriteMatrix.applyITRS(x, y, 0, tilemapLayer.scaleX, tilemapLayer.scaleY);
+
+        // Multiply by the Sprite matrix
+        calcMatrix.multiply(spriteMatrix);
 
         // Compute output quad.
         calcMatrix.setQuad(
