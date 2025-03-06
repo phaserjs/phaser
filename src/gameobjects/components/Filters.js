@@ -323,10 +323,12 @@ if (typeof WEBGL_RENDERER)
             // because other calls to `addToRenderList` will happen in another camera.
             camera.addToRenderList(gameObject);
 
+            var filtersFocusContext = gameObject.filtersFocusContext;
+
             if (gameObject.filtersAutoFocus)
             {
                 var contextCamera = null;
-                if (gameObject.filtersFocusContext)
+                if (filtersFocusContext)
                 {
                     contextCamera = camera;
                 }
@@ -350,32 +352,39 @@ if (typeof WEBGL_RENDERER)
                 parentMatrix.multiply(cameraMatrix, cameraMatrix);
             }
 
-            if (gameObject.type === 'Layer')
+            if (filtersFocusContext)
             {
                 transformMatrix.loadIdentity();
             }
             else
             {
-                var flipX = gameObject.flipX ? -1 : 1;
-                var flipY = gameObject.flipY ? -1 : 1;
-                transformMatrix.applyITRS(
-                    gameObject.x,
-                    gameObject.y,
-                    gameObject.rotation,
-                    gameObject.scaleX * flipX,
-                    gameObject.scaleY * flipY
+                if (gameObject.type === 'Layer')
+                {
+                    transformMatrix.loadIdentity();
+                }
+                else
+                {
+                    var flipX = gameObject.flipX ? -1 : 1;
+                    var flipY = gameObject.flipY ? -1 : 1;
+                    transformMatrix.applyITRS(
+                        gameObject.x,
+                        gameObject.y,
+                        gameObject.rotation,
+                        gameObject.scaleX * flipX,
+                        gameObject.scaleY * flipY
+                    );
+                }
+    
+                // Offset origin.
+                var width = filterCamera.width;
+                var height = filterCamera.height;
+                transformMatrix.translate(
+                    -width * filterCamera.originX,
+                    -height * filterCamera.originY
                 );
+
+                cameraMatrix.multiply(transformMatrix, transformMatrix);
             }
-
-            // Offset origin.
-            var width = filterCamera.width;
-            var height = filterCamera.height;
-            transformMatrix.translate(
-                -width * filterCamera.originX,
-                -height * filterCamera.originY
-            );
-
-            cameraMatrix.multiply(transformMatrix, transformMatrix);
 
             // Now we have the transform for the game object.
             // Render game object to framebuffer.
@@ -410,93 +419,76 @@ if (typeof WEBGL_RENDERER)
          */
         focusFilters: function (camera)
         {
-            var posX = this.x;
-            var posY = this.y;
-            var rotation = this.rotation;
-            var scaleX = this.scaleX;
-            var scaleY = this.scaleY;
-            var originX = this.originX;
-            var originY = this.originY;
-            var width = this.width;
-            var height = this.height;
-            var centerX;
-            var centerY;
-
-            var bounded = false;
+            var filterCamera = this.filterCamera;
 
             // Attempt to create bounds from basic object properties.
             if (!camera)
             {
+                var posX = this.x;
+                var posY = this.y;
+                var originX = this.originX;
+                var originY = this.originY;
+                var width = this.width;
+                var height = this.height;
+
                 if (
-                    this.type !== 'Layer' &&
-                    !isNaN(posX) && !isNaN(posY) &&
-                    !isNaN(width) && !isNaN(height) &&
-                    !isNaN(originX) && !isNaN(originY) &&
-                    width !== 0 && height !== 0
+                    this.type === 'Layer' ||
+                    isNaN(posX) || isNaN(posY) ||
+                    isNaN(width) || isNaN(height) ||
+                    isNaN(originX) || isNaN(originY) ||
+                    width === 0 || height === 0
                 )
-                {
-                    centerX = posX + width * (0.5 - originX);
-                    centerY = posY + height * (0.5 - originY);
-
-                    bounded = true;
-                }
-            }
-
-            // If the object has no valid bounds, focus on the context.
-            if (!bounded)
-            {
-                if (camera)
-                {
-                    posX = posX || 0;
-                    posY = posY || 0;
-                    rotation = rotation || 0;
-                    scaleX = scaleX || 1;
-                    scaleY = scaleY || 1;
-
-                    width = camera.width;
-                    height = camera.height;
-                    centerX = camera.scrollX + width / 2;
-                    centerY = camera.scrollY + height / 2;
-                    originX = 0.5 + (posX - centerX) / width;
-                    originY = 0.5 + (posY - centerY) / height;
-                }
-                else
                 {
                     this.filtersFocusContext = true;
                     return this;
                 }
+
+                var rotation = this.rotation;
+                var scaleX = this.scaleX;
+                var scaleY = this.scaleY;
+
+                var centerX = posX + width * (0.5 - originX);
+                var centerY = posY + height * (0.5 - originY);
+
+                // Handle flip.
+                if (this.flipX)
+                {
+                    scaleX *= -1;
+                }
+                if (this.flipY)
+                {
+                    scaleY *= -1;
+                }
+
+                // Set the filter camera to match the object.
+                this.filterCamera
+                    .centerOn(centerX, centerY)
+                    .setRotation(-rotation)
+                    .setOrigin(originX, originY)
+                    .setZoom(1 / scaleX, 1 / scaleY);
+            }
+            else
+            {
+                // Focus on the camera.
+                width = camera.width;
+                height = camera.height;
+
+                filterCamera.setScroll(camera.scrollX, camera.scrollY);
+                filterCamera.setRotation(camera.rotation);
+                filterCamera.setZoom(camera.zoomX, camera.zoomY);
             }
 
             // Set the filter camera size to match the object.
             this.setFilterSize(width, height);
 
-            // Handle flip.
-            if (this.flipX)
-            {
-                scaleX *= -1;
-            }
-            if (this.flipY)
-            {
-                scaleY *= -1;
-            }
-
-            // Set the filter camera to match the object.
-            this.filterCamera
-                .centerOn(centerX, centerY)
-                .setRotation(-rotation)
-                .setOrigin(originX, originY)
-                .setZoom(1 / scaleX, 1 / scaleY);
-
             // Compensate for camera scroll.
             if (!isNaN(this.scrollFactorX))
             {
-                // centerX *= this.scrollFactorX;
-                this.filterCamera.scrollX /= this.scrollFactorX;
+                filterCamera.scrollX /= this.scrollFactorX;
             }
             if (!isNaN(this.scrollFactorY))
             {
-                // centerY *= this.scrollFactorY;
-                this.filterCamera.scrollY /= this.scrollFactorY;
+                filterCamera.scrollY /= this.scrollFactorY;
             }
 
             return this;
