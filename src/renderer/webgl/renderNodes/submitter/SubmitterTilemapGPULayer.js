@@ -437,10 +437,12 @@ var SubmitterTilemapGPULayer = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.Tilemaps.TilemapGPULayer} tilemapLayer - The TilemapGPULayer being rendered.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - The parent matrix describing the game object's context.
      */
     run: function (
         drawingContext,
-        tilemapLayer
+        tilemapLayer,
+        parentMatrix
     )
     {
         var manager = this.manager;
@@ -461,11 +463,16 @@ var SubmitterTilemapGPULayer = new Class({
         var width = tilemapLayer.width;
         var height = tilemapLayer.height;
 
-        calcMatrix.copyFrom(camera.matrixCombined);
+        calcMatrix.copyFrom(camera.matrix);
         calcMatrix.translate(
             camera.scrollX * (1 - tilemapLayer.scrollFactorX),
             camera.scrollY * (1 - tilemapLayer.scrollFactorY)
         );
+
+        if (parentMatrix)
+        {
+            parentMatrix.multiply(calcMatrix, calcMatrix);
+        }
 
         spriteMatrix.applyITRS(x, y, 0, tilemapLayer.scaleX, tilemapLayer.scaleY);
 

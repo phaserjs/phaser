@@ -83,7 +83,7 @@ var TransformerTileSprite = new Class({
         var calcMatrix = this._calcMatrix;
         var spriteMatrix = this._spriteMatrix;
 
-        calcMatrix.copyFrom(camera.matrixCombined);
+        calcMatrix.copyFrom(camera.matrix);
         calcMatrix.translate(
             camera.scrollX * (1 - gameObject.scrollFactorX),
             camera.scrollY * (1 - gameObject.scrollFactorY)
