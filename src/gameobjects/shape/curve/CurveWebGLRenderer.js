@@ -27,7 +27,7 @@ var CurveWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
     var camera = drawingContext.camera;
     camera.addToRenderList(src);
 
-    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, true).calc;
 
     // Note use of _curveBounds, unlike other path-based Shape objects.
     var dx = src._displayOriginX + src._curveBounds.x;

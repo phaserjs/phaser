@@ -34,7 +34,7 @@ var IsoTriangleWebGLRenderer = function (renderer, src, drawingContext, parentMa
     var fillTriNode = src.customRenderNodes.FillTri || src.defaultRenderNodes.FillTri;
     var submitterNode = src.customRenderNodes.Submitter || src.defaultRenderNodes.Submitter;
 
-    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, true).calc;
 
     var size = src.width;
     var height = src.height;
