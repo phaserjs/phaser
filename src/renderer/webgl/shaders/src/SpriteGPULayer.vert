@@ -616,17 +616,24 @@ void main ()
         1.0
     );
 
+    // Create the view matrix.
+    mat3 viewMatrix = uViewMatrix * mat3(
+        1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        uCameraScrollAndAlpha.x * (1.0 - scrollFactorX), uCameraScrollAndAlpha.y * (1.0 - scrollFactorY), 1.0
+    );
+
     // Create and initialize the transform matrix.
     float sine = sin(rotation);
     float cosine = cos(rotation);
     mat3 transformMatrix = mat3(
         cosine, sine, 0.0,
         -sine, cosine, 0.0,
-        positionX - uCameraScrollAndAlpha.x * scrollFactorX, positionY - uCameraScrollAndAlpha.y * scrollFactorY, 1.0
+        positionX, positionY, 1.0
     );
 
     // Transform the position.
-    position = uViewMatrix * transformMatrix * position;
+    position = viewMatrix * transformMatrix * position;
 
     // Alpha handling.
     alpha *= uCameraScrollAndAlpha.z;

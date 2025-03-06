@@ -394,7 +394,7 @@ var SubmitterSpriteGPULayer = new Class({
             drawingContext.renderer.projectionMatrix.val
         );
 
-        var cm = camera.matrix;
+        var cm = camera.matrixCombined;
         programManager.setUniform(
             'uViewMatrix',
             [
