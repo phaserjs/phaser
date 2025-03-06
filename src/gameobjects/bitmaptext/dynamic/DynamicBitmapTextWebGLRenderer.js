@@ -54,7 +54,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, drawingContext, pa
 
     var submitterNode = src.customRenderNodes.Submitter || src.defaultRenderNodes.Submitter;
 
-    var result = GetCalcMatrix(src, camera, parentMatrix);
+    var result = GetCalcMatrix(src, camera, parentMatrix, true);
 
     var spriteMatrix = result.sprite;
     var calcMatrix = result.calc;
