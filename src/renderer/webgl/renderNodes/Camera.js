@@ -119,7 +119,7 @@ var Camera = new Class({
         {
             camera.matrixExternal.multiply(parentTransformMatrix, parentTransformMatrix);
         }
-        
+
         // Check whether the parentTransformMatrix is the identity matrix.
         var decomposedParent = parentTransformMatrix.decomposeMatrix();
         var parentIsIdentity =
@@ -251,7 +251,10 @@ var Camera = new Class({
                 }
 
                 // Will the texture need to be repositioned for the external filters?
-                copyInternal = coverageExternal.width !== currentContext.width || coverageExternal.height !== currentContext.height;
+                copyInternal =
+                    coverageExternal.width !== currentContext.width ||
+                    coverageExternal.height !== currentContext.height ||
+                    !parentIsIdentity;
 
                 if (copyInternal)
                 {
