@@ -385,6 +385,16 @@ if (typeof WEBGL_RENDERER)
                 cameraMatrix.multiply(transformMatrix, transformMatrix);
             }
 
+            // Set object scrollFactor to default.
+            // We can't accurately focus the camera on the object if it has a scrollFactor,
+            // because the camera needs to be set further away,
+            // going to infinity at scrollFactor 0.
+            // The scroll factor is baked into the transformMatrix, above.
+            var scrollX = gameObject.scrollFactorX;
+            var scrollY = gameObject.scrollFactorY;
+            gameObject.scrollFactorX = 1;
+            gameObject.scrollFactorY = 1;
+
             // Now we have the transform for the game object.
             // Render game object to framebuffer.
             renderer.cameraRenderNode.run(
@@ -395,6 +405,10 @@ if (typeof WEBGL_RENDERER)
                 true,
                 renderStep + 1
             );
+
+            // Restore scrollFactor.
+            gameObject.scrollFactorX = scrollX;
+            gameObject.scrollFactorY = scrollY;
         },
 
         /**
@@ -479,16 +493,6 @@ if (typeof WEBGL_RENDERER)
 
             // Set the filter camera size to match the object.
             this.setFilterSize(width, height);
-
-            // Compensate for camera scroll.
-            if (!isNaN(this.scrollFactorX))
-            {
-                filterCamera.scrollX /= this.scrollFactorX;
-            }
-            if (!isNaN(this.scrollFactorY))
-            {
-                filterCamera.scrollY /= this.scrollFactorY;
-            }
 
             return this;
         },
