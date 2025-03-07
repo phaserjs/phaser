@@ -846,7 +846,7 @@ var BaseCamera = new Class({
     {
         if (output === undefined) { output = new Vector2(); }
 
-        var cameraMatrix = this.matrix.matrix;
+        var cameraMatrix = this.matrixCombined.matrix;
 
         var mva = cameraMatrix[0];
         var mvb = cameraMatrix[1];
@@ -875,21 +875,9 @@ var BaseCamera = new Class({
         var ime = (mvc * mvf - mvd * mve) * determinant;
         var imf = (mvb * mve - mva * mvf) * determinant;
 
-        var c = Math.cos(this.rotation);
-        var s = Math.sin(this.rotation);
-
-        var zoomX = this.zoomX;
-        var zoomY = this.zoomY;
-
-        var scrollX = this.scrollX;
-        var scrollY = this.scrollY;
-
-        var sx = x + ((scrollX * c - scrollY * s) * zoomX);
-        var sy = y + ((scrollX * s + scrollY * c) * zoomY);
-
-        //  Apply transform to point
-        output.x = (sx * ima + sy * imc) + ime;
-        output.y = (sx * imb + sy * imd) + imf;
+        // Apply transform to point
+        output.x = (x * ima + y * imc) + ime;
+        output.y = (x * imb + y * imd) + imf;
 
         return output;
     },
