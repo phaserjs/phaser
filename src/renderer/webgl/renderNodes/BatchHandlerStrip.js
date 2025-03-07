@@ -142,7 +142,7 @@ var BatchHandlerStrip = new Class({
      * @param {Uint32Array} colors - The color values of the strip.
      * @param {Float32Array} alphas - The alpha values of the strip.
      * @param {number} alpha - The overall alpha value of the strip.
-     * @param {number} tintFill - Whether to tint the fill color.
+     * @param {boolean} tintFill - Whether to tint the fill color.
      * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerQuadRenderOptions} renderOptions - Optional render features. Strip rendering should always set `multiTexturing` to false. It can use `smoothPixelArt`. Other options are ignored.
      * @param {function} [debugCallback] - The debug callback, called with an array consisting of alternating x,y values of the transformed vertices.
      */

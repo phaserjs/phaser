@@ -247,9 +247,9 @@ var RenderNodeManager = new Class({
     /**
      * Add a node to the manager.
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#addStep
+     * @method Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#addNode
      * @since 4.0.0
-     * @param {string} name - The name of the step.
+     * @param {string} name - The name of the node.
      * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode} node - The node to add.
      * @throws {Error} Will throw an error if the node already exists.
      */
