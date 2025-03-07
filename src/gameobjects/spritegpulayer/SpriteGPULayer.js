@@ -574,6 +574,8 @@ var SpriteGPULayer = new Class({
         var height = Math.ceil(pixelCount / 4096);
         var dataSize = width * height * 4;
 
+        var textureManager = texture.manager;
+
         // Generate a Uint8Array with the frame data.
         var data = new ArrayBuffer(dataSize);
         var u16 = new Uint16Array(data);
@@ -584,6 +586,12 @@ var SpriteGPULayer = new Class({
             if (typeof animFrame === 'string')
             {
                 frame = texture.get(frames[i]);
+            }
+            else if (animFrame && animFrame.key !== undefined)
+            {
+                // animFrame comes from a SetAnimation object.
+                var animTexture = textureManager.get(animFrame.key);
+                frame = animTexture.get(animFrame.frame);
             }
             else
             {
