@@ -43,17 +43,16 @@ var TilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
 
     ctx.save();
 
-    camMatrix.copyFrom(camera.matrixCombined);
+    camMatrix.copyWithScrollFactorFrom(
+        camera.matrixCombined,
+        camera.scrollX, camera.scrollY,
+        src.scrollFactorX, src.scrollFactorY
+    );
 
     if (parentMatrix)
     {
         parentMatrix.multiply(camMatrix, camMatrix);
     }
-
-    camMatrix.translate(
-        camera.scrollX * (1 - src.scrollFactorX),
-        camera.scrollY * (1 - src.scrollFactorY)
-    );
 
     camMatrix.multiply(layerMatrix, calcMatrix);
 

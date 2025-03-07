@@ -463,10 +463,10 @@ var SubmitterTilemapGPULayer = new Class({
         var width = tilemapLayer.width;
         var height = tilemapLayer.height;
 
-        calcMatrix.copyFrom(camera.matrix);
-        calcMatrix.translate(
-            camera.scrollX * (1 - tilemapLayer.scrollFactorX),
-            camera.scrollY * (1 - tilemapLayer.scrollFactorY)
+        calcMatrix.copyWithScrollFactorFrom(
+            camera.matrix,
+            camera.scrollX, camera.scrollY,
+            tilemapLayer.scrollFactorX, tilemapLayer.scrollFactorY
         );
 
         if (parentMatrix)

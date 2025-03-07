@@ -675,6 +675,41 @@ var TransformMatrix = new Class({
     },
 
     /**
+     * Set the values of this Matrix to copy those of the matrix given,
+     * combined with a camera scroll factor.
+     *
+     * This is used in many render functions.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyWithScrollFactorFrom
+     * @since 4.0.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} src - The source Matrix to copy from.
+     * @param {number} scrollX - The horizontal scroll value to factor in.
+     * @param {number} scrollY - The vertical scroll value to factor in.
+     * @param {number} scrollFactorX - The horizontal scroll factor to apply.
+     * @param {number} scrollFactorY - The vertical scroll factor to apply.
+     *
+     * @returns {this} This TransformMatrix.
+     */
+    copyWithScrollFactorFrom: function (src, scrollX, scrollY, scrollFactorX, scrollFactorY)
+    {
+        var matrix = this.matrix;
+
+        matrix[0] = src.a;
+        matrix[1] = src.b;
+        matrix[2] = src.c;
+        matrix[3] = src.d;
+
+        var sx = scrollX * (1.0 - scrollFactorX);
+        var sy = scrollY * (1.0 - scrollFactorY);
+
+        matrix[4] = src.a * sx + src.c * sy + src.e;
+        matrix[5] = src.b * sx + src.d * sy + src.f;
+        
+        return this;
+    },
+
+    /**
      * Copy the values from this Matrix to the given Canvas Rendering Context.
      * This will use the Context.transform method.
      *

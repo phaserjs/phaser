@@ -52,10 +52,10 @@ var TransformerTile = new Class({
         var spriteMatrix = this._spriteMatrix;
 
         // Get view matrix.
-        calcMatrix.copyFrom(camera.matrix);
-        calcMatrix.translate(
-            camera.scrollX * (1 - gameObject.scrollFactorX),
-            camera.scrollY * (1 - gameObject.scrollFactorY)
+        calcMatrix.copyWithScrollFactorFrom(
+            camera.matrix,
+            camera.scrollX, camera.scrollY,
+            gameObject.scrollFactorX, gameObject.scrollFactorY
         );
 
         if (parentMatrix)

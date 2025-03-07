@@ -206,10 +206,10 @@ module.exports = {
 
                 var lightName = 'uLights[' + i + '].';
 
-                camMatrix.copyFrom(camera.matrixCombined);
-                camMatrix.translate(
-                    camera.scrollX * (1 - light.scrollFactorX),
-                    camera.scrollY * (1 - light.scrollFactorY)
+                camMatrix.copyWithScrollFactorFrom(
+                    camera.matrixCombined,
+                    camera.scrollX, camera.scrollY,
+                    light.scrollFactorX, light.scrollFactorY
                 );
                 camMatrix.transformPoint(
                     light.x,

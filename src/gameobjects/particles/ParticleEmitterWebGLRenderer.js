@@ -37,10 +37,10 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, drawingContext, 
 
     camera.addToRenderList(emitter);
 
-    camMatrix.copyFrom(camera.matrix);
-    camMatrix.translate(
-        camera.scrollX * (1 - emitter.scrollFactorX),
-        camera.scrollY * (1 - emitter.scrollFactorY)
+    camMatrix.copyWithScrollFactorFrom(
+        camera.matrix,
+        camera.scrollX, camera.scrollY,
+        emitter.scrollFactorX, emitter.scrollFactorY
     );
 
     if (parentMatrix)

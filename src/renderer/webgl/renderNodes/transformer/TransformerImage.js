@@ -128,11 +128,10 @@ var TransformerImage = new Class({
 
         var camera = drawingContext.camera;
         var spriteMatrix = this._spriteMatrix;
-        var calcMatrix = this._calcMatrix.copyFrom(camera.matrix);
-
-        calcMatrix.translate(
-            camera.scrollX * (1 - gameObject.scrollFactorX),
-            camera.scrollY * (1 - gameObject.scrollFactorY)
+        var calcMatrix = this._calcMatrix.copyWithScrollFactorFrom(
+            camera.matrix,
+            camera.scrollX, camera.scrollY,
+            gameObject.scrollFactorX, gameObject.scrollFactorY
         );
 
         if (parentMatrix)

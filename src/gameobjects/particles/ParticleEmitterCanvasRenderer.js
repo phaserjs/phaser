@@ -30,10 +30,10 @@ var ParticleEmitterCanvasRenderer = function (renderer, emitter, camera, parentM
 {
     camera.addToRenderList(emitter);
 
-    camMatrix.copyFrom(camera.matrixCombined);
-    camMatrix.translate(
-        camera.scrollX * (1 - emitter.scrollFactorX),
-        camera.scrollY * (1 - emitter.scrollFactorY)
+    camMatrix.copyWithScrollFactorFrom(
+        camera.matrix,
+        camera.scrollX, camera.scrollY,
+        emitter.scrollFactorX, emitter.scrollFactorY
     );
 
     if (parentMatrix)

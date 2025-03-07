@@ -784,11 +784,10 @@ var CanvasRenderer = new Class({
 
         spriteMatrix.applyITRS(gx, gy, sprite.rotation, sprite.scaleX * flipX, sprite.scaleY * flipY);
 
-        camMatrix.copyFrom(camera.matrixCombined);
-
-        camMatrix.translate(
-            camera.scrollX * (1 - sprite.scrollFactorX),
-            camera.scrollY * (1 - sprite.scrollFactorY)
+        camMatrix.copyWithScrollFactorFrom(
+            camera.matrixCombined,
+            camera.scrollX, camera.scrollY,
+            sprite.scrollFactorX, sprite.scrollFactorY
         );
 
         if (parentTransformMatrix)
