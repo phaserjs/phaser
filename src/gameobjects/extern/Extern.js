@@ -26,7 +26,11 @@ var ExternRender = require('./ExternRender');
  * 3rd party libraries or custom WebGL code there.
  *
  * The `render` method is called with this signature:
- * `render(renderer: Phaser.Renderer.WebGL.WebGLRenderer, drawingContext: Phaser.Renderer.WebGL.DrawingContext, calcMatrix: Phaser.GameObjects.Components.TransformMatrix): void`.
+ * `render(renderer: Phaser.Renderer.WebGL.WebGLRenderer, drawingContext: Phaser.Renderer.WebGL.DrawingContext, calcMatrix: Phaser.GameObjects.Components.TransformMatrix, displayList: Phaser.GameObjects.GameObject[], displayListIndex: number): void`.
+ *
+ * The `displayList` and `displayListIndex` parameters allow you to check
+ * other objects in the display list. This might be convenient for optimizing
+ * operations such as resource management.
  *
  * Once you've finished, you should free-up any of your resources.
  * The Extern will then return Phaser state and carry on rendering the display list.
@@ -118,7 +122,7 @@ var Extern = new Class({
     render: function ()
     {
         //  override this!
-        //  Arguments: renderer, drawingContext, calcMatrix
+        //  Arguments: renderer, drawingContext, calcMatrix, displayList, displayListIndex
     }
 
 });

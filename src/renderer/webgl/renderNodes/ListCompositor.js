@@ -85,7 +85,7 @@ var ListCompositor = new Class({
                 }
             }
 
-            child.renderWebGLStep(renderer, child, currentContext, parentTransformMatrix, renderStep);
+            child.renderWebGLStep(renderer, child, currentContext, parentTransformMatrix, renderStep, children, i);
         }
 
         // Release any remaining context.
