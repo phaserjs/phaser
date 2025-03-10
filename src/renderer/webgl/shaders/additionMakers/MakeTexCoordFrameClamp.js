@@ -22,7 +22,7 @@ var MakeTexCoordFrameClamp = function (disable)
         name: 'TexCoordFrameClamp',
         additions: {
             fragmentHeader: DefineTexCoordFrameClamp,
-            fragmentProcess: 'texCoord = clampTexCoordWithinFrame(texCoord);'
+            texCoord: 'texCoord = clampTexCoordWithinFrame(texCoord);'
         },
         disable: !!disable
     };

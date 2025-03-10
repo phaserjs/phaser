@@ -19,7 +19,7 @@ var MakeTexCoordFrameWrap = function (disable)
     return {
         name: 'TexCoordFrameWrap',
         additions: {
-            fragmentProcess: '// Wrap texture coordinate into the UV space of the texture frame.\ntexCoord = mod(texCoord, 1.0) * outFrame.zw + outFrame.xy;'
+            texCoord: '// Wrap texture coordinate into the UV space of the texture frame.\ntexCoord = mod(texCoord, 1.0) * outFrame.zw + outFrame.xy;'
         },
         disable: !!disable
     };
