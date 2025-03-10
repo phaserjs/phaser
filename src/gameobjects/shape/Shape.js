@@ -209,6 +209,12 @@ var Shape = new Class({
          */
         this.height = 0;
 
+        if (this.enableFilters)
+        {
+            // Prevent Shape stroke from being cut off in filters.
+            this.filtersFocusContext = true;
+        }
+
         this.initRenderNodes(this._defaultRenderNodesMap);
     },
 

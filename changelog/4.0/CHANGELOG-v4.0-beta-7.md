@@ -31,6 +31,7 @@ The new system fixes many issues with nested transforms, filters, and other uses
 - Add creation time to `SpriteGPULayer` members.
 - Add documentation for writing a `Extern#render` function.
 - `TilemapLayer` and `TilemapGPULayer` now support a parent matrix during rendering.
+- `Shape` now sets `filtersFocusContext = true` by default, to prevent clipping stroke off at the edges.
 
 ## Fixes and Tweaks
 
