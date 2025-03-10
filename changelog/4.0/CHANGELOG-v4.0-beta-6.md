@@ -6,7 +6,7 @@
 - Allow `RenderTexture` to automatically re-render.
   - `DynamicTexture#preserve()` allows you to keep the command buffer for reuse after rendering.
   - `DynamicTexture#callback()` allows you to run callbacks during command buffer execution.
-  - `RenderTexture.setTextureMode()` allows you to set the RenderTexture to automatically re-render during the render loop.
+  - `RenderTexture.setRenderMode()` allows you to set the RenderTexture to automatically re-render during the render loop.
 
 ## Fixes and Eliminations
 
