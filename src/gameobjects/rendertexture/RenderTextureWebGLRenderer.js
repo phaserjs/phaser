@@ -23,6 +23,12 @@ var RenderTextureRenderModes = require('./RenderTextureRenderModes');
  */
 var RenderTextureWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
+    if (src.isCurrentlyRendering)
+    {
+        return;
+    }
+    src.isCurrentlyRendering = true;
+
     var redraw = true;
     var render = true;
     if (src.renderMode === RenderTextureRenderModes.REDRAW)
@@ -43,6 +49,8 @@ var RenderTextureWebGLRenderer = function (renderer, src, drawingContext, parent
     {
         ImageWebGLRenderer(renderer, src, drawingContext, parentMatrix);
     }
+
+    src.isCurrentlyRendering = false;
 };
 
 module.exports = RenderTextureWebGLRenderer;

@@ -124,6 +124,18 @@ var RenderTexture = new Class({
          * @since 4.0.0
          */
         this.renderMode = RenderTextureRenderModes.RENDER;
+
+        /**
+         * Whether this RenderTexture is currently executing `renderWebGL`.
+         * This is used to prevent infinite loops when drawing containers.
+         * You should not set this property directly.
+         *
+         * @name Phaser.GameObjects.RenderTexture#isCurrentlyRendering
+         * @type {boolean}
+         * @readonly
+         * @since 4.0.0
+         */
+        this.isCurrentlyRendering = false;
     },
 
     /**
