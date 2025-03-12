@@ -627,7 +627,7 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#addPack
      * @since 3.7.0
      *
-     * @param {any} pack - The Pack File data to be parsed and each entry of it to added to the load queue.
+     * @param {any} pack - The Pack File data to be parsed and have each entry in it added to the load queue.
      * @param {string} [packKey] - An optional key to use from the pack file data.
      *
      * @return {boolean} `true` if any files were added to the queue, otherwise `false`.
