@@ -521,8 +521,8 @@ var LoaderPlugin = new Class({
      * If allowed it will then add the file into the pending list, ready for the load to start. Or, if the load has already
      * started, ready for the next batch of files to be pulled from the list to the inflight queue.
      *
-     * You should not normally call this method directly, but rather use one of the Loader methods like `image` or `atlas`,
-     * however you can call this as long as the file given to it is well formed.
+     * You should not normally call this method directly, but rather use one of the Loader methods like `image` or `atlas`.
+     * However you can call this as long as the file given to it is well formed.
      *
      * @method Phaser.Loader.LoaderPlugin#addFile
      * @fires Phaser.Loader.Events#ADD
