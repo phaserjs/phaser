@@ -268,6 +268,17 @@ var DynamicTextureHandler = new Class({
                     callback();
                     break;
                 }
+
+                case DynamicTextureCommands.CAPTURE:
+                {
+                    object = commandBuffer[++index];
+                    var config = commandBuffer[++index];
+
+                    var cacheConfig = dynamicTexture.startCapture(object, config);
+                    this._draw(renderer, object, currentContext, drawingContext, eraseContext, cacheConfig.transform);
+                    dynamicTexture.finishCapture(object, cacheConfig);
+                    break;
+                }
             }
         }
 
@@ -291,14 +302,17 @@ var DynamicTextureHandler = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.DynamicTextureHandler#_draw
      * @private
      * @since 4.0.0
+     *
      * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer.
      * @param {Phaser.GameObjects.GameObject} object - The object to draw.
      * @param {Phaser.Renderer.WebGL.DrawingContext} currentContext - The current drawing context.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The base drawing context in use.
      * @param {Phaser.Renderer.WebGL.DrawingContext} eraseContext - The erase drawing context.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - The parent matrix, if any.
+     *
      * @return {Phaser.Renderer.WebGL.DrawingContext} The new current drawing context.
      */
-    _draw: function (renderer, object, currentContext, drawingContext, eraseContext)
+    _draw: function (renderer, object, currentContext, drawingContext, eraseContext, parentMatrix)
     {
         // Handle blend mode.
         if (
@@ -324,7 +338,7 @@ var DynamicTextureHandler = new Class({
             currentContext.use();
         }
 
-        object.renderWebGLStep(renderer, object, currentContext);
+        object.renderWebGLStep(renderer, object, currentContext, parentMatrix);
 
         return currentContext;
     }

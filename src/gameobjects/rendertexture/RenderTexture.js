@@ -448,6 +448,26 @@ var RenderTexture = new Class({
     },
 
     /**
+     * Draws the given object to this Render Texture.
+     * This allows you to draw the object as it appears in the game world,
+     * or with various parameter overrides in the config.
+     *
+     * @method Phaser.GameObjects.RenderTexture#capture
+     * @since 4.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} entry - Any renderable GameObject.
+     * @param {Phaser.Types.Textures.CaptureConfig} config - The configuration object for the capture.
+     *
+     * @return {this} This Dynamic Texture instance.
+     */
+    capture: function (entry, config)
+    {
+        this.texture.capture(entry, config);
+
+        return this;
+    },
+
+    /**
      * Takes the given Texture Frame and draws it to this Dynamic Texture as a fill pattern,
      * i.e. in a grid-layout based on the frame dimensions.
      * It uses a `TileSprite` internally to draw the frame repeatedly.

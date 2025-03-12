@@ -13,6 +13,7 @@ module.exports = {
     DRAW: 4,
     SET_ERASE: 5,
     PRESERVE: 6,
-    CALLBACK: 7
+    CALLBACK: 7,
+    CAPTURE: 8
 
 };
