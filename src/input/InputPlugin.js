@@ -933,7 +933,7 @@ var InputPlugin = new Class({
 
         if (gameObject.input)
         {
-            //  If it is already has an InteractiveObject then just enable it and return
+            //  If it already has an InteractiveObject then just enable it and return
             gameObject.input.enabled = true;
         }
         else

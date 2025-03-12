@@ -518,11 +518,11 @@ var LoaderPlugin = new Class({
      *
      * The file must be an instance of `Phaser.Loader.File`, or a class that extends it. The Loader will check that the key
      * used by the file won't conflict with any other key either in the loader, the inflight queue or the target cache.
-     * If allowed it will then add the file into the pending list, read for the load to start. Or, if the load has already
+     * If allowed it will then add the file into the pending list, ready for the load to start. Or, if the load has already
      * started, ready for the next batch of files to be pulled from the list to the inflight queue.
      *
-     * You should not normally call this method directly, but rather use one of the Loader methods like `image` or `atlas`,
-     * however you can call this as long as the file given to it is well formed.
+     * You should not normally call this method directly, but rather use one of the Loader methods like `image` or `atlas`.
+     * However you can call this as long as the file given to it is well formed.
      *
      * @method Phaser.Loader.LoaderPlugin#addFile
      * @fires Phaser.Loader.Events#ADD
@@ -627,7 +627,7 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#addPack
      * @since 3.7.0
      *
-     * @param {any} pack - The Pack File data to be parsed and each entry of it to added to the load queue.
+     * @param {any} pack - The Pack File data to be parsed and have each entry in it added to the load queue.
      * @param {string} [packKey] - An optional key to use from the pack file data.
      *
      * @return {boolean} `true` if any files were added to the queue, otherwise `false`.
@@ -1069,7 +1069,7 @@ var LoaderPlugin = new Class({
      *
      * If the process was successful, and the File isn't part of a MultiFile, its `addToCache` method is called.
      *
-     * It this then removed from the queue. If there are no more files to load `loadComplete` is called.
+     * It is then removed from the queue. If there are no more files to load `loadComplete` is called.
      *
      * @method Phaser.Loader.LoaderPlugin#fileProcessComplete
      * @since 3.7.0
