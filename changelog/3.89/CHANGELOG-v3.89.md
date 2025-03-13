@@ -10,12 +10,13 @@
 
 * The `EXPAND` Scale Mode has been updated to now clamp the size of the canvas that is created, preventing it from growing too large on landscape ultra-wide displays. Fix #7027 (thanks @leha-games @rexrainbow)
 * An Error will now be thrown if you try to create a DOM Game Object but haven't correctly configured the Game Config (thanks @samme)
-* 
+
 ## Bug Fixes
 
 * An erroneous `console.log` was left in the Text Game Object. This has now been removed.
 * * Particle emitter color RGB arrays are cleared before repopulating. Fix #7069 (thanks @Golen87 @samme)
 * `Phaser.Animations.AnimationFrame` correctly uses frame duration when it is set. Fix #7070 (thanks @sylvainpolletvillard)
+* Particle emitter custom `moveTo` functions can now move particles. Fix #7063 (thanks @samme)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
