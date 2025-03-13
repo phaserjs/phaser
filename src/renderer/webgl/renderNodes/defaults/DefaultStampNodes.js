@@ -6,11 +6,11 @@
 
 var Map = require('../../../../structs/Map');
 
-var DefaultImageNodes = new Map([
+var DefaultStampNodes = new Map([
     [ 'Submitter', 'SubmitterQuad' ],
     [ 'BatchHandler', 'BatchHandlerQuad' ],
     [ 'Transformer', 'TransformerStamp' ],
     [ 'Texturer', 'TexturerImage' ]
 ]);
 
-module.exports = DefaultImageNodes;
+module.exports = DefaultStampNodes;

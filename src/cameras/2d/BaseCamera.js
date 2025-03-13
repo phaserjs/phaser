@@ -543,6 +543,20 @@ var BaseCamera = new Class({
          * @since 3.60.0
          */
         this.isSceneCamera = true;
+
+        /**
+         * Whether to force the camera to render via a framebuffer.
+         * This only applies when using the WebGL renderer.
+         * This makes the camera contents available to other WebGL processes,
+         * such as `CaptureFrame`.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#forceComposite
+         * @type {boolean}
+         * @default false
+         * @since 4.0.0
+         * @webglOnly
+         */
+        this.forceComposite = false;
     },
 
     /**
@@ -1106,6 +1120,27 @@ var BaseCamera = new Class({
             this.scrollX = this.clampX(this.scrollX);
             this.scrollY = this.clampY(this.scrollY);
         }
+
+        return this;
+    },
+
+    /**
+     * Sets the `forceComposite` property of this Camera.
+     * This property is only used by the WebGL Renderer.
+     * If `true` the camera will render via a framebuffer,
+     * making it available to other WebGL systems.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#setForceComposite
+     * @since 4.0.0
+     * @webglOnly
+     *
+     * @param {boolean} value - The value to set the property to.
+     *
+     * @returns {this} This Camera instance.
+     */
+    setForceComposite: function (value)
+    {
+        this.forceComposite = value;
 
         return this;
     },

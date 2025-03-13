@@ -129,16 +129,19 @@ var GameObjects = {
 //  WebGL only Game Objects
 if (typeof WEBGL_RENDERER)
 {
+    GameObjects.CaptureFrame = require('./captureframe/CaptureFrame');
     GameObjects.Shader = require('./shader/Shader');
     GameObjects.NineSlice = require('./nineslice/NineSlice');
     GameObjects.PointLight = require('./pointlight/PointLight');
     GameObjects.SpriteGPULayer = require('./spritegpulayer/SpriteGPULayer');
 
+    GameObjects.Factories.CaptureFrame = require('./captureframe/CaptureFrameFactory');
     GameObjects.Factories.Shader = require('./shader/ShaderFactory');
     GameObjects.Factories.NineSlice = require('./nineslice/NineSliceFactory');
     GameObjects.Factories.PointLight = require('./pointlight/PointLightFactory');
     GameObjects.Factories.SpriteGPULayer = require('./spritegpulayer/SpriteGPULayerFactory');
 
+    GameObjects.Creators.CaptureFrame = require('./captureframe/CaptureFrameCreator');
     GameObjects.Creators.Shader = require('./shader/ShaderCreator');
     GameObjects.Creators.NineSlice = require('./nineslice/NineSliceCreator');
     GameObjects.Creators.PointLight = require('./pointlight/PointLightCreator');

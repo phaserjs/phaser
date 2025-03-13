@@ -6,8 +6,8 @@
 
 var Map = require('../../../../structs/Map');
 
-var DefaultImageNodes = new Map([
+var DefaultTilemapGPULayerNodes = new Map([
     [ 'Submitter', 'SubmitterTilemapGPULayer' ]
 ]);
 
-module.exports = DefaultImageNodes;
+module.exports = DefaultTilemapGPULayerNodes;

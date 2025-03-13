@@ -17,5 +17,3 @@ var MakeAnimLength = function (maxAnims, disable)
 };
 
 module.exports = MakeAnimLength;
-
-// TODO: Add namespace for Makers.

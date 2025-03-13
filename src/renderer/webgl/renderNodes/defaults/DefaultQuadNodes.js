@@ -6,8 +6,8 @@
 
 var Map = require('../../../../structs/Map');
 
-var DefaultImageNodes = new Map([
+var DefaultQuadNodes = new Map([
     [ 'BatchHandler', 'BatchHandlerQuad' ]
 ]);
 
-module.exports = DefaultImageNodes;
+module.exports = DefaultQuadNodes;

@@ -109,7 +109,7 @@ var Camera = new Class({
         var internalFilters = camera.filters.internal.getActive();
         var externalFilters = camera.filters.external.getActive();
 
-        var useFramebuffers = forceFramebuffer || internalFilters.length || externalFilters.length || alpha < 1;
+        var useFramebuffers = forceFramebuffer || camera.forceComposite || internalFilters.length || externalFilters.length || alpha < 1;
 
         if (!parentTransformMatrix)
         {
