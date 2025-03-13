@@ -408,20 +408,27 @@ var FilterList = new Class({
      * the mask will match the context of the camera.
      * This is useful for creating effects that cover the entire view.
      *
+     * An optional `viewCamera` can be specified when creating the mask.
+     * If not used, mask objects will be viewed through a default camera.
+     * Set the `viewCamera` to the scene's main camera (`this.cameras.main`)
+     * to view the mask through the main camera.
+     *
      * @method Phaser.GameObjects.Components.FilterList#addMask
      * @since 4.0.0
      *
      * @param {string} [texture='__WHITE'] - The unique string-based key of the texture to use for the mask, which must exist in the Texture Manager.
      * @param {boolean} [invert=false] - Whether to invert the mask.
+     * @param {Phaser.Cameras.Scene2D.Camera} [viewCamera] - The Camera to use when rendering the mask. If not specified, uses an internal Camera.
      *
      * @return {Phaser.Filters.Mask} The new Mask filter controller.
      */
-    addMask: function (texture, invert)
+    addMask: function (texture, invert, viewCamera)
     {
         return this.add(new Mask(
             this.camera,
             texture,
-            invert
+            invert,
+            viewCamera
         ));
     },
 

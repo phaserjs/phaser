@@ -516,7 +516,7 @@ var DynamicTexture = new Class({
                     object.renderCanvas(
                         renderer,
                         object,
-                        camera,
+                        config.camera || camera,
                         cacheConfig.transform
                     );
                     this.finishCapture(object, cacheConfig);
@@ -813,6 +813,8 @@ var DynamicTexture = new Class({
      */
     capture: function (entry, config)
     {
+        if (!config) { config = {}; }
+
         this.commandBuffer.push(DynamicTextureCommands.CAPTURE, entry, config);
 
         return this;

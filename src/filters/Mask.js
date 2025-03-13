@@ -35,6 +35,11 @@ var Controller = require('./Controller');
  * the mask will match the context of the camera.
  * This is useful for creating effects that cover the entire view.
  *
+ * An optional `viewCamera` can be specified when creating the mask.
+ * If not used, mask objects will be viewed through a default camera.
+ * Set the `viewCamera` to the scene's main camera (`this.cameras.main`)
+ * to view the mask through the main camera.
+ *
  * A Mask effect is added to a Camera via the FilterList component:
  *
  * ```js
@@ -53,11 +58,13 @@ var Controller = require('./Controller');
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that owns this filter.
  * @param {string|Phaser.GameObjects.GameObject} [mask='__WHITE'] - The source of the mask. This can be a unique string-based key of the texture to use for the mask, which must exist in the Texture Manager. Or it can be a GameObject, in which case the mask will render the GameObject to a DynamicTexture and use that.
  * @param {boolean} [invert=false] - Whether to invert the mask.
+ * @param {Phaser.Cameras.Scene2D.Camera} [viewCamera] - The Camera to use when rendering the mask with a GameObject. If not specified, uses an internal Camera.
+ * @param {'local'|'world'} [viewTransform='world'] - The transform to use when rendering the mask with a GameObject. 'local' uses the GameObject's own properties. 'world' uses the GameObject's `parentContainer` value to compute a world position.
  */
 var Mask = new Class({
     Extends: Controller,
 
-    initialize: function Mask (camera, mask, invert)
+    initialize: function Mask (camera, mask, invert, viewCamera, viewTransform)
     {
         if (mask === undefined) { mask = '__WHITE'; }
         if (invert === undefined) { invert = false; }
@@ -133,6 +140,29 @@ var Mask = new Class({
          */
         this.needsUpdate = false;
 
+        /**
+         * The transform type to use when rendering the mask with a GameObject.
+         * 'local' uses the GameObject's own properties.
+         * 'world' uses the GameObject's `parentContainer` value to compute a world position.
+         * This only applies when the mask is a GameObject.
+         *
+         * @name Phaser.Filters.Mask#viewTransform
+         * @type {'local'|'world'}
+         * @since 4.0.0
+         * @default 'world'
+         */
+        this.viewTransform = viewTransform || 'world';
+
+        /**
+         * The Camera to use when rendering the mask.
+         * If not specified, uses an internal Camera.
+         *
+         * @name Phaser.Filters.Mask#viewCamera
+         * @type {?Phaser.Cameras.Scene2D.Camera}
+         * @since 4.0.0
+         */
+        this.viewCamera = viewCamera;
+
         if (typeof mask === 'string')
         {
             this.setTexture(mask);
@@ -182,7 +212,7 @@ var Mask = new Class({
         this.glTexture = this._dynamicTexture.get().glTexture;
 
         // Draw the GameObject to the DynamicTexture.
-        this._dynamicTexture.draw(gameObject);
+        this._dynamicTexture.capture(gameObject, { transform: this.viewTransform, camera: this.viewCamera });
         this._dynamicTexture.render();
 
         this.needsUpdate = false;

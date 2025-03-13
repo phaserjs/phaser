@@ -5,6 +5,7 @@
  * @since 4.0.0
  *
  * @property {'local'|'world'|Phaser.GameObjects.Components.TransformMatrix} [transform='world'] -  The transform to use, after applying other config settings. 'local' uses the GameObject's own properties. 'world' uses the GameObject's `parentContainer` value to compute a world position. A `TransformMatrix` can also be provided, which will be used directly.
+ * @property {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when rendering the GameObject to the DynamicTexture. If not specified, uses the DynamicTexture's own camera.
  * @property {number} [x] - The x position.
  * @property {number} [y] - The y position.
  * @property {number} [alpha] -  The alpha value.

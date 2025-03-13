@@ -275,8 +275,24 @@ var DynamicTextureHandler = new Class({
                     var config = commandBuffer[++index];
 
                     var cacheConfig = dynamicTexture.startCapture(object, config);
-                    this._draw(renderer, object, currentContext, drawingContext, eraseContext, cacheConfig.transform);
+
+                    // Handle custom capture camera.
+                    var viewContext = currentContext;
+                    if (config.camera)
+                    {
+                        viewContext = viewContext.getClone();
+                        viewContext.setCamera(config.camera);
+                        viewContext.use();
+                    }
+
+                    this._draw(renderer, object, viewContext, drawingContext, eraseContext, cacheConfig.transform);
                     dynamicTexture.finishCapture(object, cacheConfig);
+
+                    if (config.camera)
+                    {
+                        viewContext.release();
+                    }
+
                     break;
                 }
             }
