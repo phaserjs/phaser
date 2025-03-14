@@ -21,6 +21,7 @@ var SceneEvents = require('../scene/events');
  * @class GameObject
  * @memberof Phaser.GameObjects
  * @extends Phaser.Events.EventEmitter
+ * @extends Phaser.GameObjects.Components.Filters
  * @constructor
  * @since 3.0.0
  *
