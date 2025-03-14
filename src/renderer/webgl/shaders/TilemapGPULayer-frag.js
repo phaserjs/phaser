@@ -181,6 +181,7 @@ module.exports = [
     '    vec2 frameCornerOpposite = frameCorner + wh;',
     '    vec2 texCoordClamped = clamp(texCoord, (frameCorner + 0.5) / uMainResolution, (frameCornerOpposite - 0.5) / uMainResolution);',
     '    vec2 dTexelCoord = (texCoord - texCoordClamped) * uMainResolution;',
+    '    dTexelCoord.y = -dTexelCoord.y;',
     '    vec2 offsets = sign(dTexelCoord);',
     '    Samples samples0 = getColorSamples(texCoordClamped);',
     '    if (offsets.x == 0.0)',

@@ -204,6 +204,10 @@ Samples getColorSamples (vec2 texCoord)
 {
     Samples samples;
 
+    // // Debug: show the texture coordinates.
+    // samples.color = vec4(texCoord, 0.0, 1.0);
+    // return samples;
+
     samples.color = texture2D(
         uMainSampler,
         // Flip Y to convert from texel space to GL texture space.
@@ -241,6 +245,7 @@ Samples getFinalSamples (Tile tile, vec2 layerTexCoord)
     vec2 frameCornerOpposite = frameCorner + wh;
     vec2 texCoordClamped = clamp(texCoord, (frameCorner + 0.5) / uMainResolution, (frameCornerOpposite - 0.5) / uMainResolution);
     vec2 dTexelCoord = (texCoord - texCoordClamped) * uMainResolution;
+    dTexelCoord.y = -dTexelCoord.y;
     vec2 offsets = sign(dTexelCoord);
     Samples samples0 = getColorSamples(texCoordClamped);
     if (offsets.x == 0.0)
