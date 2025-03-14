@@ -394,6 +394,13 @@ var TweenChain = new Class({
     {
         if (this.isPendingRemove() || this.isDestroyed())
         {
+            if (this.persist)
+            {
+                this.setFinishedState();
+
+                return false;
+            }
+                
             return true;
         }
         else if (this.isFinished() || this.paused)
