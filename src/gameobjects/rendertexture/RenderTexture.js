@@ -119,7 +119,7 @@ var RenderTexture = new Class({
          * - 'all' mode calls `render()` then draws the texture to the frame.
          *
          * @name Phaser.GameObjects.RenderTexture#renderMode
-         * @type {'render'|'redraw'|'all'} - The render mode of this Render Texture.
+         * @type {'render'|'redraw'|'all'}
          * @default 'render'
          * @since 4.0.0
          */
