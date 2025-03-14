@@ -18,6 +18,7 @@
 * `Phaser.Animations.AnimationFrame` correctly uses frame duration when it is set. Fix #7070 (thanks @sylvainpolletvillard)
 * Particle emitter custom `moveTo` functions can now move particles. Fix #7063 (thanks @samme)
 * Changed ImageCollections default Tileset values from `null` to `undefined`. Fix #7053 (thanks @Snoturky)
+* Chained tweens now `persist` correctly even after calling `Phaser.Tweens.BaseTween#stop`. Fix #7048 (thanks @FranciscoCaetano88)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
