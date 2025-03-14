@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var CONST = require('../../const');
 var GeometryMask = require('../../display/mask/GeometryMask');
 
 /**
@@ -51,6 +52,12 @@ var Mask = {
      */
     setMask: function (mask)
     {
+        if (this.scene.renderer.type === CONST.WEBGL)
+        {
+            console.warn('Phaser.GameObjects.Components.Mask.setMask: This method is not supported in WebGL. Create a Mask filter instead.');
+            return this;
+        }
+
         this.mask = mask;
 
         return this;
@@ -58,6 +65,9 @@ var Mask = {
 
     /**
      * Clears the mask that this Game Object was using.
+     *
+     * This only works in the Canvas Renderer.
+     * In WebGL, use a Mask filter instead (see {@link Phaser.GameObjects.Components.FilterList#addMask}).
      *
      * @method Phaser.GameObjects.Components.Mask#clearMask
      * @since 3.6.2
@@ -90,6 +100,9 @@ var Mask = {
      * of a Graphics object, then it will use itself to create the mask.
      *
      * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+     *
+     * This only works in the Canvas Renderer.
+     * In WebGL, use a Mask filter instead (see {@link Phaser.GameObjects.Components.FilterList#addMask}).
      *
      * @method Phaser.GameObjects.Components.Mask#createGeometryMask
      * @since 3.6.2
