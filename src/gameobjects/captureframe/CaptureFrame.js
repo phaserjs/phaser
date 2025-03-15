@@ -45,7 +45,7 @@ var CaptureFrameRender = require('./CaptureFrameRender.js');
  * this.cameras.main.setForceComposite(true);
  *
  * // Set up a CaptureFrame:
- * var captureFrame = this.add.captureFrame(0, 0, 'myCaptureFrame');
+ * var captureFrame = this.add.captureFrame('myCaptureFrame');
  *
  * // This image will not be captured, and can display the captured image:
  * var image2 = this.add.image(0, 0, 'myCaptureFrame');
