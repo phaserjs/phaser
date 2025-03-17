@@ -65,7 +65,9 @@ var StableSort = require('../../utils/array/StableSort');
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Filters
  * @extends Phaser.GameObjects.Components.Mask
+ * @extends Phaser.GameObjects.Components.RenderSteps
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.

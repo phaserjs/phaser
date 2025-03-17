@@ -24,6 +24,9 @@ var SceneEvents = require('../scene/events');
  * @constructor
  * @since 3.0.0
  *
+ * @extends Phaser.GameObjects.Components.Filters
+ * @extends Phaser.GameObjects.Components.RenderSteps
+ *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
  * @param {string} type - A textual representation of the type of Game Object, i.e. `sprite`.
  */
