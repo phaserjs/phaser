@@ -322,6 +322,8 @@ var Text = new Class({
     {
         if (!this.style.rtl)
         {
+            this.canvas.dir = 'ltr';
+            this.context.direction = 'ltr';
             return;
         }
 
