@@ -19,7 +19,7 @@ var Length = require('../line/Length');
  * @param {number} position - The position along the perimeter of the triangle. A value between 0 and 1.
  * @param {Phaser.Math.Vector2} [out] - An optional Vector2 point to store the value in. If not given a new Vector2 will be created.
  *
- * @return {Phaser.Math.Vector2)} A Vector2 point object containing the given position from the perimeter of the triangle.
+ * @return {Phaser.Math.Vector2} A Vector2 point object containing the given position from the perimeter of the triangle.
  */
 var GetPoint = function (triangle, position, out)
 {
