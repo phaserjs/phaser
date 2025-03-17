@@ -75,7 +75,7 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
 
     if (parentMatrix)
     {
-        camMatrix.multiply(parentMatrix, camMatrix);
+        camMatrix.multiply(parentMatrix);
         dx *= src.scaleX;
         dy *= src.scaleY;
     }

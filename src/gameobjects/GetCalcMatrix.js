@@ -49,11 +49,6 @@ var GetCalcMatrix = function (src, camera, parentMatrix, ignoreCameraPosition)
         camExternalMatrix.copyFrom(camera.matrixExternal);
     }
 
-    if (parentMatrix)
-    {
-        camExternalMatrix.multiply(parentMatrix);
-    }
-
     camMatrix.copyWithScrollFactorFrom(
         camera.matrix,
         camera.scrollX, camera.scrollY,
@@ -61,6 +56,11 @@ var GetCalcMatrix = function (src, camera, parentMatrix, ignoreCameraPosition)
     );
 
     camExternalMatrix.multiply(camMatrix, calcMatrix);
+
+    if (parentMatrix)
+    {
+        calcMatrix.multiply(parentMatrix);
+    }
 
     spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 

@@ -60,7 +60,7 @@ var TransformerTile = new Class({
 
         if (parentMatrix)
         {
-            parentMatrix.multiply(calcMatrix, calcMatrix);
+            calcMatrix.multiply(parentMatrix);
         }
 
         var frameWidth = texturerNode.frameWidth;

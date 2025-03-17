@@ -51,7 +51,7 @@ var TilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
 
     if (parentMatrix)
     {
-        parentMatrix.multiply(camMatrix, camMatrix);
+        camMatrix.multiply(parentMatrix);
     }
 
     camMatrix.multiply(layerMatrix, calcMatrix);

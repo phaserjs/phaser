@@ -136,7 +136,7 @@ var TransformerImage = new Class({
 
         if (parentMatrix)
         {
-            parentMatrix.multiply(calcMatrix, calcMatrix);
+            calcMatrix.multiply(parentMatrix);
         }
 
         spriteMatrix.applyITRS(

@@ -348,7 +348,7 @@ if (typeof WEBGL_RENDERER)
 
             if (parentMatrix)
             {
-                parentMatrix.multiply(cameraMatrix, cameraMatrix);
+                cameraMatrix.multiply(parentMatrix);
             }
 
             if (filtersFocusContext)

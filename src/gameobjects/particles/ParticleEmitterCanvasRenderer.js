@@ -38,7 +38,7 @@ var ParticleEmitterCanvasRenderer = function (renderer, emitter, camera, parentM
 
     if (parentMatrix)
     {
-        parentMatrix.multiply(camMatrix, camMatrix);
+        camMatrix.multiply(parentMatrix);
     }
 
     managerMatrix.applyITRS(

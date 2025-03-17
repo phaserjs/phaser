@@ -792,7 +792,7 @@ var CanvasRenderer = new Class({
 
         if (parentTransformMatrix)
         {
-            parentTransformMatrix.multiply(camMatrix, camMatrix);
+            camMatrix.multiply(parentTransformMatrix);
         }
 
         //  Multiply by the Sprite matrix

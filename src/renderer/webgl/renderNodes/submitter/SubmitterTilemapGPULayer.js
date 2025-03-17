@@ -471,7 +471,7 @@ var SubmitterTilemapGPULayer = new Class({
 
         if (parentMatrix)
         {
-            parentMatrix.multiply(calcMatrix, calcMatrix);
+            calcMatrix.multiply(parentMatrix);
         }
 
         spriteMatrix.applyITRS(x, y, 0, tilemapLayer.scaleX, tilemapLayer.scaleY);

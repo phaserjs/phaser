@@ -851,7 +851,7 @@ var DynamicTexture = new Class({
             while (parent)
             {
                 tempMatrix.applyITRS(parent.x, parent.y, parent.rotation, parent.scaleX, parent.scaleY);
-                tempMatrix.multiply(parentTransform, parentTransform);
+                parentTransform.multiply(tempMatrix);
                 parent = parent.parentContainer;
             }
         }

@@ -531,7 +531,7 @@ var Transform = {
         {
             parentMatrix.applyITRS(parent.x, parent.y, parent._rotation, parent._scaleX, parent._scaleY);
 
-            parentMatrix.multiply(tempMatrix, tempMatrix);
+            tempMatrix.multiply(parentMatrix);
 
             parent = parent.parentContainer;
         }

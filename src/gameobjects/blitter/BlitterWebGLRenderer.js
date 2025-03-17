@@ -50,7 +50,7 @@ var BlitterWebGLRenderer = function (renderer, src, drawingContext, parentMatrix
 
     if (parentMatrix)
     {
-        parentMatrix.multiply(calcMatrix, calcMatrix);
+        calcMatrix.multiply(parentMatrix);
     }
 
     var blitterX = src.x;

@@ -45,7 +45,7 @@ var ParticleEmitterWebGLRenderer = function (renderer, emitter, drawingContext, 
 
     if (parentMatrix)
     {
-        parentMatrix.multiply(camMatrix, camMatrix);
+        camMatrix.multiply(parentMatrix);
     }
 
     managerMatrix.applyITRS(
