@@ -178,14 +178,14 @@ var GridWebGLRenderer = function (renderer, src, camera, parentMatrix)
         {
             var x1 = x * cellWidth;
 
-            pipeline.batchLine(x1, 0, x1, height, 1, 1, 1, 0, false);
+            pipeline.batchLine(x1, 0, x1, height, src.lineWidth, src.lineWidth, 1, 0, false);
         }
 
         for (y = 1; y < gridHeight; y++)
         {
             var y1 = y * cellHeight;
 
-            pipeline.batchLine(0, y1, width, y1, 1, 1, 1, 0, false);
+            pipeline.batchLine(0, y1, width, y1, src.lineWidth, src.lineWidth, 1, 0, false);
         }
     }
 
