@@ -473,6 +473,9 @@ if (typeof WEBGL_RENDERER)
                     scaleY *= -1;
                 }
 
+                // Set the filter camera size to match the object.
+                this.setFilterSize(width, height);
+
                 // Set the filter camera to match the object.
                 this.filterCamera
                     .centerOn(centerX, centerY)
@@ -486,13 +489,13 @@ if (typeof WEBGL_RENDERER)
                 width = camera.width;
                 height = camera.height;
 
+                // Set the filter camera size to match the object.
+                this.setFilterSize(width, height);
+
                 filterCamera.setScroll(camera.scrollX, camera.scrollY);
                 filterCamera.setRotation(camera.rotation);
                 filterCamera.setZoom(camera.zoomX, camera.zoomY);
             }
-
-            // Set the filter camera size to match the object.
-            this.setFilterSize(width, height);
 
             return this;
         },
