@@ -163,7 +163,7 @@ var Camera = new Class({
         {
             var bg = camera.backgroundColor;
             var col = GetColor32(bg.red, bg.green, bg.blue, bg.alpha);
-            fillCamera.run(currentContext, col);
+            fillCamera.run(currentContext, col, useFramebuffers);
         }
 
         // Draw children.
@@ -175,14 +175,14 @@ var Camera = new Class({
         if (flashEffect.postRenderWebGL())
         {
             col = GetColor32(flashEffect.red, flashEffect.green, flashEffect.blue, flashEffect.alpha * 255);
-            fillCamera.run(currentContext, col);
+            fillCamera.run(currentContext, col, useFramebuffers);
         }
 
         var fadeEffect = camera.fadeEffect;
         if (fadeEffect.postRenderWebGL())
         {
             col = GetColor32(fadeEffect.red, fadeEffect.green, fadeEffect.blue, fadeEffect.alpha * 255);
-            fillCamera.run(currentContext, col);
+            fillCamera.run(currentContext, col, useFramebuffers);
         }
 
         // Finish rendering children.
