@@ -20,7 +20,7 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '4.0.0 Beta 7',
+    VERSION: '4.0.0 Beta 8',
 
     /**
      * Phaser Release Version as displayed in the console.log header URL.
