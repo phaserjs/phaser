@@ -42,7 +42,7 @@ if (typeof WEBGL_RENDERER)
          * it allows those processes to defer `renderWebGL`
          * and otherwise manage the flow of rendering.
          *
-         * @method Phaser.GameObjects.GameObject#renderWebGLStep
+         * @method Phaser.GameObjects.Components.RenderSteps#renderWebGLStep
          * @webglOnly
          * @since 4.0.0
          * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to render with.
@@ -85,10 +85,11 @@ if (typeof WEBGL_RENDERER)
          * It should call the next render step in the list.
          * This allows render steps to control the rendering flow.
          *
-         * @method Phaser.GameObjects.GameObject#addRenderStep
+         * @method Phaser.GameObjects.Components.RenderSteps#addRenderStep
          * @param {Phaser.Types.GameObjects.RenderWebGLStep} fn - The render step function to add.
          * @param {number} [index] - The index in the render list to add the step to. Omit to add to the end.
-         * @returns {this}
+         * 
+         * @return {this} This Game Object instance.
          */
         addRenderStep: function (fn, index)
         {
