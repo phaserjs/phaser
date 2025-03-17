@@ -61,7 +61,10 @@
     "tsgen": "cd scripts/tsgen && jsdoc -c jsdoc-tsd.conf.json",
     "test-ts": "cd scripts/tsgen/test && tsc --build tsconfig.json > output.txt",
     "ts": "npm run tsgen && npm run test-ts",
-    "tsdev": "npm run build-tsgen && npm run tsgen && npm run test-ts"
+    "tsdev": "npm run build-tsgen && npm run tsgen && npm run test-ts",
+    "test": "jest --config tests/setup/jest.config.js",
+    "test:watch": "jest --config tests/setup/jest.config.js --watch",
+    "test:coverage": "jest --config tests/setup/jest.config.js --coverage"
   },
   "keywords": [
     "2d",
@@ -76,6 +79,7 @@
     "web audio"
   ],
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "@types/offscreencanvas": "^2019.7.3",
     "@types/source-map": "^0.5.7",
     "clean-webpack-plugin": "^4.0.0",
@@ -85,6 +89,8 @@
     "exports-loader": "^5.0.0",
     "fs-extra": "^11.2.0",
     "imports-loader": "^5.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "jsdoc": "3.x.x",
     "node-sloc": "^0.2.1",
     "path": "^0.12.7",
