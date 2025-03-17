@@ -162,18 +162,18 @@ var BatchHandlerTriFlat = new Class({
             drawingContext.renderer.projectionMatrix.val
         );
 
-        // Lighting uniforms.
-        Utils.updateLightingUniforms(
-            this.renderOptions.lighting,
-            this.manager.renderer,
-            drawingContext,
-            programManager,
-            1,
-            this._lightVector
-        );
-
         if (this.renderOptions.lighting)
         {
+            // Lighting uniforms.
+            Utils.updateLightingUniforms(
+                this.renderOptions.lighting,
+                this.manager.renderer,
+                drawingContext,
+                programManager,
+                1,
+                this._lightVector
+            );
+
             programManager.setUniform(
                 'uResolution',
                 [ drawingContext.width, drawingContext.height ]

@@ -163,6 +163,13 @@ module.exports = {
         var camera = drawingContext.camera;
         var scene = camera.scene;
         var lightManager = scene.sys.lights;
+
+        if (!lightManager || !lightManager.active)
+        {
+            return;
+        }
+
+
         var lights = lightManager.getLights(camera);
         var lightsCount = lights.length;
         var ambientColor = lightManager.ambientColor;

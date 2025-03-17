@@ -59,6 +59,11 @@ var Lighting = {
      */
     setLighting: function (enable)
     {
+        var lightingManager = this.scene.sys.lights;
+        if (!lightingManager || !lightingManager.active)
+        {
+            return this;
+        }
         this.lighting = enable;
 
         return this;
