@@ -14,11 +14,12 @@
 ## Bug Fixes
 
 * An erroneous `console.log` was left in the Text Game Object. This has now been removed.
-* * Particle emitter color RGB arrays are cleared before repopulating. Fix #7069 (thanks @Golen87 @samme)
+* Particle emitter color RGB arrays are cleared before repopulating. Fix #7069 (thanks @Golen87 @samme)
 * `Phaser.Animations.AnimationFrame` correctly uses frame duration when it is set. Fix #7070 (thanks @sylvainpolletvillard)
 * Particle emitter custom `moveTo` functions can now move particles. Fix #7063 (thanks @samme)
 * Changed ImageCollections default Tileset values from `null` to `undefined`. Fix #7053 (thanks @Snoturky)
 * Chained tweens now `persist` correctly even after calling `Phaser.Tweens.BaseTween#stop`. Fix #7048 (thanks @FranciscoCaetano88)
+* New left-to-right `Text` Game Objects now includes the default `canvas.dir = 'ltr` and `context.direction = 'ltr';`. Fixes a bug in Chrome 134 & Edge 134 where calling `destroy()` on a right-to-left `Text` Game Object prevents the next created left-to-right `Text` Game Object from rendering. Fix # 7077 (thanks @Demeno)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
