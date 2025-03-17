@@ -100,6 +100,7 @@ export class Parser {
                 case 'Phaser.GameObjects.Components.Origin':
                 case 'Phaser.GameObjects.Components.PathFollower':
                 case 'Phaser.GameObjects.Components.RenderNodes':
+                case 'Phaser.GameObjects.Components.RenderSteps':
                 case 'Phaser.GameObjects.Components.ScrollFactor':
                 case 'Phaser.GameObjects.Components.Size':
                 case 'Phaser.GameObjects.Components.Texture':
