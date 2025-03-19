@@ -73,10 +73,25 @@ var WebGLSnapshot = function (sourceContext, config)
 
                 var destIndex = (isFramebuffer) ? total - ((py * width + (width - px)) * 4) : (py * width + px) * 4;
 
-                data[destIndex + 0] = pixels[sourceIndex + 0];
-                data[destIndex + 1] = pixels[sourceIndex + 1];
-                data[destIndex + 2] = pixels[sourceIndex + 2];
-                data[destIndex + 3] = pixels[sourceIndex + 3];
+                var r = pixels[sourceIndex + 0];
+                var g = pixels[sourceIndex + 1];
+                var b = pixels[sourceIndex + 2];
+                var a = pixels[sourceIndex + 3];
+
+                // Un-premultiplication.
+                if (config.unpremultiplyAlpha && a !== 0)
+                {
+                    var ratio = 255 / a;
+
+                    r = Math.floor(r * ratio);
+                    g = Math.floor(g * ratio);
+                    b = Math.floor(b * ratio);
+                }
+
+                data[destIndex + 0] = r;
+                data[destIndex + 1] = g;
+                data[destIndex + 2] = b;
+                data[destIndex + 3] = a;
             }
         }
 

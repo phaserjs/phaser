@@ -243,7 +243,8 @@ var WebGLRenderer = new Class({
             encoder: 0.92,
             isFramebuffer: false,
             bufferWidth: 0,
-            bufferHeight: 0
+            bufferHeight: 0,
+            unpremultiplyAlpha: true
         };
 
         /**
@@ -2050,6 +2051,7 @@ var WebGLRenderer = new Class({
         state.y = y;
         state.width = width;
         state.height = height;
+        state.unpremultiplyAlpha = this.game.config.premultipliedAlpha;
 
         return this;
     },

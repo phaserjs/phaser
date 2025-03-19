@@ -13,4 +13,5 @@
  * @property {boolean} [isFramebuffer=false] - Is this snapshot grabbing from a frame buffer or a canvas?
  * @property {number} [bufferWidth] - The width of the frame buffer, if a frame buffer grab.
  * @property {number} [bufferHeight] - The height of the frame buffer, if a frame buffer grab.
+ * @property {boolean} [unpremultiplyAlpha] - Should the snapshot be unpremultiplied before being returned? WebGL only.
  */
