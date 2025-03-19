@@ -36,9 +36,7 @@ var Controller = require('./Controller');
  * This is useful for creating effects that cover the entire view.
  *
  * An optional `viewCamera` can be specified when creating the mask.
- * If not used, mask objects will be viewed through a default camera.
- * Set the `viewCamera` to the scene's main camera (`this.cameras.main`)
- * to view the mask through the main camera.
+ * If not used, mask objects will be viewed through the main camera.
  *
  * A Mask effect is added to a Camera via the FilterList component:
  *
@@ -47,7 +45,7 @@ var Controller = require('./Controller');
  * const texture = 'MyMask';
  *
  * camera.filters.internal.addMask(texture);
- * camera.filters.external.addMask(texture);
+ * camera.filters.external.addMask(texture, true, myCamera);
  * ```
  *
  * @class Mask
@@ -58,7 +56,7 @@ var Controller = require('./Controller');
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that owns this filter.
  * @param {string|Phaser.GameObjects.GameObject} [mask='__WHITE'] - The source of the mask. This can be a unique string-based key of the texture to use for the mask, which must exist in the Texture Manager. Or it can be a GameObject, in which case the mask will render the GameObject to a DynamicTexture and use that.
  * @param {boolean} [invert=false] - Whether to invert the mask.
- * @param {Phaser.Cameras.Scene2D.Camera} [viewCamera] - The Camera to use when rendering the mask with a GameObject. If not specified, uses an internal Camera.
+ * @param {Phaser.Cameras.Scene2D.Camera} [viewCamera] - The Camera to use when rendering the mask with a GameObject. If not specified, uses the scene's `main` camera.
  * @param {'local'|'world'} [viewTransform='world'] - The transform to use when rendering the mask with a GameObject. 'local' uses the GameObject's own properties. 'world' uses the GameObject's `parentContainer` value to compute a world position.
  */
 var Mask = new Class({
@@ -211,8 +209,10 @@ var Mask = new Class({
 
         this.glTexture = this._dynamicTexture.get().glTexture;
 
+        var camera = this.viewCamera || gameObject.scene.cameras.main;
+        
         // Draw the GameObject to the DynamicTexture.
-        this._dynamicTexture.capture(gameObject, { transform: this.viewTransform, camera: this.viewCamera });
+        this._dynamicTexture.capture(gameObject, { transform: this.viewTransform, camera: camera });
         this._dynamicTexture.render();
 
         this.needsUpdate = false;
