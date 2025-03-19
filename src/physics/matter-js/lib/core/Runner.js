@@ -1,5 +1,5 @@
 /**
-* The `Matter.Runner` module is an optional utility which provides a game loop, 
+* The `Matter.Runner` module is an optional utility which provides a game loop,
 * that handles continuously updating a `Matter.Engine` for you within a browser.
 * It is intended for development and debugging purposes, but may also be suitable for simple games.
 * If you are using your own game loop instead, then you do not need the `Matter.Runner` module.
@@ -108,7 +108,7 @@ var Common = require('./Common');
 
             // limit delta
             var deltaHistoryWindow = runner.frameDeltaHistory.slice(
-                deltaHistorySorted.length * Runner._smoothingLowerBound, 
+                deltaHistorySorted.length * Runner._smoothingLowerBound,
                 deltaHistorySorted.length * Runner._smoothingUpperBound
             );
 
@@ -217,6 +217,7 @@ var Common = require('./Common');
         }
         return (result / valuesLength) || 0;
     };
+    Runner._mean = _mean;
     /*
     *
     *  Events Documentation
@@ -288,19 +289,7 @@ var Common = require('./Common');
      */
 
     /**
-     * A `Boolean` that specifies if the runner should use a fixed timestep (otherwise it is variable).
-     * If timing is fixed, then the apparent simulation speed will change depending on the frame rate (but behaviour will be deterministic).
-     * If the timing is variable, then the apparent simulation speed will be constant (approximately, but at the cost of determininism).
-     *
-     * @property isFixed
-     * @type boolean
-     * @default false
-     */
-
-    /**
      * A `Number` that specifies the time step between updates in milliseconds.
-     * If `engine.timing.isFixed` is set to `true`, then `delta` is fixed.
-     * If it is `false`, then `delta` can dynamically change to maintain the correct apparent simulation speed.
      *
      * @property delta
      * @type number

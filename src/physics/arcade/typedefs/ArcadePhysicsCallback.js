@@ -11,6 +11,6 @@
  * 
  * You should only do this if the body intentionally has no associated game object (sprite, .etc).
  * 
- * @param {(Phaser.Types.Physics.Arcade.GameObjectWithBody|Phaser.Physics.Arcade.Body|Phaser.Tilemaps.Tile)} object1 - The first Game Object.
- * @param {(Phaser.Types.Physics.Arcade.GameObjectWithBody|Phaser.Physics.Arcade.Body|Phaser.Tilemaps.Tile)} object2 - The second Game Object.
+ * @param {(Phaser.Types.Physics.Arcade.GameObjectWithBody|Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|Phaser.Tilemaps.Tile)} object1 - The first Game Object.
+ * @param {(Phaser.Types.Physics.Arcade.GameObjectWithBody|Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|Phaser.Tilemaps.Tile)} object2 - The second Game Object.
  */

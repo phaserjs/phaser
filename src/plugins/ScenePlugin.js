@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@phaser.io>
-* @copyright    2013-2024 Phaser Studio Inc.
+* @copyright    2013-2025 Phaser Studio Inc.
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 

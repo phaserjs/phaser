@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@phaser.io>
- * @copyright    2013-2024 Phaser Studio Inc.
+ * @copyright    2013-2025 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,6 +13,7 @@ var GameObjectFactory = require('../gameobjects/GameObjectFactory');
 var GetFastValue = require('../utils/object/GetFastValue');
 var PluginCache = require('./PluginCache');
 var Remove = require('../utils/array/Remove');
+var CONST = require('../const');
 
 /**
  * @classdesc
@@ -30,12 +31,12 @@ var Remove = require('../utils/array/Remove');
  *
  * A Global Plugin is a plugin that lives within the Plugin Manager rather than a Scene. You can get
  * access to it by calling `PluginManager.get` and providing a key. Any Scene that requests a plugin in
- * this way will all get access to the same plugin instance, allowing you to use a single plugin across
+ * this way will get access to the same plugin instance, allowing you to use a single plugin across
  * multiple Scenes.
  *
  * A Scene Plugin is a plugin dedicated to running within a Scene. These are different to Global Plugins
  * in that their instances do not live within the Plugin Manager, but within the Scene Systems class instead.
- * And that every Scene created is given its own unique instance of a Scene Plugin. Examples of core Scene
+ * Also, every Scene created is given its own unique instance of a Scene Plugin. Examples of core Scene
  * Plugins include the Input Plugin, the Tween Plugin and the physics Plugins.
  *
  * You can add a plugin to Phaser in three different ways:
@@ -113,7 +114,7 @@ var PluginManager = new Class({
          */
         this._pendingScene = [];
 
-        if (game.isBooted)
+        if (game.isBooted || game.config.renderType === CONST.HEADLESS)
         {
             this.boot();
         }
@@ -124,7 +125,7 @@ var PluginManager = new Class({
     },
 
     /**
-     * Run once the game has booted and installs all of the plugins configured in the Game Config.
+     * Runs once the game has booted and installs all of the plugins configured in the Game Config.
      *
      * @method Phaser.Plugins.PluginManager#boot
      * @protected
