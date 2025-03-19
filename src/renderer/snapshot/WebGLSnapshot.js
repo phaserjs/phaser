@@ -69,7 +69,7 @@ var WebGLSnapshot = function (sourceContext, config)
         {
             for (var px = 0; px < width; px++)
             {
-                var sourceIndex = ((height - py - 1) * width + px) * 4;
+                var sourceIndex = (py * width + px) * 4;
 
                 var destIndex = (isFramebuffer) ? total - ((py * width + (width - px)) * 4) : (py * width + px) * 4;
 
