@@ -1389,7 +1389,9 @@ var World = new Class({
             !body2.enable ||
             body1.checkCollision.none ||
             body2.checkCollision.none ||
-            !this.intersects(body1, body2))
+            !this.intersects(body1, body2) ||
+            (body1.collisionMask & body2.collisionCategory) === 0 ||
+            (body2.collisionMask & body1.collisionCategory) === 0)
         {
             return result;
         }
