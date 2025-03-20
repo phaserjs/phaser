@@ -36,7 +36,10 @@ var Controller = require('./Controller');
  * This is useful for creating effects that cover the entire view.
  *
  * An optional `viewCamera` can be specified when creating the mask.
- * If not used, mask objects will be viewed through the main camera.
+ * If not used, mask objects will be viewed through the current camera,
+ * or through a default camera if no other option is set.
+ * For example, when rendering to a DynamicTexture outside the normal rendering
+ * flow.
  *
  * A Mask effect is added to a Camera via the FilterList component:
  *
@@ -153,7 +156,8 @@ var Mask = new Class({
 
         /**
          * The Camera to use when rendering the mask.
-         * If not specified, uses an internal Camera.
+         * If not specified, uses the currently rendering camera,
+         * or failing that, an internal Camera.
          *
          * @name Phaser.Filters.Mask#viewCamera
          * @type {?Phaser.Cameras.Scene2D.Camera}
