@@ -1660,7 +1660,7 @@ var World = new Class({
             //  We'll only move the circle (if we can) and let
             //  the runSeparation handle the rectangle
 
-            if (!body1Immovable || body1.pushable || deadlock)
+            if (!body1Immovable && (body1.pushable || deadlock))
             {
                 body1.x -= overlapX;
                 body1.y -= overlapY;
@@ -1668,7 +1668,7 @@ var World = new Class({
                 body1.updateCenter();
             }
 
-            if (!body2Immovable || body2.pushable || deadlock)
+            if (!body2Immovable && (body2.pushable || deadlock))
             {
                 body2.x += overlapX;
                 body2.y += overlapY;
