@@ -355,6 +355,16 @@ var WebGLRenderer = new Class({
         this.baseDrawingContext = null;
 
         /**
+         * The camera currently being rendered by `render`.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentViewCamera
+         * @type {Phaser.Cameras.Scene2D.Camera}
+         * @since 4.0.0
+         * @default null
+         */
+        this.currentViewCamera = null;
+
+        /**
          * A pool of DrawingContexts which can be reused.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#drawingContextPool
@@ -1885,7 +1895,11 @@ var WebGLRenderer = new Class({
 
         this.emit(Events.RENDER, scene, camera);
 
+        this.currentViewCamera = camera;
+
         this.cameraRenderNode.run(this.baseDrawingContext, children, camera);
+
+        this.currentViewCamera = null;
     },
 
     /**

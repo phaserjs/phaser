@@ -860,6 +860,12 @@ var DynamicTexture = new Class({
             cacheConfig.transform = parentTransform;
         }
 
+        if (config.camera)
+        {
+            // Ensure that camera transforms are applied.
+            config.camera.matrixExternal.multiply(parentTransform, parentTransform);
+        }
+
         // Cache and override the object properties.
         if (config.x !== undefined)
         {

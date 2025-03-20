@@ -209,7 +209,7 @@ var Mask = new Class({
 
         this.glTexture = this._dynamicTexture.get().glTexture;
 
-        var camera = this.viewCamera || gameObject.scene.cameras.main;
+        var camera = this.viewCamera || gameObject.scene.renderer.currentViewCamera;
         
         // Draw the GameObject to the DynamicTexture.
         this._dynamicTexture.capture(gameObject, { transform: this.viewTransform, camera: camera });
