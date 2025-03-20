@@ -140,7 +140,6 @@ var Camera = new Class({
         
         if (useFramebuffers)
         {
-            baseContext.setScissorBox(0, 0, drawingContext.width, drawingContext.height);
             currentContext = drawingContextPool.get(cw, ch);
             currentContext.setCamera(camera);
 
