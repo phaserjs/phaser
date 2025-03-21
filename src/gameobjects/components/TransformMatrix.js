@@ -742,7 +742,8 @@ var TransformMatrix = new Class({
      */
     setToContext: function (ctx)
     {
-        ctx.setTransform(this);
+        // using old way for old browser compatibility #6965
+        ctx.setTransform(this.a, this.b, this.c, this.d, this.e, this.f);
 
         return ctx;
     },
@@ -1038,7 +1039,7 @@ var TransformMatrix = new Class({
 
         if (round)
         {
-            v = Math.round(v);
+            v = Math.floor(v + 0.5);
         }
 
         return v;
@@ -1064,7 +1065,7 @@ var TransformMatrix = new Class({
 
         if (round)
         {
-            v = Math.round(v);
+            v = Math.floor(v + 0.5);
         }
 
         return v;

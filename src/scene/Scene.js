@@ -27,7 +27,7 @@ var Scene = new Class({
     function Scene (config)
     {
         /**
-         * The Scene Systems. You must never overwrite this property, or all hell will break lose.
+         * The Scene Systems. You must never overwrite this property, or all hell will break loose.
          *
          * @name Phaser.Scene#sys
          * @type {Phaser.Scenes.Systems}

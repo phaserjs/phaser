@@ -58,6 +58,7 @@ var RenderTextureRenderModes = require('./RenderTextureRenderModes');
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [width=32] - The width of the Render Texture.
  * @param {number} [height=32] - The height of the Render Texture.
+ * @param {boolean} [forceEven=true] - Force the given width and height to be rounded to even values. This significantly improves the rendering quality. Set to false if you know you need an odd sized texture.
  */
 var RenderTexture = new Class({
 
@@ -69,14 +70,15 @@ var RenderTexture = new Class({
 
     initialize:
 
-    function RenderTexture (scene, x, y, width, height)
+    function RenderTexture (scene, x, y, width, height, forceEven)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = 32; }
         if (height === undefined) { height = 32; }
+        if (forceEven === undefined) { forceEven = true; }
 
-        var dynamicTexture = scene.sys.textures.addDynamicTexture(UUID(), width, height);
+        var dynamicTexture = scene.sys.textures.addDynamicTexture(UUID(), width, height, forceEven);
 
         Image.call(this, scene, x, y, dynamicTexture);
 
@@ -144,10 +146,11 @@ var RenderTexture = new Class({
      * This will not change the size that the Game Object is rendered in-game.
      * For that you need to either set the scale of the Game Object (`setScale`) or call the
      * `setDisplaySize` method, which is the same thing as changing the scale but allows you
-     * to do so by giving pixel values.
+     * to do so by giving pixel values. You could also call the `resize` method, as that
+     * will resize the underlying texture.
      *
-     * If you have enabled this Game Object for input, changing the size will _not_ change the
-     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
+     * If you have enabled this Game Object for input, changing the size will also change the
+     * size of the hit area, unless you have defined a custom hit area.
      *
      * @method Phaser.GameObjects.RenderTexture#setSize
      * @since 3.0.0
@@ -161,8 +164,6 @@ var RenderTexture = new Class({
     {
         this.width = width;
         this.height = height;
-
-        this.texture.setSize(width, height);
 
         this.updateDisplayOrigin();
 
@@ -184,6 +185,9 @@ var RenderTexture = new Class({
      * In Canvas it will resize the underlying canvas element.
      *
      * Both approaches will erase everything currently drawn to the Render Texture.
+     * 
+     * Calling this will then invoke the `setSize` method, setting the internal size of this Game Object
+     * to the values given to this method.
      *
      * If the dimensions given are the same as those already being used, calling this method will do nothing.
      *
@@ -192,12 +196,15 @@ var RenderTexture = new Class({
      *
      * @param {number} width - The new width of the Render Texture.
      * @param {number} [height=width] - The new height of the Render Texture. If not specified, will be set the same as the `width`.
+     * @param {boolean} [forceEven=true] - Force the given width and height to be rounded to even values. This significantly improves the rendering quality. Set to false if you know you need an odd sized texture.
      *
      * @return {this} This Render Texture.
      */
-    resize: function (width, height)
+    resize: function (width, height, forceEven)
     {
-        this.setSize(width, height);
+        this.texture.setSize(width, height, forceEven);
+
+        this.setSize(this.texture.width, this.texture.height);
 
         return this;
     },
@@ -321,17 +328,22 @@ var RenderTexture = new Class({
     },
 
     /**
-     * Fully clears this Render Texture, erasing everything from it and resetting it back to
-     * a blank, transparent, texture.
+     * Clears a portion or everything from this Render Texture by erasing it and resetting it back to
+     * a blank, transparent, texture. To clear an area, specify the `x`, `y`, `width` and `height`.
      *
      * @method Phaser.GameObjects.RenderTexture#clear
      * @since 3.2.0
      *
+     * @param {number} [x=0] - The left coordinate of the fill rectangle.
+     * @param {number} [y=0] - The top coordinate of the fill rectangle.
+     * @param {number} [width=this.width] - The width of the fill rectangle.
+     * @param {number} [height=this.height] - The height of the fill rectangle.
+     *
      * @return {this} This Render Texture instance.
      */
-    clear: function ()
+    clear: function (x, y, width, height)
     {
-        this.texture.clear();
+        this.texture.clear(x, y, width, height);
 
         return this;
     },

@@ -30,10 +30,14 @@ var BuildTilesetIndex = function (mapData)
         for (var j = 0; j < images.length; j++)
         {
             var image = images[j];
+            var offset = {
+                x: 0,
+                y: image.height - mapData.tileHeight
+            };
+            
+            set = new Tileset(image.image, image.gid, image.width, image.height, 0, 0, undefined, undefined, offset);
 
-            set = new Tileset(image.image, image.gid, collection.imageWidth, collection.imageHeight, 0, 0);
-
-            set.updateTileData(collection.imageWidth, collection.imageHeight);
+            set.updateTileData(image.width, image.height);
 
             mapData.tilesets.push(set);
         }

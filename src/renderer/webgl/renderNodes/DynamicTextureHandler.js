@@ -91,6 +91,7 @@ var DynamicTextureHandler = new Class({
         var eraseContext = null;
         var preserveBuffer = false;
         var currentContext = drawingContext;
+        var gl = renderer.gl;
 
         for (var index = 0; index < commandBufferLength; index++)
         {
@@ -100,10 +101,22 @@ var DynamicTextureHandler = new Class({
             {
                 case DynamicTextureCommands.CLEAR:
                 {
-                    var gl = renderer.gl;
-                    currentContext.clear(
+                    x = commandBuffer[++index];
+                    y = commandBuffer[++index];
+                    width = commandBuffer[++index];
+                    height = commandBuffer[++index];
+
+                    var clearContext = currentContext.getClone();
+                    clearContext.setScissorEnable(true);
+                    clearContext.setScissorBox(x, y, width, height);
+                    clearContext.use();
+
+                    clearContext.clear(
                         gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT
                     );
+
+                    clearContext.release();
+
                     break;
                 }
 

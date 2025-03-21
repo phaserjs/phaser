@@ -469,6 +469,7 @@ var EmitterOp = new Class({
             case 3:
                 this._onEmit = value;
                 onEmit = this.proxyEmit;
+                current = this.defaultValue;
                 break;
 
             //  Stepped start/end
@@ -522,6 +523,7 @@ var EmitterOp = new Class({
                 this._onUpdate = (this.has(value, 'onUpdate')) ? value.onUpdate : this.defaultUpdate;
                 onEmit = this.proxyEmit;
                 onUpdate = this.proxyUpdate;
+                current = this.defaultValue;
                 break;
 
             //  Interpolation
@@ -599,15 +601,11 @@ var EmitterOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterOp#defaultEmit
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Particles.Particle} particle - The particle.
-     * @param {string} key - The name of the property.
-     * @param {number} [value] - The current value of the property.
-     *
      * @return {number} The new value of the property.
      */
-    defaultEmit: function (particle, key, value)
+    defaultEmit: function ()
     {
-        return value;
+        return this.defaultValue;
     },
 
     /**

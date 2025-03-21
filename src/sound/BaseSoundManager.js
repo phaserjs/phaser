@@ -173,10 +173,12 @@ var BaseSoundManager = new Class({
          */
         this.listenerPosition = new Vector2();
 
-        game.events.on(GameEvents.BLUR, this.onGameBlur, this);
-        game.events.on(GameEvents.FOCUS, this.onGameFocus, this);
-        game.events.on(GameEvents.PRE_STEP, this.update, this);
-        game.events.once(GameEvents.DESTROY, this.destroy, this);
+        var ee = game.events;
+
+        ee.on(GameEvents.BLUR, this.onGameBlur, this);
+        ee.on(GameEvents.FOCUS, this.onGameFocus, this);
+        ee.on(GameEvents.PRE_STEP, this.update, this);
+        ee.once(GameEvents.DESTROY, this.destroy, this);
     },
 
     /**

@@ -77,18 +77,49 @@ var WebAudioSoundManager = new Class({
          */
         this.destination = this.masterMuteNode;
 
-        this.locked = this.context.state === 'suspended' && ('ontouchstart' in window || 'onclick' in window);
+        this.locked = this.context.state === 'suspended';
 
         BaseSoundManager.call(this, game);
 
-        if (this.locked && game.isBooted)
+        if (this.locked)
         {
-            this.unlock();
+            if (game.isBooted)
+            {
+                this.unlock();
+            }
+            else
+            {
+                game.events.once(GameEvents.BOOT, this.unlock, this);
+            }
         }
-        else
-        {
-            game.events.once(GameEvents.BOOT, this.unlock, this);
-        }
+
+        game.events.on(GameEvents.VISIBLE, this.onGameVisible, this);
+    },
+
+    /**
+     * Internal handler for Phaser.Core.Events#VISIBLE.
+     * 
+     * Needed to handle resuming audio on iOS17/iOS18+ if you hide the browser, press
+     * the home button, etc. See https://github.com/phaserjs/phaser/issues/6829
+     *
+     * @method Phaser.Sound.WebAudioSoundManager#onGameVisible
+     * @private
+     * @since 3.88.0
+     */
+    onGameVisible: function ()
+    {
+        var context = this.context;
+
+        //  setTimeout to avoid weird audio artifacts (thanks Apple)
+        window.setTimeout(function () {
+
+            if (context)
+            {
+                context.suspend();
+                context.resume();
+            }
+
+        }, 100);
     },
 
     /**
@@ -320,15 +351,18 @@ var WebAudioSoundManager = new Class({
                 {
                     bodyRemove('touchstart', unlockHandler);
                     bodyRemove('touchend', unlockHandler);
-                    bodyRemove('click', unlockHandler);
+                    bodyRemove('mousedown', unlockHandler);
+                    bodyRemove('mouseup', unlockHandler);
                     bodyRemove('keydown', unlockHandler);
 
                     _this.unlocked = true;
+
                 }, function ()
                 {
                     bodyRemove('touchstart', unlockHandler);
                     bodyRemove('touchend', unlockHandler);
-                    bodyRemove('click', unlockHandler);
+                    bodyRemove('mousedown', unlockHandler);
+                    bodyRemove('mouseup', unlockHandler);
                     bodyRemove('keydown', unlockHandler);
                 });
             }
@@ -338,7 +372,8 @@ var WebAudioSoundManager = new Class({
         {
             body.addEventListener('touchstart', unlockHandler, false);
             body.addEventListener('touchend', unlockHandler, false);
-            body.addEventListener('click', unlockHandler, false);
+            body.addEventListener('mousedown', unlockHandler, false);
+            body.addEventListener('mouseup', unlockHandler, false);
             body.addEventListener('keydown', unlockHandler, false);
         }
     },
@@ -446,6 +481,8 @@ var WebAudioSoundManager = new Class({
                 _this.context = null;
             });
         }
+
+        this.game.events.off(GameEvents.VISIBLE, this.onGameVisible, this);
 
         BaseSoundManager.prototype.destroy.call(this);
     },

@@ -235,11 +235,17 @@ var DisplayList = new Class({
     shutdown: function ()
     {
         var list = this.list;
+        var i = list.length;
 
-        while (list.length)
+        while (i--)
         {
-            list[0].destroy(true);
+            if (list[i])
+            {
+                list[i].destroy(true);
+            }
         }
+
+        list.length = 0;
 
         this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },

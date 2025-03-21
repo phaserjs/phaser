@@ -29,7 +29,7 @@ var TweenFrameData = require('./TweenFrameData');
  * @since 3.0.0
  *
  * @param {Phaser.Tweens.TweenManager} parent - A reference to the Tween Manager that owns this Tween.
- * @param {object[]} targets - An array of targets to be tweened.
+ * @param {object[]} targets - An array of targets to be tweened. This array should not be manipulated outside of this Tween.
  */
 var Tween = new Class({
 
@@ -154,6 +154,16 @@ var Tween = new Class({
          * @since 3.60.0
          */
         this.totalProgress = 0;
+
+        /**
+         * Is this Tween a Number Tween? Number Tweens are a special kind of tween that don't have a target.
+         *
+         * @name Phaser.Tweens.Tween#isNumberTween
+         * @type {boolean}
+         * @default false
+         * @since 3.88.0
+         */
+        this.isNumberTween = false;
     },
 
     /**
@@ -644,6 +654,13 @@ var Tween = new Class({
     {
         if (this.isPendingRemove() || this.isDestroyed())
         {
+            if (this.persist)
+            {
+                this.setFinishedState();
+
+                return false;
+            }
+            
             return true;
         }
         else if (this.paused || this.isFinished())
@@ -781,6 +798,11 @@ var Tween = new Class({
         if (!this.isSeeking)
         {
             this.emit(event, this, this.targets);
+
+            if (!this.callbacks)
+            {
+                return;
+            }
 
             var handler = this.callbacks[callback];
 

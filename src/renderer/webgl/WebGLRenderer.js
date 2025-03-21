@@ -394,6 +394,26 @@ var WebGLRenderer = new Class({
         this.contextRestoredHandler = NOOP;
 
         /**
+         * The previous contextLostHandler that was in use.
+         * This is set when `setContextHandlers` is called.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#previousContextLostHandler
+         * @type {function}
+         * @since 3.85.0
+         */
+        this.previousContextLostHandler = NOOP;
+
+        /**
+         * The previous contextRestoredHandler that was in use.
+         * This is set when `setContextHandlers` is called.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#previousContextRestoredHandler
+         * @type {function}
+         * @since 3.85.0
+         */
+        this.previousContextRestoredHandler = NOOP;
+
+        /**
          * The underlying WebGL context of the renderer.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#gl
@@ -425,7 +445,7 @@ var WebGLRenderer = new Class({
 
         /**
          * Array of strings that indicate which WebGL extensions are supported by the browser.
-         * This is populated in the `boot` method.
+         * This is populated in the `setExtensions` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#supportedExtensions
          * @type {string[]}
@@ -438,6 +458,8 @@ var WebGLRenderer = new Class({
          * If the browser supports the `ANGLE_instanced_arrays` extension, this property will hold
          * a reference to the glExtension for it.
          *
+         * This is populated in the `setExtensions` method.
+         *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#instancedArraysExtension
          * @type {ANGLE_instanced_arrays}
          * @default null
@@ -448,6 +470,8 @@ var WebGLRenderer = new Class({
         /**
          * If the browser supports the `KHR_parallel_shader_compile` extension,
          * this property will hold a reference to the glExtension for it.
+         *
+         * This is populated in the `setExtensions` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#parallelShaderCompileExtension
          * @type {KHR_parallel_shader_compile}
@@ -461,6 +485,8 @@ var WebGLRenderer = new Class({
          * and the `smoothPixelArt` config option is true,
          * this property will hold a reference to the glExtension for it.
          *
+         * This is populated in the `setExtensions` method.
+         *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#standardDerivativesExtension
          * @type {OES_standard_derivatives}
          * @default null
@@ -471,6 +497,8 @@ var WebGLRenderer = new Class({
         /**
          * If the browser supports the `OES_vertex_array_object` extension, this property will hold
          * a reference to the glExtension for it.
+         *
+         * This is populated in the `setExtensions` method.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#vaoExtension
          * @type {OES_vertex_array_object}
@@ -712,116 +740,9 @@ var WebGLRenderer = new Class({
 
         this.gl = gl;
 
-        var _this = this;
+        this.setExtensions();
 
-        //  Load supported extensions
-        var setupExtensions = function ()
-        {
-            var exts = gl.getSupportedExtensions();
-
-            _this.supportedExtensions = exts;
-
-            var angleString = 'ANGLE_instanced_arrays';
-
-            _this.instancedArraysExtension = (exts.indexOf(angleString) > -1) ? gl.getExtension(angleString) : null;
-
-            if (game.config.skipUnreadyShaders)
-            {
-                var parallelShaderCompileString = 'KHR_parallel_shader_compile';
-
-                _this.parallelShaderCompileExtension = (exts.indexOf(parallelShaderCompileString) > -1) ? gl.getExtension(parallelShaderCompileString) : null;
-
-                if (!_this.parallelShaderCompileExtension)
-                {
-                    // Disable the option if the extension is not supported.
-                    game.config.skipUnreadyShaders = false;
-                }
-            }
-
-            var vaoString = 'OES_vertex_array_object';
-
-            _this.vaoExtension = (exts.indexOf(vaoString) > -1) ? gl.getExtension(vaoString) : null;
-
-            if (game.config.smoothPixelArt)
-            {
-                var stdDerivativesString = 'OES_standard_derivatives';
-
-                _this.standardDerivativesExtension = (exts.indexOf(stdDerivativesString) > -1) ? gl.getExtension(stdDerivativesString) : null;
-            }
-        };
-
-        setupExtensions();
-
-        this.contextLostHandler = function (event)
-        {
-            _this.contextLost = true;
-
-            if (console)
-            {
-                console.warn('WebGL Context lost. Renderer disabled');
-            }
-
-            _this.emit(Events.LOSE_WEBGL, _this);
-
-            event.preventDefault();
-        };
-
-        canvas.addEventListener('webglcontextlost', this.contextLostHandler, false);
-
-        this.contextRestoredHandler = function (event)
-        {
-            if (gl.isContextLost())
-            {
-                if (console)
-                {
-                    console.log('WebGL Context restored, but context is still lost');
-                }
-                return;
-            }
-
-            // Restore GL extensions.
-            setupExtensions();
-
-            // Force update the GL state.
-            _this.glWrapper.update(WebGLGlobalParametersFactory.getDefault(_this), true);
-            _this.glTextureUnits.init();
-
-            // Re-enable compressed texture formats.
-            _this.compression = _this.getCompressedTextures();
-
-            // Restore wrapped GL objects.
-            // Order matters, as some wrappers depend on others.
-            var wrapperCreateResource = function (wrapper)
-            {
-                wrapper.createResource();
-            };
-            ArrayEach(_this.glTextureWrappers, wrapperCreateResource);
-            ArrayEach(_this.glBufferWrappers, wrapperCreateResource);
-            ArrayEach(_this.glFramebufferWrappers, wrapperCreateResource);
-            ArrayEach(_this.glProgramWrappers, wrapperCreateResource);
-            ArrayEach(_this.glVAOWrappers, wrapperCreateResource);
-
-            // Restore texture unit assignment.
-            _this.glTextureUnits.bindUnits(_this.glTextureUnits.units, true);
-
-            // Apply resize.
-            _this.resize(_this.game.scale.baseSize.width, _this.game.scale.baseSize.height);
-
-            // Context has been restored.
-
-            _this.contextLost = false;
-
-            if (console)
-            {
-                console.warn('WebGL Context restored. Renderer running again.');
-            }
-
-            _this.emit(Events.RESTORE_WEBGL, _this);
-
-            event.preventDefault();
-        };
-
-        canvas.addEventListener('webglcontextrestored', this.contextRestoredHandler, false);
+        this.setContextHandlers();
 
         //  Set it back into the Game, so developers can access it from there too
         game.context = gl;
@@ -963,6 +884,195 @@ var WebGLRenderer = new Class({
         game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
         this.resize(width, height);
+    },
+
+    /**
+     * Queries the GL context to get the supported extensions.
+     * 
+     * Then sets them into the `supportedExtensions`, `instancedArraysExtension` and `vaoExtension` properties.
+     * 
+     * Called automatically during the `init` method.
+     * 
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setExtensions
+     * @since 3.85.2
+     */
+    setExtensions: function ()
+    {
+        var gl = this.gl;
+        var game = this.game;
+
+        var exts = gl.getSupportedExtensions();
+
+        this.supportedExtensions = exts;
+
+        var angleString = 'ANGLE_instanced_arrays';
+
+        this.instancedArraysExtension = (exts.indexOf(angleString) > -1) ? gl.getExtension(angleString) : null;
+
+        if (game.config.skipUnreadyShaders)
+        {
+            var parallelShaderCompileString = 'KHR_parallel_shader_compile';
+
+            this.parallelShaderCompileExtension = (exts.indexOf(parallelShaderCompileString) > -1) ? gl.getExtension(parallelShaderCompileString) : null;
+
+            if (!this.parallelShaderCompileExtension)
+            {
+                // Disable the option if the extension is not supported.
+                game.config.skipUnreadyShaders = false;
+            }
+        }
+
+        var vaoString = 'OES_vertex_array_object';
+
+        this.vaoExtension = (exts.indexOf(vaoString) > -1) ? gl.getExtension(vaoString) : null;
+
+        if (game.config.smoothPixelArt)
+        {
+            var stdDerivativesString = 'OES_standard_derivatives';
+
+            this.standardDerivativesExtension = (exts.indexOf(stdDerivativesString) > -1) ? gl.getExtension(stdDerivativesString) : null;
+        }
+    },
+
+    /**
+     * Sets the handlers that are called when WebGL context is lost or restored by the browser.
+     * 
+     * The default handlers are referenced via the properties `WebGLRenderer.contextLostHandler` and `WebGLRenderer.contextRestoredHandler`.
+     * By default, these map to the methods `WebGLRenderer.dispatchContextLost` and `WebGLRenderer.dispatchContextRestored`.
+     * 
+     * You can override these handlers with your own via this method.
+     * 
+     * If you do override them, make sure that your handlers invoke the methods `WebGLRenderer.dispatchContextLost` and `WebGLRenderer.dispatchContextRestored` in due course, otherwise the renderer will not be able to restore itself fully.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setContextHandlers
+     * @since 3.85.0
+     *
+     * * @param {function} [contextLost] - Custom handler for responding to the WebGL context lost event. Set as `undefined` to use the default handler.
+     * @param {function} [contextRestored] - Custom handler for responding to the WebGL context restored event. Set as `undefined` to use the default handler.
+     */
+    setContextHandlers: function (contextLost, contextRestored)
+    {
+        if (this.previousContextLostHandler)
+        {
+            this.canvas.removeEventListener('webglcontextlost', this.previousContextLostHandler, false);
+        }
+        if (this.previousContextRestoredHandler)
+        {
+            this.canvas.removeEventListener('webglcontextlost', this.previousContextRestoredHandler, false);
+        }
+
+        if (typeof contextLost === 'function')
+        {
+            this.contextLostHandler = contextLost.bind(this);
+        }
+        else
+        {
+            this.contextLostHandler = this.dispatchContextLost.bind(this);
+        }
+
+        if (typeof contextRestored === 'function')
+        {
+            this.contextRestoredHandler = contextRestored.bind(this);
+        }
+        else
+        {
+            this.contextRestoredHandler = this.dispatchContextRestored.bind(this);
+        }
+
+        this.canvas.addEventListener('webglcontextlost', this.contextLostHandler, false);
+        this.canvas.addEventListener('webglcontextrestored', this.contextRestoredHandler, false);
+
+        this.previousContextLostHandler = this.contextLostHandler;
+        this.previousContextRestoredHandler = this.contextRestoredHandler;
+    },
+
+    /**
+     * This method is called when the WebGL context is lost. By default this is bound to the property `WebGLRenderer.contextLostHandler`.
+     * If you override the context loss handler via the `setContextHandlers` method then be sure to invoke this method in due course.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#dispatchContextLost
+     * @since 3.85.0
+     * 
+     * @param {WebGLContextEvent } event - The WebGL context lost Event.
+     */
+    dispatchContextLost: function (event)
+    {
+        this.contextLost = true;
+
+        if (console)
+        {
+            console.warn('WebGL Context lost. Renderer disabled');
+        }
+
+        this.emit(Events.LOSE_WEBGL, this);
+
+        event.preventDefault();
+    },
+
+    /**
+     * This method is called when the WebGL context is restored. By default this is bound to the property `WebGLRenderer.contextRestoredHandler`.
+     * If you override the context restored handler via the `setContextHandlers` method then be sure to invoke this method in due course.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#dispatchContextRestored
+     * @since 3.85.0
+     * 
+     * @param {WebGLContextEvent } event - The WebGL context restored Event.
+
+     */
+    dispatchContextRestored: function (event)
+    {
+        var gl = this.gl;
+
+        if (gl.isContextLost())
+        {
+            if (console)
+            {
+                console.log('WebGL Context restored, but context is still lost');
+            }
+
+            return;
+        }
+
+        // Restore GL extensions.
+        this.setExtensions();
+
+        // Force update the GL state.
+        this.glWrapper.update(WebGLGlobalParametersFactory.getDefault(this), true);
+        this.glTextureUnits.init();
+
+        // Re-enable compressed texture formats.
+        this.compression = this.getCompressedTextures();
+
+        // Restore wrapped GL objects.
+        // Order matters, as some wrappers depend on others.
+        var wrapperCreateResource = function (wrapper)
+        {
+            wrapper.createResource();
+        };
+        ArrayEach(this.glTextureWrappers, wrapperCreateResource);
+        ArrayEach(this.glBufferWrappers, wrapperCreateResource);
+        ArrayEach(this.glFramebufferWrappers, wrapperCreateResource);
+        ArrayEach(this.glProgramWrappers, wrapperCreateResource);
+        ArrayEach(this.glVAOWrappers, wrapperCreateResource);
+
+        // Restore texture unit assignment.
+        this.glTextureUnits.bindUnits(this.glTextureUnits.units, true);
+
+        // Apply resize.
+        this.resize(this.game.scale.baseSize.width, this.game.scale.baseSize.height);
+
+        // Context has been restored.
+
+        this.contextLost = false;
+
+        if (console)
+        {
+            console.warn('WebGL Context restored. Renderer running again.');
+        }
+
+        this.emit(Events.RESTORE_WEBGL, this);
+
+        event.preventDefault();
     },
 
     /**
@@ -1841,12 +1951,15 @@ var WebGLRenderer = new Class({
      * Clears the base DrawingContext and readies it for use.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#preRender
+     * @fires Phaser.Renderer.Events#PRE_RENDER_CLEAR
      * @fires Phaser.Renderer.Events#PRE_RENDER
      * @since 3.0.0
      */
     preRender: function ()
     {
         if (this.contextLost) { return; }
+
+        this.emit(Events.PRE_RENDER_CLEAR);
 
         // Sync the background color to the DrawingContext.
         var baseDrawingContext = this.baseDrawingContext;

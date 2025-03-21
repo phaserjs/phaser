@@ -507,36 +507,63 @@ var StaticBody = new Class({
 
     /**
      * Changes the Game Object this Body is bound to.
+     * 
      * First it removes its reference from the old Game Object, then sets the new one.
+     * 
+     * This body will be resized to match the frame dimensions of the given Game Object, if it has a texture frame.
      * You can optionally update the position and dimensions of this Body to reflect that of the new Game Object.
      *
      * @method Phaser.Physics.Arcade.StaticBody#setGameObject
      * @since 3.1.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - The new Game Object that will own this Body.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to assign this Body to.
      * @param {boolean} [update=true] - Reposition and resize this Body to match the new Game Object?
+     * @param {boolean} [enable=true] - Automatically enable this Body for physics.
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      *
      * @see Phaser.Physics.Arcade.StaticBody#updateFromGameObject
      */
-    setGameObject: function (gameObject, update)
+    setGameObject: function (gameObject, update, enable)
     {
-        if (gameObject && gameObject !== this.gameObject)
+        if (update === undefined) { update = true; }
+        if (enable === undefined) { enable = true; }
+
+        if (!gameObject || !gameObject.hasTransformComponent)
         {
-            //  Remove this body from the old game object
-            this.gameObject.body = null;
-
-            gameObject.body = this;
-
-            //  Update our reference
-            this.gameObject = gameObject;
+            //  We need a valid Game Object to continue
+            return this;
         }
+
+        var world = this.world;
+
+        if (this.gameObject && this.gameObject.body)
+        {
+            world.disable(this.gameObject);
+
+            //  Disconnect the current Game Object
+            this.gameObject.body = null;
+        }
+
+        if (gameObject.body)
+        {
+            //  Remove the body from the world, but don't disable the Game Object
+            world.disable(gameObject);
+        }
+
+        this.gameObject = gameObject;
+
+        gameObject.body = this;
+
+        //  This will remove the body from the tree, if it's in there and add the new one in
+        this.setSize();
 
         if (update)
         {
             this.updateFromGameObject();
         }
+
+        this.enable = enable;
 
         return this;
     },

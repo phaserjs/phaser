@@ -25,7 +25,6 @@ var ParseTilesets = function (json)
     var imageCollections = [];
     var lastSet = null;
     var stringID;
-    var t;
 
     for (var i = 0; i < json.tilesets.length; i++)
     {
@@ -51,7 +50,7 @@ var ParseTilesets = function (json)
                     props = props || {};
 
                     // Tiled 1.2+
-                    for (t = 0; t < set.tiles.length; t++)
+                    for (var t = 0; t < set.tiles.length; t++)
                     {
                         var tile = set.tiles[t];
 
@@ -184,7 +183,9 @@ var ParseTilesets = function (json)
                 var image = tile.image;
                 var tileId = parseInt(tile.id, 10);
                 var gid = set.firstgid + tileId;
-                newCollection.addImage(gid, image);
+                var width = tile.imagewidth;
+                var height = tile.imageheight;
+                newCollection.addImage(gid, image, width, height);
 
                 maxId = Math.max(tileId, maxId);
             }

@@ -1414,12 +1414,12 @@ var Body = new Class({
      *
      * If this body already has a Game Object, then it will remove itself from that Game Object first.
      *
-     * Only if the given `gameObject` has a `body` property will this Body be assigned to it.
+     * If the given `gameObject` doesn't have a `body` property, it is created and this Body is assigned to it.
      *
      * @method Phaser.Physics.Arcade.Body#setGameObject
      * @since 3.60.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object this Body belongs to.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to assign this Body to.
      * @param {boolean} [enable=true] - Automatically enable this Body for physics.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
@@ -1428,25 +1428,34 @@ var Body = new Class({
     {
         if (enable === undefined) { enable = true; }
 
-        //  Remove from the World
-        this.world.remove(this);
+        if (!gameObject || !gameObject.hasTransformComponent)
+        {
+            //  We need a valid Game Object to continue
+            return this;
+        }
+
+        var world = this.world;
 
         if (this.gameObject && this.gameObject.body)
         {
+            world.disable(this.gameObject);
+
             //  Disconnect the current Game Object
             this.gameObject.body = null;
         }
 
-        this.gameObject = gameObject;
-
         if (gameObject.body)
         {
-            gameObject.body = this;
+            //  Remove the body from the world, but don't disable the Game Object
+            world.disable(gameObject);
         }
 
-        this.setSize();
+        this.gameObject = gameObject;
 
-        this.world.add(this);
+        gameObject.body = this;
+
+        //  This will remove the body from the tree, if it's in there and add the new one in
+        this.setSize();
 
         this.enable = enable;
 

@@ -59,6 +59,7 @@ var TransformMatrix = require('../gameobjects/components/TransformMatrix');
  * @param {string} key - The unique string-based key of this Texture.
  * @param {number} [width=256] - The width of this Dymamic Texture in pixels. Defaults to 256 x 256.
  * @param {number} [height=256] - The height of this Dymamic Texture in pixels. Defaults to 256 x 256.
+ * @param {boolean} [forceEven=true] - Force the given width and height to be rounded to even values. This significantly improves the rendering quality. Set to false if you know you need an odd sized texture.
  */
 var DynamicTexture = new Class({
 
@@ -66,10 +67,11 @@ var DynamicTexture = new Class({
 
     initialize:
 
-    function DynamicTexture (manager, key, width, height)
+    function DynamicTexture (manager, key, width, height, forceEven)
     {
         if (width === undefined) { width = 256; }
         if (height === undefined) { height = 256; }
+        if (forceEven === undefined) { forceEven = true; }
 
         /**
          * The internal data type of this object.
@@ -161,7 +163,7 @@ var DynamicTexture = new Class({
          * You can scroll, zoom and rotate this Camera.
          *
          * @name Phaser.Textures.DynamicTexture#camera
-         * @type {Phaser.Cameras.Scene2D.BaseCamera}
+         * @type {Phaser.Cameras.Scene2D.Camera}
          * @since 3.12.0
          */
         this.camera = new Camera(0, 0, width, height).setScene(manager.game.scene.systemScene, false);
@@ -187,7 +189,7 @@ var DynamicTexture = new Class({
             frame.source.glTexture = this.drawingContext.texture;
         }
 
-        this.setSize(width, height);
+        this.setSize(width, height, forceEven);
     },
 
     /**
@@ -205,12 +207,30 @@ var DynamicTexture = new Class({
      *
      * @param {number} width - The new width of this Dynamic Texture.
      * @param {number} [height=width] - The new height of this Dynamic Texture. If not specified, will be set the same as the `width`.
+     * @param {boolean} [forceEven=true] - Force the given width and height to be rounded to even values. This significantly improves the rendering quality. Set to false if you know you need an odd sized texture.
      *
      * @return {this} This Dynamic Texture.
      */
-    setSize: function (width, height)
+    setSize: function (width, height, forceEven)
     {
         if (height === undefined) { height = width; }
+        if (forceEven === undefined) { forceEven = true; }
+
+        if (forceEven)
+        {
+            width = Math.floor(width);
+            height = Math.floor(height);
+
+            if (width % 2 !== 0)
+            {
+                width++;
+            }
+
+            if (height % 2 !== 0)
+            {
+                height++;
+            }
+        }
 
         var frame = this.get();
         var source = frame.source;
@@ -335,10 +355,22 @@ var DynamicTexture = new Class({
             {
                 case DynamicTextureCommands.CLEAR:
                 {
-                    context.save();
-                    context.setTransform(1, 0, 0, 1, 0, 0);
-                    context.clearRect(0, 0, this.width, this.height);
-                    context.restore();
+                    x = commandBuffer[++index];
+                    y = commandBuffer[++index];
+                    width = commandBuffer[++index];
+                    height = commandBuffer[++index];
+
+                    if (x !== undefined && y !== undefined && width !== undefined && height !== undefined)
+                    {
+                        context.clearRect(x, y, width, height);
+                    }
+                    else
+                    {
+                        context.save();
+                        context.setTransform(1, 0, 0, 1, 0, 0);
+                        context.clearRect(0, 0, this.width, this.height);
+                        context.restore();
+                    }
                     break;
                 }
 
@@ -578,17 +610,22 @@ var DynamicTexture = new Class({
     },
 
     /**
-     * Fully clears this Dynamic Texture, erasing everything from it and resetting it back to
-     * a blank, transparent, texture.
+     * Clears a portion or everything from this Dynamic Texture by erasing it and resetting it back to
+     * a blank, transparent, texture. To clear an area, specify the `x`, `y`, `width` and `height`.
      *
      * @method Phaser.Textures.DynamicTexture#clear
      * @since 3.2.0
      *
+     * @param {number} [x=0] - The left coordinate of the fill rectangle.
+     * @param {number} [y=0] - The top coordinate of the fill rectangle.
+     * @param {number} [width=this.width] - The width of the fill rectangle.
+     * @param {number} [height=this.height] - The height of the fill rectangle.
+     *
      * @return {this} This Dynamic Texture instance.
      */
-    clear: function ()
+    clear: function (x, y, width, height)
     {
-        this.commandBuffer.push(DynamicTextureCommands.CLEAR);
+        this.commandBuffer.push(DynamicTextureCommands.CLEAR, x, y, width, height);
 
         return this;
     },

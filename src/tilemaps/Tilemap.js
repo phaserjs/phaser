@@ -421,7 +421,7 @@ var Tilemap = new Class({
             return null;
         }
 
-        var tileset = this.tilesets[index];
+        var tileset = this.tilesets[ index ];
 
         if (tileset)
         {
@@ -542,7 +542,8 @@ var Tilemap = new Class({
             tileHeight: tileHeight,
             width: width,
             height: height,
-            orientation: this.orientation
+            orientation: this.orientation,
+            hexSideLength: this.hexSideLength
         });
 
         var row;
@@ -609,7 +610,7 @@ var Tilemap = new Class({
             return null;
         }
 
-        var layerData = this.layers[index];
+        var layerData = this.layers[ index ];
 
         // Check for an associated tilemap layer
         if (layerData.tilemapLayer)
@@ -819,7 +820,7 @@ var Tilemap = new Class({
 
         for (var c = 0; c < config.length; c++)
         {
-            var singleConfig = config[c];
+            var singleConfig = config[ c ];
 
             var id = GetFastValue(singleConfig, 'id', null);
             var gid = GetFastValue(singleConfig, 'gid', null);
@@ -833,7 +834,7 @@ var Tilemap = new Class({
             //  Sweep to get all the objects we want to convert in this pass
             for (var s = 0; s < objects.length; s++)
             {
-                obj = objects[s];
+                obj = objects[ s ];
 
                 if (
                     (id === null && gid === null && name === null && type === null) ||
@@ -857,7 +858,7 @@ var Tilemap = new Class({
 
             for (var i = 0; i < toConvert.length; i++)
             {
-                obj = toConvert[i];
+                obj = toConvert[ i ];
 
                 var sprite = new classType(scene);
 
@@ -1248,7 +1249,7 @@ var Tilemap = new Class({
     {
         for (var i = 0; i < location.length; i++)
         {
-            if (location[i].name === name)
+            if (location[ i ].name === name)
             {
                 return i;
             }
@@ -1271,7 +1272,7 @@ var Tilemap = new Class({
     {
         var index = this.getLayerIndex(layer);
 
-        return (index !== null) ? this.layers[index] : null;
+        return (index !== null) ? this.layers[ index ] : null;
     },
 
     /**
@@ -1288,7 +1289,7 @@ var Tilemap = new Class({
     {
         var index = this.getIndex(this.objects, name);
 
-        return (index !== null) ? this.objects[index] : null;
+        return (index !== null) ? this.objects[ index ] : null;
     },
 
     /**
@@ -1525,7 +1526,7 @@ var Tilemap = new Class({
     {
         var index = this.getIndex(this.tilesets, name);
 
-        return (index !== null) ? this.tilesets[index] : null;
+        return (index !== null) ? this.tilesets[ index ] : null;
     },
 
     /**
@@ -1604,7 +1605,7 @@ var Tilemap = new Class({
     layer: {
         get: function ()
         {
-            return this.layers[this.currentLayerIndex];
+            return this.layers[ this.currentLayerIndex ];
         },
 
         set: function (layer)
@@ -1817,9 +1818,9 @@ var Tilemap = new Class({
 
             for (var i = index; i < this.layers.length; i++)
             {
-                if (this.layers[i].tilemapLayer)
+                if (this.layers[ i ].tilemapLayer)
                 {
-                    this.layers[i].tilemapLayer.layerIndex--;
+                    this.layers[ i ].tilemapLayer.layerIndex--;
                 }
             }
 
@@ -1854,7 +1855,7 @@ var Tilemap = new Class({
 
         if (index !== null)
         {
-            layer = this.layers[index];
+            layer = this.layers[ index ];
 
             layer.tilemapLayer.destroy();
 
@@ -1887,9 +1888,9 @@ var Tilemap = new Class({
 
         for (var i = 0; i < layers.length; i++)
         {
-            if (layers[i].tilemapLayer)
+            if (layers[ i ].tilemapLayer)
             {
-                layers[i].tilemapLayer.destroy(false);
+                layers[ i ].tilemapLayer.destroy(false);
             }
         }
 
@@ -1927,7 +1928,7 @@ var Tilemap = new Class({
 
         for (var i = 0; i < tiles.length; i++)
         {
-            var tile = tiles[i];
+            var tile = tiles[ i ];
 
             removed.push(this.removeTileAt(tile.x, tile.y, true, recalculateFaces, tile.tilemapLayer));
 
@@ -2051,7 +2052,7 @@ var Tilemap = new Class({
 
         for (var i = 0; i < layers.length; i++)
         {
-            TilemapComponents.RenderDebug(graphics, styleConfig, layers[i]);
+            TilemapComponents.RenderDebug(graphics, styleConfig, layers[ i ]);
         }
 
         return this;
@@ -2355,18 +2356,18 @@ var Tilemap = new Class({
         //  Update the base tile size on all layers & tiles
         for (var i = 0; i < this.layers.length; i++)
         {
-            this.layers[i].baseTileWidth = tileWidth;
-            this.layers[i].baseTileHeight = tileHeight;
+            this.layers[ i ].baseTileWidth = tileWidth;
+            this.layers[ i ].baseTileHeight = tileHeight;
 
-            var mapData = this.layers[i].data;
-            var mapWidth = this.layers[i].width;
-            var mapHeight = this.layers[i].height;
+            var mapData = this.layers[ i ].data;
+            var mapWidth = this.layers[ i ].width;
+            var mapHeight = this.layers[ i ].height;
 
             for (var row = 0; row < mapHeight; row++)
             {
                 for (var col = 0; col < mapWidth; col++)
                 {
-                    var tile = mapData[row][col];
+                    var tile = mapData[ row ][ col ];
 
                     if (tile !== null)
                     {
@@ -2410,7 +2411,7 @@ var Tilemap = new Class({
         {
             for (var col = 0; col < mapWidth; col++)
             {
-                var tile = mapData[row][col];
+                var tile = mapData[ row ][ col ];
 
                 if (tile !== null)
                 {

@@ -132,7 +132,7 @@ var DOMElement = new Class({
 
         if (!this.parent)
         {
-            throw new Error('No DOM Container');
+            throw new Error('No DOM Container set in game config');
         }
 
         /**
@@ -779,9 +779,8 @@ var DOMElement = new Class({
     },
 
     /**
-     * Internal method that calls `getBoundingClientRect` on the `node` and then sets the bounds width
-     * and height into the `displayWidth` and `displayHeight` properties, and the `clientWidth` and `clientHeight`
-     * values into the `width` and `height` properties respectively.
+     * Internal method that sets the `displayWidth` and `displayHeight` properties, and the `clientWidth` 
+     * and `clientHeight` values into the `width` and `height` properties respectively.
      *
      * This is called automatically whenever a new element is created or set.
      *
@@ -794,13 +793,11 @@ var DOMElement = new Class({
     {
         var node = this.node;
 
-        var nodeBounds = node.getBoundingClientRect();
-
         this.width = node.clientWidth;
         this.height = node.clientHeight;
 
-        this.displayWidth = nodeBounds.width || 0;
-        this.displayHeight = nodeBounds.height || 0;
+        this.displayWidth = this.width * this.scaleX;
+        this.displayHeight = this.height * this.scaleY;
 
         return this;
     },

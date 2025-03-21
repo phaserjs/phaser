@@ -150,12 +150,14 @@ var ImageCollection = new Class({
      *
      * @param {number} gid - The gid of the image in the Image Collection.
      * @param {string} image - The the key of the image in the Image Collection and in the cache.
+     * @param {number} width - The width of the image in the Image Collection.
+     * @param {number} height - The height of the image in the Image Collection.
      *
      * @return {Phaser.Tilemaps.ImageCollection} This ImageCollection object.
      */
-    addImage: function (gid, image)
+    addImage: function (gid, image, width, height)
     {
-        this.images.push({ gid: gid, image: image });
+        this.images.push({ gid: gid, image: image, width: width, height: height });
         this.total++;
 
         return this;

@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../../utils/Class');
+var Earcut = require('../../../geom/polygon/Earcut');
 var GeomRectangle = require('../../../geom/rectangle/Rectangle');
 var Shape = require('../Shape');
 var RectangleRender = require('./RectangleRender');
@@ -53,6 +54,32 @@ var Rectangle = new Class({
 
         Shape.call(this, scene, 'Rectangle', new GeomRectangle(0, 0, width, height));
 
+        /**
+         * The radius of the rectangle if this is set to use rounded corners.
+         * 
+         * Do not modify this property. Instead, call the method `setRounded` to set the
+         * radius of the rounded corners.
+         *
+         * @name Phaser.GameObjects.Shape#radius
+         * @type {number}
+         * @readonly
+         * @since 3.89.0
+         */
+        this.radius = 20;
+
+        /**
+         * Does this Rectangle have rounded corners?
+         * 
+         * Do not modify this property. Instead, call the method `setRounded` to set the
+         * radius state of this rectangle.
+         *
+         * @name Phaser.GameObjects.Shape#isRounded
+         * @type {boolean}
+         * @readonly
+         * @since 3.89.0
+         */
+        this.isRounded = false;
+
         this.setPosition(x, y);
         this.setSize(width, height);
 
@@ -63,6 +90,30 @@ var Rectangle = new Class({
 
         this.updateDisplayOrigin();
         this.updateData();
+    },
+
+    /**
+     * Sets this rectangle to have rounded corners by specifying the radius of the corner.
+     * 
+     * The radius of the rounded corners is limited by the smallest dimension of the rectangle.
+     * 
+     * To disable rounded corners, set the `radius` parameter to 0.
+     *
+     * @method Phaser.GameObjects.Rectangle#setRounded
+     * @since 3.89.0
+     *
+     * @param {number} [radius=16] - The radius of all four rounded corners.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setRounded: function (radius)
+    {
+        if (radius === undefined) { radius = 16; }
+
+        this.radius = radius;
+        this.isRounded = radius > 0;
+
+        return this.updateRoundedData();
     },
 
     /**
@@ -112,6 +163,11 @@ var Rectangle = new Class({
      */
     updateData: function ()
     {
+        if (this.isRounded)
+        {
+            return this.updateRoundedData();
+        }
+
         var path = [];
         var rect = this.geom;
         var line = this._tempLine;
@@ -135,6 +191,92 @@ var Rectangle = new Class({
         this.pathData = path;
 
         return this;
+    },
+
+    /**
+     * Internal method that updates the data and path values when this rectangle is rounded.
+     *
+     * @method Phaser.GameObjects.Rectangle#updateRoundedData
+     * @private
+     * @since 3.89.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    updateRoundedData: function ()
+    {
+        var path = [];
+        var halfWidth = this.width / 2;
+        var halfHeight = this.height / 2;
+        
+        //  Limit max radius to half the smallest dimension
+        var maxRadius = Math.min(halfWidth, halfHeight);
+        var radius = Math.min(this.radius, maxRadius);
+        
+        var x = halfWidth;
+        var y = halfHeight;
+
+        //  The number of segments is based on radius (more segments = larger radius)
+        var segments = Math.max(1, Math.floor(radius / 5));
+
+        //  Create points going clockwise from top-left
+
+        //  Top-left corner
+        this.arcTo(path, x - halfWidth + radius, y - halfHeight + radius, radius, Math.PI, Math.PI * 1.5, segments);
+        
+        //  Top edge and top-right corner
+        path.push(x + halfWidth - radius, y - halfHeight);
+
+        this.arcTo(path, x + halfWidth - radius, y - halfHeight + radius, radius, Math.PI * 1.5, Math.PI * 2, segments);
+        
+        //  Right edge and bottom-right corner
+        path.push(x + halfWidth, y + halfHeight - radius);
+
+        this.arcTo(path, x + halfWidth - radius, y + halfHeight - radius, radius, 0, Math.PI * 0.5, segments);
+        
+        //  Bottom edge and bottom-left corner
+        path.push(x - halfWidth + radius, y + halfHeight);
+
+        this.arcTo(path, x - halfWidth + radius, y + halfHeight - radius, radius, Math.PI * 0.5, Math.PI, segments);
+        
+        //  Left edge (connects back to first point)
+        path.push(x - halfWidth, y - halfHeight + radius);
+        
+        this.pathIndexes = Earcut(path);
+        this.pathData = path;
+        
+        return this;
+    },
+    
+    /**
+     * Internal method placing points around the circumference of a circle for the rounded corners.
+     *
+     * @method Phaser.GameObjects.Rectangle#arcTo
+     * @private
+     * @since 3.89.0
+     * 
+     * @param {number[]} path - The array to push the points into.
+     * @param {number} centerX - The center x coordinate of the circle.
+     * @param {number} centerY - The center y coordinate of the circle.
+     * @param {number} radius - The radius of the circle.
+     * @param {number} startAngle - The starting angle of the arc.
+     * @param {number} endAngle - The ending angle of the arc.
+     * @param {number} segments - The number of segments to create.
+     *
+     * @return {this} This Game Object instance.
+     */
+    arcTo: function (path, centerX, centerY, radius, startAngle, endAngle, segments)
+    {
+        var angleInc = (endAngle - startAngle) / segments;
+        
+        for (var i = 0; i <= segments; i++)
+        {
+            var angle = startAngle + (angleInc * i);
+
+            path.push(
+                centerX + Math.cos(angle) * radius,
+                centerY + Math.sin(angle) * radius
+            );
+        }
     }
 
 });

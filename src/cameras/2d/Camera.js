@@ -509,6 +509,8 @@ var Camera = new Class({
         var zoomX = this.zoomX;
         var zoomY = this.zoomY;
 
+        this.renderRoundPixels = (this.roundPixels && Number.isInteger(zoomX) && Number.isInteger(zoomY));
+
         var originX = width * this.originX;
         var originY = height * this.originY;
 

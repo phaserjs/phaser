@@ -13,7 +13,7 @@
  * @param {array} array - The array to check.
  * @param {number} startIndex - The start index.
  * @param {number} endIndex - The end index.
- * @param {boolean} [throwError=true] - Throw an error if the range is out of bounds.
+ * @param {boolean} [throwError=false] - Throw an error if the range is out of bounds.
  *
  * @return {boolean} True if the range is safe, otherwise false.
  */
@@ -22,7 +22,7 @@ var SafeRange = function (array, startIndex, endIndex, throwError)
     var len = array.length;
 
     if (startIndex < 0 ||
-        startIndex > len ||
+        startIndex >= len ||
         startIndex >= endIndex ||
         endIndex > len)
     {

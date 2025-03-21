@@ -18,6 +18,7 @@ var GameObject = require('../GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetRandom = require('../../utils/array/GetRandom');
 var GravityWell = require('./GravityWell');
+var HasAll = require('../../utils/object/HasAll');
 var HasAny = require('../../utils/object/HasAny');
 var HasValue = require('../../utils/object/HasValue');
 var Inflate = require('../../geom/rectangle/Inflate');
@@ -25,6 +26,7 @@ var List = require('../../structs/List');
 var MergeRect = require('../../geom/rectangle/MergeRect');
 var MergeRight = require('../../utils/object/MergeRight');
 var Particle = require('./Particle');
+var ParticleBounds = require('./ParticleBounds');
 var RandomZone = require('./zones/RandomZone');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleToRectangle = require('../../geom/intersects/RectangleToRectangle');
@@ -34,7 +36,6 @@ var StableSort = require('../../utils/array/StableSort');
 var TransformMatrix = require('../components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
-var ParticleBounds = require('./ParticleBounds');
 
 /**
  * Names of simple configuration properties.
@@ -995,7 +996,7 @@ var ParticleEmitter = new Class({
 
         this.acceleration = (this.accelerationX !== 0 || this.accelerationY !== 0);
 
-        this.moveTo = (this.moveToX !== 0 && this.moveToY !== 0);
+        this.moveTo = HasAll(config, [ 'moveToX', 'moveToY' ]);
 
         //  Special 'speed' override
 

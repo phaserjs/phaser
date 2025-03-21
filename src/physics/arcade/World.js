@@ -1614,7 +1614,8 @@ var World = new Class({
 
                 body1.updateCenter();
             }
-            else if (!body2Immovable || body2.pushable || deadlock)
+            
+            if (!body2Immovable || body2.pushable || deadlock)
             {
                 body2.x += overlapX;
                 body2.y += overlapY;
@@ -1637,7 +1638,8 @@ var World = new Class({
 
                 body1.updateCenter();
             }
-            else if (!body2Immovable || body2.pushable || deadlock)
+
+            if (!body2Immovable || body2.pushable || deadlock)
             {
                 body2.x += overlapX;
                 body2.y += overlapY;
@@ -2225,13 +2227,13 @@ var World = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
      * @param {Phaser.Tilemaps.Tile[]} tiles - An array of Tiles to check for collision against.
-     * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects overlap.
-     * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [overlapCallback] - An optional callback function that is called if the objects overlap.
+     * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `overlapCallback` will only be called if this callback returns `true`.
      * @param {any} [callbackContext] - The context in which to run the callbacks.
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
-    overlapTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext)
+    overlapTiles: function (sprite, tiles, overlapCallback, processCallback, callbackContext)
     {
         if (tiles.length === 0 || (sprite.body && !sprite.body.enable) || (sprite.isBody && !sprite.enable))
         {
@@ -2239,7 +2241,7 @@ var World = new Class({
         }
         else
         {
-            return this.collideSpriteVsTilesHandler(sprite, tiles, collideCallback, processCallback, callbackContext, true, false);
+            return this.collideSpriteVsTilesHandler(sprite, tiles, overlapCallback, processCallback, callbackContext, true, false);
         }
     },
 

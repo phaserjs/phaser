@@ -557,6 +557,22 @@ var BaseCamera = new Class({
          * @webglOnly
          */
         this.forceComposite = false;
+
+        /**
+         * Can this Camera render rounded pixel values?
+         * 
+         * This property is updated during the `preRender` method and should not be
+         * set directly. It is set based on the `roundPixels` property of the Camera
+         * combined with the zoom level. If the zoom is an integer then the WebGL
+         * Renderer can apply rounding during rendering.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#renderRoundPixels
+         * @type {boolean}
+         * @readonly
+         * @default true
+         * @since 3.86.0
+         */
+        this.renderRoundPixels = true;
     },
 
     /**

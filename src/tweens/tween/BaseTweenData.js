@@ -66,13 +66,14 @@ var BaseTweenData = new Class({
 
         /**
          * The duration of the tween in milliseconds, excluding any time required
-         * for yoyo or repeats.
+         * for yoyo or repeats. A tween can never have a duration of zero, so this
+         * will be set to 0.01 if the value is incorrectly less than or equal to zero.
          *
          * @name Phaser.Tweens.BaseTweenData#duration
          * @type {number}
          * @since 3.60.0
          */
-        this.duration = duration;
+        this.duration = (duration <= 0) ? 0.01 : duration;
 
         /**
          * The total calculated duration, in milliseconds, of this TweenData.

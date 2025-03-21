@@ -9,6 +9,7 @@ var GetTilesWithin = require('./GetTilesWithin');
 var Intersects = require('../../geom/intersects/');
 var NOOP = require('../../utils/NOOP');
 var Vector2 = require('../../math/Vector2');
+var CONST = require('../const/ORIENTATION_CONST');
 
 var TriangleToRectangle = function (triangle, rect)
 {
@@ -22,6 +23,8 @@ var pointEnd = new Vector2();
 /**
  * Gets the tiles that overlap with the given shape in the given layer. The shape must be a Circle,
  * Line, Rectangle or Triangle. The shape should be in world coordinates.
+ * 
+ * **Note:** This method currently only works with orthogonal tilemap layers.
  *
  * @function Phaser.Tilemaps.Components.GetTilesWithinShape
  * @since 3.0.0
@@ -35,6 +38,12 @@ var pointEnd = new Vector2();
  */
 var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
 {
+    if (layer.orientation !== CONST.ORTHOGONAL)
+    {
+        console.warn('GetTilesWithinShape only works with orthogonal tilemaps');
+        return [];
+    }
+
     if (shape === undefined) { return []; }
 
     // intersectTest is a function with parameters: shape, rect

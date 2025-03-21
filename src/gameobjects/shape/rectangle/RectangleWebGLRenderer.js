@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var FillPathWebGL = require('../FillPathWebGL');
 var GetCalcMatrix = require('../../GetCalcMatrix');
 var StrokePathWebGL = require('../StrokePathWebGL');
 var Utils = require('../../../renderer/webgl/Utils');
@@ -39,19 +40,26 @@ var RectangleWebGLRenderer = function (renderer, src, drawingContext, parentMatr
 
     if (src.isFilled)
     {
-        var fillTintColor = Utils.getTintAppendFloatAlpha(src.fillColor, src.fillAlpha * alpha);
-
-        (customRenderNodes.FillRect || defaultRenderNodes.FillRect).run(
-            drawingContext,
-            calcMatrix,
-            submitter,
-            -dx, -dy,
-            src.width, src.height,
-            fillTintColor,
-            fillTintColor,
-            fillTintColor,
-            fillTintColor
-        );
+        if (src.isRounded)
+        {
+            FillPathWebGL(drawingContext, submitter, calcMatrix, src, alpha, dx, dy);
+        }
+        else
+        {
+            var fillTintColor = Utils.getTintAppendFloatAlpha(src.fillColor, src.fillAlpha * alpha);
+    
+            (customRenderNodes.FillRect || defaultRenderNodes.FillRect).run(
+                drawingContext,
+                calcMatrix,
+                submitter,
+                -dx, -dy,
+                src.width, src.height,
+                fillTintColor,
+                fillTintColor,
+                fillTintColor,
+                fillTintColor
+            );
+        }
     }
 
     if (src.isStroked)

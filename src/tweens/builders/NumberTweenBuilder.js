@@ -9,6 +9,7 @@ var Defaults = require('../tween/Defaults');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetBoolean = require('./GetBoolean');
 var GetEaseFunction = require('./GetEaseFunction');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var GetNewValue = require('./GetNewValue');
 var GetValue = require('../../utils/object/GetValue');
 var GetValueOp = require('./GetValueOp');
@@ -55,14 +56,14 @@ var NumberTweenBuilder = function (parent, config, defaults)
     //
     //  tween.getValue()
 
-    var from = GetValue(config, 'from', 0);
-    var to = GetValue(config, 'to', 1);
+    var from = GetFastValue(config, 'from', 0);
+    var to = GetFastValue(config, 'to', 1);
 
     var targets = [ { value: from } ];
 
-    var delay = GetValue(config, 'delay', defaults.delay);
-    var easeParams = GetValue(config, 'easeParams', defaults.easeParams);
-    var ease = GetValue(config, 'ease', defaults.ease);
+    var delay = GetFastValue(config, 'delay', defaults.delay);
+    var easeParams = GetFastValue(config, 'easeParams', defaults.easeParams);
+    var ease = GetFastValue(config, 'ease', defaults.ease);
 
     var ops = GetValueOp('value', to);
 
@@ -74,13 +75,13 @@ var NumberTweenBuilder = function (parent, config, defaults)
         ops.getEnd,
         ops.getStart,
         ops.getActive,
-        GetEaseFunction(GetValue(config, 'ease', ease), GetValue(config, 'easeParams', easeParams)),
+        GetEaseFunction(GetFastValue(config, 'ease', ease), GetFastValue(config, 'easeParams', easeParams)),
         GetNewValue(config, 'delay', delay),
-        GetValue(config, 'duration', defaults.duration),
+        GetFastValue(config, 'duration', defaults.duration),
         GetBoolean(config, 'yoyo', defaults.yoyo),
-        GetValue(config, 'hold', defaults.hold),
-        GetValue(config, 'repeat', defaults.repeat),
-        GetValue(config, 'repeatDelay', defaults.repeatDelay),
+        GetFastValue(config, 'hold', defaults.hold),
+        GetFastValue(config, 'repeat', defaults.repeat),
+        GetFastValue(config, 'repeatDelay', defaults.repeatDelay),
         false,
         false
     );
@@ -93,6 +94,7 @@ var NumberTweenBuilder = function (parent, config, defaults)
     tween.loopDelay = Math.round(GetAdvancedValue(config, 'loopDelay', 0));
     tween.paused = GetBoolean(config, 'paused', false);
     tween.persist = GetBoolean(config, 'persist', false);
+    tween.isNumberTween = true;
 
     //  Set the Callbacks
     tween.callbackScope = GetValue(config, 'callbackScope', tween);

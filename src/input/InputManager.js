@@ -46,7 +46,7 @@ var InputManager = new Class({
     {
         /**
          * The Game instance that owns the Input Manager.
-         * A Game only maintains on instance of the Input Manager at any time.
+         * A Game only maintains one instance of the Input Manager at any time.
          *
          * @name Phaser.Input.InputManager#game
          * @type {Phaser.Game}
