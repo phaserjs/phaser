@@ -111,7 +111,8 @@ var WebAudioSoundManager = new Class({
         var context = this.context;
 
         //  setTimeout to avoid weird audio artifacts (thanks Apple)
-        window.setTimeout(function () {
+        window.setTimeout(function ()
+        {
 
             if (context)
             {
@@ -429,11 +430,12 @@ var WebAudioSoundManager = new Class({
     {
         var listener = this.context.listener;
 
+        var x = GetFastValue(this.listenerPosition, 'x', null);
+        var y = GetFastValue(this.listenerPosition, 'y', null);
+
+
         if (listener && listener.positionX !== undefined)
         {
-            var x = GetFastValue(this.listenerPosition, 'x', null);
-            var y = GetFastValue(this.listenerPosition, 'y', null);
-
             if (x && x !== this._spatialx)
             {
                 this._spatialx = listener.positionX.value = x;
@@ -442,6 +444,24 @@ var WebAudioSoundManager = new Class({
             {
                 this._spatialy = listener.positionY.value = y;
             }
+        }
+
+        // Firefox doesn't currently implement positionX, positionY and positionZ properties on AudioListener,
+        // falling back on AudioListener.prototype.setPosition() method. @see https://developer.mozilla.org/en-US/docs/Web/API/AudioListener/setPosition
+        else if (listener)
+        {
+            if (x && x !== this._spatialx)
+            {
+                this._spatialx = x;
+            }
+            if (y && y !== this._spatialy)
+            {
+                this._spatialy = y;
+            }
+
+            var z = GetFastValue(listener, 'z', 0);
+
+            listener.setPosition(this._spatialx || 0, this._spatialy || 0, z);
         }
 
         BaseSoundManager.prototype.update.call(this, time, delta);
