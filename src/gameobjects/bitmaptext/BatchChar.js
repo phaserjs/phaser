@@ -46,17 +46,36 @@ var BatchChar = function (drawingContext, submitterNode, src, char, glyph, offse
     var xw = x + char.w;
     var yh = y + char.h;
 
-    tempTransformData.quad[0] = calcMatrix.getX(x, y);
-    tempTransformData.quad[1] = calcMatrix.getY(x, y);
+    var a = calcMatrix.a;
+    var b = calcMatrix.b;
+    var c = calcMatrix.c;
+    var d = calcMatrix.d;
+    var e = calcMatrix.e;
+    var f = calcMatrix.f;
 
-    tempTransformData.quad[2] = calcMatrix.getX(x, yh);
-    tempTransformData.quad[3] = calcMatrix.getY(x, yh);
+    var tx0 = x * a + y * c + e;
+    var ty0 = x * b + y * d + f;
 
-    tempTransformData.quad[4] = calcMatrix.getX(xw, yh);
-    tempTransformData.quad[5] = calcMatrix.getY(xw, yh);
+    var tx1 = x * a + yh * c + e;
+    var ty1 = x * b + yh * d + f;
 
-    tempTransformData.quad[6] = calcMatrix.getX(xw, y);
-    tempTransformData.quad[7] = calcMatrix.getY(xw, y);
+    var tx2 = xw * a + yh * c + e;
+    var ty2 = xw * b + yh * d + f;
+
+    var tx3 = xw * a + y * c + e;
+    var ty3 = xw * b + y * d + f;
+
+    tempTransformData.quad[0] = tx0;
+    tempTransformData.quad[1] = ty0;
+
+    tempTransformData.quad[2] = tx1;
+    tempTransformData.quad[3] = ty1;
+
+    tempTransformData.quad[4] = tx2;
+    tempTransformData.quad[5] = ty2;
+
+    tempTransformData.quad[6] = tx3;
+    tempTransformData.quad[7] = ty3;
 
     submitterNode.run(
         drawingContext,
