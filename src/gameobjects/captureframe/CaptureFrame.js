@@ -126,6 +126,37 @@ var CaptureFrame = new Class({
         {
             return DefaultQuadNodes;
         }
+    },
+
+    /**
+     * Set the alpha value of this CaptureFrame.
+     * This has no effect and is only present for compatibility with other Game Objects.
+     *
+     * @method Phaser.GameObjects.CaptureFrame#setAlpha
+     * @since 4.0.0
+     * @webglOnly
+     * @param {number} alpha - The alpha value (not used).
+     * @returns {this}
+     */
+    setAlpha: function (alpha)
+    {
+        return this;
+    },
+
+    /**
+     * Set the scroll factor of this CaptureFrame.
+     * This has no effect and is only present for compatibility with other Game Objects.
+     *
+     * @method Phaser.GameObjects.CaptureFrame#setScrollFactor
+     * @since 4.0.0
+     * @webglOnly
+     * @param {number} x - The horizontal scroll factor (not used).
+     * @param {number} y - The vertical scroll factor (not used).
+     * @returns {this}
+     */
+    setScrollFactor: function (x, y)
+    {
+        return this;
     }
 });
 
