@@ -343,7 +343,7 @@ var Texture = new Class({
         var maxX = baseFrame.cutX + baseFrame.cutWidth;
         var maxY = baseFrame.cutY + baseFrame.cutHeight;
 
-        for (var i = 1; i < frames.length; i++)
+        for (var i = 1; i < frames.length - 1; i++)
         {
             var frame = frames[i];
 
