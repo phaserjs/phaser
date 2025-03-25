@@ -19,8 +19,8 @@ var GridRender = require('./GridRender');
  * grid as well as the width and height of the grid cells. You can set a fill color for each grid
  * cell as well as an alternate fill color. When the alternate fill color is set then the grid
  * cells will alternate the fill colors as they render, creating a chess-board effect. You can
- * also optionally have an outline fill color. If set, this draws lines between the grid cells
- * in the given color. If you specify an outline color with an alpha of zero, then it will draw
+ * also optionally have a stroke fill color. If set, this draws lines between the grid cells
+ * in the given color. If you specify a stroke color with an alpha of zero, then it will draw
  * the cells spaced out, but without the lines between them.
  *
  * @class Grid
@@ -38,8 +38,8 @@ var GridRender = require('./GridRender');
  * @param {number} [cellHeight=32] - The height of one cell in the grid.
  * @param {number} [fillColor] - The color the grid cells will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the grid cells will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
- * @param {number} [outlineFillColor] - The color of the lines between the grid cells. See the `setOutline` method.
- * @param {number} [outlineFillAlpha] - The alpha of the lines between the grid cells.
+ * @param {number} [strokeFillColor] - The color of the lines between the grid cells. See the `setStrokeStyle` method.
+ * @param {number} [strokeFillAlpha] - The alpha of the lines between the grid cells.
  */
 var Grid = new Class({
 
@@ -51,7 +51,7 @@ var Grid = new Class({
 
     initialize:
 
-    function Grid (scene, x, y, width, height, cellWidth, cellHeight, fillColor, fillAlpha, outlineFillColor, outlineFillAlpha)
+    function Grid (scene, x, y, width, height, cellWidth, cellHeight, fillColor, fillAlpha, strokeFillColor, strokeFillAlpha)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -151,9 +151,9 @@ var Grid = new Class({
 
         this.setFillStyle(fillColor, fillAlpha);
 
-        if (outlineFillColor !== undefined)
+        if (strokeFillColor !== undefined)
         {
-            this.setOutlineStyle(outlineFillColor, outlineFillAlpha);
+            this.setStrokeStyle(strokeFillColor, strokeFillAlpha);
         }
 
         this.updateDisplayOrigin();
@@ -164,7 +164,7 @@ var Grid = new Class({
      *
      * If this method is called with no values then alternating grid cells will not be rendered in a different color.
      *
-     * Also see the `setOutlineStyle` and `setFillStyle` methods.
+     * Also see the `setStrokeStyle` and `setFillStyle` methods.
      *
      * This call can be chained.
      *
