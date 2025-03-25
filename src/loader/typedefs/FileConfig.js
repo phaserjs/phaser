@@ -3,6 +3,7 @@
  * @since 3.0.0
  *
  * @property {string} type - The name of the Loader method that loads this file, e.g., 'image', 'json', 'spritesheet'.
+ * @property {(Phaser.Cache.BaseCache|false)} cache - Reference to the cache instance responsible for this file type. Or false if you don't need to retrieve files from your game; e.g.: Font files tracked by the browser.
  * @property {string} key - Unique cache key (unique within its file type)
  * @property {object|string} [url] - The URL of the file, not including baseURL.
  * @property {string} [path] - The path of the file, not including the baseURL.
