@@ -8,6 +8,22 @@ var Class = require('../../../utils/Class');
 var Merge = require('../../../utils/object/Merge');
 var RenderNode = require('./RenderNode');
 
+/**
+ * @classdesc
+ * RebindContext is a RenderNode which sets the WebGL context to
+ * a default state, resetting important properties
+ * that might have been changed by an external renderer.
+ *
+ * This is used by the Extern GameObject after rendering.
+ * It is the counterpart of YieldContext.
+ *
+ * @class RebindContext
+ * @memberof Phaser.Renderer.WebGL.RenderNodes
+ * @constructor
+ * @since 4.0.0
+ * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
+ * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
+ */
 var RebindContext = new Class({
     Extends: RenderNode,
 
@@ -54,6 +70,9 @@ var RebindContext = new Class({
 
         // Rebind the entire WebGL state, setting resources to null.
         glWrapper.update(Merge(this._state, glWrapper.state), true);
+
+        // Unbind all texture units, forcing rebind on use.
+        renderer.glTextureUnits.unbindAllUnits();
 
         this.onRunEnd(displayContext);
     }

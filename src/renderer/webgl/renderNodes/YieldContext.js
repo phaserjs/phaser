@@ -13,6 +13,7 @@ var RenderNode = require('./RenderNode');
  * ready for another renderer.
  *
  * This is used by the Extern Game Object to prepare the WebGL context for custom rendering.
+ * It is the counterpart of RebindContext.
  *
  * @class YieldContext
  * @memberof Phaser.Renderer.WebGL.RenderNodes
