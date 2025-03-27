@@ -58,9 +58,14 @@ var YieldContext = new Class({
     {
         this.onRunBegin(displayContext);
 
-        this.manager.startStandAloneRender();
+        var manager = this.manager;
+        var renderer = manager.renderer;
 
-        this.manager.renderer.glWrapper.update(this._state);
+        manager.startStandAloneRender();
+
+        renderer.glWrapper.update(this._state);
+
+        renderer.glTextureUnits.unbindAllUnits();
 
         this.onRunEnd(displayContext);
     }
