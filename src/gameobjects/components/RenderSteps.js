@@ -50,8 +50,8 @@ if (typeof WEBGL_RENDERER)
          * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
          * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - The parent matrix of the Game Object, if it has one.
          * @param {number} [renderStep=0] - Which step of the rendering process should be run?
-         * @param {Phaser.GameObjects.GameObject[]} [displayList] - The display list which is currently being rendered.
-         * @param {number} [displayListIndex] - The index of the Game Object within the display list.
+         * @param {Phaser.GameObjects.GameObject[]} [displayList] - The display list which is currently being rendered. If not provided, it will be created with the Game Object.
+         * @param {number} [displayListIndex=0] - The index of the Game Object within the display list.
          */
         renderWebGLStep: function (
             renderer,
@@ -73,6 +73,16 @@ if (typeof WEBGL_RENDERER)
             if (!fn)
             {
                 return;
+            }
+
+            if (!displayList)
+            {
+                displayList = [ gameObject ];
+                displayListIndex = 0;
+            }
+            else if (displayListIndex === undefined)
+            {
+                displayListIndex = 0;
             }
 
             fn(renderer, gameObject, drawingContext, parentMatrix, renderStep, displayList, displayListIndex);

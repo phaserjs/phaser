@@ -20,8 +20,11 @@ var CONST = require('../../const');
  * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
  * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+ * @param {number} renderStep - The index of this function in the Game Object's list of render processes. Used to support multiple rendering functions.
+ * @param {Phaser.GameObjects.GameObject[]} displayList - The display list which is currently being rendered.
+ * @param {number} displayListIndex - The index of the Game Object within the display list.
  */
-var ContainerWebGLRenderer = function (renderer, container, drawingContext, parentMatrix)
+var ContainerWebGLRenderer = function (renderer, container, drawingContext, parentMatrix, renderStep, displayList, displayListIndex)
 {
     var camera = drawingContext.camera;
     camera.addToRenderList(container);
@@ -118,7 +121,7 @@ var ContainerWebGLRenderer = function (renderer, container, drawingContext, pare
         child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
 
         //  Render
-        child.renderWebGLStep(renderer, child, currentContext, transformMatrix);
+        child.renderWebGLStep(renderer, child, currentContext, transformMatrix, renderStep, displayList, displayListIndex);
 
         //  Restore original values
 
