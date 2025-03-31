@@ -436,6 +436,9 @@ var DrawingContext = new Class({
      */
     setScissorBox: function (x, y, width, height)
     {
+        // Convert Y coordinate to WebGL space.
+        y = this.height - y - height;
+
         this.state.scissor.box = [ x, y, width, height ];
     },
 
