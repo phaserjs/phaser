@@ -50,12 +50,12 @@ var GetCalcMatrix = function (src, camera, parentMatrix, ignoreCameraPosition)
     }
 
     camMatrix.copyWithScrollFactorFrom(
-        camera.matrix,
+        ignoreCameraPosition ? camera.matrix : camera.matrixCombined,
         camera.scrollX, camera.scrollY,
         src.scrollFactorX, src.scrollFactorY
     );
 
-    camExternalMatrix.multiply(camMatrix, calcMatrix);
+    calcMatrix.copyFrom(camMatrix);
 
     if (parentMatrix)
     {

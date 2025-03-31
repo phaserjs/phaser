@@ -53,7 +53,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMat
 
     var submitterNode = src.customRenderNodes.Submitter || src.defaultRenderNodes.Submitter;
 
-    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, true).calc;
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, !drawingContext.useCanvas).calc;
 
     var charColors = src.charColors;
 

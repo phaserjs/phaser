@@ -27,7 +27,7 @@ var ExternWebGLRenderer = function (renderer, src, drawingContext, parentMatrix,
 {
     renderer.renderNodes.getNode('YieldContext').run(drawingContext);
 
-    var calcMatrix = GetCalcMatrix(src, drawingContext.camera, parentMatrix).calc;
+    var calcMatrix = GetCalcMatrix(src, drawingContext.camera, parentMatrix, !drawingContext.useCanvas).calc;
 
     src.render.call(src, renderer, drawingContext, calcMatrix, displayList, displayListIndex);
 

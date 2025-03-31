@@ -608,6 +608,34 @@ var Camera = new Class({
     },
 
     /**
+     * Returns the view matrix of the camera. This is used internally.
+     *
+     * This is `matrix` if the camera is intended to render to a framebuffer,
+     * and `matrixCombined` otherwise.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#getViewMatrix
+     * @webglonly
+     * @since 4.0.0
+     * @param {boolean} [forceComposite=false] - If `true`, the view matrix will always be `matrix`. This is typically used when rendering to a framebuffer, so the external matrix is irrelevant.
+     * @returns {Phaser.GameObjects.Components.TransformMatrix} The view matrix of the camera.
+     */
+    getViewMatrix: function (forceComposite)
+    {
+        if (
+            forceComposite || this.forceComposite ||
+            this.filters.external.length > 0 ||
+            this.filters.internal.length > 0
+        )
+        {
+            return this.matrix;
+        }
+        else
+        {
+            return this.matrixCombined;
+        }
+    },
+
+    /**
      * Sets the linear interpolation value to use when following a target.
      *
      * The default values of 1 means the camera will instantly snap to the target coordinates.

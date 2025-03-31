@@ -129,7 +129,7 @@ var TransformerImage = new Class({
         var camera = drawingContext.camera;
         var spriteMatrix = this._spriteMatrix;
         var calcMatrix = this._calcMatrix.copyWithScrollFactorFrom(
-            camera.matrix,
+            camera.getViewMatrix(!drawingContext.useCanvas),
             camera.scrollX, camera.scrollY,
             gameObject.scrollFactorX, gameObject.scrollFactorY
         );

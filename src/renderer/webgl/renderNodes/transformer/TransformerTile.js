@@ -53,7 +53,7 @@ var TransformerTile = new Class({
 
         // Get view matrix.
         calcMatrix.copyWithScrollFactorFrom(
-            camera.matrix,
+            camera.getViewMatrix(!drawingContext.useCanvas),
             camera.scrollX, camera.scrollY,
             gameObject.scrollFactorX, gameObject.scrollFactorY
         );

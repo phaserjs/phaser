@@ -84,7 +84,7 @@ var TransformerTileSprite = new Class({
         var spriteMatrix = this._spriteMatrix;
 
         calcMatrix.copyWithScrollFactorFrom(
-            camera.matrix,
+            camera.getViewMatrix(!drawingContext.useCanvas),
             camera.scrollX, camera.scrollY,
             gameObject.scrollFactorX, gameObject.scrollFactorY
         );

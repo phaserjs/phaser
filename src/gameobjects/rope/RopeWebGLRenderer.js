@@ -30,7 +30,7 @@ var RopeWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
     var camera = drawingContext.camera;
     camera.addToRenderList(src);
 
-    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, true).calc;
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, !drawingContext.useCanvas).calc;
 
     if (src.dirty)
     {

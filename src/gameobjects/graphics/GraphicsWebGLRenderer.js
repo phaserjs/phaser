@@ -77,7 +77,7 @@ var GraphicsWebGLRenderer = function (renderer, src, drawingContext, parentMatri
     var camera = currentContext.camera;
     camera.addToRenderList(src);
 
-    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, true).calc;
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, !drawingContext.useCanvas).calc;
 
     var currentMatrix = tempMatrix.loadIdentity();
 

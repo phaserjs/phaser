@@ -166,7 +166,7 @@ var Camera = new Class({
         }
 
         // Draw children.
-        this.listCompositorNode.run(currentContext, children, (useFramebuffers || parentIsIdentity) ? null : parentTransformMatrix, renderStep);
+        this.listCompositorNode.run(currentContext, children, null, renderStep);
 
         // Draw camera post effects.
 

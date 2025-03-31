@@ -341,7 +341,7 @@ if (typeof WEBGL_RENDERER)
             // Get transform.
             var transformMatrix = gameObject._filtersMatrix;
             var cameraMatrix = gameObject._filtersViewMatrix.copyWithScrollFactorFrom(
-                camera.matrix,
+                camera.getViewMatrix(!drawingContext.useCanvas),
                 camera.scrollX, camera.scrollY,
                 gameObject.scrollFactorX, gameObject.scrollFactorY
             );

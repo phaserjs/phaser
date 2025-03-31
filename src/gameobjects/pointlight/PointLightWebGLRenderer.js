@@ -25,7 +25,7 @@ var PointLightWebGLRenderer = function (renderer, src, drawingContext, parentMat
     var camera = drawingContext.camera;
     camera.addToRenderList(src);
 
-    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, true).calc;
+    var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, !drawingContext.useCanvas).calc;
 
     var width = src.width;
     var height = src.height;

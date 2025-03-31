@@ -43,7 +43,7 @@ var BlitterWebGLRenderer = function (renderer, src, drawingContext, parentMatrix
     camera.addToRenderList(src);
 
     var calcMatrix = tempMatrix.copyWithScrollFactorFrom(
-        camera.matrix,
+        camera.getViewMatrix(!drawingContext.useCanvas),
         camera.scrollX, camera.scrollY,
         src.scrollFactorX, src.scrollFactorY
     );
