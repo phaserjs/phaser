@@ -96,7 +96,7 @@ var LayerWebGLRenderer = function (renderer, layer, drawingContext, parentMatrix
         child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
 
         //  Render
-        child.renderWebGLStep(renderer, child, currentContext, null, renderStep, displayList, displayListIndex);
+        child.renderWebGLStep(renderer, child, currentContext, undefined, undefined, displayList, displayListIndex);
 
         //  Restore original values
         child.setAlpha(childAlphaTopLeft, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);

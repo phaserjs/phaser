@@ -899,6 +899,12 @@ var DynamicTexture = new Class({
 
         if (config.camera)
         {
+            // Ensure that parent transform exists.
+            if (!parentTransform)
+            {
+                parentTransform = new TransformMatrix();
+            }
+
             // Ensure that camera transforms are applied.
             config.camera.matrixExternal.multiply(parentTransform, parentTransform);
         }
