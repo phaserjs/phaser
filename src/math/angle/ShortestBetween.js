@@ -15,6 +15,8 @@
  * greater than 0 then it's a counter-clockwise rotation, if < 0 then it's
  * a clockwise rotation.
  *
+ * For calculation in radians use {@link Phaser.Math.Angle.GetShortestDistance} instead.
+ *
  * @function Phaser.Math.Angle.ShortestBetween
  * @since 3.0.0
  *
