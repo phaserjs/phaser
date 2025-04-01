@@ -41,7 +41,7 @@ var WebGLSnapshot = function (sourceContext, config)
     {
         var pixel = new Uint8Array(4);
 
-        var destY = (isFramebuffer) ? y : bufferHeight - y;
+        var destY = bufferHeight - y;
 
         gl.readPixels(x, destY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
 
@@ -69,9 +69,8 @@ var WebGLSnapshot = function (sourceContext, config)
         {
             for (var px = 0; px < width; px++)
             {
-                var sourceIndex = (py * width + px) * 4;
-
-                var destIndex = (isFramebuffer) ? total - ((py * width + (width - px)) * 4) : (py * width + px) * 4;
+                var sourceIndex = ((height - py - 1) * width + px) * 4;
+                var destIndex = (py * width + px) * 4;
 
                 var r = pixels[sourceIndex + 0];
                 var g = pixels[sourceIndex + 1];
