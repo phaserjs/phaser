@@ -595,6 +595,74 @@ if (typeof WEBGL_RENDERER)
             filterCamera.setSize(width, height);
 
             return this;
+        },
+
+        /**
+         * Set whether filters should be updated every frame.
+         * Sets the `filtersAutoFocus` property.
+         *
+         * @method Phaser.GameObjects.Components.Filters#setFiltersAutoFocus
+         * @webglOnly
+         * @since 4.0.0
+         * @param {boolean} value - Whether filters should be updated every frame.
+         * @returns {this}
+         */
+        setFiltersAutoFocus: function (value)
+        {
+            this.filtersAutoFocus = value;
+
+            return this;
+        },
+
+        /**
+         * Set whether the filters should focus on the context.
+         * Sets the `filtersFocusContext` property.
+         *
+         * @method Phaser.GameObjects.Components.Filters#setFiltersFocusContext
+         * @webglOnly
+         * @since 4.0.0
+         * @param {boolean} value - Whether the filters should focus on the context.
+         * @returns {this}
+         */
+        setFiltersFocusContext: function (value)
+        {
+            this.filtersFocusContext = value;
+
+            return this;
+        },
+
+        /**
+         * Set whether the filters should always draw to a framebuffer.
+         * Sets the `filtersForceComposite` property.
+         *
+         * @method Phaser.GameObjects.Components.Filters#setFiltersForceComposite
+         * @webglOnly
+         * @since 4.0.0
+         * @param {boolean} value - Whether the object should always draw to a framebuffer, even if there are no active filters.
+         * @returns {this}
+         */
+        setFiltersForceComposite: function (value)
+        {
+            this.filtersForceComposite = value;
+
+            return this;
+        },
+
+        /**
+         * Set whether the filters should be rendered.
+         * Sets the `renderFilters` property.
+         *
+         * @method Phaser.GameObjects.Components.Filters#setRenderFilters
+         * @webglOnly
+         * @since 4.0.0
+         * @param {boolean} value - Whether the filters should be rendered.
+         * @returns {this}
+         */
+        setRenderFilters: function (value)
+        {
+            this.renderFilters = value;
+
+            return this;
         }
     };
 }
