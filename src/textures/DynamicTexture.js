@@ -625,6 +625,11 @@ var DynamicTexture = new Class({
      */
     clear: function (x, y, width, height)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
+
         this.commandBuffer.push(DynamicTextureCommands.CLEAR, x, y, width, height);
 
         return this;
