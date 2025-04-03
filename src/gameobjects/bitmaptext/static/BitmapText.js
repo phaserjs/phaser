@@ -853,6 +853,34 @@ var BitmapText = new Class({
     },
 
     /**
+     * Sets the display size of this BitmapText Game Object.
+     *
+     * Calling this will adjust the scale.
+     *
+     * @method Phaser.GameObjects.BitmapText#setDisplaySize
+     * @since 3.61.0
+     *
+     * @param {number} width - The width of this BitmapText Game Object.
+     * @param {number} height - The height of this BitmapText Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setDisplaySize: function (displayWidth, displayHeight)
+    {
+        this.setScale(1, 1);
+
+        this.getTextBounds(false);
+
+        var scaleX = displayWidth / this.width;
+
+        var scaleY = displayHeight / this.height;
+
+        this.setScale(scaleX, scaleY);
+
+        return this;
+    },
+
+    /**
      * Controls the alignment of each line of text in this BitmapText object.
      *
      * Only has any effect when this BitmapText contains multiple lines of text, split with carriage-returns.
@@ -1069,6 +1097,17 @@ var BitmapText = new Class({
      */
     displayWidth: {
 
+        set: function(value)
+        {
+            this.setScaleX(1);
+
+            this.getTextBounds(false);
+
+            var scale = value / this.width;
+
+            this.setScaleX(scale);
+        },
+
         get: function ()
         {
             return this.width;
@@ -1089,6 +1128,17 @@ var BitmapText = new Class({
      * @since 3.60.0
      */
     displayHeight: {
+
+        set: function(value)
+        {
+            this.setScaleY(1);
+
+            this.getTextBounds(false);
+
+            var scale = value / this.height;
+
+            this.setScaleY(scale);
+        },
 
         get: function ()
         {
