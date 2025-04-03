@@ -5,6 +5,10 @@
 * `GameObjects.Rectangle.setRounded` is a new method that will allow the Rectangle Shape Game Object to have rounded corners. Pass the radius to set for the corners, or pass a value of zero to disable rounded corners.
 * `GameObjects.Rectangle.isRounded` is a new read-only boolean that can be used to determine if the Rectangle Shape Game Object has rounded corners, or not.
 * `GameObjects.Rectangle.radius` is a new read-only number that is the size of the rounded corners. Do not set directly, instead use the method `setRounded`.
+* Added `Phaser.Math.Angle.GetClockwiseDistance()` to get the shortest nonnegative angular distance between two angles. PR #7092 (thanks @samme)
+* Added `Phaser.Math.Angle.GetCounterClockwiseDistance()` gets the shortest nonpositive angular distance between two angles. PR #7092 (thanks @samme)
+* Added `Phaser.Math.Angle.GetShortestDistance()` gets the shortest signed angular distance between two angles. (This is like `Phaser.Math.Angle.ShortestBetween()` but in radians.) PR #7092 (thanks @samme)
+
 
 ## Updates
 
