@@ -4,10 +4,9 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var MATH_CONST = require('../const');
 var NormalizeAngle = require('./Normalize');
 
-var TAU = MATH_CONST.TAU;
+var TAU = 2 * Math.PI;
 
 /**
  * Gets the shortest nonpositive angular distance from angle1 to angle2.
