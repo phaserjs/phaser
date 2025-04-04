@@ -8,7 +8,8 @@
 * Added `Phaser.Math.Angle.GetClockwiseDistance()` to get the shortest nonnegative angular distance between two angles. PR #7092 (thanks @samme)
 * Added `Phaser.Math.Angle.GetCounterClockwiseDistance()` gets the shortest nonpositive angular distance between two angles. PR #7092 (thanks @samme)
 * Added `Phaser.Math.Angle.GetShortestDistance()` gets the shortest signed angular distance between two angles. (This is like `Phaser.Math.Angle.ShortestBetween()` but in radians.) PR #7092 (thanks @samme)
-
+* Added `Phaser.GameObjects.BitmapText#setDisplaySize` method to `BitmapText` to get the original scaled size of 1. PR #6623 (thanks @samme)
+* Added fallback for Web Audio on Firefox. Firefox doesn't implement `positionX`, `positionY` and `positionZ` properties on the AudioListener instances at the moment. This prevents the follow feature from WebAudioSound to operate on Firefox. PR #7083 (thanks @raaaahman)
 
 ## Updates
 
@@ -26,6 +27,7 @@
 * New left-to-right `Text` Game Objects now includes the default `canvas.dir = 'ltr` and `context.direction = 'ltr';`. Fixes a bug in Chrome 134 & Edge 134 where calling `destroy()` on a right-to-left `Text` Game Object prevents the next created left-to-right `Text` Game Object from rendering. Fix #7077 (thanks @Demeno)
 * `Grid` Game Objects renders `lineWidth` correctly in WebGL mode. Fix #7029 (thanks @AlvaroNeuronup)
 * Added `collisionMask` and `collisionCategory` checks to `Phaser.Physics.Arcade.World#separate` to allow individual physics game objects within a physics group to have it's own unique collision categories. Fix #7034 (thanks @frederikocmr)
+* Fixed Arcade Physics bug causing immovable circle objects to move when pushed by polygons. Fix #7054 (thanks @hunkydoryrepair)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
