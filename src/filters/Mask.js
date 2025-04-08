@@ -200,7 +200,7 @@ var Mask = new Class({
         if (!this._dynamicTexture)
         {
             var textureManager = this.camera.scene.sys.textures;
-            this._dynamicTexture = textureManager.addDynamicTexture(UUID(), width, height);
+            this._dynamicTexture = textureManager.addDynamicTexture(UUID(), width, height, false);
         }
         else if (this._dynamicTexture.width !== width || this._dynamicTexture.height !== height)
         {

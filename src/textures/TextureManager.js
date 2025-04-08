@@ -725,16 +725,18 @@ var TextureManager = new Class({
      * @param {(string|Phaser.Textures.DynamicTexture)} key - The string-based key of this Texture. Must be unique within the Texture Manager. Or, a DynamicTexture instance.
      * @param {number} [width=256] - The width of this Dynamic Texture in pixels. Defaults to 256 x 256. Ignored if an instance is passed as the key.
      * @param {number} [height=256] - The height of this Dynamic Texture in pixels. Defaults to 256 x 256. Ignored if an instance is passed as the key.
+     * @param {boolean} [forceEven=true] - If the width and height are odd numbers, should they be forced to be even? Ignored if an instance is passed as the key.
      *
      * @return {?Phaser.Textures.DynamicTexture} The Dynamic Texture that was created, or `null` if the key is already in use.
      */
-    addDynamicTexture: function (key, width, height)
+    addDynamicTexture: function (key, width, height, forceEven)
     {
         var texture = null;
 
         if (typeof(key) === 'string' && !this.exists(key))
         {
-            texture = new DynamicTexture(this, key, width, height);
+            if (forceEven === undefined) { forceEven = true; }
+            texture = new DynamicTexture(this, key, width, height, forceEven);
         }
         else
         {
