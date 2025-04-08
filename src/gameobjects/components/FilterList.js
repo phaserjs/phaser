@@ -417,19 +417,21 @@ var FilterList = new Class({
      * @method Phaser.GameObjects.Components.FilterList#addMask
      * @since 4.0.0
      *
-     * @param {string} [texture='__WHITE'] - The unique string-based key of the texture to use for the mask, which must exist in the Texture Manager.
+     * @param {string|Phaser.GameObjects.GameObject} [mask='__WHITE'] - The source of the mask. This can be a unique string-based key of the texture to use for the mask, which must exist in the Texture Manager. Or it can be a GameObject, in which case the mask will render the GameObject to a DynamicTexture and use that.
      * @param {boolean} [invert=false] - Whether to invert the mask.
-     * @param {Phaser.Cameras.Scene2D.Camera} [viewCamera] - The Camera to use when rendering the mask. If not specified, uses an internal Camera.
+     * @param {Phaser.Cameras.Scene2D.Camera} [viewCamera] - The Camera to use when rendering the mask with a GameObject. If not specified, uses the scene's `main` camera.
+     * @param {'local'|'world'} [viewTransform='world'] - The transform to use when rendering the mask with a GameObject. 'local' uses the GameObject's own properties. 'world' uses the GameObject's `parentContainer` value to compute a world position.
      *
      * @return {Phaser.Filters.Mask} The new Mask filter controller.
      */
-    addMask: function (texture, invert, viewCamera)
+    addMask: function (mask, invert, viewCamera, viewTransform)
     {
         return this.add(new Mask(
             this.camera,
-            texture,
+            mask,
             invert,
-            viewCamera
+            viewCamera,
+            viewTransform
         ));
     },
 
