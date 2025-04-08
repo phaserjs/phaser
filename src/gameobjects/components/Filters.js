@@ -327,12 +327,14 @@ if (typeof WEBGL_RENDERER)
 
             if (gameObject.filtersAutoFocus)
             {
-                var contextCamera = null;
                 if (filtersFocusContext)
                 {
-                    contextCamera = camera;
+                    gameObject.focusFiltersOnCamera(camera);
                 }
-                gameObject.focusFilters(contextCamera);
+                else
+                {
+                    gameObject.focusFilters();
+                }
             }
 
             var filterCamera = gameObject.filterCamera;
@@ -416,9 +418,7 @@ if (typeof WEBGL_RENDERER)
          * This sets the size and position of the filter camera to match the GameObject.
          * This is called automatically on render if `filtersAutoFocus` is enabled.
          *
-         * If a camera is provided, this will focus on the camera.
-         * Otherwise, this will focus on the GameObject's raw dimensions
-         * if available.
+         * This will focus on the GameObject's raw dimensions if available.
          * If the GameObject has no dimensions, this will focus on the context:
          * the camera belonging to the DrawingContext used to render the GameObject.
          * Context focus occurs during rendering,
@@ -427,75 +427,80 @@ if (typeof WEBGL_RENDERER)
          * @method Phaser.GameObjects.Components.Filters#focusFilters
          * @webglOnly
          * @since 4.0.0
-         * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera to focus on. Optional; if provided, this will focus on the camera.
          * @returns {this}
          */
-        focusFilters: function (camera)
+        focusFilters: function ()
         {
-            var filterCamera = this.filterCamera;
+            var posX = this.x;
+            var posY = this.y;
+            var originX = this.originX;
+            var originY = this.originY;
+            var width = this.width;
+            var height = this.height;
 
-            // Attempt to create bounds from basic object properties.
-            if (!camera)
+            if (
+                this.type === 'Layer' ||
+                isNaN(posX) || isNaN(posY) ||
+                isNaN(width) || isNaN(height) ||
+                isNaN(originX) || isNaN(originY) ||
+                width === 0 || height === 0
+            )
             {
-                var posX = this.x;
-                var posY = this.y;
-                var originX = this.originX;
-                var originY = this.originY;
-                var width = this.width;
-                var height = this.height;
-
-                if (
-                    this.type === 'Layer' ||
-                    isNaN(posX) || isNaN(posY) ||
-                    isNaN(width) || isNaN(height) ||
-                    isNaN(originX) || isNaN(originY) ||
-                    width === 0 || height === 0
-                )
-                {
-                    this.filtersFocusContext = true;
-                    return this;
-                }
-
-                var rotation = this.rotation;
-                var scaleX = this.scaleX;
-                var scaleY = this.scaleY;
-
-                var centerX = posX + width * (0.5 - originX);
-                var centerY = posY + height * (0.5 - originY);
-
-                // Handle flip.
-                if (this.flipX)
-                {
-                    scaleX *= -1;
-                }
-                if (this.flipY)
-                {
-                    scaleY *= -1;
-                }
-
-                // Set the filter camera size to match the object.
-                this.setFilterSize(width, height);
-
-                // Set the filter camera to match the object.
-                this.filterCamera
-                    .centerOn(centerX, centerY)
-                    .setRotation(-rotation)
-                    .setOrigin(originX, originY)
-                    .setZoom(1 / scaleX, 1 / scaleY);
+                this.filtersFocusContext = true;
+                return this;
             }
-            else
+
+            var rotation = this.rotation;
+            var scaleX = this.scaleX;
+            var scaleY = this.scaleY;
+
+            var centerX = posX + width * (0.5 - originX);
+            var centerY = posY + height * (0.5 - originY);
+
+            // Handle flip.
+            if (this.flipX)
             {
-                // Focus on the camera.
-                width = camera.width;
-                height = camera.height;
-
-                // Set the filter camera size to match the object.
-                this.setFilterSize(width, height);
-
-                filterCamera.setScroll(camera.scrollX, camera.scrollY);
-                filterCamera.setRotation(camera.rotation);
-                filterCamera.setZoom(camera.zoomX, camera.zoomY);
+                scaleX *= -1;
             }
+            if (this.flipY)
+            {
+                scaleY *= -1;
+            }
+
+            // Set the filter camera size to match the object.
+            this.setFilterSize(width, height);
+
+            // Set the filter camera to match the object.
+            this.filterCamera
+                .centerOn(centerX, centerY)
+                .setRotation(-rotation)
+                .setOrigin(originX, originY)
+                .setZoom(1 / scaleX, 1 / scaleY);
+
+            return this;
+        },
+
+        /**
+         * Focus the filter camera on a specific camera.
+         * This is used internally when `filtersFocusContext` is enabled.
+         *
+         * @method Phaser.GameObjects.Components.Filters#focusFiltersOnCamera
+         * @webglOnly
+         * @since 4.0.0
+         * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to focus on.
+         * @returns {this}
+         */
+        focusFiltersOnCamera: function (camera)
+        {
+            var width = camera.width;
+            var height = camera.height;
+
+            // Set the filter camera size to match the object.
+            this.setFilterSize(width, height);
+
+            this.filterCamera.setScroll(camera.scrollX, camera.scrollY);
+            this.filterCamera.setRotation(camera.rotation);
+            this.filterCamera.setZoom(camera.zoomX, camera.zoomY);
 
             return this;
         },
