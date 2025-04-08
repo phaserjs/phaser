@@ -494,13 +494,30 @@ if (typeof WEBGL_RENDERER)
         {
             var width = camera.width;
             var height = camera.height;
+            var posX = camera.scrollX;
+            var posY = camera.scrollY;
+            var rotation = camera.rotation;
+            var zoomX = camera.zoomX;
+            var zoomY = camera.zoomY;
+
+            var parent = this.parentContainer;
+
+            if (parent)
+            {
+                var parentMatrix = parent.getWorldTransformMatrix();
+                posX -= parentMatrix.tx;
+                posY -= parentMatrix.ty;
+                rotation += parentMatrix.rotation;
+                zoomX *= parentMatrix.scaleX;
+                zoomY *= parentMatrix.scaleY;
+            }
 
             // Set the filter camera size to match the object.
             this.setFilterSize(width, height);
 
-            this.filterCamera.setScroll(camera.scrollX, camera.scrollY);
-            this.filterCamera.setRotation(camera.rotation);
-            this.filterCamera.setZoom(camera.zoomX, camera.zoomY);
+            this.filterCamera.setScroll(posX, posY);
+            this.filterCamera.setRotation(rotation);
+            this.filterCamera.setZoom(zoomX, zoomY);
 
             return this;
         },
