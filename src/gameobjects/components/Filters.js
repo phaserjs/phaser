@@ -78,7 +78,7 @@ if (typeof WEBGL_RENDERER)
          * This is only available if you use the `enableFilters` method.
          *
          * @name Phaser.GameObjects.Components.Filters#filters
-         * @type {{internal: Phaser.GameObjects.Components.FilterList, external: Phaser.GameObjects.Components.FilterList}|null}
+         * @type {Phaser.Types.GameObjects.FiltersInternalExternal|null}
          * @readonly
          * @since 4.0.0
          * @webglOnly

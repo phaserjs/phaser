@@ -68,7 +68,7 @@ var Camera = new Class({
          * See {@link Phaser.GameObjects.Components.FilterList} for more information.
          *
          * @name Phaser.Cameras.Scene2D.Camera#filters
-         * @type {{ internal: Phaser.GameObjects.Components.FilterList, external: Phaser.GameObjects.Components.FilterList }}
+         * @type {Phaser.Types.GameObjects.FiltersInternalExternal}
          * @since 4.0.0
          */
         this.filters = {
