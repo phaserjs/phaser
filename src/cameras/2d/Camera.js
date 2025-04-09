@@ -596,9 +596,9 @@ var Camera = new Class({
 
         matrixExternal.applyITRS(this.x, this.y, 0, 1, 1);
 
-        matrixExternal.multiply(matrix, this.matrixCombined);
-
         this.shakeEffect.preRender();
+
+        matrixExternal.multiply(matrix, this.matrixCombined);
 
         if (emitFollowEvent)
         {
