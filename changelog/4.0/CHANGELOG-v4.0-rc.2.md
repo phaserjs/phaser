@@ -2,6 +2,10 @@
 
 Updates since RC1:
 
+## New Features
+
+- `RenderConfig#renderNodes` allows you to add render nodes at game boot.
+
 ## Changes
 
 - `TextureManager#addDynamicTexture` now has `forceEven` parameter.

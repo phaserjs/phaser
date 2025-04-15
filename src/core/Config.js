@@ -458,6 +458,11 @@ var Config = new Class({
          */
         this.maxLights = GetValue(renderConfig, 'maxLights', 10, config);
 
+        /**
+         * @const {Record<string, Function>} Phaser.Core.Config#renderNodes - A map of custom Render Nodes to be added to the WebGL Renderer. The values will be added to the RenderNodeManager, using the keys as the names.
+         */
+        this.renderNodes = GetValue(renderConfig, 'renderNodes', {}, config);
+
         var bgc = GetValue(config, 'backgroundColor', 0);
 
         /**

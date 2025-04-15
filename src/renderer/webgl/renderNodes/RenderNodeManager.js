@@ -190,6 +190,14 @@ var RenderNodeManager = new Class({
             YieldContext: YieldContext
         };
 
+        Object.entries(game.config.renderNodes).forEach(function (entry)
+        {
+            var name = entry[0];
+            var constructor = entry[1];
+
+            this.addNodeConstructor(name, constructor);
+        }, this);
+
         /**
          * The RenderNode which is currently being filled.
          * This is stored so that it can be completed when another type of
