@@ -34,7 +34,7 @@ var FilterShadow = new Class({
         var programManager = this.programManager;
         var samples = controller.samples;
 
-        programManager.setUniform('lightPosition', [ controller.x, controller.y ]);
+        programManager.setUniform('lightPosition', [ controller.x, 1 - controller.y ]);
         programManager.setUniform('decay', controller.decay);
         programManager.setUniform('power', controller.power / samples);
         programManager.setUniform('color', controller.glcolor);
