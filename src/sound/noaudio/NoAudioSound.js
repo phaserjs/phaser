@@ -11,21 +11,6 @@ var EventEmitter = require('eventemitter3');
 var Extend = require('../../utils/object/Extend');
 var NOOP = require('../../utils/NOOP');
 
-var returnFalse = function ()
-{
-    return false;
-};
-
-var returnNull = function ()
-{
-    return null;
-};
-
-var returnThis = function ()
-{
-    return this;
-};
-
 /**
  * @classdesc
  * No audio implementation of the sound. It is used if audio has been
@@ -288,7 +273,10 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    addMarker: returnFalse,
+    addMarker: function ()
+    {
+        return false;
+    },
 
     /**
      * @method Phaser.Sound.NoAudioSound#updateMarker
@@ -298,7 +286,10 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    updateMarker: returnFalse,
+    updateMarker: function ()
+    {
+        return false;
+    },
 
     /**
      * @method Phaser.Sound.NoAudioSound#removeMarker
@@ -308,7 +299,10 @@ var NoAudioSound = new Class({
      *
      * @return {null} null
      */
-    removeMarker: returnNull,
+    removeMarker: function ()
+    {
+        return null;
+    },
 
     /**
      * @method Phaser.Sound.NoAudioSound#play
@@ -319,7 +313,10 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    play: returnFalse,
+    play: function ()
+    {
+        return false;
+    },
 
     /**
      * @method Phaser.Sound.NoAudioSound#pause
@@ -327,7 +324,10 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    pause: returnFalse,
+    pause: function ()
+    {
+        return false;
+    },
 
     /**
      * Resumes the sound.
@@ -337,7 +337,10 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    resume: returnFalse,
+    resume: function ()
+    {
+        return false;
+    },
 
     /**
      * Stop playing this sound.
@@ -347,7 +350,10 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    stop: returnFalse,
+    stop: function ()
+    {
+        return false;
+    },
 
     /**
      * Sets the muted state of this Sound.
@@ -359,7 +365,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setMute: returnThis,
+    setMute: function ()
+    {
+        return this;
+    },
 
     /**
      * Sets the volume of this Sound.
@@ -371,7 +380,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setVolume: returnThis,
+    setVolume: function ()
+    {
+        return this;
+    },
 
     /**
      * Sets the playback rate of this Sound.
@@ -386,7 +398,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setRate: returnThis,
+    setRate: function ()
+    {
+        return this;
+    },
 
     /**
      * Sets the detune value of this Sound, given in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
@@ -399,7 +414,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setDetune: returnThis,
+    setDetune: function ()
+    {
+        return this;
+    },
 
     /**
      * Seeks to a specific point in this sound.
@@ -411,7 +429,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setSeek: returnThis,
+    setSeek: function ()
+    {
+        return this;
+    },
 
     /**
      * Sets the loop state of this Sound.
@@ -423,7 +444,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setLoop: returnThis,
+    setLoop: function ()
+    {
+        return this;
+    },
 
     /**
      * Sets the pan of this sound, a value between -1 (full left pan) and 1 (full right pan).
@@ -437,7 +461,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setPan: returnThis,
+    setPan: function ()
+    {
+        return this;
+    },
 
     /**
      * Method used internally for applying config values to some of the sound properties.
@@ -445,7 +472,10 @@ var NoAudioSound = new Class({
      * @method Phaser.Sound.NoAudioSound#applyConfig
      * @since 3.0.0
      */
-    applyConfig: returnNull,
+    applyConfig: function ()
+    {
+        return null;
+    },
 
     /**
      * Method used internally for resetting values of some of the config properties.
@@ -453,7 +483,10 @@ var NoAudioSound = new Class({
      * @method Phaser.Sound.NoAudioSound#resetConfig
      * @since 3.0.0
      */
-    resetConfig: returnNull,
+    resetConfig: function ()
+    {
+        return null;
+    },
 
     /**
      * Update method called automatically by sound manager on every game step.
@@ -473,7 +506,10 @@ var NoAudioSound = new Class({
      * @method Phaser.Sound.NoAudioSound#calculateRate
      * @since 3.0.0
      */
-    calculateRate: returnNull,
+    calculateRate: function ()
+    {
+        return null;
+    },
 
     /**
      * Destroys this sound and all associated events and marks it for removal from the sound manager.
