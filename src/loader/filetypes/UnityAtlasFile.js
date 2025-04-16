@@ -33,13 +33,9 @@ var TextFile = require('./TextFile');
  * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas data file. Used in replacement of the Loaders default XHR Settings.
  */
-var UnityAtlasFile = new Class({
+var UnityAtlasFile = class extends MultiFile {
 
-    Extends: MultiFile,
-
-    initialize:
-
-    function UnityAtlasFile (loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
+    constructor(loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
     {
         var image;
         var data;
@@ -74,13 +70,13 @@ var UnityAtlasFile = new Class({
         if (image.linkFile)
         {
             //  Image has a normal map
-            MultiFile.call(this, loader, 'unityatlas', key, [ image, data, image.linkFile ]);
+            super(loader, 'unityatlas', key, [ image, data, image.linkFile ]);
         }
         else
         {
-            MultiFile.call(this, loader, 'unityatlas', key, [ image, data ]);
+            super(loader, 'unityatlas', key, [ image, data ]);
         }
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -88,7 +84,7 @@ var UnityAtlasFile = new Class({
      * @method Phaser.Loader.FileTypes.UnityAtlasFile#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         if (this.isReadyToProcess())
         {
@@ -102,7 +98,7 @@ var UnityAtlasFile = new Class({
         }
     }
 
-});
+};
 
 /**
  * Adds a Unity YAML based Texture Atlas, or array of atlases, to the current load queue.

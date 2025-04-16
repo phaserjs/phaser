@@ -23,11 +23,9 @@ var GameEvents = require('../core/events');
  *
  * @param {Phaser.Game} game - A reference to the Phaser.Game instance that owns this CacheManager.
  */
-var CacheManager = new Class({
+var CacheManager = class {
 
-    initialize:
-
-    function CacheManager (game)
+    constructor(game)
     {
         /**
          * A reference to the Phaser.Game instance that owns this CacheManager.
@@ -160,7 +158,7 @@ var CacheManager = new Class({
         this.custom = {};
 
         this.game.events.once(GameEvents.DESTROY, this.destroy, this);
-    },
+    }
 
     /**
      * Add your own custom Cache for storing your own files.
@@ -174,7 +172,7 @@ var CacheManager = new Class({
      *
      * @return {Phaser.Cache.BaseCache} A reference to the BaseCache that was created. If the key was already in use, a reference to the existing cache is returned instead.
      */
-    addCustom: function (key)
+    addCustom(key)
     {
         if (!this.custom.hasOwnProperty(key))
         {
@@ -182,7 +180,7 @@ var CacheManager = new Class({
         }
 
         return this.custom[key];
-    },
+    }
 
     /**
      * Removes all entries from all BaseCaches and destroys all custom caches.
@@ -190,7 +188,7 @@ var CacheManager = new Class({
      * @method Phaser.Cache.CacheManager#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         var keys = [
             'binary',
@@ -223,6 +221,6 @@ var CacheManager = new Class({
         this.game = null;
     }
 
-});
+};
 
 module.exports = CacheManager;

@@ -25,11 +25,9 @@ var Vector2 = require('../../math/Vector2');
  * @param {number} [x2=0] - The x coordinate of the lines ending point.
  * @param {number} [y2=0] - The y coordinate of the lines ending point.
  */
-var Line = new Class({
+var Line = class {
 
-    initialize:
-
-    function Line (x1, y1, x2, y2)
+    constructor(x1, y1, x2, y2)
     {
         if (x1 === undefined) { x1 = 0; }
         if (y1 === undefined) { y1 = 0; }
@@ -82,7 +80,7 @@ var Line = new Class({
          * @since 3.0.0
          */
         this.y2 = y2;
-    },
+    }
 
     /**
      * Get a point on a line that's a given percentage along its length.
@@ -97,10 +95,10 @@ var Line = new Class({
      *
      * @return {Phaser.Math.Vector2} A Vector2 object containing the coordinates of the point on the line.
      */
-    getPoint: function (position, output)
+    getPoint(position, output)
     {
         return GetPoint(this, position, output);
-    },
+    }
 
     /**
      * Get a number of points along a line's length.
@@ -121,10 +119,10 @@ var Line = new Class({
      *
      * @return {Phaser.Math.Vector2[]} An array of Vector2 objects containing the coordinates of the points on the line.
      */
-    getPoints: function (quantity, stepRate, output)
+    getPoints(quantity, stepRate, output)
     {
         return GetPoints(this, quantity, stepRate, output);
-    },
+    }
 
     /**
      * Get a random Point on the Line.
@@ -138,10 +136,10 @@ var Line = new Class({
      *
      * @return {Phaser.Math.Vector2} A random point on the Line.
      */
-    getRandomPoint: function (point)
+    getRandomPoint(point)
     {
         return Random(this, point);
-    },
+    }
 
     /**
      * Set new coordinates for the line endpoints.
@@ -156,7 +154,7 @@ var Line = new Class({
      *
      * @return {this} This Line object.
      */
-    setTo: function (x1, y1, x2, y2)
+    setTo(x1, y1, x2, y2)
     {
         if (x1 === undefined) { x1 = 0; }
         if (y1 === undefined) { y1 = 0; }
@@ -170,7 +168,7 @@ var Line = new Class({
         this.y2 = y2;
 
         return this;
-    },
+    }
 
     /**
      * Sets this Line to match the x/y coordinates of the two given Vector2Like objects.
@@ -183,7 +181,7 @@ var Line = new Class({
      *
      * @return {this} This Line object.
      */
-    setFromObjects: function (start, end)
+    setFromObjects(start, end)
     {
         this.x1 = start.x;
         this.y1 = start.y;
@@ -192,7 +190,7 @@ var Line = new Class({
         this.y2 = end.y;
 
         return this;
-    },
+    }
 
     /**
      * Returns a Vector2 object that corresponds to the start of this Line.
@@ -206,14 +204,14 @@ var Line = new Class({
      *
      * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the start of this Line.
      */
-    getPointA: function (vec2)
+    getPointA(vec2)
     {
         if (vec2 === undefined) { vec2 = new Vector2(); }
 
         vec2.set(this.x1, this.y1);
 
         return vec2;
-    },
+    }
 
     /**
      * Returns a Vector2 object that corresponds to the end of this Line.
@@ -227,14 +225,14 @@ var Line = new Class({
      *
      * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the end of this Line.
      */
-    getPointB: function (vec2)
+    getPointB(vec2)
     {
         if (vec2 === undefined) { vec2 = new Vector2(); }
 
         vec2.set(this.x2, this.y2);
 
         return vec2;
-    },
+    }
 
     /**
      * The left position of the Line.
@@ -243,26 +241,23 @@ var Line = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    left: {
 
-        get: function ()
-        {
-            return Math.min(this.x1, this.x2);
-        },
+    get left()
+    {
+        return Math.min(this.x1, this.x2);
+    }
 
-        set: function (value)
+    set left(value)
+    {
+        if (this.x1 <= this.x2)
         {
-            if (this.x1 <= this.x2)
-            {
-                this.x1 = value;
-            }
-            else
-            {
-                this.x2 = value;
-            }
+            this.x1 = value;
         }
-
-    },
+        else
+        {
+            this.x2 = value;
+        }
+    }
 
     /**
      * The right position of the Line.
@@ -271,26 +266,23 @@ var Line = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    right: {
 
-        get: function ()
-        {
-            return Math.max(this.x1, this.x2);
-        },
+    get right()
+    {
+        return Math.max(this.x1, this.x2);
+    }
 
-        set: function (value)
+    set right(value)
+    {
+        if (this.x1 > this.x2)
         {
-            if (this.x1 > this.x2)
-            {
-                this.x1 = value;
-            }
-            else
-            {
-                this.x2 = value;
-            }
+            this.x1 = value;
         }
-
-    },
+        else
+        {
+            this.x2 = value;
+        }
+    }
 
     /**
      * The top position of the Line.
@@ -299,26 +291,23 @@ var Line = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    top: {
 
-        get: function ()
-        {
-            return Math.min(this.y1, this.y2);
-        },
+    get top()
+    {
+        return Math.min(this.y1, this.y2);
+    }
 
-        set: function (value)
+    set top(value)
+    {
+        if (this.y1 <= this.y2)
         {
-            if (this.y1 <= this.y2)
-            {
-                this.y1 = value;
-            }
-            else
-            {
-                this.y2 = value;
-            }
+            this.y1 = value;
         }
-
-    },
+        else
+        {
+            this.y2 = value;
+        }
+    }
 
     /**
      * The bottom position of the Line.
@@ -327,27 +316,24 @@ var Line = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    bottom: {
 
-        get: function ()
-        {
-            return Math.max(this.y1, this.y2);
-        },
-
-        set: function (value)
-        {
-            if (this.y1 > this.y2)
-            {
-                this.y1 = value;
-            }
-            else
-            {
-                this.y2 = value;
-            }
-        }
-
+    get bottom()
+    {
+        return Math.max(this.y1, this.y2);
     }
 
-});
+    set bottom(value)
+    {
+        if (this.y1 > this.y2)
+        {
+            this.y1 = value;
+        }
+        else
+        {
+            this.y2 = value;
+        }
+    }
+
+};
 
 module.exports = Line;

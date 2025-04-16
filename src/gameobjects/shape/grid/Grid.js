@@ -41,17 +41,16 @@ var GridRender = require('./GridRender');
  * @param {number} [strokeFillColor] - The color of the lines between the grid cells. See the `setStrokeStyle` method.
  * @param {number} [strokeFillAlpha] - The alpha of the lines between the grid cells.
  */
-var Grid = new Class({
+var Grid = class extends Shape {
 
-    Extends: Shape,
+    static
+    {
+        Class.mixin(this, [
+            GridRender
+        ], false);
+    }
 
-    Mixins: [
-        GridRender
-    ],
-
-    initialize:
-
-    function Grid (scene, x, y, width, height, cellWidth, cellHeight, fillColor, fillAlpha, strokeFillColor, strokeFillAlpha)
+    constructor(scene, x, y, width, height, cellWidth, cellHeight, fillColor, fillAlpha, strokeFillColor, strokeFillAlpha)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -60,7 +59,7 @@ var Grid = new Class({
         if (cellWidth === undefined) { cellWidth = 32; }
         if (cellHeight === undefined) { cellHeight = 32; }
 
-        Shape.call(this, scene, 'Grid', null);
+        super(scene, 'Grid', null);
 
         /**
          * The width of each grid cell.
@@ -157,7 +156,7 @@ var Grid = new Class({
         }
 
         this.updateDisplayOrigin();
-    },
+    }
 
     /**
      * Sets the fill color and alpha level that the alternating grid cells will use.
@@ -176,7 +175,7 @@ var Grid = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setAltFillStyle: function (fillColor, fillAlpha)
+    setAltFillStyle(fillColor, fillAlpha)
     {
         if (fillAlpha === undefined) { fillAlpha = 1; }
 
@@ -192,7 +191,7 @@ var Grid = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the cell padding for the grid.
@@ -208,12 +207,12 @@ var Grid = new Class({
      * @param {number} [value] - The cell padding value.
      * @return {this} This Game Object instance.
      */
-    setCellPadding: function (value)
+    setCellPadding(value)
     {
         this.cellPadding = value || 0;
 
         return this;
-    },
+    }
 
     /**
      * Sets how to stroke the outside of the Grid object.
@@ -225,7 +224,7 @@ var Grid = new Class({
      * @param {boolean} strokeOutside - Whether to stroke the outside edges of the Grid object.
      * @param {boolean} [strokeOutsideIncomplete] - Whether to stroke the outside edges of the Grid object when the cell is incomplete.
      */
-    setStrokeOutside: function (strokeOutside, strokeOutsideIncomplete)
+    setStrokeOutside(strokeOutside, strokeOutsideIncomplete)
     {
         this.strokeOutside = strokeOutside;
 
@@ -237,6 +236,6 @@ var Grid = new Class({
         return this;
     }
 
-});
+};
 
 module.exports = Grid;

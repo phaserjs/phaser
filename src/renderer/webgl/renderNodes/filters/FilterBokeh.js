@@ -21,15 +21,14 @@ var ShaderSourceFS = require('../../shaders/FilterBokeh-frag.js');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterBokeh = new Class({
-    Extends: BaseFilterShader,
+var FilterBokeh = class extends BaseFilterShader {
 
-    initialize: function FilterBokeh (manager)
+    constructor(manager)
     {
-        BaseFilterShader.call(this, 'FilterBokeh', manager, null, ShaderSourceFS);
-    },
+        super('FilterBokeh', manager, null, ShaderSourceFS);
+    }
 
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         var programManager = this.programManager;
 
@@ -41,6 +40,6 @@ var FilterBokeh = new Class({
         programManager.setUniform('isTiltShift', controller.isTiltShift);
         programManager.setUniform('resolution', [ drawingContext.width, drawingContext.height ]);
     }
-});
+};
 
 module.exports = FilterBokeh;

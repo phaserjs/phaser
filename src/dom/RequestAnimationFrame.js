@@ -18,11 +18,9 @@ var NOOP = require('../utils/NOOP');
  * @constructor
  * @since 3.0.0
  */
-var RequestAnimationFrame = new Class({
+var RequestAnimationFrame = class {
 
-    initialize:
-
-    function RequestAnimationFrame ()
+    constructor()
     {
         /**
          * True if RequestAnimationFrame is running, otherwise false.
@@ -115,7 +113,7 @@ var RequestAnimationFrame = new Class({
 
             _this.callback(window.performance.now());
         };
-    },
+    }
 
     /**
      * Starts the requestAnimationFrame or setTimeout process running.
@@ -127,7 +125,7 @@ var RequestAnimationFrame = new Class({
      * @param {boolean} forceSetTimeOut - Should it use SetTimeout, even if RAF is available?
      * @param {number} delay - The setTimeout delay rate in ms.
      */
-    start: function (callback, forceSetTimeOut, delay)
+    start(callback, forceSetTimeOut, delay)
     {
         if (this.isRunning)
         {
@@ -143,7 +141,7 @@ var RequestAnimationFrame = new Class({
         this.isRunning = true;
 
         this.timeOutID = (forceSetTimeOut) ? window.setTimeout(this.stepTimeout, 0) : window.requestAnimationFrame(this.step);
-    },
+    }
 
     /**
      * Stops the requestAnimationFrame or setTimeout from running.
@@ -151,7 +149,7 @@ var RequestAnimationFrame = new Class({
      * @method Phaser.DOM.RequestAnimationFrame#stop
      * @since 3.0.0
      */
-    stop: function ()
+    stop()
     {
         this.isRunning = false;
 
@@ -163,7 +161,7 @@ var RequestAnimationFrame = new Class({
         {
             window.cancelAnimationFrame(this.timeOutID);
         }
-    },
+    }
 
     /**
      * Stops the step from running and clears the callback reference.
@@ -171,13 +169,13 @@ var RequestAnimationFrame = new Class({
      * @method Phaser.DOM.RequestAnimationFrame#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.stop();
 
         this.callback = NOOP;
     }
 
-});
+};
 
 module.exports = RequestAnimationFrame;

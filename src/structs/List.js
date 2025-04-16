@@ -29,11 +29,9 @@ var StableSort = require('../utils/array/StableSort');
  *
  * @param {*} parent - The parent of this list.
  */
-var List = new Class({
+var List = class {
 
-    initialize:
-
-    function List (parent)
+    constructor(parent)
     {
         /**
          * The parent of this list.
@@ -94,7 +92,7 @@ var List = new Class({
          * @since 3.4.0
          */
         this._sortKey = '';
-    },
+    }
 
     /**
      * Adds the given item to the end of the list. Each item must be unique.
@@ -107,7 +105,7 @@ var List = new Class({
      *
      * @return {*} The list's underlying array.
      */
-    add: function (child, skipCallback)
+    add(child, skipCallback)
     {
         if (skipCallback)
         {
@@ -117,7 +115,7 @@ var List = new Class({
         {
             return ArrayUtils.Add(this.list, child, 0, this.addCallback, this);
         }
-    },
+    }
 
     /**
      * Adds an item to list, starting at a specified index. Each item must be unique within the list.
@@ -133,7 +131,7 @@ var List = new Class({
      *
      * @return {*} The List's underlying array.
      */
-    addAt: function (child, index, skipCallback)
+    addAt(child, index, skipCallback)
     {
         if (skipCallback)
         {
@@ -143,7 +141,7 @@ var List = new Class({
         {
             return ArrayUtils.AddAt(this.list, child, index, 0, this.addCallback, this);
         }
-    },
+    }
 
     /**
      * Retrieves the item at a given position inside the List.
@@ -157,10 +155,10 @@ var List = new Class({
      *
      * @return {*} The retrieved item, or `undefined` if it's outside the List's bounds.
      */
-    getAt: function (index)
+    getAt(index)
     {
         return this.list[index];
-    },
+    }
 
     /**
      * Locates an item within the List and returns its index.
@@ -174,11 +172,11 @@ var List = new Class({
      *
      * @return {number} The index of the item within the List, or -1 if it's not in the List.
      */
-    getIndex: function (child)
+    getIndex(child)
     {
         //  Return -1 if given child isn't a child of this display list
         return this.list.indexOf(child);
-    },
+    }
 
     /**
      * Sort the contents of this List so the items are in order based on the given property.
@@ -194,7 +192,7 @@ var List = new Class({
      *
      * @return {Phaser.Structs.List} This List object.
      */
-    sort: function (property, handler)
+    sort(property, handler)
     {
         if (!property)
         {
@@ -212,7 +210,7 @@ var List = new Class({
         StableSort(this.list, handler);
 
         return this;
-    },
+    }
 
     /**
      * Searches for the first instance of a child with its `name`
@@ -228,10 +226,10 @@ var List = new Class({
      *
      * @return {?*} The first child with a matching name, or null if none were found.
      */
-    getByName: function (name)
+    getByName(name)
     {
         return ArrayUtils.GetFirst(this.list, 'name', name);
-    },
+    }
 
     /**
      * Returns a random child from the group.
@@ -246,10 +244,10 @@ var List = new Class({
      *
      * @return {?*} A random child of this Group.
      */
-    getRandom: function (startIndex, length)
+    getRandom(startIndex, length)
     {
         return ArrayUtils.GetRandom(this.list, startIndex, length);
-    },
+    }
 
     /**
      * Returns the first element in a given part of the List which matches a specific criterion.
@@ -266,10 +264,10 @@ var List = new Class({
      *
      * @return {?*} The first item which matches the given criterion, or `null` if no such item exists.
      */
-    getFirst: function (property, value, startIndex, endIndex)
+    getFirst(property, value, startIndex, endIndex)
     {
         return ArrayUtils.GetFirst(this.list, property, value, startIndex, endIndex);
-    },
+    }
 
     /**
      * Returns all children in this List.
@@ -298,10 +296,10 @@ var List = new Class({
      *
      * @return {Array.<*>} All items of the List which match the given criterion, if any.
      */
-    getAll: function (property, value, startIndex, endIndex)
+    getAll(property, value, startIndex, endIndex)
     {
         return ArrayUtils.GetAll(this.list, property, value, startIndex, endIndex);
-    },
+    }
 
     /**
      * Returns the total number of items in the List which have a property matching the given value.
@@ -316,10 +314,10 @@ var List = new Class({
      *
      * @return {number} The total number of matching elements.
      */
-    count: function (property, value)
+    count(property, value)
     {
         return ArrayUtils.CountAllMatching(this.list, property, value);
-    },
+    }
 
     /**
      * Swaps the positions of two items in the list.
@@ -332,10 +330,10 @@ var List = new Class({
      * @param {*} child1 - The first item to swap.
      * @param {*} child2 - The second item to swap.
      */
-    swap: function (child1, child2)
+    swap(child1, child2)
     {
         ArrayUtils.Swap(this.list, child1, child2);
-    },
+    }
 
     /**
      * Moves an item in the List to a new position.
@@ -350,10 +348,10 @@ var List = new Class({
      *
      * @return {*} The item that was moved.
      */
-    moveTo: function (child, index)
+    moveTo(child, index)
     {
         return ArrayUtils.MoveTo(this.list, child, index);
-    },
+    }
 
     /**
      * Moves an item above another one in the List.
@@ -368,10 +366,10 @@ var List = new Class({
      * @param {*} child1 - The element to move above base element.
      * @param {*} child2 - The base element.
      */
-    moveAbove: function (child1, child2)
+    moveAbove(child1, child2)
     {
         return ArrayUtils.MoveAbove(this.list, child1, child2);
-    },
+    }
 
     /**
      * Moves an item below another one in the List.
@@ -386,10 +384,10 @@ var List = new Class({
      * @param {*} child1 - The element to move below base element.
      * @param {*} child2 - The base element.
      */
-    moveBelow: function (child1, child2)
+    moveBelow(child1, child2)
     {
         return ArrayUtils.MoveBelow(this.list, child1, child2);
-    },
+    }
 
     /**
      * Removes one or many items from the List.
@@ -402,7 +400,7 @@ var List = new Class({
      *
      * @return {*} The item, or array of items, which were successfully removed from the List.
      */
-    remove: function (child, skipCallback)
+    remove(child, skipCallback)
     {
         if (skipCallback)
         {
@@ -412,7 +410,7 @@ var List = new Class({
         {
             return ArrayUtils.Remove(this.list, child, this.removeCallback, this);
         }
-    },
+    }
 
     /**
      * Removes the item at the given position in the List.
@@ -427,7 +425,7 @@ var List = new Class({
      *
      * @return {*} The item that was removed.
      */
-    removeAt: function (index, skipCallback)
+    removeAt(index, skipCallback)
     {
         if (skipCallback)
         {
@@ -437,7 +435,7 @@ var List = new Class({
         {
             return ArrayUtils.RemoveAt(this.list, index, this.removeCallback, this);
         }
-    },
+    }
 
     /**
      * Removes the items within the given range in the List.
@@ -453,7 +451,7 @@ var List = new Class({
      *
      * @return {Array.<*>} An array of the items which were removed.
      */
-    removeBetween: function (startIndex, endIndex, skipCallback)
+    removeBetween(startIndex, endIndex, skipCallback)
     {
         if (skipCallback)
         {
@@ -463,7 +461,7 @@ var List = new Class({
         {
             return ArrayUtils.RemoveBetween(this.list, startIndex, endIndex, this.removeCallback, this);
         }
-    },
+    }
 
     /**
      * Removes all the items.
@@ -475,7 +473,7 @@ var List = new Class({
      *
      * @return {this} This List object.
      */
-    removeAll: function (skipCallback)
+    removeAll(skipCallback)
     {
         var i = this.list.length;
 
@@ -485,7 +483,7 @@ var List = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Brings the given child to the top of this List.
@@ -499,10 +497,10 @@ var List = new Class({
      *
      * @return {*} The item which was moved.
      */
-    bringToTop: function (child)
+    bringToTop(child)
     {
         return ArrayUtils.BringToTop(this.list, child);
-    },
+    }
 
     /**
      * Sends the given child to the bottom of this List.
@@ -516,10 +514,10 @@ var List = new Class({
      *
      * @return {*} The item which was moved.
      */
-    sendToBack: function (child)
+    sendToBack(child)
     {
         return ArrayUtils.SendToBack(this.list, child);
-    },
+    }
 
     /**
      * Moves the given child up one place in this group unless it's already at the top.
@@ -533,12 +531,12 @@ var List = new Class({
      *
      * @return {*} The item which was moved.
      */
-    moveUp: function (child)
+    moveUp(child)
     {
         ArrayUtils.MoveUp(this.list, child);
 
         return child;
-    },
+    }
 
     /**
      * Moves the given child down one place in this group unless it's already at the bottom.
@@ -552,12 +550,12 @@ var List = new Class({
      *
      * @return {*} The item which was moved.
      */
-    moveDown: function (child)
+    moveDown(child)
     {
         ArrayUtils.MoveDown(this.list, child);
 
         return child;
-    },
+    }
 
     /**
      * Reverses the order of all children in this List.
@@ -569,12 +567,12 @@ var List = new Class({
      *
      * @return {Phaser.Structs.List} This List object.
      */
-    reverse: function ()
+    reverse()
     {
         this.list.reverse();
 
         return this;
-    },
+    }
 
     /**
      * Shuffles the items in the list.
@@ -586,12 +584,12 @@ var List = new Class({
      *
      * @return {Phaser.Structs.List} This List object.
      */
-    shuffle: function ()
+    shuffle()
     {
         ArrayUtils.Shuffle(this.list);
 
         return this;
-    },
+    }
 
     /**
      * Replaces a child of this List with the given newChild. The newChild cannot be a member of this List.
@@ -606,10 +604,10 @@ var List = new Class({
      *
      * @return {*} Returns the oldChild that was replaced within this group.
      */
-    replace: function (oldChild, newChild)
+    replace(oldChild, newChild)
     {
         return ArrayUtils.Replace(this.list, oldChild, newChild);
-    },
+    }
 
     /**
      * Checks if an item exists within the List.
@@ -623,10 +621,10 @@ var List = new Class({
      *
      * @return {boolean} `true` if the item is found in the list, otherwise `false`.
      */
-    exists: function (child)
+    exists(child)
     {
         return (this.list.indexOf(child) > -1);
-    },
+    }
 
     /**
      * Sets the property `key` to the given value on all members of this List.
@@ -641,12 +639,12 @@ var List = new Class({
      * @param {number} [startIndex] - The first child index to start the search from.
      * @param {number} [endIndex] - The last child index to search up until.
      */
-    setAll: function (property, value, startIndex, endIndex)
+    setAll(property, value, startIndex, endIndex)
     {
         ArrayUtils.SetAll(this.list, property, value, startIndex, endIndex);
 
         return this;
-    },
+    }
 
     /**
      * Passes all children to the given callback.
@@ -660,7 +658,7 @@ var List = new Class({
      * @param {*} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
      */
-    each: function (callback, context)
+    each(callback, context)
     {
         var args = [ null ];
 
@@ -675,7 +673,7 @@ var List = new Class({
 
             callback.apply(context, args);
         }
-    },
+    }
 
     /**
      * Clears the List and recreates its internal array.
@@ -683,12 +681,12 @@ var List = new Class({
      * @method Phaser.Structs.List#shutdown
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         this.removeAll();
 
         this.list = [];
-    },
+    }
 
     /**
      * Destroys this List.
@@ -696,14 +694,14 @@ var List = new Class({
      * @method Phaser.Structs.List#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.removeAll();
 
         this.parent = null;
         this.addCallback = null;
         this.removeCallback = null;
-    },
+    }
 
     /**
      * The number of items inside the List.
@@ -713,14 +711,11 @@ var List = new Class({
      * @readonly
      * @since 3.0.0
      */
-    length: {
 
-        get: function ()
-        {
-            return this.list.length;
-        }
-
-    },
+    get length()
+    {
+        return this.list.length;
+    }
 
     /**
      * The first item in the List or `null` for an empty List.
@@ -731,23 +726,20 @@ var List = new Class({
      * @readonly
      * @since 3.0.0
      */
-    first: {
 
-        get: function ()
+    get first()
+    {
+        this.position = 0;
+
+        if (this.list.length > 0)
         {
-            this.position = 0;
-
-            if (this.list.length > 0)
-            {
-                return this.list[0];
-            }
-            else
-            {
-                return null;
-            }
+            return this.list[0];
         }
-
-    },
+        else
+        {
+            return null;
+        }
+    }
 
     /**
      * The last item in the List, or `null` for an empty List.
@@ -758,23 +750,20 @@ var List = new Class({
      * @readonly
      * @since 3.0.0
      */
-    last: {
 
-        get: function ()
+    get last()
+    {
+        if (this.list.length > 0)
         {
-            if (this.list.length > 0)
-            {
-                this.position = this.list.length - 1;
+            this.position = this.list.length - 1;
 
-                return this.list[this.position];
-            }
-            else
-            {
-                return null;
-            }
+            return this.list[this.position];
         }
-
-    },
+        else
+        {
+            return null;
+        }
+    }
 
     /**
      * The next item in the List, or `null` if the entire List has been traversed.
@@ -787,23 +776,20 @@ var List = new Class({
      * @readonly
      * @since 3.0.0
      */
-    next: {
 
-        get: function ()
+    get next()
+    {
+        if (this.position < this.list.length)
         {
-            if (this.position < this.list.length)
-            {
-                this.position++;
+            this.position++;
 
-                return this.list[this.position];
-            }
-            else
-            {
-                return null;
-            }
+            return this.list[this.position];
         }
-
-    },
+        else
+        {
+            return null;
+        }
+    }
 
     /**
      * The previous item in the List, or `null` if the entire List has been traversed.
@@ -816,24 +802,21 @@ var List = new Class({
      * @readonly
      * @since 3.0.0
      */
-    previous: {
 
-        get: function ()
+    get previous()
+    {
+        if (this.position > 0)
         {
-            if (this.position > 0)
-            {
-                this.position--;
+            this.position--;
 
-                return this.list[this.position];
-            }
-            else
-            {
-                return null;
-            }
+            return this.list[this.position];
         }
-
+        else
+        {
+            return null;
+        }
     }
 
-});
+};
 
 module.exports = List;

@@ -24,15 +24,14 @@ var ShaderSourceFS = require('../../shaders/FilterBlurMed-frag.js');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterBlurMed = new Class({
-    Extends: BaseFilterShader,
+var FilterBlurMed = class extends BaseFilterShader {
 
-    initialize: function FilterBlurMed (manager)
+    constructor(manager)
     {
-        BaseFilterShader.call(this, 'FilterBlurMed', manager, null, ShaderSourceFS);
-    },
+        super('FilterBlurMed', manager, null, ShaderSourceFS);
+    }
 
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         var programManager = this.programManager;
 
@@ -41,6 +40,6 @@ var FilterBlurMed = new Class({
         programManager.setUniform('color', controller.color);
         programManager.setUniform('offset', [ controller.x, controller.y ]);
     }
-});
+};
 
 module.exports = FilterBlurMed;

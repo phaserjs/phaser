@@ -25,13 +25,12 @@ var RenderNode = require('./RenderNode');
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FillPath = new Class({
-    Extends: RenderNode,
+var FillPath = class extends RenderNode {
 
-    initialize: function FillPath (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'FillPath', manager);
-    },
+        super('FillPath', manager);
+    }
 
     /**
      * Render the path using Earcut.
@@ -48,7 +47,7 @@ var FillPath = new Class({
      * @param {number} detail - The level of detail to use when filling the path. Points which are only this far apart in screen space are combined. It is ignored if the entire path is equal to or shorter than this distance.
      * @param {boolean} lighting - Whether to apply lighting effects to the path.
      */
-    run: function (drawingContext, currentMatrix, submitterNode, path, tintTL, tintTR, tintBL, detail, lighting)
+    run(drawingContext, currentMatrix, submitterNode, path, tintTL, tintTR, tintBL, detail, lighting)
     {
         this.onRunBegin(drawingContext);
 
@@ -156,6 +155,6 @@ var FillPath = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = FillPath;

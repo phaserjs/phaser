@@ -21,27 +21,26 @@ var ShaderSourceFS = require('../../shaders/FilterDisplacement-frag.js');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterDisplacement = new Class({
-    Extends: BaseFilterShader,
+var FilterDisplacement = class extends BaseFilterShader {
 
-    initialize: function FilterDisplacement (manager)
+    constructor(manager)
     {
-        BaseFilterShader.call(this, 'FilterDisplacement', manager, null, ShaderSourceFS);
-    },
+        super('FilterDisplacement', manager, null, ShaderSourceFS);
+    }
 
-    setupTextures: function (controller, textures)
+    setupTextures(controller, textures)
     {
         // Displacement texture.
         textures[1] = controller.glTexture;
-    },
+    }
 
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         var programManager = this.programManager;
 
         programManager.setUniform('uDisplacementSampler', 1);
         programManager.setUniform('amount', [ controller.x, controller.y ]);
     }
-});
+};
 
 module.exports = FilterDisplacement;

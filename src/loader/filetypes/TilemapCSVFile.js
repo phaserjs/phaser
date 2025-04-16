@@ -31,13 +31,9 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.csv`, i.e. if `key` was "alien" then the URL will be "alien.csv".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var TilemapCSVFile = new Class({
+var TilemapCSVFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function TilemapCSVFile (loader, key, url, xhrSettings)
+    constructor(loader, key, url, xhrSettings)
     {
         var extension = 'csv';
 
@@ -61,10 +57,10 @@ var TilemapCSVFile = new Class({
             xhrSettings: xhrSettings
         };
 
-        File.call(this, loader, fileConfig);
+        super(loader, fileConfig);
 
         this.tilemapFormat = TILEMAP_FORMATS.CSV;
-    },
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -73,14 +69,14 @@ var TilemapCSVFile = new Class({
      * @method Phaser.Loader.FileTypes.TilemapCSVFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
         this.data = this.xhrLoader.responseText;
 
         this.onProcessComplete();
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -88,14 +84,14 @@ var TilemapCSVFile = new Class({
      * @method Phaser.Loader.FileTypes.TilemapCSVFile#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         var tiledata = { format: this.tilemapFormat, data: this.data };
 
         this.cache.add(this.key, tiledata);
     }
 
-});
+};
 
 /**
  * Adds a CSV Tilemap file, or array of CSV files, to the current load queue.

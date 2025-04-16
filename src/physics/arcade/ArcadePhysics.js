@@ -37,11 +37,9 @@ var World = require('./World');
  *
  * @param {Phaser.Scene} scene - The Scene that this Plugin belongs to.
  */
-var ArcadePhysics = new Class({
+var ArcadePhysics = class {
 
-    initialize:
-
-    function ArcadePhysics (scene)
+    constructor(scene)
     {
         /**
          * The Scene that this Plugin belongs to.
@@ -100,7 +98,7 @@ var ArcadePhysics = new Class({
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
-    },
+    }
 
     /**
      * This method is called automatically, only once, when the Scene is first created.
@@ -110,13 +108,13 @@ var ArcadePhysics = new Class({
      * @private
      * @since 3.5.1
      */
-    boot: function ()
+    boot()
     {
         this.world = new World(this.scene, this.config);
         this.add = new Factory(this.world);
 
         this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
-    },
+    }
 
     /**
      * This method is called automatically by the Scene when it is starting up.
@@ -127,7 +125,7 @@ var ArcadePhysics = new Class({
      * @private
      * @since 3.5.0
      */
-    start: function ()
+    start()
     {
         if (!this.world)
         {
@@ -144,7 +142,7 @@ var ArcadePhysics = new Class({
 
         eventEmitter.on(SceneEvents.POST_UPDATE, this.world.postUpdate, this.world);
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * Causes `World.update` to be automatically called each time the Scene
@@ -154,10 +152,10 @@ var ArcadePhysics = new Class({
      * @method Phaser.Physics.Arcade.ArcadePhysics#enableUpdate
      * @since 3.50.0
      */
-    enableUpdate: function ()
+    enableUpdate()
     {
         this.systems.events.on(SceneEvents.UPDATE, this.world.update, this.world);
-    },
+    }
 
     /**
      * Causes `World.update` to **not** be automatically called each time the Scene
@@ -173,10 +171,10 @@ var ArcadePhysics = new Class({
      * @method Phaser.Physics.Arcade.ArcadePhysics#disableUpdate
      * @since 3.50.0
      */
-    disableUpdate: function ()
+    disableUpdate()
     {
         this.systems.events.off(SceneEvents.UPDATE, this.world.update, this.world);
-    },
+    }
 
     /**
      * Creates the physics configuration for the current Scene.
@@ -186,7 +184,7 @@ var ArcadePhysics = new Class({
      *
      * @return {Phaser.Types.Physics.Arcade.ArcadeWorldConfig} The physics configuration.
      */
-    getConfig: function ()
+    getConfig()
     {
         var gameConfig = this.systems.game.config.physics;
         var sceneConfig = this.systems.settings.physics;
@@ -197,7 +195,7 @@ var ArcadePhysics = new Class({
         );
 
         return config;
-    },
+    }
 
     /**
      * Returns the next available collision category.
@@ -214,12 +212,12 @@ var ArcadePhysics = new Class({
      *
      * @return {number} The next collision category.
      */
-    nextCategory: function ()
+    nextCategory()
     {
         this._category = this._category << 1;
 
         return this._category;
-    },
+    }
 
     /**
      * Tests if Game Objects overlap. See {@link Phaser.Physics.Arcade.World#overlap}
@@ -237,14 +235,14 @@ var ArcadePhysics = new Class({
      *
      * @see Phaser.Physics.Arcade.World#overlap
      */
-    overlap: function (object1, object2, overlapCallback, processCallback, callbackContext)
+    overlap(object1, object2, overlapCallback, processCallback, callbackContext)
     {
         if (overlapCallback === undefined) { overlapCallback = null; }
         if (processCallback === undefined) { processCallback = null; }
         if (callbackContext === undefined) { callbackContext = overlapCallback; }
 
         return this.world.collideObjects(object1, object2, overlapCallback, processCallback, callbackContext, true);
-    },
+    }
 
     /**
      * Performs a collision check and separation between the two physics enabled objects given, which can be single
@@ -279,14 +277,14 @@ var ArcadePhysics = new Class({
      *
      * @see Phaser.Physics.Arcade.World#collide
      */
-    collide: function (object1, object2, collideCallback, processCallback, callbackContext)
+    collide(object1, object2, collideCallback, processCallback, callbackContext)
     {
         if (collideCallback === undefined) { collideCallback = null; }
         if (processCallback === undefined) { processCallback = null; }
         if (callbackContext === undefined) { callbackContext = collideCallback; }
 
         return this.world.collideObjects(object1, object2, collideCallback, processCallback, callbackContext, false);
-    },
+    }
 
     /**
      * This advanced method is specifically for testing for collision between a single Sprite and an array of Tile objects.
@@ -316,10 +314,10 @@ var ArcadePhysics = new Class({
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
-    collideTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext)
+    collideTiles(sprite, tiles, collideCallback, processCallback, callbackContext)
     {
         return this.world.collideTiles(sprite, tiles, collideCallback, processCallback, callbackContext);
-    },
+    }
 
     /**
      * This advanced method is specifically for testing for overlaps between a single Sprite and an array of Tile objects.
@@ -344,10 +342,10 @@ var ArcadePhysics = new Class({
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
-    overlapTiles: function (sprite, tiles, overlapCallback, processCallback, callbackContext)
+    overlapTiles(sprite, tiles, overlapCallback, processCallback, callbackContext)
     {
         return this.world.overlapTiles(sprite, tiles, overlapCallback, processCallback, callbackContext);
-    },
+    }
 
     /**
      * Pauses the simulation.
@@ -357,10 +355,10 @@ var ArcadePhysics = new Class({
      *
      * @return {Phaser.Physics.Arcade.World} The simulation.
      */
-    pause: function ()
+    pause()
     {
         return this.world.pause();
-    },
+    }
 
     /**
      * Resumes the simulation (if paused).
@@ -370,10 +368,10 @@ var ArcadePhysics = new Class({
      *
      * @return {Phaser.Physics.Arcade.World} The simulation.
      */
-    resume: function ()
+    resume()
     {
         return this.world.resume();
-    },
+    }
 
     /**
      * Sets the acceleration.x/y property on the game object so it will move towards the x/y coordinates at the given rate (in pixels per second squared)
@@ -395,7 +393,7 @@ var ArcadePhysics = new Class({
      *
      * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
      */
-    accelerateTo: function (gameObject, x, y, speed, xSpeedMax, ySpeedMax)
+    accelerateTo(gameObject, x, y, speed, xSpeedMax, ySpeedMax)
     {
         if (speed === undefined) { speed = 60; }
 
@@ -409,7 +407,7 @@ var ArcadePhysics = new Class({
         }
 
         return angle;
-    },
+    }
 
     /**
      * Sets the acceleration.x/y property on the game object so it will move towards the x/y coordinates at the given rate (in pixels per second squared)
@@ -430,10 +428,10 @@ var ArcadePhysics = new Class({
      *
      * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
      */
-    accelerateToObject: function (gameObject, destination, speed, xSpeedMax, ySpeedMax)
+    accelerateToObject(gameObject, destination, speed, xSpeedMax, ySpeedMax)
     {
         return this.accelerateTo(gameObject, destination.x, destination.y, speed, xSpeedMax, ySpeedMax);
-    },
+    }
 
     /**
      * Finds the Body or Game Object closest to a source point or object.
@@ -455,7 +453,7 @@ var ArcadePhysics = new Class({
      *
      * @return {Target|null} The target closest to the given source point.
      */
-    closest: function (source, targets)
+    closest(source, targets)
     {
         if (!targets)
         {
@@ -488,7 +486,7 @@ var ArcadePhysics = new Class({
         }
 
         return closest;
-    },
+    }
 
     /**
      * Finds the Body or Game Object farthest from a source point or object.
@@ -509,7 +507,7 @@ var ArcadePhysics = new Class({
      *
      * @return {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|Phaser.GameObjects.GameObject)} The target farthest from the given source point.
      */
-    furthest: function (source, targets)
+    furthest(source, targets)
     {
         if (!targets)
         {
@@ -543,7 +541,7 @@ var ArcadePhysics = new Class({
         }
 
         return farthest;
-    },
+    }
 
     /**
      * Move the given display object towards the x/y coordinates at a steady velocity.
@@ -564,7 +562,7 @@ var ArcadePhysics = new Class({
      *
      * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
      */
-    moveTo: function (gameObject, x, y, speed, maxTime)
+    moveTo(gameObject, x, y, speed, maxTime)
     {
         if (speed === undefined) { speed = 60; }
         if (maxTime === undefined) { maxTime = 0; }
@@ -580,7 +578,7 @@ var ArcadePhysics = new Class({
         gameObject.body.velocity.setToPolar(angle, speed);
 
         return angle;
-    },
+    }
 
     /**
      * Move the given display object towards the destination object at a steady velocity.
@@ -600,10 +598,10 @@ var ArcadePhysics = new Class({
      *
      * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
      */
-    moveToObject: function (gameObject, destination, speed, maxTime)
+    moveToObject(gameObject, destination, speed, maxTime)
     {
         return this.moveTo(gameObject, destination.x, destination.y, speed, maxTime);
-    },
+    }
 
     /**
      * Given the angle (in degrees) and speed calculate the velocity and return it as a vector, or set it to the given vector object.
@@ -618,13 +616,13 @@ var ArcadePhysics = new Class({
      *
      * @return {Phaser.Math.Vector2} The Vector2 that stores the velocity.
      */
-    velocityFromAngle: function (angle, speed, vec2)
+    velocityFromAngle(angle, speed, vec2)
     {
         if (speed === undefined) { speed = 60; }
         if (vec2 === undefined) { vec2 = new Vector2(); }
 
         return vec2.setToPolar(DegToRad(angle), speed);
-    },
+    }
 
     /**
      * Given the rotation (in radians) and speed calculate the velocity and return it as a vector, or set it to the given vector object.
@@ -639,13 +637,13 @@ var ArcadePhysics = new Class({
      *
      * @return {Phaser.Math.Vector2} The Vector2 that stores the velocity.
      */
-    velocityFromRotation: function (rotation, speed, vec2)
+    velocityFromRotation(rotation, speed, vec2)
     {
         if (speed === undefined) { speed = 60; }
         if (vec2 === undefined) { vec2 = new Vector2(); }
 
         return vec2.setToPolar(rotation, speed);
-    },
+    }
 
     /**
      * This method will search the given rectangular area and return an array of all physics bodies that
@@ -669,10 +667,10 @@ var ArcadePhysics = new Class({
      *
      * @return {(Phaser.Physics.Arcade.Body[]|Phaser.Physics.Arcade.StaticBody[])} An array of bodies that overlap with the given area.
      */
-    overlapRect: function (x, y, width, height, includeDynamic, includeStatic)
+    overlapRect(x, y, width, height, includeDynamic, includeStatic)
     {
         return OverlapRect(this.world, x, y, width, height, includeDynamic, includeStatic);
-    },
+    }
 
     /**
      * This method will search the given circular area and return an array of all physics bodies that
@@ -695,10 +693,10 @@ var ArcadePhysics = new Class({
      *
      * @return {(Phaser.Physics.Arcade.Body[]|Phaser.Physics.Arcade.StaticBody[])} An array of bodies that overlap with the given area.
      */
-    overlapCirc: function (x, y, radius, includeDynamic, includeStatic)
+    overlapCirc(x, y, radius, includeDynamic, includeStatic)
     {
         return OverlapCirc(this.world, x, y, radius, includeDynamic, includeStatic);
-    },
+    }
 
     /**
      * The Scene that owns this plugin is shutting down.
@@ -707,7 +705,7 @@ var ArcadePhysics = new Class({
      * @method Phaser.Physics.Arcade.ArcadePhysics#shutdown
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         if (!this.world)
         {
@@ -727,7 +725,7 @@ var ArcadePhysics = new Class({
         this.add = null;
         this.world = null;
         this._category = 1;
-    },
+    }
 
     /**
      * The Scene that owns this plugin is being destroyed.
@@ -736,7 +734,7 @@ var ArcadePhysics = new Class({
      * @method Phaser.Physics.Arcade.ArcadePhysics#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.shutdown();
 
@@ -746,7 +744,7 @@ var ArcadePhysics = new Class({
         this.systems = null;
     }
 
-});
+};
 
 PluginCache.register('ArcadePhysics', ArcadePhysics, 'arcadePhysics');
 

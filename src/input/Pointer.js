@@ -35,11 +35,9 @@ var OS = require('../device/OS');
  * @param {Phaser.Input.InputManager} manager - A reference to the Input Manager.
  * @param {number} id - The internal ID of this Pointer.
  */
-var Pointer = new Class({
+var Pointer = class {
 
-    initialize:
-
-    function Pointer (manager, id)
+    constructor(manager, id)
     {
         /**
          * A reference to the Input Manager.
@@ -491,7 +489,7 @@ var Pointer = new Class({
          * @since 3.18.0
          */
         this.deltaZ = 0;
-    },
+    }
 
     /**
      * Takes a Camera and updates this Pointer's `worldX` and `worldY` values so they are
@@ -507,7 +505,7 @@ var Pointer = new Class({
      *
      * @return {this} This Pointer object.
      */
-    updateWorldPoint: function (camera)
+    updateWorldPoint(camera)
     {
         //  Stores the world point inside of tempPoint
         var temp = camera.getWorldPoint(this.x, this.y);
@@ -516,7 +514,7 @@ var Pointer = new Class({
         this.worldY = temp.y;
 
         return this;
-    },
+    }
 
     /**
      * Takes a Camera and returns a Vector2 containing the translated position of this Pointer
@@ -530,10 +528,10 @@ var Pointer = new Class({
      *
      * @return {(Phaser.Math.Vector2|object)} A Vector2 containing the translated coordinates of this Pointer, based on the given camera.
      */
-    positionToCamera: function (camera, output)
+    positionToCamera(camera, output)
     {
         return camera.getWorldPoint(this.x, this.y, output);
-    },
+    }
 
     /**
      * Calculates the motion of this Pointer, including its velocity and angle of movement.
@@ -543,7 +541,7 @@ var Pointer = new Class({
      * @private
      * @since 3.16.0
      */
-    updateMotion: function ()
+    updateMotion()
     {
         var cx = this.position.x;
         var cy = this.position.y;
@@ -581,7 +579,7 @@ var Pointer = new Class({
         this.angle = Angle(vx, vy, cx, cy);
 
         this.distance = Math.sqrt(dx * dx + dy * dy);
-    },
+    }
 
     /**
      * Internal method to handle a Mouse Up Event.
@@ -592,7 +590,7 @@ var Pointer = new Class({
      *
      * @param {MouseEvent} event - The Mouse Event to process.
      */
-    up: function (event)
+    up(event)
     {
         if ('buttons' in event)
         {
@@ -625,7 +623,7 @@ var Pointer = new Class({
 
             this.wasTouch = false;
         }
-    },
+    }
 
     /**
      * Internal method to handle a Mouse Down Event.
@@ -636,7 +634,7 @@ var Pointer = new Class({
      *
      * @param {MouseEvent} event - The Mouse Event to process.
      */
-    down: function (event)
+    down(event)
     {
         if ('buttons' in event)
         {
@@ -675,7 +673,7 @@ var Pointer = new Class({
         }
 
         this.wasTouch = false;
-    },
+    }
 
     /**
      * Internal method to handle a Mouse Move Event.
@@ -686,7 +684,7 @@ var Pointer = new Class({
      *
      * @param {MouseEvent} event - The Mouse Event to process.
      */
-    move: function (event)
+    move(event)
     {
         if ('buttons' in event)
         {
@@ -708,7 +706,7 @@ var Pointer = new Class({
         this.moveTime = event.timeStamp;
 
         this.wasTouch = false;
-    },
+    }
 
     /**
      * Internal method to handle a Mouse Wheel Event.
@@ -719,7 +717,7 @@ var Pointer = new Class({
      *
      * @param {WheelEvent} event - The Wheel Event to process.
      */
-    wheel: function (event)
+    wheel(event)
     {
         if ('buttons' in event)
         {
@@ -736,7 +734,7 @@ var Pointer = new Class({
         this.deltaZ = event.deltaZ;
 
         this.wasTouch = false;
-    },
+    }
 
     /**
      * Internal method to handle a Touch Start Event.
@@ -748,7 +746,7 @@ var Pointer = new Class({
      * @param {Touch} touch - The Changed Touch from the Touch Event.
      * @param {TouchEvent} event - The full Touch Event.
      */
-    touchstart: function (touch, event)
+    touchstart(touch, event)
     {
         if (touch['pointerId'])
         {
@@ -779,7 +777,7 @@ var Pointer = new Class({
         this.wasCanceled = false;
 
         this.updateMotion();
-    },
+    }
 
     /**
      * Internal method to handle a Touch Move Event.
@@ -791,7 +789,7 @@ var Pointer = new Class({
      * @param {Touch} touch - The Changed Touch from the Touch Event.
      * @param {TouchEvent} event - The full Touch Event.
      */
-    touchmove: function (touch, event)
+    touchmove(touch, event)
     {
         this.event = event;
 
@@ -803,7 +801,7 @@ var Pointer = new Class({
         this.wasTouch = true;
 
         this.updateMotion();
-    },
+    }
 
     /**
      * Internal method to handle a Touch End Event.
@@ -815,7 +813,7 @@ var Pointer = new Class({
      * @param {Touch} touch - The Changed Touch from the Touch Event.
      * @param {TouchEvent} event - The full Touch Event.
      */
-    touchend: function (touch, event)
+    touchend(touch, event)
     {
         this.buttons = 0;
 
@@ -839,7 +837,7 @@ var Pointer = new Class({
         this.active = false;
 
         this.updateMotion();
-    },
+    }
 
     /**
      * Internal method to handle a Touch Cancel Event.
@@ -851,7 +849,7 @@ var Pointer = new Class({
      * @param {Touch} touch - The Changed Touch from the Touch Event.
      * @param {TouchEvent} event - The full Touch Event.
      */
-    touchcancel: function (touch, event)
+    touchcancel(touch, event)
     {
         this.buttons = 0;
 
@@ -873,7 +871,7 @@ var Pointer = new Class({
         this.wasCanceled = true;
 
         this.active = false;
-    },
+    }
 
     /**
      * Checks to see if any buttons are being held down on this Pointer.
@@ -883,10 +881,10 @@ var Pointer = new Class({
      *
      * @return {boolean} `true` if no buttons are being held down.
      */
-    noButtonDown: function ()
+    noButtonDown()
     {
         return (this.buttons === 0);
-    },
+    }
 
     /**
      * Checks to see if the left button is being held down on this Pointer.
@@ -896,10 +894,10 @@ var Pointer = new Class({
      *
      * @return {boolean} `true` if the left button is being held down.
      */
-    leftButtonDown: function ()
+    leftButtonDown()
     {
         return (this.buttons & 1) ? true : false;
-    },
+    }
 
     /**
      * Checks to see if the right button is being held down on this Pointer.
@@ -909,10 +907,10 @@ var Pointer = new Class({
      *
      * @return {boolean} `true` if the right button is being held down.
      */
-    rightButtonDown: function ()
+    rightButtonDown()
     {
         return (this.buttons & 2) ? true : false;
-    },
+    }
 
     /**
      * Checks to see if the middle button is being held down on this Pointer.
@@ -922,10 +920,10 @@ var Pointer = new Class({
      *
      * @return {boolean} `true` if the middle button is being held down.
      */
-    middleButtonDown: function ()
+    middleButtonDown()
     {
         return (this.buttons & 4) ? true : false;
-    },
+    }
 
     /**
      * Checks to see if the back button is being held down on this Pointer.
@@ -935,10 +933,10 @@ var Pointer = new Class({
      *
      * @return {boolean} `true` if the back button is being held down.
      */
-    backButtonDown: function ()
+    backButtonDown()
     {
         return (this.buttons & 8) ? true : false;
-    },
+    }
 
     /**
      * Checks to see if the forward button is being held down on this Pointer.
@@ -948,10 +946,10 @@ var Pointer = new Class({
      *
      * @return {boolean} `true` if the forward button is being held down.
      */
-    forwardButtonDown: function ()
+    forwardButtonDown()
     {
         return (this.buttons & 16) ? true : false;
-    },
+    }
 
     /**
      * Checks to see if the release of the left button was the most recent activity on this Pointer.
@@ -961,10 +959,10 @@ var Pointer = new Class({
      *
      * @return {boolean} `true` if the release of the left button was the most recent activity on this Pointer.
      */
-    leftButtonReleased: function ()
+    leftButtonReleased()
     {
         return this.buttons === 0 ? (this.button === 0 && !this.isDown) : this.button === 0;
-    },
+    }
 
     /**
      * Checks to see if the release of the right button was the most recent activity on this Pointer.
@@ -974,10 +972,10 @@ var Pointer = new Class({
      *
      * @return {boolean} `true` if the release of the right button was the most recent activity on this Pointer.
      */
-    rightButtonReleased: function ()
+    rightButtonReleased()
     {
         return this.buttons === 0 ? (this.button === 2 && !this.isDown) : this.button === 2;
-    },
+    }
 
     /**
      * Checks to see if the release of the middle button was the most recent activity on this Pointer.
@@ -987,10 +985,10 @@ var Pointer = new Class({
      *
      * @return {boolean} `true` if the release of the middle button was the most recent activity on this Pointer.
      */
-    middleButtonReleased: function ()
+    middleButtonReleased()
     {
         return this.buttons === 0 ? (this.button === 1 && !this.isDown) : this.button === 1;
-    },
+    }
 
     /**
      * Checks to see if the release of the back button was the most recent activity on this Pointer.
@@ -1000,10 +998,10 @@ var Pointer = new Class({
      *
      * @return {boolean} `true` if the release of the back button was the most recent activity on this Pointer.
      */
-    backButtonReleased: function ()
+    backButtonReleased()
     {
         return this.buttons === 0 ? (this.button === 3 && !this.isDown) : this.button === 3;
-    },
+    }
 
     /**
      * Checks to see if the release of the forward button was the most recent activity on this Pointer.
@@ -1013,10 +1011,10 @@ var Pointer = new Class({
      *
      * @return {boolean} `true` if the release of the forward button was the most recent activity on this Pointer.
      */
-    forwardButtonReleased: function ()
+    forwardButtonReleased()
     {
         return this.buttons === 0 ? (this.button === 4 && !this.isDown) : this.button === 4;
-    },
+    }
 
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
@@ -1033,7 +1031,7 @@ var Pointer = new Class({
      *
      * @return {number} The distance the Pointer moved.
      */
-    getDistance: function ()
+    getDistance()
     {
         if (this.isDown)
         {
@@ -1043,7 +1041,7 @@ var Pointer = new Class({
         {
             return Distance(this.downX, this.downY, this.upX, this.upY);
         }
-    },
+    }
 
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
@@ -1057,7 +1055,7 @@ var Pointer = new Class({
      *
      * @return {number} The horizontal distance the Pointer moved.
      */
-    getDistanceX: function ()
+    getDistanceX()
     {
         if (this.isDown)
         {
@@ -1067,7 +1065,7 @@ var Pointer = new Class({
         {
             return Math.abs(this.downX - this.upX);
         }
-    },
+    }
 
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
@@ -1081,7 +1079,7 @@ var Pointer = new Class({
      *
      * @return {number} The vertical distance the Pointer moved.
      */
-    getDistanceY: function ()
+    getDistanceY()
     {
         if (this.isDown)
         {
@@ -1091,7 +1089,7 @@ var Pointer = new Class({
         {
             return Math.abs(this.downY - this.upY);
         }
-    },
+    }
 
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
@@ -1105,7 +1103,7 @@ var Pointer = new Class({
      *
      * @return {number} The duration the Pointer was held down for in milliseconds.
      */
-    getDuration: function ()
+    getDuration()
     {
         if (this.isDown)
         {
@@ -1115,7 +1113,7 @@ var Pointer = new Class({
         {
             return (this.upTime - this.downTime);
         }
-    },
+    }
 
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
@@ -1134,7 +1132,7 @@ var Pointer = new Class({
      *
      * @return {number} The angle between the Pointer's coordinates in radians.
      */
-    getAngle: function ()
+    getAngle()
     {
         if (this.isDown)
         {
@@ -1144,7 +1142,7 @@ var Pointer = new Class({
         {
             return Angle(this.downX, this.downY, this.upX, this.upY);
         }
-    },
+    }
 
     /**
      * Takes the previous and current Pointer positions and then generates an array of interpolated values between
@@ -1176,7 +1174,7 @@ var Pointer = new Class({
      *
      * @return {array} An array of interpolated values.
      */
-    getInterpolatedPosition: function (steps, out)
+    getInterpolatedPosition(steps, out)
     {
         if (steps === undefined) { steps = 10; }
         if (out === undefined) { out = []; }
@@ -1195,7 +1193,7 @@ var Pointer = new Class({
         }
 
         return out;
-    },
+    }
 
     /**
      * Fully reset this Pointer back to its unitialized state.
@@ -1203,7 +1201,7 @@ var Pointer = new Class({
      * @method Phaser.Input.Pointer#reset
      * @since 3.60.0
      */
-    reset: function ()
+    reset()
     {
         this.event = null;
         this.downElement = null;
@@ -1240,7 +1238,7 @@ var Pointer = new Class({
         this.deltaZ = 0;
 
         this.active = (this.id === 0) ? true : false;
-    },
+    }
 
     /**
      * Destroys this Pointer instance and resets its external references.
@@ -1248,12 +1246,12 @@ var Pointer = new Class({
      * @method Phaser.Input.Pointer#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.camera = null;
         this.manager = null;
         this.position = null;
-    },
+    }
 
     /**
      * The x position of this Pointer.
@@ -1264,19 +1262,16 @@ var Pointer = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    x: {
 
-        get: function ()
-        {
-            return this.position.x;
-        },
+    get x()
+    {
+        return this.position.x;
+    }
 
-        set: function (value)
-        {
-            this.position.x = value;
-        }
-
-    },
+    set x(value)
+    {
+        this.position.x = value;
+    }
 
     /**
      * The y position of this Pointer.
@@ -1287,19 +1282,16 @@ var Pointer = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    y: {
 
-        get: function ()
-        {
-            return this.position.y;
-        },
+    get y()
+    {
+        return this.position.y;
+    }
 
-        set: function (value)
-        {
-            this.position.y = value;
-        }
-
-    },
+    set y(value)
+    {
+        this.position.y = value;
+    }
 
     /**
      * Time when this Pointer was most recently updated by a DOM Event.
@@ -1311,15 +1303,12 @@ var Pointer = new Class({
      * @readonly
      * @since 3.16.0
      */
-    time: {
 
-        get: function ()
-        {
-            return (this.event) ? this.event.timeStamp : 0;
-        }
-
+    get time()
+    {
+        return (this.event) ? this.event.timeStamp : 0;
     }
 
-});
+};
 
 module.exports = Pointer;

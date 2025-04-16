@@ -40,11 +40,9 @@ function isDifferent (a, b)
  * @param {string} vertexSource - The vertex shader source code as a string.
  * @param {string} fragmentShader - The fragment shader source code as a string.
  */
-var WebGLProgramWrapper = new Class({
+var WebGLProgramWrapper = class {
 
-    initialize:
-
-    function WebGLProgramWrapper (renderer, vertexSource, fragmentSource)
+    constructor(renderer, vertexSource, fragmentSource)
     {
         /**
          * The WebGLRenderer instance that owns this wrapper.
@@ -209,7 +207,7 @@ var WebGLProgramWrapper = new Class({
         this.uniformRequests = new Map();
 
         this.createResource();
-    },
+    }
 
     /**
      * Creates a WebGLProgram from the given vertex and fragment shaders.
@@ -221,7 +219,7 @@ var WebGLProgramWrapper = new Class({
      * @throws {Error} If the shaders failed to compile or link.
      * @since 3.80.0
      */
-    createResource: function ()
+    createResource()
     {
         var renderer = this.renderer;
         var gl = renderer.gl;
@@ -275,7 +273,7 @@ var WebGLProgramWrapper = new Class({
         {
             this._completeProgram();
         }
-    },
+    }
 
     /**
      * Poll shader compilation status, and complete the program if it is ready.
@@ -285,7 +283,7 @@ var WebGLProgramWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#checkParallelCompile
      * @since 4.0.0
      */
-    checkParallelCompile: function ()
+    checkParallelCompile()
     {
         var renderer = this.renderer;
         var gl = renderer.gl;
@@ -297,7 +295,7 @@ var WebGLProgramWrapper = new Class({
         }
 
         this._completeProgram();
-    },
+    }
 
     /**
      * Complete the program after the shaders have compiled.
@@ -308,7 +306,7 @@ var WebGLProgramWrapper = new Class({
      * @private
      * @since 4.0.0
      */
-    _completeProgram: function ()
+    _completeProgram()
     {
         var program = this.webGLProgram;
         var renderer = this.renderer;
@@ -339,7 +337,7 @@ var WebGLProgramWrapper = new Class({
 
         this.compileTimeMs = performance.now() - this._compileStartTime;
         this.compiling = false;
-    },
+    }
 
     /**
      * Set up the attributes and uniforms for this program.
@@ -349,7 +347,7 @@ var WebGLProgramWrapper = new Class({
      * @private
      * @since 4.0.0
      */
-    _setupAttributesAndUniforms: function ()
+    _setupAttributesAndUniforms()
     {
         var program = this.webGLProgram;
         var renderer = this.renderer;
@@ -409,7 +407,7 @@ var WebGLProgramWrapper = new Class({
                 value: initialValue
             });
         }
-    },
+    }
 
     /**
      * Set a uniform value for this WebGLProgram.
@@ -423,10 +421,10 @@ var WebGLProgramWrapper = new Class({
      * @param {string} name - The name of the uniform.
      * @param {number|number[]|Int32Array|Float32Array} value - The value to set.
      */
-    setUniform: function (name, value)
+    setUniform(name, value)
     {
         this.uniformRequests.set(name, value);
-    },
+    }
 
     /**
      * Set this program as the active program in the WebGL context.
@@ -436,14 +434,14 @@ var WebGLProgramWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#bind
      * @since 4.0.0
      */
-    bind: function ()
+    bind()
     {
         this.renderer.glWrapper.updateBindingsProgram(this.glState);
 
         this.uniformRequests.each(this._processUniformRequest.bind(this));
 
         this.uniformRequests.clear();
-    },
+    }
 
     /**
      * Process a request to update a uniform value.
@@ -463,7 +461,7 @@ var WebGLProgramWrapper = new Class({
      * @param {string} name - The name of the uniform.
      * @param {number|number[]|Int32Array|Float32Array} value - The value to set.
      */
-    _processUniformRequest: function (name, value)
+    _processUniformRequest(name, value)
     {
         var renderer = this.renderer;
         var gl = renderer.gl;
@@ -527,7 +525,7 @@ var WebGLProgramWrapper = new Class({
                     break;
             }
         }
-    },
+    }
 
     /**
      * Remove this WebGLProgram from the GL context.
@@ -535,7 +533,7 @@ var WebGLProgramWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper#destroy
      * @since 3.80.0
      */
-    destroy: function ()
+    destroy()
     {
         if (!this.webGLProgram)
         {
@@ -572,6 +570,6 @@ var WebGLProgramWrapper = new Class({
         this.webGLProgram = null;
         this.renderer = null;
     }
-});
+};
 
 module.exports = WebGLProgramWrapper;

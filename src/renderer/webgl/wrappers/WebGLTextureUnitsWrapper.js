@@ -18,11 +18,9 @@ var Class = require('../../../utils/Class');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance that owns this wrapper.
  */
-var WebGLTextureUnitsWrapper = new Class({
+var WebGLTextureUnitsWrapper = class {
 
-    initialize:
-
-    function WebGLTextureUnitsWrapper (renderer)
+    constructor(renderer)
     {
         /**
          * The WebGLRenderer instance that owns this wrapper.
@@ -53,7 +51,7 @@ var WebGLTextureUnitsWrapper = new Class({
         this.unitIndices = [];
 
         this.init();
-    },
+    }
 
     /**
      * Initializes the texture units to `null`. The active texture unit
@@ -67,7 +65,7 @@ var WebGLTextureUnitsWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLTextureUnitsWrapper#init
      * @since 4.0.0
      */
-    init: function ()
+    init()
     {
         var gl = this.renderer.gl;
 
@@ -92,7 +90,7 @@ var WebGLTextureUnitsWrapper = new Class({
             this.unitIndices[unit] = unit;
         }
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([ 0, 0, 255, 255 ]));
-    },
+    }
 
     /**
      * Binds a texture to a texture unit.
@@ -109,7 +107,7 @@ var WebGLTextureUnitsWrapper = new Class({
      * @param {boolean} [force=false] - If true, it will bind the texture even if it is already bound.
      * @param {boolean} [forceActive=true] - If true, it will change the active texture unit to the given unit even if it is already active. Otherwise, it will only change the active texture unit if it is not already active.
      */
-    bind: function (texture, unit, force, forceActive)
+    bind(texture, unit, force, forceActive)
     {
         var needsBind = this.units[unit] !== texture;
         if (force || (forceActive !== false) || needsBind)
@@ -126,7 +124,7 @@ var WebGLTextureUnitsWrapper = new Class({
         var glTexture = texture ? texture.webGLTexture : null;
         var gl = this.renderer.gl;
         gl.bindTexture(gl.TEXTURE_2D, glTexture);
-    },
+    }
 
     /**
      * Set specific texture units to specific textures.
@@ -138,7 +136,7 @@ var WebGLTextureUnitsWrapper = new Class({
      * @param {Array<Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper|null|undefined>} textures - The textures to bind. Null values will be unbound. Undefined values will be skipped.
      * @param {boolean} [force=false] - If true, it will bind all textures, even if they are already bound.
      */
-    bindUnits: function (textures, force)
+    bindUnits(textures, force)
     {
         var length = Math.min(textures.length, this.renderer.maxTextures);
         for (var i = length - 1; i >= 0; i--)
@@ -148,7 +146,7 @@ var WebGLTextureUnitsWrapper = new Class({
                 this.bind(textures[i], i, force, false);
             }
         }
-    },
+    }
 
     /**
      * Unbinds all textures from all texture units.
@@ -157,13 +155,13 @@ var WebGLTextureUnitsWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLTextureUnitsWrapper#unbindAllUnits
      * @since 4.0.0
      */
-    unbindAllUnits: function ()
+    unbindAllUnits()
     {
         for (var i = this.units.length - 1; i >= 0; i--)
         {
             this.bind(null, i, true, false);
         }
     }
-});
+};
 
 module.exports = WebGLTextureUnitsWrapper;

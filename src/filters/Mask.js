@@ -62,15 +62,14 @@ var Controller = require('./Controller');
  * @param {Phaser.Cameras.Scene2D.Camera} [viewCamera] - The Camera to use when rendering the mask with a GameObject. If not specified, uses the scene's `main` camera.
  * @param {'local'|'world'} [viewTransform='world'] - The transform to use when rendering the mask with a GameObject. 'local' uses the GameObject's own properties. 'world' uses the GameObject's `parentContainer` value to compute a world position.
  */
-var Mask = new Class({
-    Extends: Controller,
+var Mask = class extends Controller {
 
-    initialize: function Mask (camera, mask, invert, viewCamera, viewTransform)
+    constructor(camera, mask, invert, viewCamera, viewTransform)
     {
         if (mask === undefined) { mask = '__WHITE'; }
         if (invert === undefined) { invert = false; }
 
-        Controller.call(this, camera, 'FilterMask');
+        super(camera, 'FilterMask');
 
         /**
          * The underlying texture used for the mask.
@@ -173,7 +172,7 @@ var Mask = new Class({
         {
             this.setGameObject(mask);
         }
-    },
+    }
 
     /**
      * Updates the DynamicTexture for the mask.
@@ -188,7 +187,7 @@ var Mask = new Class({
      * @param {number} width - The width of the DynamicTexture.
      * @param {number} height - The height of the DynamicTexture
      */
-    updateDynamicTexture: function (width, height)
+    updateDynamicTexture(width, height)
     {
         var gameObject = this.maskGameObject;
 
@@ -220,7 +219,7 @@ var Mask = new Class({
         this._dynamicTexture.render();
 
         this.needsUpdate = false;
-    },
+    }
 
     /**
      * Sets the GameObject used for the mask.
@@ -230,7 +229,7 @@ var Mask = new Class({
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject to use for the mask.
      * @returns {this} This Filter Controller.
      */
-    setGameObject: function (gameObject)
+    setGameObject(gameObject)
     {
         this.maskGameObject = gameObject;
         this.needsUpdate = true;
@@ -241,7 +240,7 @@ var Mask = new Class({
         // if this filter is being used as an internal filter.
 
         return this;
-    },
+    }
 
     /**
      * Sets the texture used for the mask.
@@ -251,7 +250,7 @@ var Mask = new Class({
      * @param {string} [texture='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
      * @returns {this} This Filter Controller.
      */
-    setTexture: function (texture)
+    setTexture(texture)
     {
         var phaserTexture = this.camera.scene.sys.textures.getFrame(texture);
 
@@ -262,9 +261,9 @@ var Mask = new Class({
         }
 
         return this;
-    },
+    }
 
-    destroy: function ()
+    destroy()
     {
         if (this._dynamicTexture)
         {
@@ -276,6 +275,6 @@ var Mask = new Class({
 
         Controller.prototype.destroy.call(this);
     }
-});
+};
 
 module.exports = Mask;

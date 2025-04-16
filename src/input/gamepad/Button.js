@@ -20,11 +20,9 @@ var Events = require('./events');
  * @param {Phaser.Input.Gamepad.Gamepad} pad - A reference to the Gamepad that this Button belongs to.
  * @param {number} index - The index of this Button.
  */
-var Button = new Class({
+var Button = class {
 
-    initialize:
-
-    function Button (pad, index)
+    constructor(pad, index)
     {
         /**
          * A reference to the Gamepad that this Button belongs to.
@@ -83,7 +81,7 @@ var Button = new Class({
          * @since 3.0.0
          */
         this.pressed = false;
-    },
+    }
 
     /**
      * Internal update handler for this Button.
@@ -99,7 +97,7 @@ var Button = new Class({
      *
      * @param {number} value - The value of the button. Between 0 and 1.
      */
-    update: function (value)
+    update(value)
     {
         this.value = value;
 
@@ -121,7 +119,7 @@ var Button = new Class({
             this.events.emit(Events.BUTTON_UP, pad, this, value);
             this.pad.emit(Events.GAMEPAD_BUTTON_UP, index, value, this);
         }
-    },
+    }
 
     /**
      * Destroys this Button instance and releases external references it holds.
@@ -129,12 +127,12 @@ var Button = new Class({
      * @method Phaser.Input.Gamepad.Button#destroy
      * @since 3.10.0
      */
-    destroy: function ()
+    destroy()
     {
         this.pad = null;
         this.events = null;
     }
 
-});
+};
 
 module.exports = Button;

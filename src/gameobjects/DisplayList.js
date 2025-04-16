@@ -27,15 +27,11 @@ var StableSort = require('../utils/array/StableSort');
  *
  * @param {Phaser.Scene} scene - The Scene that this Display List belongs to.
  */
-var DisplayList = new Class({
+var DisplayList = class extends List {
 
-    Extends: List,
-
-    initialize:
-
-    function DisplayList (scene)
+    constructor(scene)
     {
-        List.call(this, scene);
+        super(scene);
 
         /**
          * The flag the determines whether Game Objects should be sorted when `depthSort()` is called.
@@ -80,7 +76,7 @@ var DisplayList = new Class({
 
         this.events.once(SceneEvents.BOOT, this.boot, this);
         this.events.on(SceneEvents.START, this.start, this);
-    },
+    }
 
     /**
      * This method is called automatically, only once, when the Scene is first created.
@@ -90,10 +86,10 @@ var DisplayList = new Class({
      * @private
      * @since 3.5.1
      */
-    boot: function ()
+    boot()
     {
         this.events.once(SceneEvents.DESTROY, this.destroy, this);
-    },
+    }
 
     /**
      * Internal method called from `List.addCallback`.
@@ -106,7 +102,7 @@ var DisplayList = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was added to the list.
      */
-    addChildCallback: function (gameObject)
+    addChildCallback(gameObject)
     {
         if (gameObject.displayList && gameObject.displayList !== this)
         {
@@ -128,7 +124,7 @@ var DisplayList = new Class({
 
             this.events.emit(SceneEvents.ADDED_TO_SCENE, gameObject, this.scene);
         }
-    },
+    }
 
     /**
      * Internal method called from `List.removeCallback`.
@@ -141,7 +137,7 @@ var DisplayList = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was removed from the list.
      */
-    removeChildCallback: function (gameObject)
+    removeChildCallback(gameObject)
     {
         this.queueDepthSort();
 
@@ -150,7 +146,7 @@ var DisplayList = new Class({
         gameObject.emit(GameObjectEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
 
         this.events.emit(SceneEvents.REMOVED_FROM_SCENE, gameObject, this.scene);
-    },
+    }
 
     /**
      * This method is called automatically by the Scene when it is starting up.
@@ -161,10 +157,10 @@ var DisplayList = new Class({
      * @private
      * @since 3.5.0
      */
-    start: function ()
+    start()
     {
         this.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * Force a sort of the display list on the next call to depthSort.
@@ -172,10 +168,10 @@ var DisplayList = new Class({
      * @method Phaser.GameObjects.DisplayList#queueDepthSort
      * @since 3.0.0
      */
-    queueDepthSort: function ()
+    queueDepthSort()
     {
         this.sortChildrenFlag = true;
-    },
+    }
 
     /**
      * Immediately sorts the display list if the flag is set.
@@ -183,7 +179,7 @@ var DisplayList = new Class({
      * @method Phaser.GameObjects.DisplayList#depthSort
      * @since 3.0.0
      */
-    depthSort: function ()
+    depthSort()
     {
         if (this.sortChildrenFlag)
         {
@@ -191,7 +187,7 @@ var DisplayList = new Class({
 
             this.sortChildrenFlag = false;
         }
-    },
+    }
 
     /**
      * Compare the depth of two Game Objects.
@@ -204,10 +200,10 @@ var DisplayList = new Class({
      *
      * @return {number} The difference between the depths of each Game Object.
      */
-    sortByDepth: function (childA, childB)
+    sortByDepth(childA, childB)
     {
         return childA._depth - childB._depth;
-    },
+    }
 
     /**
      * Returns an array which contains all objects currently on the Display List.
@@ -218,10 +214,10 @@ var DisplayList = new Class({
      *
      * @return {Phaser.GameObjects.GameObject[]} The group members.
      */
-    getChildren: function ()
+    getChildren()
     {
         return this.list;
-    },
+    }
 
     /**
      * The Scene that owns this plugin is shutting down.
@@ -232,7 +228,7 @@ var DisplayList = new Class({
      * @private
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         var list = this.list;
         var i = list.length;
@@ -248,7 +244,7 @@ var DisplayList = new Class({
         list.length = 0;
 
         this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * The Scene that owns this plugin is being destroyed.
@@ -258,7 +254,7 @@ var DisplayList = new Class({
      * @private
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.shutdown();
 
@@ -269,7 +265,7 @@ var DisplayList = new Class({
         this.events = null;
     }
 
-});
+};
 
 PluginCache.register('DisplayList', DisplayList, 'displayList');
 

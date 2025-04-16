@@ -44,15 +44,11 @@ var Vector = require('./lib/geometry/Vector');
  * @param {Phaser.Scene} scene - The Scene to which this Matter World instance belongs.
  * @param {Phaser.Types.Physics.Matter.MatterWorldConfig} config - The Matter World configuration object.
  */
-var World = new Class({
+var World = class extends EventEmitter {
 
-    Extends: EventEmitter,
-
-    initialize:
-
-    function World (scene, config)
+    constructor(scene, config)
     {
-        EventEmitter.call(this);
+        super();
 
         /**
          * The Scene to which this Matter World instance belongs.
@@ -309,7 +305,7 @@ var World = new Class({
                 this.setBounds(x, y, width, height, thickness, left, right, top, bottom);
             }
         }
-    },
+    }
 
     /**
      * Sets the debug render style for the children of the given Matter Composite.
@@ -325,7 +321,7 @@ var World = new Class({
      *
      * @return {this} This Matter World instance for method chaining.
      */
-    setCompositeRenderStyle: function (composite)
+    setCompositeRenderStyle(composite)
     {
         var bodies = composite.bodies;
         var constraints = composite.constraints;
@@ -359,7 +355,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the debug render style for the given Matter Body.
@@ -384,7 +380,7 @@ var World = new Class({
      *
      * @return {this} This Matter World instance for method chaining.
      */
-    setBodyRenderStyle: function (body, lineColor, lineOpacity, lineThickness, fillColor, fillOpacity)
+    setBodyRenderStyle(body, lineColor, lineOpacity, lineThickness, fillColor, fillOpacity)
     {
         var render = body.render;
         var config = this.debugConfig;
@@ -445,7 +441,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the debug render style for the given Matter Constraint.
@@ -471,7 +467,7 @@ var World = new Class({
      *
      * @return {this} This Matter World instance for method chaining.
      */
-    setConstraintRenderStyle: function (constraint, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize)
+    setConstraintRenderStyle(constraint, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize)
     {
         var render = constraint.render;
         var config = this.debugConfig;
@@ -556,7 +552,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * This internal method acts as a proxy between all of the Matter JS events and then re-emits them
@@ -565,7 +561,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#setEventsProxy
      * @since 3.0.0
      */
-    setEventsProxy: function ()
+    setEventsProxy()
     {
         var _this = this;
         var engine = this.engine;
@@ -767,7 +763,7 @@ var World = new Class({
 
             _this.emit(Events.COLLISION_END, event, bodyA, bodyB);
         });
-    },
+    }
 
     /**
      * Sets the bounds of the Physics world to match the given world pixel dimensions.
@@ -793,7 +789,7 @@ var World = new Class({
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
      */
-    setBounds: function (x, y, width, height, thickness, left, right, top, bottom)
+    setBounds(x, y, width, height, thickness, left, right, top, bottom)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -811,7 +807,7 @@ var World = new Class({
         this.updateWall(bottom, 'bottom', x, y + height, width, thickness);
 
         return this;
-    },
+    }
 
     /**
      * Updates the 4 rectangle bodies that were created, if `setBounds` was set in the Matter config, to use
@@ -827,7 +823,7 @@ var World = new Class({
      * @param {number} [width] - The width of the walls, in pixels. Only optional if `add` is `false`.
      * @param {number} [height] - The height of the walls, in pixels. Only optional if `add` is `false`.
      */
-    updateWall: function (add, position, x, y, width, height)
+    updateWall(add, position, x, y, width, height)
     {
         var wall = this.walls[position];
 
@@ -853,7 +849,7 @@ var World = new Class({
 
             this.walls[position] = null;
         }
-    },
+    }
 
     /**
      * Creates a Phaser.GameObjects.Graphics object that is used to render all of the debug bodies and joints to.
@@ -870,7 +866,7 @@ var World = new Class({
      *
      * @return {Phaser.GameObjects.Graphics} The newly created Graphics object.
      */
-    createDebugGraphic: function ()
+    createDebugGraphic()
     {
         var graphic = this.scene.sys.add.graphics({ x: 0, y: 0 });
 
@@ -881,7 +877,7 @@ var World = new Class({
         this.drawDebug = true;
 
         return graphic;
-    },
+    }
 
     /**
      * Sets the world gravity and gravity scale to 0.
@@ -891,14 +887,14 @@ var World = new Class({
      *
      * @return {this} This Matter World object.
      */
-    disableGravity: function ()
+    disableGravity()
     {
         this.localWorld.gravity.x = 0;
         this.localWorld.gravity.y = 0;
         this.localWorld.gravity.scale = 0;
 
         return this;
-    },
+    }
 
     /**
      * Sets the worlds gravity to the values given.
@@ -914,7 +910,7 @@ var World = new Class({
      *
      * @return {this} This Matter World object.
      */
-    setGravity: function (x, y, scale)
+    setGravity(x, y, scale)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 1; }
@@ -925,7 +921,7 @@ var World = new Class({
         this.localWorld.gravity.scale = scale;
 
         return this;
-    },
+    }
 
     /**
      * Creates a rectangle Matter body and adds it to the world.
@@ -941,14 +937,14 @@ var World = new Class({
      *
      * @return {MatterJS.BodyType} The Matter.js body that was created.
      */
-    create: function (x, y, width, height, options)
+    create(x, y, width, height, options)
     {
         var body = Bodies.rectangle(x, y, width, height, options);
 
         MatterWorld.add(this.localWorld, body);
 
         return body;
-    },
+    }
 
     /**
      * Adds a Matter JS object, or array of objects, to the world.
@@ -964,12 +960,12 @@ var World = new Class({
      *
      * @return {this} This Matter World object.
      */
-    add: function (object)
+    add(object)
     {
         MatterWorld.add(this.localWorld, object);
 
         return this;
-    },
+    }
 
     /**
      * Removes a Matter JS object, or array of objects, from the world.
@@ -986,7 +982,7 @@ var World = new Class({
      *
      * @return {this} This Matter World object.
      */
-    remove: function (object, deep)
+    remove(object, deep)
     {
         if (!Array.isArray(object))
         {
@@ -1003,7 +999,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Removes a Matter JS constraint, or array of constraints, from the world.
@@ -1018,12 +1014,12 @@ var World = new Class({
      *
      * @return {this} This Matter World object.
      */
-    removeConstraint: function (constraint, deep)
+    removeConstraint(constraint, deep)
     {
         Composite.remove(this.localWorld, constraint, deep);
 
         return this;
-    },
+    }
 
     /**
      * Adds `MatterTileBody` instances for all the colliding tiles within the given tilemap layer.
@@ -1042,7 +1038,7 @@ var World = new Class({
      *
      * @return {this} This Matter World object.
      */
-    convertTilemapLayer: function (tilemapLayer, options)
+    convertTilemapLayer(tilemapLayer, options)
     {
         var layerData = tilemapLayer.layer;
         var tiles = tilemapLayer.getTilesWithin(0, 0, layerData.width, layerData.height, { isColliding: true });
@@ -1050,7 +1046,7 @@ var World = new Class({
         this.convertTiles(tiles, options);
 
         return this;
-    },
+    }
 
     /**
      * Creates `MatterTileBody` instances for all of the given tiles. This creates bodies regardless of whether the
@@ -1066,7 +1062,7 @@ var World = new Class({
      *
      * @return {this} This Matter World object.
      */
-    convertTiles: function (tiles, options)
+    convertTiles(tiles, options)
     {
         if (tiles.length === 0)
         {
@@ -1079,7 +1075,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Returns the next unique group index for which bodies will collide.
@@ -1092,10 +1088,10 @@ var World = new Class({
      *
      * @return {number} Unique category bitfield
      */
-    nextGroup: function (isNonColliding)
+    nextGroup(isNonColliding)
     {
         return MatterBody.nextGroup(isNonColliding);
-    },
+    }
 
     /**
      * Returns the next unique category bitfield (starting after the initial default category 0x0001).
@@ -1106,10 +1102,10 @@ var World = new Class({
      *
      * @return {number} Unique category bitfield
      */
-    nextCategory: function ()
+    nextCategory()
     {
         return MatterBody.nextCategory();
-    },
+    }
 
     /**
      * Pauses this Matter World instance and sets `enabled` to `false`.
@@ -1122,14 +1118,14 @@ var World = new Class({
      *
      * @return {this} This Matter World object.
      */
-    pause: function ()
+    pause()
     {
         this.enabled = false;
 
         this.emit(Events.PAUSE);
 
         return this;
-    },
+    }
 
     /**
      * Resumes this Matter World instance from a paused state and sets `enabled` to `true`.
@@ -1140,7 +1136,7 @@ var World = new Class({
      *
      * @return {this} This Matter World object.
      */
-    resume: function ()
+    resume()
     {
         this.enabled = true;
 
@@ -1149,7 +1145,7 @@ var World = new Class({
         this.emit(Events.RESUME);
 
         return this;
-    },
+    }
 
     /**
      * The internal update method. This is called automatically by the parent Scene.
@@ -1171,7 +1167,7 @@ var World = new Class({
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    update: function (time)
+    update(time)
     {
         if (!this.enabled || !this.autoUpdate)
         {
@@ -1263,7 +1259,7 @@ var World = new Class({
                 break;
             }
         }
-    },
+    }
 
     /**
      * Manually advances the physics simulation by one iteration.
@@ -1291,10 +1287,10 @@ var World = new Class({
      *
      * @param {number} [delta=16.666] - The delta value.
      */
-    step: function (delta)
+    step(delta)
     {
         Engine.update(this.engine, delta);
-    },
+    }
 
     /**
      * Runs the Matter Engine.update at a fixed timestep of 60Hz.
@@ -1304,10 +1300,10 @@ var World = new Class({
      *
      * @return {number} The delta value to be passed to Engine.update.
      */
-    update60Hz: function ()
+    update60Hz()
     {
         return 1000 / 60;
-    },
+    }
 
     /**
      * Runs the Matter Engine.update at a fixed timestep of 30Hz.
@@ -1317,10 +1313,10 @@ var World = new Class({
      *
      * @return {number} The delta value to be passed to Engine.update.
      */
-    update30Hz: function ()
+    update30Hz()
     {
         return 1000 / 30;
-    },
+    }
 
     /**
      * Returns `true` if the given body can be found within the World.
@@ -1332,12 +1328,12 @@ var World = new Class({
      *
      * @return {MatterJS.BodyType[]} An array of all the Matter JS Bodies in this World.
      */
-    has: function (body)
+    has(body)
     {
         var src = (body.hasOwnProperty('body')) ? body.body : body;
 
         return (Composite.get(this.localWorld, src.id, src.type) !== null);
-    },
+    }
 
     /**
      * Returns all the bodies in the Matter World, including all bodies in children, recursively.
@@ -1347,10 +1343,10 @@ var World = new Class({
      *
      * @return {MatterJS.BodyType[]} An array of all the Matter JS Bodies in this World.
      */
-    getAllBodies: function ()
+    getAllBodies()
     {
         return Composite.allBodies(this.localWorld);
-    },
+    }
 
     /**
      * Returns all the constraints in the Matter World, including all constraints in children, recursively.
@@ -1360,10 +1356,10 @@ var World = new Class({
      *
      * @return {MatterJS.ConstraintType[]} An array of all the Matter JS Constraints in this World.
      */
-    getAllConstraints: function ()
+    getAllConstraints()
     {
         return Composite.allConstraints(this.localWorld);
-    },
+    }
 
     /**
      * Returns all the composites in the Matter World, including all composites in children, recursively.
@@ -1373,10 +1369,10 @@ var World = new Class({
      *
      * @return {MatterJS.CompositeType[]} An array of all the Matter JS Composites in this World.
      */
-    getAllComposites: function ()
+    getAllComposites()
     {
         return Composite.allComposites(this.localWorld);
-    },
+    }
 
     /**
      * Handles the rendering of bodies and debug information to the debug Graphics object, if enabled.
@@ -1387,7 +1383,7 @@ var World = new Class({
      * @private
      * @since 3.0.0
      */
-    postUpdate: function ()
+    postUpdate()
     {
         if (!this.drawDebug)
         {
@@ -1441,7 +1437,7 @@ var World = new Class({
         {
             this.renderCollisions(engine.pairs.list, graphics, config.collisionColor);
         }
-    },
+    }
 
     /**
      * Renders the Engine Broadphase Controller Grid to the given Graphics instance.
@@ -1461,7 +1457,7 @@ var World = new Class({
      *
      * @return {this} This Matter World instance for method chaining.
      */
-    renderGrid: function (grid, graphics, lineColor, lineOpacity)
+    renderGrid(grid, graphics, lineColor, lineOpacity)
     {
         graphics.lineStyle(1, lineColor, lineOpacity);
 
@@ -1487,7 +1483,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Renders the list of Pair separations to the given Graphics instance.
@@ -1506,7 +1502,7 @@ var World = new Class({
      *
      * @return {this} This Matter World instance for method chaining.
      */
-    renderSeparations: function (pairs, graphics, lineColor)
+    renderSeparations(pairs, graphics, lineColor)
     {
         graphics.lineStyle(1, lineColor, 1);
 
@@ -1556,7 +1552,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Renders the list of collision points and normals to the given Graphics instance.
@@ -1575,7 +1571,7 @@ var World = new Class({
      *
      * @return {this} This Matter World instance for method chaining.
      */
-    renderCollisions: function (pairs, graphics, lineColor)
+    renderCollisions(pairs, graphics, lineColor)
     {
         graphics.lineStyle(1, lineColor, 0.5);
         graphics.fillStyle(lineColor, 1);
@@ -1653,7 +1649,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Renders the bounds of an array of Bodies to the given Graphics instance.
@@ -1673,7 +1669,7 @@ var World = new Class({
      * @param {number} lineColor - The line color.
      * @param {number} lineOpacity - The line opacity, between 0 and 1.
      */
-    renderBodyBounds: function (bodies, graphics, lineColor, lineOpacity)
+    renderBodyBounds(bodies, graphics, lineColor, lineOpacity)
     {
         graphics.lineStyle(1, lineColor, lineOpacity);
 
@@ -1717,7 +1713,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Renders either all axes, or a single axis indicator, for an array of Bodies, to the given Graphics instance.
@@ -1736,7 +1732,7 @@ var World = new Class({
      * @param {number} lineColor - The line color.
      * @param {number} lineOpacity - The line opacity, between 0 and 1.
      */
-    renderBodyAxes: function (bodies, graphics, showAxes, lineColor, lineOpacity)
+    renderBodyAxes(bodies, graphics, showAxes, lineColor, lineOpacity)
     {
         graphics.lineStyle(1, lineColor, lineOpacity);
 
@@ -1794,7 +1790,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Renders a velocity indicator for an array of Bodies, to the given Graphics instance.
@@ -1813,7 +1809,7 @@ var World = new Class({
      * @param {number} lineOpacity - The line opacity, between 0 and 1.
      * @param {number} lineThickness - The line thickness.
      */
-    renderBodyVelocity: function (bodies, graphics, lineColor, lineOpacity, lineThickness)
+    renderBodyVelocity(bodies, graphics, lineColor, lineOpacity, lineThickness)
     {
         graphics.lineStyle(lineThickness, lineColor, lineOpacity);
 
@@ -1836,7 +1832,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Renders the given array of Bodies to the debug graphics instance.
@@ -1849,7 +1845,7 @@ var World = new Class({
      *
      * @param {array} bodies - An array of bodies from the localWorld.
      */
-    renderBodies: function (bodies)
+    renderBodies(bodies)
     {
         var graphics = this.debugGraphic;
 
@@ -1926,7 +1922,7 @@ var World = new Class({
                 this.renderConvexHull(body, graphics, hullColor, lineThickness);
             }
         }
-    },
+    }
 
     /**
      * Renders a single Matter Body to the given Phaser Graphics Game Object.
@@ -1951,7 +1947,7 @@ var World = new Class({
      *
      * @return {this} This Matter World instance for method chaining.
      */
-    renderBody: function (body, graphics, showInternalEdges, lineColor, lineOpacity, lineThickness, fillColor, fillOpacity)
+    renderBody(body, graphics, showInternalEdges, lineColor, lineOpacity, lineThickness, fillColor, fillOpacity)
     {
         if (lineColor === undefined) { lineColor = null; }
         if (lineOpacity === undefined) { lineOpacity = null; }
@@ -2066,7 +2062,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Renders the Convex Hull for a single Matter Body to the given Phaser Graphics Game Object.
@@ -2084,7 +2080,7 @@ var World = new Class({
      *
      * @return {this} This Matter World instance for method chaining.
      */
-    renderConvexHull: function (body, graphics, hullColor, lineThickness)
+    renderConvexHull(body, graphics, hullColor, lineThickness)
     {
         if (lineThickness === undefined) { lineThickness = 1; }
 
@@ -2113,7 +2109,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Renders all of the constraints in the world (unless they are specifically set to invisible).
@@ -2124,7 +2120,7 @@ var World = new Class({
      * @private
      * @since 3.14.0
      */
-    renderJoints: function ()
+    renderJoints()
     {
         var graphics = this.debugGraphic;
 
@@ -2144,7 +2140,7 @@ var World = new Class({
 
             this.renderConstraint(constraints[i], graphics, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize);
         }
-    },
+    }
 
     /**
      * Renders a single Matter Constraint, such as a Pin or a Spring, to the given Phaser Graphics Game Object.
@@ -2166,7 +2162,7 @@ var World = new Class({
      *
      * @return {this} This Matter World instance for method chaining.
      */
-    renderConstraint: function (constraint, graphics, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize)
+    renderConstraint(constraint, graphics, lineColor, lineOpacity, lineThickness, pinSize, anchorColor, anchorSize)
     {
         var render = constraint.render;
 
@@ -2240,7 +2236,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Resets the internal collision IDs that Matter.JS uses for Body collision groups.
@@ -2253,14 +2249,14 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#resetCollisionIDs
      * @since 3.17.0
      */
-    resetCollisionIDs: function ()
+    resetCollisionIDs()
     {
         Body._nextCollidingGroupId = 1;
         Body._nextNonCollidingGroupId = -1;
         Body._nextCategory = 0x0001;
 
         return this;
-    },
+    }
 
     /**
      * Will remove all Matter physics event listeners and clear the matter physics world,
@@ -2269,7 +2265,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#shutdown
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         MatterEvents.off(this.engine);
 
@@ -2283,7 +2279,7 @@ var World = new Class({
         {
             this.debugGraphic.destroy();
         }
-    },
+    }
 
     /**
      * Will remove all Matter physics event listeners and clear the matter physics world,
@@ -2294,11 +2290,11 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.shutdown();
     }
 
-});
+};
 
 module.exports = World;

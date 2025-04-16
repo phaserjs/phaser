@@ -22,8 +22,8 @@ var Class = require('../../../utils/Class');
  * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} [buffer] - The buffer that this layout should use. If not provided, a new buffer will be created. If the buffer is too small, an exception is thrown.
  * @throws {Error} If the buffer is too small for the layout.
  */
-var WebGLVertexBufferLayoutWrapper = new Class({
-    initialize: function WebGLVertexBufferLayoutWrapper (renderer, layout, buffer)
+var WebGLVertexBufferLayoutWrapper = class {
+    constructor(renderer, layout, buffer)
     {
         /**
          * The WebGLRenderer instance that owns this wrapper.
@@ -61,7 +61,7 @@ var WebGLVertexBufferLayoutWrapper = new Class({
          * @since 4.0.0
          */
         this.buffer = buffer || renderer.createVertexBuffer(new ArrayBuffer(bufferSize), layout.usage);
-    },
+    }
 
     /**
      * Complete the layout of the provided attribute buffer layout.
@@ -76,7 +76,7 @@ var WebGLVertexBufferLayoutWrapper = new Class({
      * @since 4.0.0
      * @param {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout} attributeBufferLayout - The layout to complete.
      */
-    completeLayout: function (attributeBufferLayout)
+    completeLayout(attributeBufferLayout)
     {
         var gl = this.renderer.gl;
         var layout = attributeBufferLayout.layout;
@@ -117,6 +117,6 @@ var WebGLVertexBufferLayoutWrapper = new Class({
         // Now that we know the total stride, we can set it.
         attributeBufferLayout.stride = offset;
     }
-});
+};
 
 module.exports = WebGLVertexBufferLayoutWrapper;

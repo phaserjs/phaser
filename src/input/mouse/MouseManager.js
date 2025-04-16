@@ -27,11 +27,9 @@ var NOOP = require('../../utils/NOOP');
  *
  * @param {Phaser.Input.InputManager} inputManager - A reference to the Input Manager.
  */
-var MouseManager = new Class({
+var MouseManager = class {
 
-    initialize:
-
-    function MouseManager (inputManager)
+    constructor(inputManager)
     {
         /**
          * A reference to the Input Manager.
@@ -227,7 +225,7 @@ var MouseManager = new Class({
         this.isTop = true;
 
         inputManager.events.once(InputEvents.MANAGER_BOOT, this.boot, this);
-    },
+    }
 
     /**
      * The Touch Manager boot process.
@@ -236,7 +234,7 @@ var MouseManager = new Class({
      * @private
      * @since 3.0.0
      */
-    boot: function ()
+    boot()
     {
         var config = this.manager.config;
 
@@ -267,7 +265,7 @@ var MouseManager = new Class({
         {
             this.startListeners();
         }
-    },
+    }
 
     /**
      * Attempts to disable the context menu from appearing if you right-click on the game canvas, or specified input target.
@@ -282,7 +280,7 @@ var MouseManager = new Class({
      *
      * @return {this} This Mouse Manager instance.
      */
-    disableContextMenu: function ()
+    disableContextMenu()
     {
         this.target.addEventListener('contextmenu', function (event)
         {
@@ -291,7 +289,7 @@ var MouseManager = new Class({
         });
 
         return this;
-    },
+    }
 
     /**
      * If the browser supports it, you can request that the pointer be locked to the browser window.
@@ -314,7 +312,7 @@ var MouseManager = new Class({
      * @method Phaser.Input.Mouse.MouseManager#requestPointerLock
      * @since 3.0.0
      */
-    requestPointerLock: function ()
+    requestPointerLock()
     {
         if (Features.pointerLock)
         {
@@ -324,7 +322,7 @@ var MouseManager = new Class({
 
             element.requestPointerLock();
         }
-    },
+    }
 
     /**
      * If the browser supports pointer lock, this will request that the pointer lock is released. If
@@ -334,14 +332,14 @@ var MouseManager = new Class({
      * @method Phaser.Input.Mouse.MouseManager#releasePointerLock
      * @since 3.0.0
      */
-    releasePointerLock: function ()
+    releasePointerLock()
     {
         if (Features.pointerLock)
         {
             document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock || document.webkitExitPointerLock;
             document.exitPointerLock();
         }
-    },
+    }
 
     /**
      * Starts the Mouse Event listeners running.
@@ -350,7 +348,7 @@ var MouseManager = new Class({
      * @method Phaser.Input.Mouse.MouseManager#startListeners
      * @since 3.0.0
      */
-    startListeners: function ()
+    startListeners()
     {
         var target = this.target;
 
@@ -515,7 +513,7 @@ var MouseManager = new Class({
         }
 
         this.enabled = true;
-    },
+    }
 
     /**
      * Stops the Mouse Event listeners.
@@ -524,7 +522,7 @@ var MouseManager = new Class({
      * @method Phaser.Input.Mouse.MouseManager#stopListeners
      * @since 3.0.0
      */
-    stopListeners: function ()
+    stopListeners()
     {
         var target = this.target;
 
@@ -548,7 +546,7 @@ var MouseManager = new Class({
             document.removeEventListener('mozpointerlockchange', this.pointerLockChange, true);
             document.removeEventListener('webkitpointerlockchange', this.pointerLockChange, true);
         }
-    },
+    }
 
     /**
      * Destroys this Mouse Manager instance.
@@ -556,7 +554,7 @@ var MouseManager = new Class({
      * @method Phaser.Input.Mouse.MouseManager#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.stopListeners();
 
@@ -565,6 +563,6 @@ var MouseManager = new Class({
         this.manager = null;
     }
 
-});
+};
 
 module.exports = MouseManager;

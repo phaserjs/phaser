@@ -80,26 +80,25 @@ var tempTransformMatrix = new Components.TransformMatrix();
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to this Container.
  */
-var Container = new Class({
+var Container = class extends GameObject {
 
-    Extends: GameObject,
-
-    Mixins: [
-        Components.AlphaSingle,
-        Components.BlendMode,
-        Components.ComputedSize,
-        Components.Depth,
-        Components.Mask,
-        Components.Transform,
-        Components.Visible,
-        Render
-    ],
-
-    initialize:
-
-    function Container (scene, x, y, children)
+    static
     {
-        GameObject.call(this, scene, 'Container');
+        Class.mixin(this, [
+            Components.AlphaSingle,
+            Components.BlendMode,
+            Components.ComputedSize,
+            Components.Depth,
+            Components.Mask,
+            Components.Transform,
+            Components.Visible,
+            Render
+        ], false);
+    }
+
+    constructor(scene, x, y, children)
+    {
+        super(scene, 'Container');
 
         /**
          * An array holding the children of this Container.
@@ -242,7 +241,7 @@ var Container = new Class({
         {
             this.add(children);
         }
-    },
+    }
 
     /**
      * Internal value to allow Containers to be used for input and physics.
@@ -254,14 +253,11 @@ var Container = new Class({
      * @override
      * @since 3.4.0
      */
-    originX: {
 
-        get: function ()
-        {
-            return 0.5;
-        }
-
-    },
+    get originX()
+    {
+        return 0.5;
+    }
 
     /**
      * Internal value to allow Containers to be used for input and physics.
@@ -273,14 +269,11 @@ var Container = new Class({
      * @override
      * @since 3.4.0
      */
-    originY: {
 
-        get: function ()
-        {
-            return 0.5;
-        }
-
-    },
+    get originY()
+    {
+        return 0.5;
+    }
 
     /**
      * Internal value to allow Containers to be used for input and physics.
@@ -292,14 +285,11 @@ var Container = new Class({
      * @override
      * @since 3.4.0
      */
-    displayOriginX: {
 
-        get: function ()
-        {
-            return this.width * 0.5;
-        }
-
-    },
+    get displayOriginX()
+    {
+        return this.width * 0.5;
+    }
 
     /**
      * Internal value to allow Containers to be used for input and physics.
@@ -311,14 +301,11 @@ var Container = new Class({
      * @override
      * @since 3.4.0
      */
-    displayOriginY: {
 
-        get: function ()
-        {
-            return this.height * 0.5;
-        }
-
-    },
+    get displayOriginY()
+    {
+        return this.height * 0.5;
+    }
 
     /**
      * Does this Container exclusively manage its children?
@@ -340,14 +327,14 @@ var Container = new Class({
      *
      * @return {this} This Container.
      */
-    setExclusive: function (value)
+    setExclusive(value)
     {
         if (value === undefined) { value = true; }
 
         this.exclusive = value;
 
         return this;
-    },
+    }
 
     /**
      * Gets the bounds of this Container. It works by iterating all children of the Container,
@@ -369,7 +356,7 @@ var Container = new Class({
      *
      * @return {Phaser.Geom.Rectangle} The values stored in the output object.
      */
-    getBounds: function (output)
+    getBounds(output)
     {
         if (output === undefined) { output = new Rectangle(); }
 
@@ -413,7 +400,7 @@ var Container = new Class({
         }
 
         return output;
-    },
+    }
 
     /**
      * Internal add handler.
@@ -424,7 +411,7 @@ var Container = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was just added to this Container.
      */
-    addHandler: function (gameObject)
+    addHandler(gameObject)
     {
         gameObject.once(Events.DESTROY, this.onChildDestroyed, this);
 
@@ -441,7 +428,7 @@ var Container = new Class({
 
             gameObject.addedToScene();
         }
-    },
+    }
 
     /**
      * Internal remove handler.
@@ -452,7 +439,7 @@ var Container = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that was just removed from this Container.
      */
-    removeHandler: function (gameObject)
+    removeHandler(gameObject)
     {
         gameObject.off(Events.DESTROY, this.remove, this);
 
@@ -464,7 +451,7 @@ var Container = new Class({
 
             gameObject.addToDisplayList();
         }
-    },
+    }
 
     /**
      * Takes a Point-like object, such as a Vector2, or object with public x and y properties,
@@ -478,7 +465,7 @@ var Container = new Class({
      *
      * @return {Phaser.Types.Math.Vector2Like} The transformed point.
      */
-    pointToContainer: function (source, output)
+    pointToContainer(source, output)
     {
         if (output === undefined) { output = new Vector2(); }
 
@@ -502,7 +489,7 @@ var Container = new Class({
         tempMatrix.transformPoint(source.x, source.y, output);
 
         return output;
-    },
+    }
 
     /**
      * Returns the world transform matrix as used for Bounds checks.
@@ -514,10 +501,10 @@ var Container = new Class({
      *
      * @return {Phaser.GameObjects.Components.TransformMatrix} The world transform matrix.
      */
-    getBoundsTransformMatrix: function ()
+    getBoundsTransformMatrix()
     {
         return this.getWorldTransformMatrix(tempTransformMatrix, this.localTransform);
-    },
+    }
 
     /**
      * Adds the given Game Object, or array of Game Objects, to this Container.
@@ -534,12 +521,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    add: function (child)
+    add(child)
     {
         ArrayUtils.Add(this.list, child, this.maxSize, this.addHandler, this);
 
         return this;
-    },
+    }
 
     /**
      * Adds the given Game Object, or array of Game Objects, to this Container at the specified position.
@@ -559,12 +546,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    addAt: function (child, index)
+    addAt(child, index)
     {
         ArrayUtils.AddAt(this.list, child, index, this.maxSize, this.addHandler, this);
 
         return this;
-    },
+    }
 
     /**
      * Returns the Game Object at the given position in this Container.
@@ -579,10 +566,10 @@ var Container = new Class({
      *
      * @return {?Phaser.GameObjects.GameObject} The Game Object at the specified index, or `null` if none found.
      */
-    getAt: function (index)
+    getAt(index)
     {
         return this.list[index];
-    },
+    }
 
     /**
      * Returns the index of the given Game Object in this Container.
@@ -597,10 +584,10 @@ var Container = new Class({
      *
      * @return {number} The index of the Game Object in this Container, or -1 if not found.
      */
-    getIndex: function (child)
+    getIndex(child)
     {
         return this.list.indexOf(child);
-    },
+    }
 
     /**
      * Sort the contents of this Container so the items are in order based on the given property.
@@ -614,7 +601,7 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    sort: function (property, handler)
+    sort(property, handler)
     {
         if (!property)
         {
@@ -632,7 +619,7 @@ var Container = new Class({
         ArrayUtils.StableSort(this.list, handler);
 
         return this;
-    },
+    }
 
     /**
      * Searches for the first instance of a child with its `name` property matching the given argument.
@@ -648,10 +635,10 @@ var Container = new Class({
      *
      * @return {?Phaser.GameObjects.GameObject} The first child with a matching name, or `null` if none were found.
      */
-    getByName: function (name)
+    getByName(name)
     {
         return ArrayUtils.GetFirst(this.list, 'name', name);
-    },
+    }
 
     /**
      * Returns a random Game Object from this Container.
@@ -667,10 +654,10 @@ var Container = new Class({
      *
      * @return {?Phaser.GameObjects.GameObject} A random child from the Container, or `null` if the Container is empty.
      */
-    getRandom: function (startIndex, length)
+    getRandom(startIndex, length)
     {
         return ArrayUtils.GetRandom(this.list, startIndex, length);
-    },
+    }
 
     /**
      * Gets the first Game Object in this Container.
@@ -695,10 +682,10 @@ var Container = new Class({
      *
      * @return {?Phaser.GameObjects.GameObject} The first matching Game Object, or `null` if none was found.
      */
-    getFirst: function (property, value, startIndex, endIndex)
+    getFirst(property, value, startIndex, endIndex)
     {
         return ArrayUtils.GetFirst(this.list, property, value, startIndex, endIndex);
-    },
+    }
 
     /**
      * Returns all Game Objects in this Container.
@@ -728,10 +715,10 @@ var Container = new Class({
      *
      * @return {Phaser.GameObjects.GameObject[]} An array of matching Game Objects from this Container.
      */
-    getAll: function (property, value, startIndex, endIndex)
+    getAll(property, value, startIndex, endIndex)
     {
         return ArrayUtils.GetAll(this.list, property, value, startIndex, endIndex);
-    },
+    }
 
     /**
      * Returns the total number of Game Objects in this Container that have a property
@@ -751,10 +738,10 @@ var Container = new Class({
      *
      * @return {number} The total number of Game Objects in this Container with a property matching the given value.
      */
-    count: function (property, value, startIndex, endIndex)
+    count(property, value, startIndex, endIndex)
     {
         return ArrayUtils.CountAllMatching(this.list, property, value, startIndex, endIndex);
-    },
+    }
 
     /**
      * Swaps the position of two Game Objects in this Container.
@@ -771,12 +758,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    swap: function (child1, child2)
+    swap(child1, child2)
     {
         ArrayUtils.Swap(this.list, child1, child2);
 
         return this;
-    },
+    }
 
     /**
      * Moves a Game Object to a new position within this Container.
@@ -797,12 +784,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    moveTo: function (child, index)
+    moveTo(child, index)
     {
         ArrayUtils.MoveTo(this.list, child, index);
 
         return this;
-    },
+    }
 
     /**
      * Moves a Game Object above another one within this Container.
@@ -821,12 +808,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    moveAbove: function (child1, child2)
+    moveAbove(child1, child2)
     {
         ArrayUtils.MoveAbove(this.list, child1, child2);
 
         return this;
-    },
+    }
 
     /**
      * Moves a Game Object below another one within this Container.
@@ -845,12 +832,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    moveBelow: function (child1, child2)
+    moveBelow(child1, child2)
     {
         ArrayUtils.MoveBelow(this.list, child1, child2);
 
         return this;
-    },
+    }
 
     /**
      * Removes the given Game Object, or array of Game Objects, from this Container.
@@ -870,7 +857,7 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    remove: function (child, destroyChild)
+    remove(child, destroyChild)
     {
         var removed = ArrayUtils.Remove(this.list, child, this.removeHandler, this);
 
@@ -888,7 +875,7 @@ var Container = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Removes the Game Object at the given position in this Container.
@@ -903,7 +890,7 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    removeAt: function (index, destroyChild)
+    removeAt(index, destroyChild)
     {
         var removed = ArrayUtils.RemoveAt(this.list, index, this.removeHandler, this);
 
@@ -913,7 +900,7 @@ var Container = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Removes the Game Objects between the given positions in this Container.
@@ -929,7 +916,7 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    removeBetween: function (startIndex, endIndex, destroyChild)
+    removeBetween(startIndex, endIndex, destroyChild)
     {
         var removed = ArrayUtils.RemoveBetween(this.list, startIndex, endIndex, this.removeHandler, this);
 
@@ -942,7 +929,7 @@ var Container = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Removes all Game Objects from this Container.
@@ -956,7 +943,7 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    removeAll: function (destroyChild)
+    removeAll(destroyChild)
     {
         var list = this.list;
 
@@ -980,7 +967,7 @@ var Container = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Brings the given Game Object to the top of this Container.
@@ -996,12 +983,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    bringToTop: function (child)
+    bringToTop(child)
     {
         ArrayUtils.BringToTop(this.list, child);
 
         return this;
-    },
+    }
 
     /**
      * Sends the given Game Object to the bottom of this Container.
@@ -1017,12 +1004,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    sendToBack: function (child)
+    sendToBack(child)
     {
         ArrayUtils.SendToBack(this.list, child);
 
         return this;
-    },
+    }
 
     /**
      * Moves the given Game Object up one place in this Container, unless it's already at the top.
@@ -1037,12 +1024,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    moveUp: function (child)
+    moveUp(child)
     {
         ArrayUtils.MoveUp(this.list, child);
 
         return this;
-    },
+    }
 
     /**
      * Moves the given Game Object down one place in this Container, unless it's already at the bottom.
@@ -1057,12 +1044,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    moveDown: function (child)
+    moveDown(child)
     {
         ArrayUtils.MoveDown(this.list, child);
 
         return this;
-    },
+    }
 
     /**
      * Reverses the order of all Game Objects in this Container.
@@ -1072,12 +1059,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    reverse: function ()
+    reverse()
     {
         this.list.reverse();
 
         return this;
-    },
+    }
 
     /**
      * Shuffles the all Game Objects in this Container using the Fisher-Yates implementation.
@@ -1087,12 +1074,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    shuffle: function ()
+    shuffle()
     {
         ArrayUtils.Shuffle(this.list);
 
         return this;
-    },
+    }
 
     /**
      * Replaces a Game Object in this Container with the new Game Object.
@@ -1110,7 +1097,7 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    replace: function (oldChild, newChild, destroyChild)
+    replace(oldChild, newChild, destroyChild)
     {
         var moved = ArrayUtils.Replace(this.list, oldChild, newChild);
 
@@ -1126,7 +1113,7 @@ var Container = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Returns `true` if the given Game Object is a direct child of this Container.
@@ -1143,10 +1130,10 @@ var Container = new Class({
      *
      * @return {boolean} True if the Game Object is an immediate child of this Container, otherwise false.
      */
-    exists: function (child)
+    exists(child)
     {
         return (this.list.indexOf(child) > -1);
-    },
+    }
 
     /**
      * Sets the property to the given value on all Game Objects in this Container.
@@ -1165,12 +1152,12 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    setAll: function (property, value, startIndex, endIndex)
+    setAll(property, value, startIndex, endIndex)
     {
         ArrayUtils.SetAll(this.list, property, value, startIndex, endIndex);
 
         return this;
-    },
+    }
 
     /**
      * @callback EachContainerCallback
@@ -1198,7 +1185,7 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    each: function (callback, context)
+    each(callback, context)
     {
         var args = [ null ];
         var i;
@@ -1218,7 +1205,7 @@ var Container = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Passes all Game Objects in this Container to the given callback.
@@ -1235,7 +1222,7 @@ var Container = new Class({
      *
      * @return {this} This Container instance.
      */
-    iterate: function (callback, context)
+    iterate(callback, context)
     {
         var args = [ null ];
         var i;
@@ -1253,7 +1240,7 @@ var Container = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the scroll factor of this Container and optionally all of its children.
@@ -1281,7 +1268,7 @@ var Container = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setScrollFactor: function (x, y, updateChildren)
+    setScrollFactor(x, y, updateChildren)
     {
         if (y === undefined) { y = x; }
         if (updateChildren === undefined) { updateChildren = false; }
@@ -1296,7 +1283,7 @@ var Container = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * The number of Game Objects inside this Container.
@@ -1306,14 +1293,11 @@ var Container = new Class({
      * @readonly
      * @since 3.4.0
      */
-    length: {
 
-        get: function ()
-        {
-            return this.list.length;
-        }
-
-    },
+    get length()
+    {
+        return this.list.length;
+    }
 
     /**
      * Returns the first Game Object within the Container, or `null` if it is empty.
@@ -1325,23 +1309,20 @@ var Container = new Class({
      * @readonly
      * @since 3.4.0
      */
-    first: {
 
-        get: function ()
+    get first()
+    {
+        this.position = 0;
+
+        if (this.list.length > 0)
         {
-            this.position = 0;
-
-            if (this.list.length > 0)
-            {
-                return this.list[0];
-            }
-            else
-            {
-                return null;
-            }
+            return this.list[0];
         }
-
-    },
+        else
+        {
+            return null;
+        }
+    }
 
     /**
      * Returns the last Game Object within the Container, or `null` if it is empty.
@@ -1353,23 +1334,20 @@ var Container = new Class({
      * @readonly
      * @since 3.4.0
      */
-    last: {
 
-        get: function ()
+    get last()
+    {
+        if (this.list.length > 0)
         {
-            if (this.list.length > 0)
-            {
-                this.position = this.list.length - 1;
+            this.position = this.list.length - 1;
 
-                return this.list[this.position];
-            }
-            else
-            {
-                return null;
-            }
+            return this.list[this.position];
         }
-
-    },
+        else
+        {
+            return null;
+        }
+    }
 
     /**
      * Returns the next Game Object within the Container, or `null` if it is empty.
@@ -1381,23 +1359,20 @@ var Container = new Class({
      * @readonly
      * @since 3.4.0
      */
-    next: {
 
-        get: function ()
+    get next()
+    {
+        if (this.position < this.list.length)
         {
-            if (this.position < this.list.length)
-            {
-                this.position++;
+            this.position++;
 
-                return this.list[this.position];
-            }
-            else
-            {
-                return null;
-            }
+            return this.list[this.position];
         }
-
-    },
+        else
+        {
+            return null;
+        }
+    }
 
     /**
      * Returns the previous Game Object within the Container, or `null` if it is empty.
@@ -1409,23 +1384,20 @@ var Container = new Class({
      * @readonly
      * @since 3.4.0
      */
-    previous: {
 
-        get: function ()
+    get previous()
+    {
+        if (this.position > 0)
         {
-            if (this.position > 0)
-            {
-                this.position--;
+            this.position--;
 
-                return this.list[this.position];
-            }
-            else
-            {
-                return null;
-            }
+            return this.list[this.position];
         }
-
-    },
+        else
+        {
+            return null;
+        }
+    }
 
     /**
      * Internal destroy handler, called as part of the destroy process.
@@ -1434,14 +1406,14 @@ var Container = new Class({
      * @protected
      * @since 3.9.0
      */
-    preDestroy: function ()
+    preDestroy()
     {
         this.removeAll(!!this.exclusive);
 
         this.localTransform.destroy();
 
         this.list = [];
-    },
+    }
 
     /**
      * Internal handler, called when a child is destroyed.
@@ -1450,7 +1422,7 @@ var Container = new Class({
      * @protected
      * @since 3.80.0
      */
-    onChildDestroyed: function (gameObject)
+    onChildDestroyed(gameObject)
     {
         ArrayUtils.Remove(this.list, gameObject);
 
@@ -1462,6 +1434,6 @@ var Container = new Class({
         }
     }
 
-});
+};
 
 module.exports = Container;

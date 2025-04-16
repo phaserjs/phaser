@@ -21,20 +21,19 @@ var ShaderSourceFS = require('../../shaders/FilterBarrel-frag.js');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterBarrel = new Class({
-    Extends: BaseFilterShader,
+var FilterBarrel = class extends BaseFilterShader {
 
-    initialize: function FilterBarrel (manager)
+    constructor(manager)
     {
-        BaseFilterShader.call(this, 'FilterBarrel', manager, null, ShaderSourceFS);
-    },
+        super('FilterBarrel', manager, null, ShaderSourceFS);
+    }
 
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         var programManager = this.programManager;
 
         programManager.setUniform('amount', controller.amount);
     }
-});
+};
 
 module.exports = FilterBarrel;

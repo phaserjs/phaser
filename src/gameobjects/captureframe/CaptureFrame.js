@@ -66,20 +66,22 @@ var CaptureFrameRender = require('./CaptureFrameRender.js');
  * @param {Phaser.Scene} scene - The Scene to which this CaptureFrame belongs.
  * @param {string} key - The key of the texture to create from this CaptureFrame.
  */
-var CaptureFrame = new Class({
-    Extends: GameObject,
+var CaptureFrame = class extends GameObject {
 
-    Mixins: [
-        Components.BlendMode,
-        Components.Depth,
-        Components.RenderNodes,
-        Components.Visible,
-        CaptureFrameRender
-    ],
-
-    initialize: function CaptureFrame (scene, key)
+    static
     {
-        GameObject.call(this, scene, 'CaptureFrame');
+        Class.mixin(this, [
+            Components.BlendMode,
+            Components.Depth,
+            Components.RenderNodes,
+            Components.Visible,
+            CaptureFrameRender
+        ], false);
+    }
+
+    constructor(scene, key)
+    {
+        super(scene, 'CaptureFrame');
 
         var renderer = scene.renderer;
 
@@ -109,7 +111,7 @@ var CaptureFrame = new Class({
         this.captureTexture = scene.sys.textures.addGLTexture(key, this.drawingContext.texture);
 
         this.initRenderNodes(this._defaultRenderNodesMap);
-    },
+    }
 
     /**
      * The default render nodes for this Game Object.
@@ -121,12 +123,11 @@ var CaptureFrame = new Class({
      * @readonly
      * @since 4.0.0
      */
-    _defaultRenderNodesMap: {
-        get: function ()
-        {
-            return DefaultQuadNodes;
-        }
-    },
+
+    get _defaultRenderNodesMap()
+    {
+        return DefaultQuadNodes;
+    }
 
     /**
      * Set the alpha value of this CaptureFrame.
@@ -138,10 +139,10 @@ var CaptureFrame = new Class({
      * @param {number} alpha - The alpha value (not used).
      * @returns {this}
      */
-    setAlpha: function (alpha)
+    setAlpha(alpha)
     {
         return this;
-    },
+    }
 
     /**
      * Set the scroll factor of this CaptureFrame.
@@ -154,10 +155,10 @@ var CaptureFrame = new Class({
      * @param {number} y - The vertical scroll factor (not used).
      * @returns {this}
      */
-    setScrollFactor: function (x, y)
+    setScrollFactor(x, y)
     {
         return this;
     }
-});
+};
 
 module.exports = CaptureFrame;

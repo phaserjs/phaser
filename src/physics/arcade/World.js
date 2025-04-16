@@ -52,15 +52,11 @@ var Wrap = require('../../math/Wrap');
  * @param {Phaser.Scene} scene - The Scene to which this World instance belongs.
  * @param {Phaser.Types.Physics.Arcade.ArcadeWorldConfig} config - An Arcade Physics Configuration object.
  */
-var World = new Class({
+var World = class extends EventEmitter {
 
-    Extends: EventEmitter,
-
-    initialize:
-
-    function World (scene, config)
+    constructor(scene, config)
     {
-        EventEmitter.call(this);
+        super();
 
         /**
          * The Scene this simulation belongs to.
@@ -412,7 +408,7 @@ var World = new Class({
         {
             this.createDebugGraphic();
         }
-    },
+    }
 
     /**
      * Adds an Arcade Physics Body to a Game Object, an array of Game Objects, or the children of a Group.
@@ -443,7 +439,7 @@ var World = new Class({
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object - The object, or objects, on which to create the bodies.
      * @param {number} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
      */
-    enable: function (object, bodyType)
+    enable(object, bodyType)
     {
         if (bodyType === undefined) { bodyType = CONST.DYNAMIC_BODY; }
 
@@ -480,7 +476,7 @@ var World = new Class({
                 this.enableBody(entry, bodyType);
             }
         }
-    },
+    }
 
     /**
      * Creates an Arcade Physics Body on a single Game Object.
@@ -512,7 +508,7 @@ var World = new Class({
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object on which the body was created.
      */
-    enableBody: function (object, bodyType)
+    enableBody(object, bodyType)
     {
         if (bodyType === undefined) { bodyType = CONST.DYNAMIC_BODY; }
 
@@ -534,7 +530,7 @@ var World = new Class({
         }
 
         return object;
-    },
+    }
 
     /**
      * Adds an existing Arcade Physics Body or StaticBody to the simulation.
@@ -548,7 +544,7 @@ var World = new Class({
      *
      * @return {(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody)} The Body that was added to the simulation.
      */
-    add: function (body)
+    add(body)
     {
         if (body.physicsType === CONST.DYNAMIC_BODY)
         {
@@ -564,7 +560,7 @@ var World = new Class({
         body.enable = true;
 
         return body;
-    },
+    }
 
     /**
      * Disables the Arcade Physics Body of a Game Object, an array of Game Objects, or the children of a Group.
@@ -580,7 +576,7 @@ var World = new Class({
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object - The object, or objects, on which to disable the bodies.
      */
-    disable: function (object)
+    disable(object)
     {
         if (!Array.isArray(object))
         {
@@ -615,7 +611,7 @@ var World = new Class({
                 this.disableBody(entry.body);
             }
         }
-    },
+    }
 
     /**
      * Disables an existing Arcade Physics Body or StaticBody and removes it from the simulation.
@@ -630,12 +626,12 @@ var World = new Class({
      *
      * @param {(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody)} body - The Body to be disabled.
      */
-    disableBody: function (body)
+    disableBody(body)
     {
         this.remove(body);
 
         body.enable = false;
-    },
+    }
 
     /**
      * Removes an existing Arcade Physics Body or StaticBody from the simulation.
@@ -650,7 +646,7 @@ var World = new Class({
      *
      * @param {(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody)} body - The body to be removed from the simulation.
      */
-    remove: function (body)
+    remove(body)
     {
         if (body.physicsType === CONST.DYNAMIC_BODY)
         {
@@ -662,7 +658,7 @@ var World = new Class({
             this.staticBodies.delete(body);
             this.staticTree.remove(body);
         }
-    },
+    }
 
     /**
      * Creates a Graphics Game Object that the world will use to render the debug display to.
@@ -681,7 +677,7 @@ var World = new Class({
      *
      * @return {Phaser.GameObjects.Graphics} The Graphics object that was created for use by the World.
      */
-    createDebugGraphic: function ()
+    createDebugGraphic()
     {
         var graphic = this.scene.sys.add.graphics({ x: 0, y: 0 });
 
@@ -692,7 +688,7 @@ var World = new Class({
         this.drawDebug = true;
 
         return graphic;
-    },
+    }
 
     /**
      * Sets the position, size and properties of the World boundary.
@@ -716,7 +712,7 @@ var World = new Class({
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
      */
-    setBounds: function (x, y, width, height, checkLeft, checkRight, checkUp, checkDown)
+    setBounds(x, y, width, height, checkLeft, checkRight, checkUp, checkDown)
     {
         this.bounds.setTo(x, y, width, height);
 
@@ -726,7 +722,7 @@ var World = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Enables or disables collisions on each edge of the World boundary.
@@ -741,7 +737,7 @@ var World = new Class({
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
      */
-    setBoundsCollision: function (left, right, up, down)
+    setBoundsCollision(left, right, up, down)
     {
         if (left === undefined) { left = true; }
         if (right === undefined) { right = true; }
@@ -754,7 +750,7 @@ var World = new Class({
         this.checkCollision.down = down;
 
         return this;
-    },
+    }
 
     /**
      * Pauses the simulation.
@@ -770,14 +766,14 @@ var World = new Class({
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
      */
-    pause: function ()
+    pause()
     {
         this.isPaused = true;
 
         this.emit(Events.PAUSE);
 
         return this;
-    },
+    }
 
     /**
      * Resumes the simulation, if paused.
@@ -788,14 +784,14 @@ var World = new Class({
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
      */
-    resume: function ()
+    resume()
     {
         this.isPaused = false;
 
         this.emit(Events.RESUME);
 
         return this;
-    },
+    }
 
     /**
      * Creates a new Collider object and adds it to the simulation.
@@ -820,7 +816,7 @@ var World = new Class({
      *
      * @return {Phaser.Physics.Arcade.Collider} The Collider that was created.
      */
-    addCollider: function (object1, object2, collideCallback, processCallback, callbackContext)
+    addCollider(object1, object2, collideCallback, processCallback, callbackContext)
     {
         if (collideCallback === undefined) { collideCallback = null; }
         if (processCallback === undefined) { processCallback = null; }
@@ -831,7 +827,7 @@ var World = new Class({
         this.colliders.add(collider);
 
         return collider;
-    },
+    }
 
     /**
      * Creates a new Overlap Collider object and adds it to the simulation.
@@ -855,7 +851,7 @@ var World = new Class({
      *
      * @return {Phaser.Physics.Arcade.Collider} The Collider that was created.
      */
-    addOverlap: function (object1, object2, collideCallback, processCallback, callbackContext)
+    addOverlap(object1, object2, collideCallback, processCallback, callbackContext)
     {
         if (collideCallback === undefined) { collideCallback = null; }
         if (processCallback === undefined) { processCallback = null; }
@@ -866,7 +862,7 @@ var World = new Class({
         this.colliders.add(collider);
 
         return collider;
-    },
+    }
 
     /**
      * Removes a Collider from the simulation so it is no longer processed.
@@ -885,12 +881,12 @@ var World = new Class({
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
      */
-    removeCollider: function (collider)
+    removeCollider(collider)
     {
         this.colliders.remove(collider);
 
         return this;
-    },
+    }
 
     /**
      * Sets the frame rate to run the simulation at.
@@ -911,14 +907,14 @@ var World = new Class({
      *
      * @return {this} This World object.
      */
-    setFPS: function (framerate)
+    setFPS(framerate)
     {
         this.fps = framerate;
         this._frameTime = 1 / this.fps;
         this._frameTimeMS = 1000 * this._frameTime;
 
         return this;
-    },
+    }
 
     /**
      * Advances the simulation based on the elapsed time and fps rate.
@@ -932,7 +928,7 @@ var World = new Class({
      * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    update: function (time, delta)
+    update(time, delta)
     {
         if (this.isPaused || this.bodies.size === 0)
         {
@@ -1003,7 +999,7 @@ var World = new Class({
 
             this.step(fixedDelta);
         }
-    },
+    }
 
     /**
      * Advances the simulation by a time increment.
@@ -1014,7 +1010,7 @@ var World = new Class({
      *
      * @param {number} delta - The delta time amount, in seconds, by which to advance the simulation.
      */
-    step: function (delta)
+    step(delta)
     {
         //  Update all active bodies
         var bodies = this.bodies;
@@ -1050,7 +1046,7 @@ var World = new Class({
         this.emit(Events.WORLD_STEP, delta);
 
         this.stepsLastFrame++;
-    },
+    }
 
     /**
      * Advances the simulation by a single step.
@@ -1059,12 +1055,12 @@ var World = new Class({
      * @fires Phaser.Physics.Arcade.Events#WORLD_STEP
      * @since 3.70.0
      */
-    singleStep: function ()
+    singleStep()
     {
         this.update(0, this._frameTimeMS);
 
         this.postUpdate();
-    },
+    }
 
     /**
      * Updates bodies, draws the debug display, and handles pending queue operations.
@@ -1072,7 +1068,7 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#postUpdate
      * @since 3.0.0
      */
-    postUpdate: function ()
+    postUpdate()
     {
         var dynamic = this.bodies;
         var staticBodies = this.staticBodies;
@@ -1140,7 +1136,7 @@ var World = new Class({
 
             pending.clear();
         }
-    },
+    }
 
     /**
      * Calculates a Body's velocity and updates its position.
@@ -1151,7 +1147,7 @@ var World = new Class({
      * @param {Phaser.Physics.Arcade.Body} body - The Body to be updated.
      * @param {number} delta - The delta value to be used in the motion calculations, in seconds.
      */
-    updateMotion: function (body, delta)
+    updateMotion(body, delta)
     {
         if (body.allowRotation)
         {
@@ -1159,7 +1155,7 @@ var World = new Class({
         }
 
         this.computeVelocity(body, delta);
-    },
+    }
 
     /**
      * Calculates a Body's angular velocity.
@@ -1170,7 +1166,7 @@ var World = new Class({
      * @param {Phaser.Physics.Arcade.Body} body - The Body to compute the velocity for.
      * @param {number} delta - The delta value to be used in the calculation, in seconds.
      */
-    computeAngularVelocity: function (body, delta)
+    computeAngularVelocity(body, delta)
     {
         var velocity = body.angularVelocity;
         var acceleration = body.angularAcceleration;
@@ -1205,7 +1201,7 @@ var World = new Class({
 
         body.angularVelocity += velocityDelta;
         body.rotation += (body.angularVelocity * delta);
-    },
+    }
 
     /**
      * Calculates a Body's per-axis velocity.
@@ -1216,7 +1212,7 @@ var World = new Class({
      * @param {Phaser.Physics.Arcade.Body} body - The Body to compute the velocity for.
      * @param {number} delta - The delta value to be used in the calculation, in seconds.
      */
-    computeVelocity: function (body, delta)
+    computeVelocity(body, delta)
     {
         var velocityX = body.velocity.x;
         var accelerationX = body.acceleration.x;
@@ -1331,7 +1327,7 @@ var World = new Class({
         }
 
         body.speed = speed;
-    },
+    }
 
     /**
      * Separates two Bodies.
@@ -1349,7 +1345,7 @@ var World = new Class({
      *
      * @return {boolean} True if separation occurred, otherwise false.
      */
-    separate: function (body1, body2, processCallback, callbackContext, overlapOnly)
+    separate(body1, body2, processCallback, callbackContext, overlapOnly)
     {
         var overlapX;
         var overlapY;
@@ -1446,7 +1442,7 @@ var World = new Class({
         }
 
         return result;
-    },
+    }
 
     /**
      * Separates two Bodies, when both are circular.
@@ -1462,7 +1458,7 @@ var World = new Class({
      *
      * @return {boolean} True if separation occurred, otherwise false.
      */
-    separateCircle: function (body1, body2, overlapOnly)
+    separateCircle(body1, body2, overlapOnly)
     {
         //  Set the AABB overlap, blocked and touching values into the bodies (we don't use the return values here)
         GetOverlapX(body1, body2, false, 0);
@@ -1653,7 +1649,7 @@ var World = new Class({
         }
 
         return results;
-    },
+    }
 
     /**
      * Checks to see if two Bodies intersect at all.
@@ -1666,7 +1662,7 @@ var World = new Class({
      *
      * @return {boolean} True if the two bodies intersect, otherwise false.
      */
-    intersects: function (body1, body2)
+    intersects(body1, body2)
     {
         if (body1 === body2)
         {
@@ -1701,7 +1697,7 @@ var World = new Class({
             //  Rect vs. Circle
             return this.circleBodyIntersects(body2, body1);
         }
-    },
+    }
 
     /**
      * Tests if a circular Body intersects with another Body.
@@ -1714,7 +1710,7 @@ var World = new Class({
      *
      * @return {boolean} True if the two bodies intersect, otherwise false.
      */
-    circleBodyIntersects: function (circle, body)
+    circleBodyIntersects(circle, body)
     {
         var x = Clamp(circle.center.x, body.left, body.right);
         var y = Clamp(circle.center.y, body.top, body.bottom);
@@ -1723,7 +1719,7 @@ var World = new Class({
         var dy = (circle.center.y - y) * (circle.center.y - y);
 
         return (dx + dy) <= (circle.halfWidth * circle.halfWidth);
-    },
+    }
 
     /**
      * Tests if Game Objects overlap.
@@ -1743,14 +1739,14 @@ var World = new Class({
      *
      * @see Phaser.Physics.Arcade.World#collide
      */
-    overlap: function (object1, object2, overlapCallback, processCallback, callbackContext)
+    overlap(object1, object2, overlapCallback, processCallback, callbackContext)
     {
         if (overlapCallback === undefined) { overlapCallback = null; }
         if (processCallback === undefined) { processCallback = null; }
         if (callbackContext === undefined) { callbackContext = overlapCallback; }
 
         return this.collideObjects(object1, object2, overlapCallback, processCallback, callbackContext, true);
-    },
+    }
 
     /**
      * Performs a collision check and separation between the two physics enabled objects given, which can be single
@@ -1784,14 +1780,14 @@ var World = new Class({
      *
      * @return {boolean} `true` if any overlapping Game Objects were separated, otherwise `false`.
      */
-    collide: function (object1, object2, collideCallback, processCallback, callbackContext)
+    collide(object1, object2, collideCallback, processCallback, callbackContext)
     {
         if (collideCallback === undefined) { collideCallback = null; }
         if (processCallback === undefined) { processCallback = null; }
         if (callbackContext === undefined) { callbackContext = collideCallback; }
 
         return this.collideObjects(object1, object2, collideCallback, processCallback, callbackContext, false);
-    },
+    }
 
     /**
      * Internal helper function. Please use Phaser.Physics.Arcade.World#collide instead.
@@ -1809,7 +1805,7 @@ var World = new Class({
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
-    collideObjects: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly)
+    collideObjects(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
         var i;
         var j;
@@ -1884,7 +1880,7 @@ var World = new Class({
         }
 
         return (this._total > 0);
-    },
+    }
 
     /**
      * Internal helper function. Please use Phaser.Physics.Arcade.World#collide and Phaser.Physics.Arcade.World#overlap instead.
@@ -1902,7 +1898,7 @@ var World = new Class({
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
-    collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly)
+    collideHandler(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
         //  Collide Group with Self
         //  Only collide valid objects
@@ -1963,7 +1959,7 @@ var World = new Class({
                 return this.collideGroupVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
             }
         }
-    },
+    }
 
     /**
      * Checks if the two given Arcade Physics bodies will collide, or not,
@@ -1977,14 +1973,14 @@ var World = new Class({
      *
      * @return {boolean} True if the two bodies will collide, otherwise false.
      */
-    canCollide: function (body1, body2)
+    canCollide(body1, body2)
     {
         return (
             (body1 && body2) &&
             (body1.collisionMask & body2.collisionCategory) !== 0 &&
             (body2.collisionMask & body1.collisionCategory) !== 0
         );
-    },
+    }
 
     /**
      * Internal handler for Sprite vs. Sprite collisions.
@@ -2003,7 +1999,7 @@ var World = new Class({
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
-    collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext, overlapOnly)
+    collideSpriteVsSprite(sprite1, sprite2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
         var body1 = (sprite1.isBody) ? sprite1 : sprite1.body;
         var body2 = (sprite2.isBody) ? sprite2 : sprite2.body;
@@ -2024,7 +2020,7 @@ var World = new Class({
         }
 
         return true;
-    },
+    }
 
     /**
      * Internal handler for Sprite vs. Group collisions.
@@ -2041,7 +2037,7 @@ var World = new Class({
      * @param {any} callbackContext - The scope in which to call the callbacks.
      * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      */
-    collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly)
+    collideSpriteVsGroup(sprite, group, collideCallback, processCallback, callbackContext, overlapOnly)
     {
         var bodyA = (sprite.isBody) ? sprite : sprite.body;
 
@@ -2117,7 +2113,7 @@ var World = new Class({
                 }
             }
         }
-    },
+    }
 
     /**
      * Internal handler for Group vs. Tilemap collisions.
@@ -2136,7 +2132,7 @@ var World = new Class({
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
-    collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly)
+    collideGroupVsTilemapLayer(group, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly)
     {
         if (!this.canCollide(group, tilemapLayer))
         {
@@ -2164,7 +2160,7 @@ var World = new Class({
         }
 
         return didCollide;
-    },
+    }
 
     /**
      * This advanced method is specifically for testing for collision between a single Sprite and an array of Tile objects.
@@ -2196,7 +2192,7 @@ var World = new Class({
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
-    collideTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext)
+    collideTiles(sprite, tiles, collideCallback, processCallback, callbackContext)
     {
         if (tiles.length === 0 || (sprite.body && !sprite.body.enable) || (sprite.isBody && !sprite.enable))
         {
@@ -2206,7 +2202,7 @@ var World = new Class({
         {
             return this.collideSpriteVsTilesHandler(sprite, tiles, collideCallback, processCallback, callbackContext, false, false);
         }
-    },
+    }
 
     /**
      * This advanced method is specifically for testing for overlaps between a single Sprite and an array of Tile objects.
@@ -2233,7 +2229,7 @@ var World = new Class({
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
-    overlapTiles: function (sprite, tiles, overlapCallback, processCallback, callbackContext)
+    overlapTiles(sprite, tiles, overlapCallback, processCallback, callbackContext)
     {
         if (tiles.length === 0 || (sprite.body && !sprite.body.enable) || (sprite.isBody && !sprite.enable))
         {
@@ -2243,7 +2239,7 @@ var World = new Class({
         {
             return this.collideSpriteVsTilesHandler(sprite, tiles, overlapCallback, processCallback, callbackContext, true, false);
         }
-    },
+    }
 
     /**
      * Internal handler for Sprite vs. Tilemap collisions.
@@ -2263,7 +2259,7 @@ var World = new Class({
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
-    collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly)
+    collideSpriteVsTilemapLayer(sprite, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly)
     {
         var body = (sprite.isBody) ? sprite : sprite.body;
 
@@ -2294,7 +2290,7 @@ var World = new Class({
         {
             return this.collideSpriteVsTilesHandler(sprite, mapData, collideCallback, processCallback, callbackContext, overlapOnly, true);
         }
-    },
+    }
 
     /**
      * Internal handler for Sprite vs. Tilemap collisions.
@@ -2316,7 +2312,7 @@ var World = new Class({
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
-    collideSpriteVsTilesHandler: function (sprite, tiles, collideCallback, processCallback, callbackContext, overlapOnly, isLayer)
+    collideSpriteVsTilesHandler(sprite, tiles, collideCallback, processCallback, callbackContext, overlapOnly, isLayer)
     {
         var body = (sprite.isBody) ? sprite : sprite.body;
 
@@ -2366,7 +2362,7 @@ var World = new Class({
         }
 
         return collision;
-    },
+    }
 
     /**
      * Internal helper for Group vs. Group collisions.
@@ -2385,7 +2381,7 @@ var World = new Class({
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
-    collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext, overlapOnly)
+    collideGroupVsGroup(group1, group2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
         if (group1.getLength() === 0 || group2.getLength() === 0 || !this.canCollide(group1, group2))
         {
@@ -2398,7 +2394,7 @@ var World = new Class({
         {
             this.collideSpriteVsGroup(children[i], group2, collideCallback, processCallback, callbackContext, overlapOnly);
         }
-    },
+    }
 
     /**
      * Wrap an object's coordinates (or several objects' coordinates) within {@link Phaser.Physics.Arcade.World#bounds}.
@@ -2411,7 +2407,7 @@ var World = new Class({
      * @param {any} object - A Game Object, a Group, an object with `x` and `y` coordinates, or an array of such objects.
      * @param {number} [padding=0] - An amount added to each boundary edge during the operation.
      */
-    wrap: function (object, padding)
+    wrap(object, padding)
     {
         if (object.body)
         {
@@ -2429,7 +2425,7 @@ var World = new Class({
         {
             this.wrapObject(object, padding);
         }
-    },
+    }
 
     /**
      * Wrap each object's coordinates within {@link Phaser.Physics.Arcade.World#bounds}.
@@ -2440,13 +2436,13 @@ var World = new Class({
      * @param {Array.<*>} objects - An array of objects to be wrapped.
      * @param {number} [padding=0] - An amount added to the boundary.
      */
-    wrapArray: function (objects, padding)
+    wrapArray(objects, padding)
     {
         for (var i = 0; i < objects.length; i++)
         {
             this.wrapObject(objects[i], padding);
         }
-    },
+    }
 
     /**
      * Wrap an object's coordinates within {@link Phaser.Physics.Arcade.World#bounds}.
@@ -2457,13 +2453,13 @@ var World = new Class({
      * @param {*} object - A Game Object, a Physics Body, or any object with `x` and `y` coordinates
      * @param {number} [padding=0] - An amount added to the boundary.
      */
-    wrapObject: function (object, padding)
+    wrapObject(object, padding)
     {
         if (padding === undefined) { padding = 0; }
 
         object.x = Wrap(object.x, this.bounds.left - padding, this.bounds.right + padding);
         object.y = Wrap(object.y, this.bounds.top - padding, this.bounds.bottom + padding);
-    },
+    }
 
     /**
      * Shuts down the simulation, clearing physics data and removing listeners.
@@ -2471,7 +2467,7 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#shutdown
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         this.tree.clear();
         this.staticTree.clear();
@@ -2480,7 +2476,7 @@ var World = new Class({
         this.colliders.destroy();
 
         this.removeAllListeners();
-    },
+    }
 
     /**
      * Shuts down the simulation and disconnects it from the current scene.
@@ -2488,7 +2484,7 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.shutdown();
 
@@ -2501,6 +2497,6 @@ var World = new Class({
         }
     }
 
-});
+};
 
 module.exports = World;

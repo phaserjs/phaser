@@ -18,12 +18,11 @@ var RenderNode = require('./RenderNode');
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FillTri = new Class({
-    Extends: RenderNode,
+var FillTri = class extends RenderNode {
 
-    initialize: function FillTri (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'FillTri', manager);
+        super('FillTri', manager);
 
         /**
          * Vertex indices for the triangle.
@@ -38,7 +37,7 @@ var FillTri = new Class({
         this._indexedTriangles = [
             0, 1, 2
         ];
-    },
+    }
 
     /**
      * Render the triangle.
@@ -59,7 +58,7 @@ var FillTri = new Class({
      * @param {number} tintC - The tint color of the third vertex.
      * @param {boolean} lighting - Whether to apply lighting effects to the triangle.
      */
-    run: function (drawingContext, currentMatrix, submitterNode, xA, yA, xB, yB, xC, yC, tintA, tintB, tintC, lighting)
+    run(drawingContext, currentMatrix, submitterNode, xA, yA, xB, yB, xC, yC, tintA, tintB, tintC, lighting)
     {
         this.onRunBegin(drawingContext);
 
@@ -108,6 +107,6 @@ var FillTri = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = FillTri;

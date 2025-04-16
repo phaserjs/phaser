@@ -19,18 +19,17 @@ var TransformerImage = require('./TransformerImage');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {object} [config] - The configuration object for this RenderNode.
  */
-var TransformerTile = new Class({
-    Extends: TransformerImage,
+var TransformerTile = class extends TransformerImage {
 
-    initialize: function TransformerTile (manager, config)
+    constructor(manager, config)
     {
-        TransformerImage.call(this, manager, config);
-    },
+        super(manager, config);
+    }
 
     defaultConfig: {
         name: 'TransformerTile',
         role: 'Transformer'
-    },
+    }
 
     /**
      * Stores the transform data for rendering.
@@ -43,7 +42,7 @@ var TransformerTile = new Class({
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested.
      * @param {object} [element] - The specific element within the game object. This is used for objects that consist of multiple quads. It is unused here.
      */
-    run: function (drawingContext, gameObject, texturerNode, parentMatrix, element)
+    run(drawingContext, gameObject, texturerNode, parentMatrix, element)
     {
         this.onRunBegin(drawingContext);
 
@@ -125,6 +124,6 @@ var TransformerTile = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = TransformerTile;

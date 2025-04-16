@@ -24,15 +24,13 @@ var RenderNode = require('../RenderNode');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {object} [config] - The configuration object for this RenderNode.
  */
-var TransformerStamp = new Class({
+var TransformerStamp = class extends RenderNode {
 
-    Extends: RenderNode,
-
-    initialize: function TransformerStamp (manager, config)
+    constructor(manager, config)
     {
         config = Merge(config || {}, this.defaultConfig);
 
-        RenderNode.call(this, config.name, manager);
+        super(config.name, manager);
 
         /**
          * The matrix used internally to compute sprite transforms.
@@ -61,12 +59,12 @@ var TransformerStamp = new Class({
          * @since 4.0.0
          */
         this.onlyTranslate = false;
-    },
+    }
 
     defaultConfig: {
         name: 'TransformerStamp',
         role: 'Transformer'
-    },
+    }
 
     /**
      * Stores the transform data for rendering.
@@ -79,7 +77,7 @@ var TransformerStamp = new Class({
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested. It is unused here.
      * @param {object} [element] - The specific element within the game object. This is used for objects that consist of multiple quads. It is unused here.
      */
-    run: function (drawingContext, gameObject, texturerNode, parentMatrix, element)
+    run(drawingContext, gameObject, texturerNode, parentMatrix, element)
     {
         this.onRunBegin(drawingContext);
 
@@ -141,6 +139,6 @@ var TransformerStamp = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = TransformerStamp;

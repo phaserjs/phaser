@@ -32,13 +32,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {number} [height] - The height of the texture the HTML will be rendered to.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var HTMLTextureFile = new Class({
+var HTMLTextureFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function HTMLTextureFile (loader, key, url, width, height, xhrSettings)
+    constructor(loader, key, url, width, height, xhrSettings)
     {
         if (width === undefined) { width = 512; }
         if (height === undefined) { height = 512; }
@@ -71,8 +67,8 @@ var HTMLTextureFile = new Class({
             }
         };
 
-        File.call(this, loader, fileConfig);
-    },
+        super(loader, fileConfig);
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -81,7 +77,7 @@ var HTMLTextureFile = new Class({
      * @method Phaser.Loader.FileTypes.HTMLTextureFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -133,7 +129,7 @@ var HTMLTextureFile = new Class({
         };
 
         File.createObjectURL(this.data, blob, 'image/svg+xml');
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -141,12 +137,12 @@ var HTMLTextureFile = new Class({
      * @method Phaser.Loader.FileTypes.HTMLTextureFile#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         this.cache.addImage(this.key, this.data);
     }
 
-});
+};
 
 /**
  * Adds an HTML File, or array of HTML Files, to the current load queue. When the files are loaded they

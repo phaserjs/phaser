@@ -27,11 +27,9 @@ var Class = require('../../utils/Class');
  * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
  * @param {any} callbackContext - The scope in which to call the callbacks.
  */
-var Collider = new Class({
+var Collider = class {
 
-    initialize:
-
-    function Collider (world, overlapOnly, object1, object2, collideCallback, processCallback, callbackContext)
+    constructor(world, overlapOnly, object1, object2, collideCallback, processCallback, callbackContext)
     {
         /**
          * The world in which the bodies will collide.
@@ -114,7 +112,7 @@ var Collider = new Class({
          * @since 3.0.0
          */
         this.callbackContext = callbackContext;
-    },
+    }
 
     /**
      * A name for the Collider.
@@ -128,12 +126,12 @@ var Collider = new Class({
      *
      * @return {Phaser.Physics.Arcade.Collider} This Collider instance.
      */
-    setName: function (name)
+    setName(name)
     {
         this.name = name;
 
         return this;
-    },
+    }
 
     /**
      * Called by World as part of its step processing, initial operation of collision checking.
@@ -141,7 +139,7 @@ var Collider = new Class({
      * @method Phaser.Physics.Arcade.Collider#update
      * @since 3.0.0
      */
-    update: function ()
+    update()
     {
         this.world.collideObjects(
             this.object1,
@@ -151,7 +149,7 @@ var Collider = new Class({
             this.callbackContext,
             this.overlapOnly
         );
-    },
+    }
 
     /**
      * Removes Collider from World and disposes of its resources.
@@ -159,7 +157,7 @@ var Collider = new Class({
      * @method Phaser.Physics.Arcade.Collider#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.world.removeCollider(this);
 
@@ -175,6 +173,6 @@ var Collider = new Class({
         this.callbackContext = null;
     }
 
-});
+};
 
 module.exports = Collider;

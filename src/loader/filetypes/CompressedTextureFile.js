@@ -38,13 +38,9 @@ var verifyCompressedTexture = require('../../textures/parsers/VerifyCompressedTe
  * @param {Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry} entry - The compressed texture file entry to load.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var CompressedTextureFile = new Class({
+var CompressedTextureFile = class extends MultiFile {
 
-    Extends: MultiFile,
-
-    initialize:
-
-    function CompressedTextureFile (loader, key, entry, xhrSettings)
+    constructor(loader, key, entry, xhrSettings)
     {
         if (entry.multiAtlasURL)
         {
@@ -55,7 +51,7 @@ var CompressedTextureFile = new Class({
                 config: entry
             });
 
-            MultiFile.call(this, loader, 'texture', key, [ multi ]);
+            super(loader, 'texture', key, [ multi ]);
         }
         else
         {
@@ -83,16 +79,16 @@ var CompressedTextureFile = new Class({
                     config: entry
                 });
 
-                MultiFile.call(this, loader, 'texture', key, [ image, data ]);
+                super(loader, 'texture', key, [ image, data ]);
             }
             else
             {
-                MultiFile.call(this, loader, 'texture', key, [ image ]);
+                super(loader, 'texture', key, [ image ]);
             }
         }
 
         this.config = entry;
-    },
+    }
 
     /**
      * Called by each File when it finishes loading.
@@ -102,7 +98,7 @@ var CompressedTextureFile = new Class({
      *
      * @param {Phaser.Loader.File} file - The File that has completed processing.
      */
-    onFileComplete: function (file)
+    onFileComplete(file)
     {
         var index = this.files.indexOf(file);
 
@@ -181,7 +177,7 @@ var CompressedTextureFile = new Class({
                 loader.setPrefix(currentPrefix);
             }
         }
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -189,7 +185,7 @@ var CompressedTextureFile = new Class({
      * @method Phaser.Loader.FileTypes.CompressedTextureFile#addToCache
      * @since 3.60.0
      */
-    addToCache: function ()
+    addToCache()
     {
         function compressionWarning (message)
         {
@@ -252,7 +248,7 @@ var CompressedTextureFile = new Class({
 
             this.complete = true;
         }
-    },
+    }
 
     /**
      * Adds all of the multi-file entties to their target caches upon successful loading and processing.
@@ -260,7 +256,7 @@ var CompressedTextureFile = new Class({
      * @method Phaser.Loader.FileTypes.CompressedTextureFile#addMultiToCache
      * @since 3.60.0
      */
-    addMultiToCache: function ()
+    addMultiToCache()
     {
         var entry = this.config;
         var json = this.files[0];
@@ -332,7 +328,7 @@ var CompressedTextureFile = new Class({
         this.complete = true;
     }
 
-});
+};
 
 /**
  * Adds a Compressed Texture file to the current load queue. This feature is WebGL only.

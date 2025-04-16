@@ -23,11 +23,9 @@ var Class = require('../../../utils/Class');
  * @param {Phaser.Types.GameObjects.Particles.DeathZoneSource} source - An object instance that has a `contains` method that returns a boolean when given `x` and `y` arguments.
  * @param {boolean} killOnEnter - Should the Particle be killed when it enters the zone? `true` or leaves it? `false`
  */
-var DeathZone = new Class({
+var DeathZone = class {
 
-    initialize:
-
-    function DeathZone (source, killOnEnter)
+    constructor(source, killOnEnter)
     {
         /**
          * An object instance that has a `contains` method that returns a boolean when given `x` and `y` arguments.
@@ -48,7 +46,7 @@ var DeathZone = new Class({
          * @since 3.0.0
          */
         this.killOnEnter = killOnEnter;
-    },
+    }
 
     /**
      * Checks if the given Particle will be killed or not by this zone.
@@ -60,7 +58,7 @@ var DeathZone = new Class({
      *
      * @return {boolean} Return `true` if the Particle is to be killed, otherwise return `false`.
      */
-    willKill: function (particle)
+    willKill(particle)
     {
         var pos = particle.worldPosition;
         var withinZone = this.source.contains(pos.x, pos.y);
@@ -68,6 +66,6 @@ var DeathZone = new Class({
         return (withinZone && this.killOnEnter || !withinZone && !this.killOnEnter);
     }
 
-});
+};
 
 module.exports = DeathZone;

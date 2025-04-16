@@ -30,20 +30,19 @@ var SceneEvents = require('../scene/events');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
  * @param {string} type - A textual representation of the type of Game Object, i.e. `sprite`.
  */
-var GameObject = new Class({
+var GameObject = class extends EventEmitter {
 
-    Extends: EventEmitter,
-
-    Mixins: [
-        Components.Filters,
-        Components.RenderSteps
-    ],
-
-    initialize:
-
-    function GameObject (scene, type)
+    static
     {
-        EventEmitter.call(this);
+        Class.mixin(this, [
+            Components.Filters,
+            Components.RenderSteps
+        ], false);
+    }
+
+    constructor(scene, type)
+    {
+        super();
 
         /**
          * A reference to the Scene to which this Game Object belongs.
@@ -226,7 +225,7 @@ var GameObject = new Class({
 
         //  Tell the Scene to re-sort the children
         scene.sys.queueDepthSort();
-    },
+    }
 
     /**
      * Sets the `active` property of this Game Object and returns this Game Object for further chaining.
@@ -239,12 +238,12 @@ var GameObject = new Class({
      *
      * @return {this} This GameObject.
      */
-    setActive: function (value)
+    setActive(value)
     {
         this.active = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the `name` property of this Game Object and returns this Game Object for further chaining.
@@ -257,12 +256,12 @@ var GameObject = new Class({
      *
      * @return {this} This GameObject.
      */
-    setName: function (value)
+    setName(value)
     {
         this.name = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the current state of this Game Object.
@@ -281,12 +280,12 @@ var GameObject = new Class({
      *
      * @return {this} This GameObject.
      */
-    setState: function (value)
+    setState(value)
     {
         this.state = value;
 
         return this;
-    },
+    }
 
     /**
      * Adds a Data Manager component to this Game Object.
@@ -297,7 +296,7 @@ var GameObject = new Class({
      *
      * @return {this} This GameObject.
      */
-    setDataEnabled: function ()
+    setDataEnabled()
     {
         if (!this.data)
         {
@@ -305,7 +304,7 @@ var GameObject = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Allows you to store a key value pair within this Game Objects Data Manager.
@@ -357,7 +356,7 @@ var GameObject = new Class({
      *
      * @return {this} This GameObject.
      */
-    setData: function (key, value)
+    setData(key, value)
     {
         if (!this.data)
         {
@@ -367,7 +366,7 @@ var GameObject = new Class({
         this.data.set(key, value);
 
         return this;
-    },
+    }
 
     /**
      * Increase a value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is increased from 0.
@@ -387,7 +386,7 @@ var GameObject = new Class({
      *
      * @return {this} This GameObject.
      */
-    incData: function (key, amount)
+    incData(key, amount)
     {
         if (!this.data)
         {
@@ -397,7 +396,7 @@ var GameObject = new Class({
         this.data.inc(key, amount);
 
         return this;
-    },
+    }
 
     /**
      * Toggle a boolean value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is toggled from false.
@@ -416,7 +415,7 @@ var GameObject = new Class({
      *
      * @return {this} This GameObject.
      */
-    toggleData: function (key)
+    toggleData(key)
     {
         if (!this.data)
         {
@@ -426,7 +425,7 @@ var GameObject = new Class({
         this.data.toggle(key);
 
         return this;
-    },
+    }
 
     /**
      * Retrieves the value for the given key in this Game Objects Data Manager, or undefined if it doesn't exist.
@@ -458,7 +457,7 @@ var GameObject = new Class({
      *
      * @return {*} The value belonging to the given key, or an array of values, the order of which will match the input array.
      */
-    getData: function (key)
+    getData(key)
     {
         if (!this.data)
         {
@@ -466,7 +465,7 @@ var GameObject = new Class({
         }
 
         return this.data.get(key);
-    },
+    }
 
     /**
      * Pass this Game Object to the Input Manager to enable it for Input.
@@ -499,12 +498,12 @@ var GameObject = new Class({
      *
      * @return {this} This GameObject.
      */
-    setInteractive: function (hitArea, hitAreaCallback, dropZone)
+    setInteractive(hitArea, hitAreaCallback, dropZone)
     {
         this.scene.sys.input.enable(this, hitArea, hitAreaCallback, dropZone);
 
         return this;
-    },
+    }
 
     /**
      * If this Game Object has previously been enabled for input, this will disable it.
@@ -522,14 +521,14 @@ var GameObject = new Class({
      *
      * @return {this} This GameObject.
      */
-    disableInteractive: function (resetCursor)
+    disableInteractive(resetCursor)
     {
         if (resetCursor === undefined) { resetCursor = false; }
 
         this.scene.sys.input.disable(this, resetCursor);
 
         return this;
-    },
+    }
 
     /**
      * If this Game Object has previously been enabled for input, this will queue it
@@ -558,7 +557,7 @@ var GameObject = new Class({
      *
      * @return {this} This GameObject.
      */
-    removeInteractive: function (resetCursor)
+    removeInteractive(resetCursor)
     {
         if (resetCursor === undefined) { resetCursor = false; }
 
@@ -572,7 +571,7 @@ var GameObject = new Class({
         this.input = undefined;
 
         return this;
-    },
+    }
 
     /**
      * This callback is invoked when this Game Object is added to a Scene.
@@ -585,9 +584,9 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#addedToScene
      * @since 3.50.0
      */
-    addedToScene: function ()
+    addedToScene()
     {
-    },
+    }
 
     /**
      * This callback is invoked when this Game Object is removed from a Scene.
@@ -600,9 +599,9 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#removedFromScene
      * @since 3.50.0
      */
-    removedFromScene: function ()
+    removedFromScene()
     {
-    },
+    }
 
     /**
      * To be overridden by custom GameObjects. Allows base objects to be used in a Pool.
@@ -612,9 +611,9 @@ var GameObject = new Class({
      *
      * @param {...*} [args] - args
      */
-    update: function ()
+    update()
     {
-    },
+    }
 
     /**
      * Returns a JSON representation of the Game Object.
@@ -624,10 +623,10 @@ var GameObject = new Class({
      *
      * @return {Phaser.Types.GameObjects.JSONGameObject} A JSON representation of the Game Object.
      */
-    toJSON: function ()
+    toJSON()
     {
         return ComponentsToJSON(this);
-    },
+    }
 
     /**
      * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
@@ -640,12 +639,12 @@ var GameObject = new Class({
      *
      * @return {boolean} True if the Game Object should be rendered, otherwise false.
      */
-    willRender: function (camera)
+    willRender(camera)
     {
         var listWillRender = (this.displayList && this.displayList.active) ? this.displayList.willRender(camera) : true;
 
         return !(!listWillRender || GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
-    },
+    }
 
     /**
      * Returns an array containing the display list index of either this Game Object, or if it has one,
@@ -660,7 +659,7 @@ var GameObject = new Class({
      *
      * @return {number[]} An array of display list position indexes.
      */
-    getIndexList: function ()
+    getIndexList()
     {
         // eslint-disable-next-line consistent-this
         var child = this;
@@ -694,7 +693,7 @@ var GameObject = new Class({
         }
 
         return indexes;
-    },
+    }
 
     /**
      * Adds this Game Object to the given Display List.
@@ -721,7 +720,7 @@ var GameObject = new Class({
      *
      * @return {this} This Game Object.
      */
-    addToDisplayList: function (displayList)
+    addToDisplayList(displayList)
     {
         if (displayList === undefined) { displayList = this.scene.sys.displayList; }
 
@@ -745,7 +744,7 @@ var GameObject = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Adds this Game Object to the Update List belonging to the Scene.
@@ -762,7 +761,7 @@ var GameObject = new Class({
      *
      * @return {this} This Game Object.
      */
-    addToUpdateList: function ()
+    addToUpdateList()
     {
         if (this.scene && this.preUpdate)
         {
@@ -770,7 +769,7 @@ var GameObject = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Removes this Game Object from the Display List it is currently on.
@@ -790,7 +789,7 @@ var GameObject = new Class({
      *
      * @return {this} This Game Object.
      */
-    removeFromDisplayList: function ()
+    removeFromDisplayList()
     {
         var displayList = this.displayList || this.scene.sys.displayList;
 
@@ -808,7 +807,7 @@ var GameObject = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Removes this Game Object from the Scene's Update List.
@@ -825,7 +824,7 @@ var GameObject = new Class({
      *
      * @return {this} This Game Object.
      */
-    removeFromUpdateList: function ()
+    removeFromUpdateList()
     {
         if (this.scene && this.preUpdate)
         {
@@ -833,7 +832,7 @@ var GameObject = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Returns a reference to the underlying display list _array_ that contains this Game Object,
@@ -851,7 +850,7 @@ var GameObject = new Class({
      *
      * @return {?Phaser.GameObjects.GameObject[]} The internal Display List array of Game Objects, or `null`.
      */
-    getDisplayList: function ()
+    getDisplayList()
     {
         var list = null;
 
@@ -865,7 +864,7 @@ var GameObject = new Class({
         }
 
         return list;
-    },
+    }
 
     /**
      * Destroys this Game Object removing it from the Display List and Update List and
@@ -886,7 +885,7 @@ var GameObject = new Class({
      *
      * @param {boolean} [fromScene=false] - `True` if this Game Object is being destroyed by the Scene, `false` if not.
      */
-    destroy: function (fromScene)
+    destroy(fromScene)
     {
         //  This Game Object has already been destroyed
         if (!this.scene || this.ignoreDestroy)
@@ -942,7 +941,7 @@ var GameObject = new Class({
         this.parentContainer = undefined;
     }
 
-});
+};
 
 /**
  * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.

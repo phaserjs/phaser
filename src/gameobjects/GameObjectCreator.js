@@ -24,11 +24,9 @@ var SceneEvents = require('../scene/events');
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object Factory belongs.
  */
-var GameObjectCreator = new Class({
+var GameObjectCreator = class {
 
-    initialize:
-
-    function GameObjectCreator (scene)
+    constructor(scene)
     {
         /**
          * The Scene to which this Game Object Creator belongs.
@@ -82,7 +80,7 @@ var GameObjectCreator = new Class({
 
         this.events.once(SceneEvents.BOOT, this.boot, this);
         this.events.on(SceneEvents.START, this.start, this);
-    },
+    }
 
     /**
      * This method is called automatically, only once, when the Scene is first created.
@@ -92,13 +90,13 @@ var GameObjectCreator = new Class({
      * @private
      * @since 3.5.1
      */
-    boot: function ()
+    boot()
     {
         this.displayList = this.systems.displayList;
         this.updateList = this.systems.updateList;
 
         this.events.once(SceneEvents.DESTROY, this.destroy, this);
-    },
+    }
 
     /**
      * This method is called automatically by the Scene when it is starting up.
@@ -109,10 +107,10 @@ var GameObjectCreator = new Class({
      * @private
      * @since 3.5.0
      */
-    start: function ()
+    start()
     {
         this.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * The Scene that owns this plugin is shutting down.
@@ -122,10 +120,10 @@ var GameObjectCreator = new Class({
      * @private
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * The Scene that owns this plugin is being destroyed.
@@ -135,7 +133,7 @@ var GameObjectCreator = new Class({
      * @private
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.shutdown();
 
@@ -149,7 +147,7 @@ var GameObjectCreator = new Class({
         this.updateList = null;
     }
 
-});
+};
 
 /**
  * Static method called directly by the Game Object creator functions.

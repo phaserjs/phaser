@@ -24,11 +24,9 @@ var Class = require('../../utils/Class');
  * @param {number} [y=0] - The y coordinate of the Particle Processor, in world space.
  * @param {boolean} [active=true] - The active state of this Particle Processor.
  */
-var ParticleProcessor = new Class({
+var ParticleProcessor = class {
 
-    initialize:
-
-    function ParticleProcessor (x, y, active)
+    constructor(x, y, active)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -74,7 +72,7 @@ var ParticleProcessor = new Class({
          * @since 3.60.0
          */
         this.active = active;
-    },
+    }
 
     /**
      * The Particle Processor update method should be overriden by your own
@@ -89,9 +87,9 @@ var ParticleProcessor = new Class({
      * @param {number} step - The delta value divided by 1000.
      * @param {number} t - The current normalized lifetime of the particle, between 0 (birth) and 1 (death).
      */
-    update: function ()
+    update()
     {
-    },
+    }
 
     /**
      * Destroys this Particle Processor by removing all external references.
@@ -101,11 +99,11 @@ var ParticleProcessor = new Class({
      * @method Phaser.GameObjects.Particles.ParticleProcessor#destroy
      * @since 3.60.0
      */
-    destroy: function ()
+    destroy()
     {
         this.emitter = null;
     }
 
-});
+};
 
 module.exports = ParticleProcessor;

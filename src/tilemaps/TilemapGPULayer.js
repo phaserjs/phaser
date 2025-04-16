@@ -75,16 +75,18 @@ var TilemapGPULayerRender = require('./TilemapGPULayerRender');
  * @param {number} [x] - The world x position where the top left of this layer will be placed.
  * @param {number} [y] - The world y position where the top left of this layer will be placed.
  */
-var TilemapGPULayer = new Class({
-    Extends: TilemapLayerBase,
+var TilemapGPULayer = class extends TilemapLayerBase {
 
-    Mixins: [
-        TilemapGPULayerRender
-    ],
-
-    initialize: function TilemapGPULayer (scene, tilemap, layerIndex, tileset, x, y)
+    static
     {
-        TilemapLayerBase.call(this, 'TilemapGPULayer', scene, tilemap, layerIndex, x, y);
+        Class.mixin(this, [
+            TilemapGPULayerRender
+        ], false);
+    }
+
+    constructor(scene, tilemap, layerIndex, tileset, x, y)
+    {
+        super('TilemapGPULayer', scene, tilemap, layerIndex, x, y);
 
         /**
          * The `Tileset` associated with this layer.
@@ -119,7 +121,7 @@ var TilemapGPULayer = new Class({
         this.setTileset(tileset);
 
         this.initRenderNodes(this._defaultRenderNodesMap);
-    },
+    }
 
     /**
      * The default render nodes for this Game Object.
@@ -131,12 +133,11 @@ var TilemapGPULayer = new Class({
      * @readonly
      * @since 4.0.0
      */
-    _defaultRenderNodesMap: {
-        get: function ()
-        {
-            return DefaultTilemapGPULayerNodes;
-        }
-    },
+
+    get _defaultRenderNodesMap()
+    {
+        return DefaultTilemapGPULayerNodes;
+    }
 
     /**
      * Populates data structures to render this tilemap layer.
@@ -147,7 +148,7 @@ var TilemapGPULayer = new Class({
      *
      * @param {(string|Phaser.Tilemaps.Tileset)} tileset - The tileset used to render this layer. Can be a string or a Tileset object.
      */
-    setTileset: function (tileset)
+    setTileset(tileset)
     {
         if (typeof tileset === 'string')
         {
@@ -158,7 +159,7 @@ var TilemapGPULayer = new Class({
 
         // Convert layer into a data texture.
         this.generateLayerDataTexture();
-    },
+    }
 
     /**
      * Generate the data textures for this game object.
@@ -167,7 +168,7 @@ var TilemapGPULayer = new Class({
      * @method Phaser.Tilemaps.TilemapGPULayer#generateLayerDataTexture
      * @since 4.0.0
      */
-    generateLayerDataTexture: function ()
+    generateLayerDataTexture()
     {
         var layer = this.layer;
         var tileset = this.tileset;
@@ -229,6 +230,6 @@ var TilemapGPULayer = new Class({
         var u8 = new Uint8Array(u32.buffer);
         this.layerDataTexture = renderer.createUint8ArrayTexture(u8, layer.width, layer.height, false, true);
     }
-});
+};
 
 module.exports = TilemapGPULayer;

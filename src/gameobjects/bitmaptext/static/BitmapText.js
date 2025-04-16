@@ -66,35 +66,34 @@ var Render = require('./BitmapTextRender');
  * @param {number} [size] - The font size of this Bitmap Text.
  * @param {number} [align=0] - The alignment of the text in a multi-line BitmapText object.
  */
-var BitmapText = new Class({
+var BitmapText = class extends GameObject {
 
-    Extends: GameObject,
+    static
+    {
+        Class.mixin(this, [
+            Components.Alpha,
+            Components.BlendMode,
+            Components.Depth,
+            Components.GetBounds,
+            Components.Lighting,
+            Components.Mask,
+            Components.Origin,
+            Components.RenderNodes,
+            Components.ScrollFactor,
+            Components.Texture,
+            Components.Tint,
+            Components.Transform,
+            Components.Visible,
+            Render
+        ], false);
+    }
 
-    Mixins: [
-        Components.Alpha,
-        Components.BlendMode,
-        Components.Depth,
-        Components.GetBounds,
-        Components.Lighting,
-        Components.Mask,
-        Components.Origin,
-        Components.RenderNodes,
-        Components.ScrollFactor,
-        Components.Texture,
-        Components.Tint,
-        Components.Transform,
-        Components.Visible,
-        Render
-    ],
-
-    initialize:
-
-    function BitmapText (scene, x, y, font, text, size, align)
+    constructor(scene, x, y, font, text, size, align)
     {
         if (text === undefined) { text = ''; }
         if (align === undefined) { align = 0; }
 
-        GameObject.call(this, scene, 'BitmapText');
+        super(scene, 'BitmapText');
 
         /**
          * The key of the Bitmap Font used by this Bitmap Text.
@@ -298,7 +297,7 @@ var BitmapText = new Class({
         this.initRenderNodes(this._defaultRenderNodesMap);
 
         this.setText(text);
-    },
+    }
 
     /**
      * The default render nodes to initialize.
@@ -310,12 +309,11 @@ var BitmapText = new Class({
      * @readonly
      * @since 4.0.0
      */
-    _defaultRenderNodesMap: {
-        get: function ()
-        {
-            return DefaultBitmapTextNodes;
-        }
-    },
+
+    get _defaultRenderNodesMap()
+    {
+        return DefaultBitmapTextNodes;
+    }
 
     /**
      * Set the lines of text in this BitmapText to be left-aligned.
@@ -326,14 +324,14 @@ var BitmapText = new Class({
      *
      * @return {this} This BitmapText Object.
      */
-    setLeftAlign: function ()
+    setLeftAlign()
     {
         this._align = BitmapText.ALIGN_LEFT;
 
         this._dirty = true;
 
         return this;
-    },
+    }
 
     /**
      * Set the lines of text in this BitmapText to be center-aligned.
@@ -344,14 +342,14 @@ var BitmapText = new Class({
      *
      * @return {this} This BitmapText Object.
      */
-    setCenterAlign: function ()
+    setCenterAlign()
     {
         this._align = BitmapText.ALIGN_CENTER;
 
         this._dirty = true;
 
         return this;
-    },
+    }
 
     /**
      * Set the lines of text in this BitmapText to be right-aligned.
@@ -362,14 +360,14 @@ var BitmapText = new Class({
      *
      * @return {this} This BitmapText Object.
      */
-    setRightAlign: function ()
+    setRightAlign()
     {
         this._align = BitmapText.ALIGN_RIGHT;
 
         this._dirty = true;
 
         return this;
-    },
+    }
 
     /**
      * Set the font size of this Bitmap Text.
@@ -381,14 +379,14 @@ var BitmapText = new Class({
      *
      * @return {this} This BitmapText Object.
      */
-    setFontSize: function (size)
+    setFontSize(size)
     {
         this._fontSize = size;
 
         this._dirty = true;
 
         return this;
-    },
+    }
 
     /**
      * Sets the letter spacing between each character of this Bitmap Text.
@@ -402,7 +400,7 @@ var BitmapText = new Class({
      *
      * @return {this} This BitmapText Object.
      */
-    setLetterSpacing: function (spacing)
+    setLetterSpacing(spacing)
     {
         if (spacing === undefined) { spacing = 0; }
 
@@ -411,7 +409,7 @@ var BitmapText = new Class({
         this._dirty = true;
 
         return this;
-    },
+    }
 
     /**
      * Sets the line spacing value. This value is added to the font height to
@@ -428,14 +426,14 @@ var BitmapText = new Class({
      *
      * @return {this} This BitmapText Object.
      */
-    setLineSpacing: function (spacing)
+    setLineSpacing(spacing)
     {
         if (spacing === undefined) { spacing = 0; }
 
         this.lineSpacing = spacing;
 
         return this;
-    },
+    }
 
     /**
      * Set the textual content of this BitmapText.
@@ -449,7 +447,7 @@ var BitmapText = new Class({
      *
      * @return {this} This BitmapText Object.
      */
-    setText: function (value)
+    setText(value)
     {
         if (!value && value !== 0)
         {
@@ -471,7 +469,7 @@ var BitmapText = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets a drop shadow effect on this Bitmap Text.
@@ -496,7 +494,7 @@ var BitmapText = new Class({
      *
      * @return {this} This BitmapText Object.
      */
-    setDropShadow: function (x, y, color, alpha)
+    setDropShadow(x, y, color, alpha)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -509,7 +507,7 @@ var BitmapText = new Class({
         this.dropShadowAlpha = alpha;
 
         return this;
-    },
+    }
 
     /**
      * Sets a tint on a range of characters in this Bitmap Text, starting from the `start` parameter index
@@ -552,7 +550,7 @@ var BitmapText = new Class({
      *
      * @return {this} This BitmapText Object.
      */
-    setCharacterTint: function (start, length, tintFill, topLeft, topRight, bottomLeft, bottomRight)
+    setCharacterTint(start, length, tintFill, topLeft, topRight, bottomLeft, bottomRight)
     {
         if (start === undefined) { start = 0; }
         if (length === undefined) { length = 1; }
@@ -618,7 +616,7 @@ var BitmapText = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets a tint on a matching word within this Bitmap Text.
@@ -661,7 +659,7 @@ var BitmapText = new Class({
      *
      * @return {this} This BitmapText Object.
      */
-    setWordTint: function (word, count, tintFill, topLeft, topRight, bottomLeft, bottomRight)
+    setWordTint(word, count, tintFill, topLeft, topRight, bottomLeft, bottomRight)
     {
         if (count === undefined) { count = 1; }
 
@@ -691,7 +689,7 @@ var BitmapText = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Calculate the bounds of this Bitmap Text.
@@ -712,7 +710,7 @@ var BitmapText = new Class({
      *
      * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} An object that describes the size of this Bitmap Text.
      */
-    getTextBounds: function (round)
+    getTextBounds(round)
     {
         //  local = The BitmapText based on fontSize and 0x0 coords
         //  global = The BitmapText, taking into account scale and world position
@@ -728,7 +726,7 @@ var BitmapText = new Class({
         }
 
         return bounds;
-    },
+    }
 
     /**
      * Gets the character located at the given x/y coordinate within this Bitmap Text.
@@ -754,7 +752,7 @@ var BitmapText = new Class({
      *
      * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextCharacter} The character object at the given position, or `null`.
      */
-    getCharacterAt: function (x, y, camera)
+    getCharacterAt(x, y, camera)
     {
         var point = this.getLocalPoint(x, y, null, camera);
 
@@ -777,7 +775,7 @@ var BitmapText = new Class({
         }
 
         return null;
-    },
+    }
 
     /**
      * Updates the Display Origin cached values internally stored on this Game Object.
@@ -788,14 +786,14 @@ var BitmapText = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    updateDisplayOrigin: function ()
+    updateDisplayOrigin()
     {
         this._dirty = true;
 
         this.getTextBounds(false);
 
         return this;
-    },
+    }
 
     /**
      * Changes the font this BitmapText is using to render.
@@ -812,7 +810,7 @@ var BitmapText = new Class({
      *
      * @return {this} This BitmapText Object.
      */
-    setFont: function (key, size, align)
+    setFont(key, size, align)
     {
         if (size === undefined) { size = this._fontSize; }
         if (align === undefined) { align = this._align; }
@@ -833,7 +831,7 @@ var BitmapText = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the maximum display width of this BitmapText in pixels.
@@ -855,7 +853,7 @@ var BitmapText = new Class({
      *
      * @return {this} This BitmapText Object.
      */
-    setMaxWidth: function (value, wordWrapCharCode)
+    setMaxWidth(value, wordWrapCharCode)
     {
         this._maxWidth = value;
 
@@ -867,7 +865,7 @@ var BitmapText = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Controls the alignment of each line of text in this BitmapText object.
@@ -887,20 +885,17 @@ var BitmapText = new Class({
      * @type {number}
      * @since 3.11.0
      */
-    align: {
 
-        set: function (value)
-        {
-            this._align = value;
-            this._dirty = true;
-        },
+    set align(value)
+    {
+        this._align = value;
+        this._dirty = true;
+    }
 
-        get: function ()
-        {
-            return this._align;
-        }
-
-    },
+    get align()
+    {
+        return this._align;
+    }
 
     /**
      * The text that this Bitmap Text object displays.
@@ -911,19 +906,16 @@ var BitmapText = new Class({
      * @type {string}
      * @since 3.0.0
      */
-    text: {
 
-        set: function (value)
-        {
-            this.setText(value);
-        },
+    set text(value)
+    {
+        this.setText(value);
+    }
 
-        get: function ()
-        {
-            return this._text;
-        }
-
-    },
+    get text()
+    {
+        return this._text;
+    }
 
     /**
      * The font size of this Bitmap Text.
@@ -934,20 +926,17 @@ var BitmapText = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    fontSize: {
 
-        set: function (value)
-        {
-            this._fontSize = value;
-            this._dirty = true;
-        },
+    set fontSize(value)
+    {
+        this._fontSize = value;
+        this._dirty = true;
+    }
 
-        get: function ()
-        {
-            return this._fontSize;
-        }
-
-    },
+    get fontSize()
+    {
+        return this._fontSize;
+    }
 
     /**
      * Adds / Removes spacing between characters.
@@ -960,20 +949,17 @@ var BitmapText = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    letterSpacing: {
 
-        set: function (value)
-        {
-            this._letterSpacing = value;
-            this._dirty = true;
-        },
+    set letterSpacing(value)
+    {
+        this._letterSpacing = value;
+        this._dirty = true;
+    }
 
-        get: function ()
-        {
-            return this._letterSpacing;
-        }
-
-    },
+    get letterSpacing()
+    {
+        return this._letterSpacing;
+    }
 
     /**
      * Adds / Removes spacing between lines.
@@ -986,20 +972,17 @@ var BitmapText = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    lineSpacing: {
 
-        set: function (value)
-        {
-            this._lineSpacing = value;
-            this._dirty = true;
-        },
+    set lineSpacing(value)
+    {
+        this._lineSpacing = value;
+        this._dirty = true;
+    }
 
-        get: function ()
-        {
-            return this._lineSpacing;
-        }
-
-    },
+    get lineSpacing()
+    {
+        return this._lineSpacing;
+    }
 
     /**
      * The maximum display width of this BitmapText in pixels.
@@ -1015,20 +998,17 @@ var BitmapText = new Class({
      * @type {number}
      * @since 3.21.0
      */
-    maxWidth: {
 
-        set: function (value)
-        {
-            this._maxWidth = value;
-            this._dirty = true;
-        },
+    set maxWidth(value)
+    {
+        this._maxWidth = value;
+        this._dirty = true;
+    }
 
-        get: function ()
-        {
-            return this._maxWidth;
-        }
-
-    },
+    get maxWidth()
+    {
+        return this._maxWidth;
+    }
 
     /**
      * The width of this Bitmap Text.
@@ -1040,16 +1020,13 @@ var BitmapText = new Class({
      * @readonly
      * @since 3.0.0
      */
-    width: {
 
-        get: function ()
-        {
-            this.getTextBounds(false);
+    get width()
+    {
+        this.getTextBounds(false);
 
-            return this._bounds.global.width;
-        }
-
-    },
+        return this._bounds.global.width;
+    }
 
     /**
      * The height of this Bitmap text.
@@ -1061,16 +1038,13 @@ var BitmapText = new Class({
      * @readonly
      * @since 3.0.0
      */
-    height: {
 
-        get: function ()
-        {
-            this.getTextBounds(false);
+    get height()
+    {
+        this.getTextBounds(false);
 
-            return this._bounds.global.height;
-        }
-
-    },
+        return this._bounds.global.height;
+    }
 
     /**
      * The displayed width of this Bitmap Text.
@@ -1084,14 +1058,11 @@ var BitmapText = new Class({
      * @readonly
      * @since 3.60.0
      */
-    displayWidth: {
 
-        get: function ()
-        {
-            return this.width;
-        }
-
-    },
+    get displayWidth()
+    {
+        return this.width;
+    }
 
     /**
      * The displayed height of this Bitmap Text.
@@ -1105,14 +1076,11 @@ var BitmapText = new Class({
      * @readonly
      * @since 3.60.0
      */
-    displayHeight: {
 
-        get: function ()
-        {
-            return this.height;
-        }
-
-    },
+    get displayHeight()
+    {
+        return this.height;
+    }
 
     /**
      * Build a JSON representation of this Bitmap Text.
@@ -1122,7 +1090,7 @@ var BitmapText = new Class({
      *
      * @return {Phaser.Types.GameObjects.BitmapText.JSONBitmapText} A JSON representation of this Bitmap Text.
      */
-    toJSON: function ()
+    toJSON()
     {
         var out = Components.ToJSON(this);
 
@@ -1140,7 +1108,7 @@ var BitmapText = new Class({
         out.data = data;
 
         return out;
-    },
+    }
 
     /**
      * Internal destroy handler, called as part of the destroy process.
@@ -1149,14 +1117,14 @@ var BitmapText = new Class({
      * @protected
      * @since 3.50.0
      */
-    preDestroy: function ()
+    preDestroy()
     {
         this.charColors.length = 0;
         this._bounds = null;
         this.fontData = null;
     }
 
-});
+};
 
 /**
  * Left align the text characters in a multi-line BitmapText object.

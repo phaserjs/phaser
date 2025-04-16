@@ -31,11 +31,9 @@ var Utils = require('../../renderer/webgl/Utils');
  * @constructor
  * @since 3.0.0
  */
-var LightsManager = new Class({
+var LightsManager = class {
 
-    initialize:
-
-    function LightsManager ()
+    constructor()
     {
         /**
          * The Lights in the Scene.
@@ -86,7 +84,7 @@ var LightsManager = new Class({
          * @since 3.50.0
          */
         this.visibleLights = 0;
-    },
+    }
 
     /**
      * Creates a new Point Light Game Object and adds it to the Scene.
@@ -129,10 +127,10 @@ var LightsManager = new Class({
      *
      * @return {Phaser.GameObjects.PointLight} The Game Object that was created.
      */
-    addPointLight: function (x, y, color, radius, intensity, attenuation)
+    addPointLight(x, y, color, radius, intensity, attenuation)
     {
         return this.systems.displayList.add(new PointLight(this.scene, x, y, color, radius, intensity, attenuation));
-    },
+    }
 
     /**
      * Enable the Lights Manager.
@@ -142,7 +140,7 @@ var LightsManager = new Class({
      *
      * @return {this} This Lights Manager instance.
      */
-    enable: function ()
+    enable()
     {
         if (this.maxLights === -1)
         {
@@ -152,7 +150,7 @@ var LightsManager = new Class({
         this.active = true;
 
         return this;
-    },
+    }
 
     /**
      * Disable the Lights Manager.
@@ -162,12 +160,12 @@ var LightsManager = new Class({
      *
      * @return {this} This Lights Manager instance.
      */
-    disable: function ()
+    disable()
     {
         this.active = false;
 
         return this;
-    },
+    }
 
     /**
      * Get all lights that can be seen by the given Camera.
@@ -184,7 +182,7 @@ var LightsManager = new Class({
      *
      * @return {Phaser.GameObjects.Light[]} The culled Lights.
      */
-    getLights: function (camera)
+    getLights(camera)
     {
         var lights = this.lights;
         var worldView = camera.worldView;
@@ -218,12 +216,12 @@ var LightsManager = new Class({
         this.visibleLights = visibleLights.length;
 
         return visibleLights;
-    },
+    }
 
-    sortByDistance: function (a, b)
+    sortByDistance(a, b)
     {
         return (a.distance >= b.distance);
-    },
+    }
 
     /**
      * Set the ambient light color.
@@ -235,14 +233,14 @@ var LightsManager = new Class({
      *
      * @return {this} This Lights Manager instance.
      */
-    setAmbientColor: function (rgb)
+    setAmbientColor(rgb)
     {
         var color = Utils.getFloatsFromUintRGB(rgb);
 
         this.ambientColor.set(color[0], color[1], color[2]);
 
         return this;
-    },
+    }
 
     /**
      * Returns the maximum number of Lights allowed to appear at once.
@@ -252,10 +250,10 @@ var LightsManager = new Class({
      *
      * @return {number} The maximum number of Lights allowed to appear at once.
      */
-    getMaxVisibleLights: function ()
+    getMaxVisibleLights()
     {
         return this.maxLights;
-    },
+    }
 
     /**
      * Get the number of Lights managed by this Lights Manager.
@@ -265,10 +263,10 @@ var LightsManager = new Class({
      *
      * @return {number} The number of Lights managed by this Lights Manager.
      */
-    getLightCount: function ()
+    getLightCount()
     {
         return this.lights.length;
-    },
+    }
 
     /**
      * Add a Light.
@@ -285,7 +283,7 @@ var LightsManager = new Class({
      *
      * @return {Phaser.GameObjects.Light} The Light that was added.
      */
-    addLight: function (x, y, radius, rgb, intensity, z)
+    addLight(x, y, radius, rgb, intensity, z)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -301,7 +299,7 @@ var LightsManager = new Class({
         this.lights.push(light);
 
         return light;
-    },
+    }
 
     /**
      * Remove a Light.
@@ -313,7 +311,7 @@ var LightsManager = new Class({
      *
      * @return {this} This Lights Manager instance.
      */
-    removeLight: function (light)
+    removeLight(light)
     {
         var index = this.lights.indexOf(light);
 
@@ -323,7 +321,7 @@ var LightsManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Shut down the Lights Manager.
@@ -334,10 +332,10 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#shutdown
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         this.lights.length = 0;
-    },
+    }
 
     /**
      * Destroy the Lights Manager.
@@ -347,11 +345,11 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.shutdown();
     }
 
-});
+};
 
 module.exports = LightsManager;

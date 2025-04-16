@@ -21,15 +21,14 @@ var ShaderSourceFS = require('../../shaders/FilterMask-frag.js');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterMask = new Class({
-    Extends: BaseFilterShader,
+var FilterMask = class extends BaseFilterShader {
 
-    initialize: function FilterMask (manager)
+    constructor(manager)
     {
-        BaseFilterShader.call(this, 'FilterMask', manager, null, ShaderSourceFS);
-    },
+        super('FilterMask', manager, null, ShaderSourceFS);
+    }
 
-    setupTextures: function (controller, textures, drawingContext)
+    setupTextures(controller, textures, drawingContext)
     {
         // Update dynamic texture if necessary.
         if (controller.maskGameObject && (controller.needsUpdate || controller.autoUpdate))
@@ -39,15 +38,15 @@ var FilterMask = new Class({
 
         // Mask texture.
         textures[1] = controller.glTexture;
-    },
+    }
 
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         var programManager = this.programManager;
 
         programManager.setUniform('uMaskSampler', 1);
         programManager.setUniform('invert', controller.invert);
     }
-});
+};
 
 module.exports = FilterMask;

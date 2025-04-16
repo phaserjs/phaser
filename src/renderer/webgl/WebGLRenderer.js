@@ -78,15 +78,11 @@ if (typeof WEBGL_DEBUG)
  *
  * @param {Phaser.Game} game - The Game instance which owns this WebGL Renderer.
  */
-var WebGLRenderer = new Class({
+var WebGLRenderer = class extends EventEmitter {
 
-    Extends: EventEmitter,
-
-    initialize:
-
-    function WebGLRenderer (game)
+    constructor(game)
     {
-        EventEmitter.call(this);
+        super();
 
         var gameConfig = game.config;
 
@@ -695,7 +691,7 @@ var WebGLRenderer = new Class({
         this._debugCapture = false;
 
         this.init(this.config);
-    },
+    }
 
     /**
      * Creates a new WebGLRenderingContext and initializes all internal state.
@@ -707,7 +703,7 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGLRenderer instance.
      */
-    init: function (config)
+    init(config)
     {
         var gl;
         var game = this.game;
@@ -809,7 +805,7 @@ var WebGLRenderer = new Class({
         game.textures.once(TextureEvents.READY, this.boot, this);
 
         return this;
-    },
+    }
 
     /**
      * Internal boot handler.
@@ -818,7 +814,7 @@ var WebGLRenderer = new Class({
      * @private
      * @since 3.11.0
      */
-    boot: function ()
+    boot()
     {
         var game = this.game;
         var gl = this.gl;
@@ -884,7 +880,7 @@ var WebGLRenderer = new Class({
         game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
         this.resize(width, height);
-    },
+    }
 
     /**
      * Queries the GL context to get the supported extensions.
@@ -896,7 +892,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setExtensions
      * @since 3.85.2
      */
-    setExtensions: function ()
+    setExtensions()
     {
         var gl = this.gl;
         var game = this.game;
@@ -932,7 +928,7 @@ var WebGLRenderer = new Class({
 
             this.standardDerivativesExtension = (exts.indexOf(stdDerivativesString) > -1) ? gl.getExtension(stdDerivativesString) : null;
         }
-    },
+    }
 
     /**
      * Sets the handlers that are called when WebGL context is lost or restored by the browser.
@@ -950,7 +946,7 @@ var WebGLRenderer = new Class({
      * * @param {function} [contextLost] - Custom handler for responding to the WebGL context lost event. Set as `undefined` to use the default handler.
      * @param {function} [contextRestored] - Custom handler for responding to the WebGL context restored event. Set as `undefined` to use the default handler.
      */
-    setContextHandlers: function (contextLost, contextRestored)
+    setContextHandlers(contextLost, contextRestored)
     {
         if (this.previousContextLostHandler)
         {
@@ -984,7 +980,7 @@ var WebGLRenderer = new Class({
 
         this.previousContextLostHandler = this.contextLostHandler;
         this.previousContextRestoredHandler = this.contextRestoredHandler;
-    },
+    }
 
     /**
      * This method is called when the WebGL context is lost. By default this is bound to the property `WebGLRenderer.contextLostHandler`.
@@ -995,7 +991,7 @@ var WebGLRenderer = new Class({
      * 
      * @param {WebGLContextEvent } event - The WebGL context lost Event.
      */
-    dispatchContextLost: function (event)
+    dispatchContextLost(event)
     {
         this.contextLost = true;
 
@@ -1007,7 +1003,7 @@ var WebGLRenderer = new Class({
         this.emit(Events.LOSE_WEBGL, this);
 
         event.preventDefault();
-    },
+    }
 
     /**
      * This method is called when the WebGL context is restored. By default this is bound to the property `WebGLRenderer.contextRestoredHandler`.
@@ -1019,7 +1015,7 @@ var WebGLRenderer = new Class({
      * @param {WebGLContextEvent } event - The WebGL context restored Event.
 
      */
-    dispatchContextRestored: function (event)
+    dispatchContextRestored(event)
     {
         var gl = this.gl;
 
@@ -1073,7 +1069,7 @@ var WebGLRenderer = new Class({
         this.emit(Events.RESTORE_WEBGL, this);
 
         event.preventDefault();
-    },
+    }
 
     /**
      * This method is only available in the Debug Build of Phaser, or a build with the
@@ -1095,7 +1091,7 @@ var WebGLRenderer = new Class({
      * @param {boolean} [quickCapture=false] - If `true` thumbnails are not captured in order to speed up the capture.
      * @param {boolean} [fullCapture=false] - If `true` all details are captured.
      */
-    captureFrame: function (quickCapture, fullCapture)
+    captureFrame(quickCapture, fullCapture)
     {
         if (quickCapture === undefined) { quickCapture = false; }
         if (fullCapture === undefined) { fullCapture = false; }
@@ -1106,7 +1102,7 @@ var WebGLRenderer = new Class({
 
             this._debugCapture = true;
         }
-    },
+    }
 
     /**
      * This method is only available in the Debug Build of Phaser, or a build with the
@@ -1125,7 +1121,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#captureNextFrame
      * @since 3.60.0
      */
-    captureNextFrame: function ()
+    captureNextFrame()
     {
         if (DEBUG && this.spector && !this._debugCapture)
         {
@@ -1133,7 +1129,7 @@ var WebGLRenderer = new Class({
 
             this.spector.captureNextFrame(this.canvas);
         }
-    },
+    }
 
     /**
      * This method is only available in the Debug Build of Phaser, or a build with the
@@ -1154,13 +1150,13 @@ var WebGLRenderer = new Class({
      *
      * @return {number} The current FPS of the WebGL canvas.
      */
-    getFps: function ()
+    getFps()
     {
         if (DEBUG && this.spector)
         {
             return this.spector.getFps();
         }
-    },
+    }
 
     /**
      * This method is only available in the Debug Build of Phaser, or a build with the
@@ -1184,7 +1180,7 @@ var WebGLRenderer = new Class({
      *
      * @return {string} The current log.
      */
-    log: function ()
+    log()
     {
         if (DEBUG && this.spector)
         {
@@ -1192,7 +1188,7 @@ var WebGLRenderer = new Class({
 
             return this.spector.log(t);
         }
-    },
+    }
 
     /**
      * This method is only available in the Debug Build of Phaser, or a build with the
@@ -1217,7 +1213,7 @@ var WebGLRenderer = new Class({
      * @param {boolean} [quickCapture=false] - If `true` thumbnails are not captured in order to speed up the capture.
      * @param {boolean} [fullCapture=false] - If `true` all details are captured.
      */
-    startCapture: function (commandCount, quickCapture, fullCapture)
+    startCapture(commandCount, quickCapture, fullCapture)
     {
         if (commandCount === undefined) { commandCount = 0; }
         if (quickCapture === undefined) { quickCapture = false; }
@@ -1229,7 +1225,7 @@ var WebGLRenderer = new Class({
 
             this._debugCapture = true;
         }
-    },
+    }
 
     /**
      * This method is only available in the Debug Build of Phaser, or a build with the
@@ -1252,13 +1248,13 @@ var WebGLRenderer = new Class({
      *
      * @return {object} The current capture.
      */
-    stopCapture: function ()
+    stopCapture()
     {
         if (DEBUG && this.spector && this._debugCapture)
         {
             return this.spector.stopCapture();
         }
-    },
+    }
 
     /**
      * This method is only available in the Debug Build of Phaser, or a build with the
@@ -1272,7 +1268,7 @@ var WebGLRenderer = new Class({
      *
      * @param {object} capture - The capture data.
      */
-    onCapture: function (capture)
+    onCapture(capture)
     {
         if (DEBUG)
         {
@@ -1282,7 +1278,7 @@ var WebGLRenderer = new Class({
 
             this._debugCapture = false;
         }
-    },
+    }
 
     /**
      * The event handler that manages the `resize` event dispatched by the Scale Manager.
@@ -1293,14 +1289,14 @@ var WebGLRenderer = new Class({
      * @param {Phaser.Structs.Size} gameSize - The default Game Size object. This is the un-modified game dimensions.
      * @param {Phaser.Structs.Size} baseSize - The base Size object. The game dimensions. The canvas width / height values match this.
      */
-    onResize: function (gameSize, baseSize)
+    onResize(gameSize, baseSize)
     {
         //  Has the underlying canvas size changed?
         if (baseSize.width !== this.width || baseSize.height !== this.height)
         {
             this.resize(baseSize.width, baseSize.height);
         }
-    },
+    }
 
     /**
      * Resizes the drawing buffer to match that required by the Scale Manager.
@@ -1314,7 +1310,7 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGLRenderer instance.
      */
-    resize: function (width, height)
+    resize(width, height)
     {
         var gl = this.gl;
 
@@ -1335,7 +1331,7 @@ var WebGLRenderer = new Class({
         this.emit(Events.RESIZE, width, height);
 
         return this;
-    },
+    }
 
     /**
      * Determines which compressed texture formats this browser and device supports.
@@ -1348,7 +1344,7 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Types.Renderer.WebGL.WebGLTextureCompression} The compression object.
      */
-    getCompressedTextures: function ()
+    getCompressedTextures()
     {
         var extString = 'WEBGL_compressed_texture_';
         var wkExtString = 'WEBKIT_' + extString;
@@ -1385,7 +1381,7 @@ var WebGLRenderer = new Class({
             S3TCSRGB: hasExt(gl, 's3tc_srgb'),
             IMG: true
         };
-    },
+    }
 
     /**
      * Returns a compressed texture format GLenum name based on the given format.
@@ -1398,7 +1394,7 @@ var WebGLRenderer = new Class({
      *
      * @return {string} The compressed texture format name, as a string.
      */
-    getCompressedTextureName: function (baseFormat, format)
+    getCompressedTextureName(baseFormat, format)
     {
         var supportedFormats = this.compression[baseFormat.toUpperCase()];
 
@@ -1406,7 +1402,7 @@ var WebGLRenderer = new Class({
         {
             return supportedFormats[format];
         }
-    },
+    }
 
     /**
      * Checks if the given compressed texture format is supported, or not.
@@ -1419,7 +1415,7 @@ var WebGLRenderer = new Class({
      *
      * @return {boolean} True if the format is supported, otherwise false.
      */
-    supportsCompressedTexture: function (baseFormat, format)
+    supportsCompressedTexture(baseFormat, format)
     {
         var supportedFormats = this.compression[baseFormat.toUpperCase()];
 
@@ -1436,7 +1432,7 @@ var WebGLRenderer = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Gets the aspect ratio of the WebGLRenderer dimensions.
@@ -1446,10 +1442,10 @@ var WebGLRenderer = new Class({
      *
      * @return {number} The aspect ratio of the WebGLRenderer dimensions.
      */
-    getAspectRatio: function ()
+    getAspectRatio()
     {
         return this.width / this.height;
-    },
+    }
 
     /**
      * Sets the Projection Matrix of this renderer to the given dimensions.
@@ -1463,7 +1459,7 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGLRenderer instance.
      */
-    setProjectionMatrix: function (width, height, flipY)
+    setProjectionMatrix(width, height, flipY)
     {
         if (width !== this.projectionWidth || height !== this.projectionHeight || flipY !== this.projectionFlipY)
         {
@@ -1482,7 +1478,7 @@ var WebGLRenderer = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the Projection Matrix of this renderer to match the given drawing context.
@@ -1494,14 +1490,14 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGLRenderer instance.
      */
-    setProjectionMatrixFromDrawingContext: function (drawingContext)
+    setProjectionMatrixFromDrawingContext(drawingContext)
     {
         return this.setProjectionMatrix(
             drawingContext.width,
             drawingContext.height,
             false
         );
-    },
+    }
 
     /**
      * Resets the Projection Matrix back to this renderers width and height.
@@ -1514,10 +1510,10 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGLRenderer instance.
      */
-    resetProjectionMatrix: function ()
+    resetProjectionMatrix()
     {
         return this.setProjectionMatrix(this.width, this.height);
-    },
+    }
 
     /**
      * Checks if a WebGL extension is supported
@@ -1529,10 +1525,10 @@ var WebGLRenderer = new Class({
      *
      * @return {boolean} `true` if the extension is supported, otherwise `false`.
      */
-    hasExtension: function (extensionName)
+    hasExtension(extensionName)
     {
         return this.supportedExtensions ? this.supportedExtensions.indexOf(extensionName) : false;
-    },
+    }
 
     /**
      * Loads a WebGL extension
@@ -1544,7 +1540,7 @@ var WebGLRenderer = new Class({
      *
      * @return {object} WebGL extension if the extension is supported
      */
-    getExtension: function (extensionName)
+    getExtension(extensionName)
     {
         if (!this.hasExtension(extensionName)) { return null; }
 
@@ -1554,7 +1550,7 @@ var WebGLRenderer = new Class({
         }
 
         return this.extensions[extensionName];
-    },
+    }
 
     /**
      * Creates a new custom blend mode for the renderer.
@@ -1569,12 +1565,12 @@ var WebGLRenderer = new Class({
      *
      * @return {number} The index of the new blend mode, used for referencing it in the future.
      */
-    addBlendMode: function (func, equation)
+    addBlendMode(func, equation)
     {
         var index = this.blendModes.push(WebGLBlendParametersFactory.createCombined(this, true, undefined, equation, func[0], func[1])) - 1;
 
         return index - 1;
-    },
+    }
 
     /**
      * Updates the function bound to a given custom blend mode.
@@ -1588,7 +1584,7 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGLRenderer instance.
      */
-    updateBlendMode: function (index, func, equation)
+    updateBlendMode(index, func, equation)
     {
         if (index > 17 && this.blendModes[index])
         {
@@ -1613,7 +1609,7 @@ var WebGLRenderer = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Removes a custom blend mode from the renderer.
@@ -1626,7 +1622,7 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGLRenderer instance.
      */
-    removeBlendMode: function (index)
+    removeBlendMode(index)
     {
         if (index > 17 && this.blendModes[index])
         {
@@ -1634,7 +1630,7 @@ var WebGLRenderer = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Clear the current framebuffer to the given color.
@@ -1645,7 +1641,7 @@ var WebGLRenderer = new Class({
      * @param {number} [stencil] - The stencil value to clear to.
      * @param {number} [depth] - The depth value to clear to. Currently, this is not set, and only determines whether the depth buffer is cleared.
      */
-    clearFramebuffer: function (color, stencil, depth)
+    clearFramebuffer(color, stencil, depth)
     {
         var gl = this.gl;
         var bits = 0;
@@ -1664,7 +1660,7 @@ var WebGLRenderer = new Class({
             bits = bits | gl.DEPTH_BUFFER_BIT;
         }
         gl.clear(bits);
-    },
+    }
 
     /**
      * Creates a texture from an image source. If the source is not valid it creates an empty texture.
@@ -1681,7 +1677,7 @@ var WebGLRenderer = new Class({
      *
      * @return {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The WebGLTextureWrapper that was created, or `null` if it couldn't be created.
      */
-    createTextureFromSource: function (source, width, height, scaleMode, forceClamp, flipY)
+    createTextureFromSource(source, width, height, scaleMode, forceClamp, flipY)
     {
         if (forceClamp === undefined) { forceClamp = false; }
 
@@ -1724,7 +1720,7 @@ var WebGLRenderer = new Class({
         }
 
         return texture;
-    },
+    }
 
     /**
      * A wrapper for creating a WebGLTextureWrapper. If no pixel data is passed it will create an empty texture.
@@ -1747,7 +1743,7 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The WebGLTextureWrapper that was created.
      */
-    createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY)
+    createTexture2D(mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY)
     {
         if (typeof width !== 'number') { width = pixels ? pixels.width : 1; }
         if (typeof height !== 'number') { height = pixels ? pixels.height : 1; }
@@ -1757,7 +1753,7 @@ var WebGLRenderer = new Class({
         this.glTextureWrappers.push(texture);
 
         return texture;
-    },
+    }
 
     /**
      * Creates a WebGL Framebuffer object and optionally binds a depth stencil render buffer.
@@ -1773,7 +1769,7 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper} Wrapped framebuffer which is safe to use with the renderer.
      */
-    createFramebuffer: function (renderTexture, addStencilBuffer, addDepthBuffer)
+    createFramebuffer(renderTexture, addStencilBuffer, addDepthBuffer)
     {
         if (!Array.isArray(renderTexture) && renderTexture !== null)
         {
@@ -1789,7 +1785,7 @@ var WebGLRenderer = new Class({
         this.glFramebufferWrappers.push(framebuffer);
 
         return framebuffer;
-    },
+    }
 
     /**
      * Creates a WebGLProgram instance based on the given vertex and fragment shader source.
@@ -1804,12 +1800,12 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper} The wrapped, linked WebGLProgram created from the given shader source.
      */
-    createProgram: function (vertexShader, fragmentShader)
+    createProgram(vertexShader, fragmentShader)
     {
         var wrapper = new WebGLProgramWrapper(this, vertexShader, fragmentShader);
         this.glProgramWrappers.push(wrapper);
         return wrapper;
-    },
+    }
 
     /**
      * Wrapper for creating a vertex buffer.
@@ -1822,13 +1818,13 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} Wrapped vertex buffer
      */
-    createVertexBuffer: function (initialDataOrSize, bufferUsage)
+    createVertexBuffer(initialDataOrSize, bufferUsage)
     {
         var gl = this.gl;
         var vertexBuffer = new WebGLBufferWrapper(this, initialDataOrSize, gl.ARRAY_BUFFER, bufferUsage);
         this.glBufferWrappers.push(vertexBuffer);
         return vertexBuffer;
-    },
+    }
 
     /**
      * Wrapper for creating a vertex buffer.
@@ -1841,13 +1837,13 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} Wrapped index buffer
      */
-    createIndexBuffer: function (initialDataOrSize, bufferUsage)
+    createIndexBuffer(initialDataOrSize, bufferUsage)
     {
         var gl = this.gl;
         var indexBuffer = new WebGLBufferWrapper(this, initialDataOrSize, gl.ELEMENT_ARRAY_BUFFER, bufferUsage);
         this.glBufferWrappers.push(indexBuffer);
         return indexBuffer;
-    },
+    }
 
     /**
      * Wrapper for creating a vertex array object.
@@ -1859,12 +1855,12 @@ var WebGLRenderer = new Class({
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} indexBuffer - The index buffer.
      * @param {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout[]} attributeBufferLayouts - The attribute buffer layouts.
      */
-    createVAO: function (program, indexBuffer, attributeBufferLayouts)
+    createVAO(program, indexBuffer, attributeBufferLayouts)
     {
         var vao = new WebGLVAOWrapper(this, program, indexBuffer, attributeBufferLayouts);
         this.glVAOWrappers.push(vao);
         return vao;
-    },
+    }
 
     /**
      * Removes a texture from the GPU.
@@ -1876,7 +1872,7 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGLRenderer instance.
      */
-    deleteTexture: function (texture)
+    deleteTexture(texture)
     {
         if (!texture)
         {
@@ -1885,7 +1881,7 @@ var WebGLRenderer = new Class({
         ArrayRemove(this.glTextureWrappers, texture);
         texture.destroy();
         return this;
-    },
+    }
 
     /**
      * Deletes a Framebuffer from the GL instance.
@@ -1897,7 +1893,7 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGLRenderer instance.
      */
-    deleteFramebuffer: function (framebuffer)
+    deleteFramebuffer(framebuffer)
     {
         if (!framebuffer)
         {
@@ -1906,7 +1902,7 @@ var WebGLRenderer = new Class({
         ArrayRemove(this.glFramebufferWrappers, framebuffer);
         framebuffer.destroy();
         return this;
-    },
+    }
 
     /**
      * Deletes a WebGLProgram from the GL instance.
@@ -1918,7 +1914,7 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGLRenderer instance.
      */
-    deleteProgram: function (program)
+    deleteProgram(program)
     {
         if (program)
         {
@@ -1927,7 +1923,7 @@ var WebGLRenderer = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Deletes a WebGLBuffer from the GL instance.
@@ -1939,13 +1935,13 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGLRenderer instance.
      */
-    deleteBuffer: function (buffer)
+    deleteBuffer(buffer)
     {
         if (!buffer) { return this; }
         ArrayRemove(this.glBufferWrappers, buffer);
         buffer.destroy();
         return this;
-    },
+    }
 
     /**
      * Clears the base DrawingContext and readies it for use.
@@ -1955,7 +1951,7 @@ var WebGLRenderer = new Class({
      * @fires Phaser.Renderer.Events#PRE_RENDER
      * @since 3.0.0
      */
-    preRender: function ()
+    preRender()
     {
         if (this.contextLost) { return; }
 
@@ -1982,7 +1978,7 @@ var WebGLRenderer = new Class({
         baseDrawingContext.use();
 
         this.emit(Events.PRE_RENDER);
-    },
+    }
 
     /**
      * The core render step for a Scene Camera.
@@ -2002,7 +1998,7 @@ var WebGLRenderer = new Class({
      * @param {Phaser.GameObjects.GameObject[]} children - An array of filtered Game Objects that can be rendered by the given Camera.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera to render with.
      */
-    render: function (scene, children, camera)
+    render(scene, children, camera)
     {
         if (this.contextLost) { return; }
 
@@ -2013,7 +2009,7 @@ var WebGLRenderer = new Class({
         this.cameraRenderNode.run(this.baseDrawingContext, children, camera);
 
         this.currentViewCamera = null;
-    },
+    }
 
     /**
      * The post-render step happens after all Cameras in all Scenes have been rendered.
@@ -2022,7 +2018,7 @@ var WebGLRenderer = new Class({
      * @fires Phaser.Renderer.Events#POST_RENDER
      * @since 3.0.0
      */
-    postRender: function ()
+    postRender()
     {
         this.baseDrawingContext.release();
 
@@ -2038,7 +2034,7 @@ var WebGLRenderer = new Class({
 
             state.callback = null;
         }
-    },
+    }
 
     /**
      * Draw a number of vertices to a drawing context.
@@ -2063,7 +2059,7 @@ var WebGLRenderer = new Class({
      * @param {number} offset - The offset to start drawing from in the index buffer. This is in bytes, and should be a multiple of 2 (for 16-bit `UNSIGNED_SHORT` indices).
      * @param {number} topology - The type of primitives to render. Defaults to `TRIANGLE_STRIP`.
      */
-    drawElements: function (drawingContext, textures, program, vao, count, offset, topology)
+    drawElements(drawingContext, textures, program, vao, count, offset, topology)
     {
         var gl = this.gl;
 
@@ -2076,7 +2072,7 @@ var WebGLRenderer = new Class({
         this.glTextureUnits.bindUnits(textures);
 
         gl.drawElements(topology || gl.TRIANGLE_STRIP, count, gl.UNSIGNED_SHORT, offset);
-    },
+    }
 
     /**
      * Draw a number of instances to a drawing context.
@@ -2098,7 +2094,7 @@ var WebGLRenderer = new Class({
      * @param {number} count - The number of vertices to draw.
      * @param {number} instanceCount - The number of instances to render.
      */
-    drawInstancedArrays: function (drawingContext, textures, program, vao, first, count, instanceCount, topology)
+    drawInstancedArrays(drawingContext, textures, program, vao, first, count, instanceCount, topology)
     {
         var gl = this.gl;
 
@@ -2111,7 +2107,7 @@ var WebGLRenderer = new Class({
         this.glTextureUnits.bindUnits(textures);
 
         this.instancedArraysExtension.drawArraysInstancedANGLE(topology || gl.TRIANGLE_STRIP, first, count, instanceCount);
-    },
+    }
 
     /**
      * Schedules a snapshot of the entire game viewport to be taken after the current frame is rendered.
@@ -2135,10 +2131,10 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGL Renderer.
      */
-    snapshot: function (callback, type, encoderOptions)
+    snapshot(callback, type, encoderOptions)
     {
         return this.snapshotArea(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight, callback, type, encoderOptions);
-    },
+    }
 
     /**
      * Schedules a snapshot of the given area of the game viewport to be taken after the current frame is rendered.
@@ -2166,7 +2162,7 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGL Renderer.
      */
-    snapshotArea: function (x, y, width, height, callback, type, encoderOptions)
+    snapshotArea(x, y, width, height, callback, type, encoderOptions)
     {
         var state = this.snapshotState;
 
@@ -2181,7 +2177,7 @@ var WebGLRenderer = new Class({
         state.unpremultiplyAlpha = this.game.config.premultipliedAlpha;
 
         return this;
-    },
+    }
 
     /**
      * Schedules a snapshot of the given pixel from the game viewport to be taken after the current frame is rendered.
@@ -2204,14 +2200,14 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGL Renderer.
      */
-    snapshotPixel: function (x, y, callback)
+    snapshotPixel(x, y, callback)
     {
         this.snapshotArea(x, y, 1, 1, callback);
 
         this.snapshotState.getPixel = true;
 
         return this;
-    },
+    }
 
     /**
      * Takes a snapshot of the given area of the given frame buffer.
@@ -2240,7 +2236,7 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGL Renderer.
      */
-    snapshotFramebuffer: function (framebuffer, bufferWidth, bufferHeight, callback, getPixel, x, y, width, height, type, encoderOptions)
+    snapshotFramebuffer(framebuffer, bufferWidth, bufferHeight, callback, getPixel, x, y, width, height, type, encoderOptions)
     {
         if (getPixel === undefined) { getPixel = false; }
         if (x === undefined) { x = 0; }
@@ -2279,7 +2275,7 @@ var WebGLRenderer = new Class({
         state.isFramebuffer = false;
 
         return this;
-    },
+    }
 
     /**
      * Creates a new WebGL Texture based on the given Canvas Element.
@@ -2296,7 +2292,7 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created, or updated, WebGLTextureWrapper.
      */
-    canvasToTexture: function (srcCanvas, dstTexture, noRepeat, flipY)
+    canvasToTexture(srcCanvas, dstTexture, noRepeat, flipY)
     {
         if (noRepeat === undefined) { noRepeat = false; }
         if (flipY === undefined) { flipY = true; }
@@ -2333,7 +2329,7 @@ var WebGLRenderer = new Class({
 
             return dstTexture;
         }
-    },
+    }
 
     /**
      * Creates a new WebGL Texture based on the given Canvas Element.
@@ -2347,13 +2343,13 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created WebGLTextureWrapper.
      */
-    createCanvasTexture: function (srcCanvas, noRepeat, flipY)
+    createCanvasTexture(srcCanvas, noRepeat, flipY)
     {
         if (noRepeat === undefined) { noRepeat = false; }
         if (flipY === undefined) { flipY = true; }
 
         return this.canvasToTexture(srcCanvas, null, noRepeat, flipY);
-    },
+    }
 
     /**
      * Updates a WebGL Texture based on the given Canvas Element.
@@ -2368,13 +2364,13 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The updated WebGLTextureWrapper. This is the same wrapper object as `dstTexture`.
      */
-    updateCanvasTexture: function (srcCanvas, dstTexture, flipY, noRepeat)
+    updateCanvasTexture(srcCanvas, dstTexture, flipY, noRepeat)
     {
         if (flipY === undefined) { flipY = true; }
         if (noRepeat === undefined) { noRepeat = false; }
 
         return this.canvasToTexture(srcCanvas, dstTexture, noRepeat, flipY);
-    },
+    }
 
     /**
      * Creates or updates a WebGL Texture based on the given HTML Video Element.
@@ -2391,7 +2387,7 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created, or updated, WebGLTextureWrapper.
      */
-    videoToTexture: function (srcVideo, dstTexture, noRepeat, flipY)
+    videoToTexture(srcVideo, dstTexture, noRepeat, flipY)
     {
         if (noRepeat === undefined) { noRepeat = false; }
         if (flipY === undefined) { flipY = true; }
@@ -2428,7 +2424,7 @@ var WebGLRenderer = new Class({
 
             return dstTexture;
         }
-    },
+    }
 
     /**
      * Creates a new WebGL Texture based on the given HTML Video Element.
@@ -2442,13 +2438,13 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created WebGLTextureWrapper.
      */
-    createVideoTexture: function (srcVideo, noRepeat, flipY)
+    createVideoTexture(srcVideo, noRepeat, flipY)
     {
         if (noRepeat === undefined) { noRepeat = false; }
         if (flipY === undefined) { flipY = true; }
 
         return this.videoToTexture(srcVideo, null, noRepeat, flipY);
-    },
+    }
 
     /**
      * Updates a WebGL Texture based on the given HTML Video Element.
@@ -2463,13 +2459,13 @@ var WebGLRenderer = new Class({
      *
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The updated WebGLTextureWrapper. This is the same wrapper object as `dstTexture`.
      */
-    updateVideoTexture: function (srcVideo, dstTexture, flipY, noRepeat)
+    updateVideoTexture(srcVideo, dstTexture, flipY, noRepeat)
     {
         if (flipY === undefined) { flipY = true; }
         if (noRepeat === undefined) { noRepeat = false; }
 
         return this.videoToTexture(srcVideo, dstTexture, noRepeat, flipY);
-    },
+    }
 
     /**
      * Create a WebGLTexture from a Uint8Array.
@@ -2487,7 +2483,7 @@ var WebGLRenderer = new Class({
      * @param {boolean} [flipY = true] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y`?
      * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The newly created WebGLTextureWrapper.
      */
-    createUint8ArrayTexture: function (data, width, height, pma, flipY)
+    createUint8ArrayTexture(data, width, height, pma, flipY)
     {
         var gl = this.gl;
         var minFilter = gl.NEAREST;
@@ -2505,7 +2501,7 @@ var WebGLRenderer = new Class({
         if (flipY === undefined) { flipY = true; }
 
         return this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, data, width, height, pma, false, flipY);
-    },
+    }
 
     /**
      * Sets the minification and magnification filter for a texture.
@@ -2518,7 +2514,7 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGL Renderer instance.
      */
-    setTextureFilter: function (texture, filter)
+    setTextureFilter(texture, filter)
     {
         var gl = this.gl;
         var glFilter = (filter === 0) ? gl.LINEAR : gl.NEAREST;
@@ -2543,7 +2539,7 @@ var WebGLRenderer = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Returns the largest texture size (either width or height) that can be created.
@@ -2555,10 +2551,10 @@ var WebGLRenderer = new Class({
      *
      * @return {number} The maximum supported texture size.
      */
-    getMaxTextureSize: function ()
+    getMaxTextureSize()
     {
         return this.config.maxTextureSize;
-    },
+    }
 
     /**
      * Destroy this WebGLRenderer, cleaning up all related resources such as wrappers, native textures, etc.
@@ -2566,7 +2562,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.off(Events.RESIZE, this.baseDrawingContext.resize, this.baseDrawingContext);
 
@@ -2597,6 +2593,6 @@ var WebGLRenderer = new Class({
             this.spector = null;
         }
     }
-});
+};
 
 module.exports = WebGLRenderer;

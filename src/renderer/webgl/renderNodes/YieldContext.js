@@ -22,12 +22,11 @@ var RenderNode = require('./RenderNode');
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var YieldContext = new Class({
-    Extends: RenderNode,
+var YieldContext = class extends RenderNode {
 
-    initialize: function YieldContext (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'YieldContext', manager);
+        super('YieldContext', manager);
 
         /**
          * The WebGL state to set when this node is run.
@@ -43,7 +42,7 @@ var YieldContext = new Class({
             blend: this.manager.renderer.blendModes[0],
             vao: null
         };
-    },
+    }
 
     /**
      * Sets the WebGL context to a default state.
@@ -54,7 +53,7 @@ var YieldContext = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} displayContext - The context currently in use.
      */
-    run: function (displayContext)
+    run(displayContext)
     {
         this.onRunBegin(displayContext);
 
@@ -69,6 +68,6 @@ var YieldContext = new Class({
 
         this.onRunEnd(displayContext);
     }
-});
+};
 
 module.exports = YieldContext;

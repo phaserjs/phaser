@@ -46,10 +46,9 @@ var Controller = require('./Controller');
  * @param {number} [quality=10] - The quality of the glow effect. This cannot be changed after the filter has been created.
  * @param {number} [distance=10] - The distance of the glow effect. This cannot be changed after the filter has been created.
  */
-var Glow = new Class({
-    Extends: Controller,
+var Glow = class extends Controller {
 
-    initialize: function Glow (camera, color, outerStrength, innerStrength, scale, knockout, quality, distance)
+    constructor(camera, color, outerStrength, innerStrength, scale, knockout, quality, distance)
     {
         if (outerStrength === undefined) { outerStrength = 4; }
         if (innerStrength === undefined) { innerStrength = 0; }
@@ -58,7 +57,7 @@ var Glow = new Class({
         if (quality === undefined) { quality = camera.scene.sys.game.config.glowQuality; }
         if (distance === undefined) { distance = camera.scene.sys.game.config.glowDistance; }
 
-        Controller.call(this, camera, 'FilterGlow');
+        super(camera, 'FilterGlow');
 
         /**
          * The strength of the glow outward from the edge of textures.
@@ -144,7 +143,7 @@ var Glow = new Class({
         {
             this.color = color;
         }
-    },
+    }
 
     /**
      * The color of the glow as a number value.
@@ -153,25 +152,22 @@ var Glow = new Class({
      * @type {number}
      * @since 4.0.0
      */
-    color: {
 
-        get: function ()
-        {
-            var color = this.glcolor;
+    get color()
+    {
+        var color = this.glcolor;
 
-            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
-        },
+        return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+    }
 
-        set: function (value)
-        {
-            var color = this.glcolor;
+    set color(value)
+    {
+        var color = this.glcolor;
 
-            color[0] = ((value >> 16) & 0xFF) / 255;
-            color[1] = ((value >> 8) & 0xFF) / 255;
-            color[2] = (value & 0xFF) / 255;
-        }
-
-    },
+        color[0] = ((value >> 16) & 0xFF) / 255;
+        color[1] = ((value >> 8) & 0xFF) / 255;
+        color[2] = (value & 0xFF) / 255;
+    }
 
     /**
      * The distance of the glow effect.
@@ -184,14 +180,11 @@ var Glow = new Class({
      * @since 4.0.0
      * @readonly
      */
-    distance: {
 
-        get: function ()
-        {
-            return this._distance;
-        }
-
-    },
+    get distance()
+    {
+        return this._distance;
+    }
 
     /**
      * The quality of the glow effect.
@@ -205,15 +198,13 @@ var Glow = new Class({
      * @since 4.0.0
      * @readonly
      */
-    quality: {
 
-        get: function ()
-        {
-            return this._quality;
-        }
-    },
+    get quality()
+    {
+        return this._quality;
+    }
 
-    getPadding: function ()
+    getPadding()
     {
         var override = this.paddingOverride;
         if (override)
@@ -232,6 +223,6 @@ var Glow = new Class({
 
         return padding;
     }
-});
+};
 
 module.exports = Glow;

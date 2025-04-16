@@ -33,17 +33,16 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {(Phaser.GameObjects.GameObject[]|Phaser.Types.GameObjects.Group.GroupConfig|Phaser.Types.GameObjects.Group.GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
  * @param {Phaser.Types.GameObjects.Group.GroupConfig|Phaser.Types.GameObjects.Group.GroupCreateConfig} [config] - Settings for this group.
  */
-var StaticPhysicsGroup = new Class({
+var StaticPhysicsGroup = class extends Group {
 
-    Extends: Group,
+    static
+    {
+        Class.mixin(this, [
+            CollisionComponent
+        ], false);
+    }
 
-    Mixins: [
-        CollisionComponent
-    ],
-
-    initialize:
-
-    function StaticPhysicsGroup (world, scene, children, config)
+    constructor(world, scene, children, config)
     {
         if (!children && !config)
         {
@@ -131,7 +130,7 @@ var StaticPhysicsGroup = new Class({
          */
         this.collisionMask = 1;
 
-        Group.call(this, scene, children, config);
+        super(scene, children, config);
 
         /**
          * A textual representation of this Game Object.
@@ -143,7 +142,7 @@ var StaticPhysicsGroup = new Class({
          * @since 3.21.0
          */
         this.type = 'StaticPhysicsGroup';
-    },
+    }
 
     /**
      * Adds a static physics body to the new group member (if it lacks one) and adds it to the simulation.
@@ -155,13 +154,13 @@ var StaticPhysicsGroup = new Class({
      *
      * @see Phaser.Physics.Arcade.World#enableBody
      */
-    createCallbackHandler: function (child)
+    createCallbackHandler(child)
     {
         if (!child.body)
         {
             this.world.enableBody(child, CONST.STATIC_BODY);
         }
-    },
+    }
 
     /**
      * Disables the group member's physics body, removing it from the simulation.
@@ -173,13 +172,13 @@ var StaticPhysicsGroup = new Class({
      *
      * @see Phaser.Physics.Arcade.World#disableBody
      */
-    removeCallbackHandler: function (child)
+    removeCallbackHandler(child)
     {
         if (child.body)
         {
             this.world.disableBody(child);
         }
-    },
+    }
 
     /**
      * Refreshes the group.
@@ -191,10 +190,10 @@ var StaticPhysicsGroup = new Class({
      *
      * @see Phaser.Physics.Arcade.StaticGroup#refresh
      */
-    createMultipleCallbackHandler: function ()
+    createMultipleCallbackHandler()
     {
         this.refresh();
-    },
+    }
 
     /**
      * Resets each Body to the position of its parent Game Object.
@@ -207,7 +206,7 @@ var StaticPhysicsGroup = new Class({
      *
      * @see Phaser.Physics.Arcade.StaticBody#reset
      */
-    refresh: function ()
+    refresh()
     {
         var children = Array.from(this.children);
 
@@ -219,6 +218,6 @@ var StaticPhysicsGroup = new Class({
         return this;
     }
 
-});
+};
 
 module.exports = StaticPhysicsGroup;

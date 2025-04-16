@@ -30,15 +30,14 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.SubmitterQuadConfig} [config] - The configuration object for this Submitter. This is a SubmitterQuad configuration object with the `name` defaulting to `SubmitterTileSprite`.
  */
-var SubmitterTileSprite = new Class({
-    Extends: SubmitterQuad,
+var SubmitterTileSprite = class extends SubmitterQuad {
 
-    initialize: function SubmitterTileSprite (manager, config)
+    constructor(manager, config)
     {
-        SubmitterQuad.call(this, manager, config);
+        super(manager, config);
 
         this._renderOptions.wrapFrame = true;
-    },
+    }
 
     /**
      * The default configuration for this RenderNode.
@@ -50,7 +49,7 @@ var SubmitterTileSprite = new Class({
         name: 'SubmitterTileSprite',
         role: 'Submitter',
         batchHandler: 'BatchHandler'
-    },
+    }
 
     /**
      * Submit data for rendering.
@@ -67,7 +66,7 @@ var SubmitterTileSprite = new Class({
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [normalMap] - The normal map texture to use for lighting. If omitted, the normal map texture of the GameObject will be used, or the default normal map texture of the renderer.
      * @param {number} [normalMapRotation] - The rotation of the normal map texture. If omitted, the rotation of the GameObject will be used.
      */
-    run: function (
+    run(
         drawingContext,
         gameObject,
         parentMatrix,
@@ -164,6 +163,6 @@ var SubmitterTileSprite = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = SubmitterTileSprite;

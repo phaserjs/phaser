@@ -44,10 +44,9 @@ var BaseFilter = require('./BaseFilter');
  * @param {string} [fragmentShaderSource] - The fragment shader source.
  * @param {?Phaser.Types.Renderer.WebGL.ShaderAdditionConfig[]} [shaderAdditions] - An array of shader additions to apply to the shader program.
  */
-var BaseFilterShader = new Class({
-    Extends: BaseFilter,
+var BaseFilterShader = class extends BaseFilter {
 
-    initialize: function BaseFilterShader (name, manager, fragmentShaderKey, fragmentShaderSource, shaderAdditions)
+    constructor(name, manager, fragmentShaderKey, fragmentShaderSource, shaderAdditions)
     {
         if (!fragmentShaderSource)
         {
@@ -59,7 +58,7 @@ var BaseFilterShader = new Class({
             fragmentShaderSource = baseShader.glsl;
         }
 
-        BaseFilter.call(this, name, manager);
+        super(name, manager);
 
         var renderer = manager.renderer;
         var gl = renderer.gl;
@@ -146,9 +145,9 @@ var BaseFilterShader = new Class({
 
         // Set the shader program to use texture unit 0.
         this.programManager.setUniform('uMainSampler', 0);
-    },
+    }
 
-    run: function (controller, inputDrawingContext, outputDrawingContext, padding)
+    run(controller, inputDrawingContext, outputDrawingContext, padding)
     {
         var manager = this.manager;
         var renderer = manager.renderer;
@@ -281,7 +280,7 @@ var BaseFilterShader = new Class({
         this.onRunEnd(outputDrawingContext);
 
         return outputDrawingContext;
-    },
+    }
 
     /**
      * Set up the shader configuration for this shader.
@@ -292,10 +291,10 @@ var BaseFilterShader = new Class({
      * @param {Phaser.Filters.Controller} controller - The filter controller.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The drawing context in use.
      */
-    updateShaderConfig: function (controller, drawingContext)
+    updateShaderConfig(controller, drawingContext)
     {
         // NOOP
-    },
+    }
 
     /**
      * Run any necessary modifications on the textures array.
@@ -307,10 +306,10 @@ var BaseFilterShader = new Class({
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]} textures - The array of textures to modify in-place.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The drawing context in use.
      */
-    setupTextures: function (controller, textures, drawingContext)
+    setupTextures(controller, textures, drawingContext)
     {
         // NOOP
-    },
+    }
 
     /**
      * Set up the uniforms for this shader, based on the controller.
@@ -320,11 +319,11 @@ var BaseFilterShader = new Class({
      * @param {Phaser.Filters.Controller} controller - The filter controller.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The drawing context in use.
      */
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         // This is the base setupUniforms method that all filters should override
     }
-});
+};
 
 function remapCoord (coord, low, high)
 {

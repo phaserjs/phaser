@@ -32,13 +32,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var PluginFile = new Class({
+var PluginFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function PluginFile (loader, key, url, start, mapping, xhrSettings)
+    constructor(loader, key, url, start, mapping, xhrSettings)
     {
         var extension = 'js';
 
@@ -68,7 +64,7 @@ var PluginFile = new Class({
             }
         };
 
-        File.call(this, loader, fileConfig);
+        super(loader, fileConfig);
 
         // If the url variable refers to a class, add the plugin directly
         if (typeof url === 'function')
@@ -77,7 +73,7 @@ var PluginFile = new Class({
 
             this.state = CONST.FILE_POPULATED;
         }
-    },
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -86,7 +82,7 @@ var PluginFile = new Class({
      * @method Phaser.Loader.FileTypes.PluginFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         var pluginManager = this.loader.systems.plugins;
         var config = this.config;
@@ -124,7 +120,7 @@ var PluginFile = new Class({
         this.onProcessComplete();
     }
 
-});
+};
 
 /**
  * Adds a Plugin Script file, or array of plugin files, to the current load queue.

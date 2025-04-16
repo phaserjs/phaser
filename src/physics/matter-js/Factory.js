@@ -40,11 +40,9 @@ var Vertices = require('./lib/geometry/Vertices');
  *
  * @param {Phaser.Physics.Matter.World} world - The Matter World which this Factory adds to.
  */
-var Factory = new Class({
+var Factory = class {
 
-    initialize:
-
-    function Factory (world)
+    constructor(world)
     {
         /**
          * The Matter World which this Factory adds to.
@@ -72,7 +70,7 @@ var Factory = new Class({
          * @since 3.0.0
          */
         this.sys = world.scene.sys;
-    },
+    }
 
     /**
      * Creates a new rigid rectangular Body and adds it to the World.
@@ -88,14 +86,14 @@ var Factory = new Class({
      *
      * @return {MatterJS.BodyType} A Matter JS Body.
      */
-    rectangle: function (x, y, width, height, options)
+    rectangle(x, y, width, height, options)
     {
         var body = Bodies.rectangle(x, y, width, height, options);
 
         this.world.add(body);
 
         return body;
-    },
+    }
 
     /**
      * Creates a new rigid trapezoidal Body and adds it to the World.
@@ -112,14 +110,14 @@ var Factory = new Class({
      *
      * @return {MatterJS.BodyType} A Matter JS Body.
      */
-    trapezoid: function (x, y, width, height, slope, options)
+    trapezoid(x, y, width, height, slope, options)
     {
         var body = Bodies.trapezoid(x, y, width, height, slope, options);
 
         this.world.add(body);
 
         return body;
-    },
+    }
 
     /**
      * Creates a new rigid circular Body and adds it to the World.
@@ -135,14 +133,14 @@ var Factory = new Class({
      *
      * @return {MatterJS.BodyType} A Matter JS Body.
      */
-    circle: function (x, y, radius, options, maxSides)
+    circle(x, y, radius, options, maxSides)
     {
         var body = Bodies.circle(x, y, radius, options, maxSides);
 
         this.world.add(body);
 
         return body;
-    },
+    }
 
     /**
      * Creates a new rigid polygonal Body and adds it to the World.
@@ -158,14 +156,14 @@ var Factory = new Class({
      *
      * @return {MatterJS.BodyType} A Matter JS Body.
      */
-    polygon: function (x, y, sides, radius, options)
+    polygon(x, y, sides, radius, options)
     {
         var body = Bodies.polygon(x, y, sides, radius, options);
 
         this.world.add(body);
 
         return body;
-    },
+    }
 
     /**
      * Creates a body using the supplied vertices (or an array containing multiple sets of vertices) and adds it to the World.
@@ -184,7 +182,7 @@ var Factory = new Class({
      *
      * @return {MatterJS.BodyType} A Matter JS Body.
      */
-    fromVertices: function (x, y, vertexSets, options, flagInternal, removeCollinear, minimumArea)
+    fromVertices(x, y, vertexSets, options, flagInternal, removeCollinear, minimumArea)
     {
         if (typeof vertexSets === 'string')
         {
@@ -196,7 +194,7 @@ var Factory = new Class({
         this.world.add(body);
 
         return body;
-    },
+    }
 
     /**
      * Creates a body using data exported from the application PhysicsEditor (https://www.codeandweb.com/physicseditor)
@@ -231,7 +229,7 @@ var Factory = new Class({
      *
      * @return {MatterJS.BodyType} A Matter JS Body.
      */
-    fromPhysicsEditor: function (x, y, config, options, addToWorld)
+    fromPhysicsEditor(x, y, config, options, addToWorld)
     {
         if (addToWorld === undefined) { addToWorld = true; }
 
@@ -243,7 +241,7 @@ var Factory = new Class({
         }
 
         return body;
-    },
+    }
 
     /**
      * Creates a body using the path data from an SVG file.
@@ -277,7 +275,7 @@ var Factory = new Class({
      *
      * @return {MatterJS.BodyType} A Matter JS Body.
      */
-    fromSVG: function (x, y, xml, scale, options, addToWorld)
+    fromSVG(x, y, xml, scale, options, addToWorld)
     {
         if (scale === undefined) { scale = 1; }
         if (options === undefined) { options = {}; }
@@ -306,7 +304,7 @@ var Factory = new Class({
         }
 
         return body;
-    },
+    }
 
     /**
      * Creates a body using the supplied physics data, as provided by a JSON file.
@@ -357,7 +355,7 @@ var Factory = new Class({
      *
      * @return {MatterJS.BodyType} A Matter JS Body.
      */
-    fromJSON: function (x, y, config, options, addToWorld)
+    fromJSON(x, y, config, options, addToWorld)
     {
         if (options === undefined) { options = {}; }
         if (addToWorld === undefined) { addToWorld = true; }
@@ -370,7 +368,7 @@ var Factory = new Class({
         }
 
         return body;
-    },
+    }
 
     /**
      * Create a new composite containing Matter Image objects created in a grid arrangement.
@@ -391,7 +389,7 @@ var Factory = new Class({
      *
      * @return {MatterJS.CompositeType} A Matter JS Composite Stack.
      */
-    imageStack: function (key, frame, x, y, columns, rows, columnGap, rowGap, options)
+    imageStack(key, frame, x, y, columns, rows, columnGap, rowGap, options)
     {
         if (columnGap === undefined) { columnGap = 0; }
         if (rowGap === undefined) { rowGap = 0; }
@@ -414,7 +412,7 @@ var Factory = new Class({
         world.add(stack);
 
         return stack;
-    },
+    }
 
     /**
      * Create a new composite containing bodies created in the callback in a grid arrangement.
@@ -434,14 +432,14 @@ var Factory = new Class({
      *
      * @return {MatterJS.CompositeType} A new composite containing objects created in the callback.
      */
-    stack: function (x, y, columns, rows, columnGap, rowGap, callback)
+    stack(x, y, columns, rows, columnGap, rowGap, callback)
     {
         var stack = Composites.stack(x, y, columns, rows, columnGap, rowGap, callback);
 
         this.world.add(stack);
 
         return stack;
-    },
+    }
 
     /**
      * Create a new composite containing bodies created in the callback in a pyramid arrangement.
@@ -460,14 +458,14 @@ var Factory = new Class({
      *
      * @return {MatterJS.CompositeType} A Matter JS Composite pyramid.
      */
-    pyramid: function (x, y, columns, rows, columnGap, rowGap, callback)
+    pyramid(x, y, columns, rows, columnGap, rowGap, callback)
     {
         var stack = Composites.pyramid(x, y, columns, rows, columnGap, rowGap, callback);
 
         this.world.add(stack);
 
         return stack;
-    },
+    }
 
     /**
      * Chains all bodies in the given composite together using constraints.
@@ -484,10 +482,10 @@ var Factory = new Class({
      *
      * @return {MatterJS.CompositeType} The original composite that was passed to this method.
      */
-    chain: function (composite, xOffsetA, yOffsetA, xOffsetB, yOffsetB, options)
+    chain(composite, xOffsetA, yOffsetA, xOffsetB, yOffsetB, options)
     {
         return Composites.chain(composite, xOffsetA, yOffsetA, xOffsetB, yOffsetB, options);
-    },
+    }
 
     /**
      * Connects bodies in the composite with constraints in a grid pattern, with optional cross braces.
@@ -503,10 +501,10 @@ var Factory = new Class({
      *
      * @return {MatterJS.CompositeType} The original composite that was passed to this method.
      */
-    mesh: function (composite, columns, rows, crossBrace, options)
+    mesh(composite, columns, rows, crossBrace, options)
     {
         return Composites.mesh(composite, columns, rows, crossBrace, options);
-    },
+    }
 
     /**
      * Creates a composite with a Newton's Cradle setup of bodies and constraints.
@@ -522,14 +520,14 @@ var Factory = new Class({
      *
      * @return {MatterJS.CompositeType} A Newton's cradle composite.
      */
-    newtonsCradle: function (x, y, number, size, length)
+    newtonsCradle(x, y, number, size, length)
     {
         var composite = Composites.newtonsCradle(x, y, number, size, length);
 
         this.world.add(composite);
 
         return composite;
-    },
+    }
 
     /**
      * Creates a composite with simple car setup of bodies and constraints.
@@ -545,14 +543,14 @@ var Factory = new Class({
      *
      * @return {MatterJS.CompositeType} A new composite car body.
      */
-    car: function (x, y, width, height, wheelSize)
+    car(x, y, width, height, wheelSize)
     {
         var composite = Composites.car(x, y, width, height, wheelSize);
 
         this.world.add(composite);
 
         return composite;
-    },
+    }
 
     /**
      * Creates a simple soft body like object.
@@ -573,14 +571,14 @@ var Factory = new Class({
      *
      * @return {MatterJS.CompositeType} A new composite simple soft body.
      */
-    softBody: function (x, y, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions)
+    softBody(x, y, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions)
     {
         var composite = Composites.softBody(x, y, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions);
 
         this.world.add(composite);
 
         return composite;
-    },
+    }
 
     /**
      * This method is an alias for `Factory.constraint`.
@@ -609,10 +607,10 @@ var Factory = new Class({
      *
      * @return {MatterJS.ConstraintType} A Matter JS Constraint.
      */
-    joint: function (bodyA, bodyB, length, stiffness, options)
+    joint(bodyA, bodyB, length, stiffness, options)
     {
         return this.constraint(bodyA, bodyB, length, stiffness, options);
-    },
+    }
 
     /**
      * This method is an alias for `Factory.constraint`.
@@ -641,10 +639,10 @@ var Factory = new Class({
      *
      * @return {MatterJS.ConstraintType} A Matter JS Constraint.
      */
-    spring: function (bodyA, bodyB, length, stiffness, options)
+    spring(bodyA, bodyB, length, stiffness, options)
     {
         return this.constraint(bodyA, bodyB, length, stiffness, options);
-    },
+    }
 
     /**
      * Constraints (or joints) are used for specifying that a fixed distance must be maintained
@@ -671,7 +669,7 @@ var Factory = new Class({
      *
      * @return {MatterJS.ConstraintType} A Matter JS Constraint.
      */
-    constraint: function (bodyA, bodyB, length, stiffness, options)
+    constraint(bodyA, bodyB, length, stiffness, options)
     {
         if (stiffness === undefined) { stiffness = 1; }
         if (options === undefined) { options = {}; }
@@ -691,7 +689,7 @@ var Factory = new Class({
         this.world.add(constraint);
 
         return constraint;
-    },
+    }
 
     /**
      * Constraints (or joints) are used for specifying that a fixed distance must be maintained
@@ -720,7 +718,7 @@ var Factory = new Class({
      *
      * @return {MatterJS.ConstraintType} A Matter JS Constraint.
      */
-    worldConstraint: function (body, length, stiffness, options)
+    worldConstraint(body, length, stiffness, options)
     {
         if (stiffness === undefined) { stiffness = 1; }
         if (options === undefined) { options = {}; }
@@ -739,7 +737,7 @@ var Factory = new Class({
         this.world.add(constraint);
 
         return constraint;
-    },
+    }
 
     /**
      * This method is an alias for `Factory.pointerConstraint`.
@@ -760,10 +758,10 @@ var Factory = new Class({
      *
      * @return {MatterJS.ConstraintType} A Matter JS Constraint.
      */
-    mouseSpring: function (options)
+    mouseSpring(options)
     {
         return this.pointerConstraint(options);
-    },
+    }
 
     /**
      * A Pointer Constraint is a special type of constraint that allows you to click
@@ -782,7 +780,7 @@ var Factory = new Class({
      *
      * @return {MatterJS.ConstraintType} A Matter JS Constraint.
      */
-    pointerConstraint: function (options)
+    pointerConstraint(options)
     {
         if (options === undefined) { options = {}; }
 
@@ -796,7 +794,7 @@ var Factory = new Class({
         this.world.add(pointerConstraint.constraint);
 
         return pointerConstraint;
-    },
+    }
 
     /**
      * Creates a Matter Physics Image Game Object.
@@ -817,14 +815,14 @@ var Factory = new Class({
      *
      * @return {Phaser.Physics.Matter.Image} The Matter Image Game Object.
      */
-    image: function (x, y, key, frame, options)
+    image(x, y, key, frame, options)
     {
         var image = new MatterImage(this.world, x, y, key, frame, options);
 
         this.sys.displayList.add(image);
 
         return image;
-    },
+    }
 
     /**
      * Creates a wrapper around a Tile that provides access to a corresponding Matter body. A tile can only
@@ -846,10 +844,10 @@ var Factory = new Class({
      *
      * @return {Phaser.Physics.Matter.TileBody} The Matter Tile Body Game Object.
      */
-    tileBody: function (tile, options)
+    tileBody(tile, options)
     {
         return new MatterTileBody(this.world, tile, options);
-    },
+    }
 
     /**
      * Creates a Matter Physics Sprite Game Object.
@@ -873,7 +871,7 @@ var Factory = new Class({
      *
      * @return {Phaser.Physics.Matter.Sprite} The Matter Sprite Game Object.
      */
-    sprite: function (x, y, key, frame, options)
+    sprite(x, y, key, frame, options)
     {
         var sprite = new MatterSprite(this.world, x, y, key, frame, options);
 
@@ -881,7 +879,7 @@ var Factory = new Class({
         this.sys.updateList.add(sprite);
 
         return sprite;
-    },
+    }
 
     /**
      * Takes an existing Game Object and injects all of the Matter Components into it.
@@ -901,10 +899,10 @@ var Factory = new Class({
      *
      * @return {(Phaser.Physics.Matter.Image|Phaser.Physics.Matter.Sprite|Phaser.GameObjects.GameObject)} The Game Object that had the Matter Components injected into it.
      */
-    gameObject: function (gameObject, options, addToWorld)
+    gameObject(gameObject, options, addToWorld)
     {
         return MatterGameObject(this.world, gameObject, options, addToWorld);
-    },
+    }
 
     /**
      * Destroys this Factory.
@@ -912,13 +910,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#destroy
      * @since 3.5.0
      */
-    destroy: function ()
+    destroy()
     {
         this.world = null;
         this.scene = null;
         this.sys = null;
     }
 
-});
+};
 
 module.exports = Factory;

@@ -31,8 +31,8 @@ var DrawingContext = require('./DrawingContext');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this DrawingContextPool.
  */
-var DrawingContextPool = new Class({
-    initialize: function DrawingContextPool (renderer, maxAge, maxPoolSize)
+var DrawingContextPool = class {
+    constructor(renderer, maxAge, maxPoolSize)
     {
         /**
          * The renderer that owns this DrawingContextPool.
@@ -84,7 +84,7 @@ var DrawingContextPool = new Class({
          * @since 4.0.0
          */
         this.sizePool = {};
-    },
+    }
 
     /**
      * Adds a DrawingContext to the pool.
@@ -94,7 +94,7 @@ var DrawingContextPool = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The DrawingContext to add to the pool.
      */
-    add: function (drawingContext)
+    add(drawingContext)
     {
         if (this.agePool.indexOf(drawingContext) !== -1)
         {
@@ -113,7 +113,7 @@ var DrawingContextPool = new Class({
         }
 
         this.agePool.push(drawingContext);
-    },
+    }
 
     /**
      * Returns a DrawingContext of the given dimensions.
@@ -124,7 +124,7 @@ var DrawingContextPool = new Class({
      * @param {number} [height] - The height of the DrawingContext.
      * @return {Phaser.Renderer.WebGL.DrawingContext} The DrawingContext.
      */
-    get: function (width, height)
+    get(width, height)
     {
         var drawingContext;
 
@@ -218,7 +218,7 @@ var DrawingContextPool = new Class({
         });
 
         return drawingContext;
-    },
+    }
 
     /**
      * Sets the maximum age of a DrawingContext in milliseconds.
@@ -227,10 +227,10 @@ var DrawingContextPool = new Class({
      * @since 4.0.0
      * @param {number} maxAge - The maximum age of a DrawingContext in milliseconds.
      */
-    setMaxAge: function (maxAge)
+    setMaxAge(maxAge)
     {
         this.maxAge = maxAge;
-    },
+    }
 
     /**
      * Sets the maximum number of DrawingContexts to store.
@@ -239,10 +239,10 @@ var DrawingContextPool = new Class({
      * @since 4.0.0
      * @param {number} maxPoolSize - The maximum number of DrawingContexts to store.
      */
-    setMaxPoolSize: function (maxPoolSize)
+    setMaxPoolSize(maxPoolSize)
     {
         this.maxPoolSize = maxPoolSize;
-    },
+    }
 
     /**
      * Clears the DrawingContextPool. This will not destroy any DrawingContexts
@@ -251,7 +251,7 @@ var DrawingContextPool = new Class({
      * @method Phaser.Renderer.WebGL.DrawingContextPool#clear
      * @since 4.0.0
      */
-    clear: function ()
+    clear()
     {
         for (var i = 0; i < this.agePool.length; i++)
         {
@@ -260,7 +260,7 @@ var DrawingContextPool = new Class({
 
         this.sizePool = {};
         this.agePool.length = 0;
-    },
+    }
 
     /**
      * Prunes the DrawingContextPool down to the maximum pool size.
@@ -270,7 +270,7 @@ var DrawingContextPool = new Class({
      * @method Phaser.Renderer.WebGL.DrawingContextPool#prune
      * @since 4.0.0
      */
-    prune: function ()
+    prune()
     {
         var sizePool = this.sizePool;
         var agePool = this.agePool;
@@ -291,6 +291,6 @@ var DrawingContextPool = new Class({
             }
         }
     }
-});
+};
 
 module.exports = DrawingContextPool;

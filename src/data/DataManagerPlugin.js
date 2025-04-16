@@ -23,15 +23,11 @@ var SceneEvents = require('../scene/events');
  *
  * @param {Phaser.Scene} scene - A reference to the Scene that this DataManager belongs to.
  */
-var DataManagerPlugin = new Class({
+var DataManagerPlugin = class extends DataManager {
 
-    Extends: DataManager,
-
-    initialize:
-
-    function DataManagerPlugin (scene)
+    constructor(scene)
     {
-        DataManager.call(this, scene, scene.sys.events);
+        super(scene, scene.sys.events);
 
         /**
          * A reference to the Scene that this DataManager belongs to.
@@ -53,7 +49,7 @@ var DataManagerPlugin = new Class({
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
-    },
+    }
 
     /**
      * This method is called automatically, only once, when the Scene is first created.
@@ -63,12 +59,12 @@ var DataManagerPlugin = new Class({
      * @private
      * @since 3.5.1
      */
-    boot: function ()
+    boot()
     {
         this.events = this.systems.events;
 
         this.events.once(SceneEvents.DESTROY, this.destroy, this);
-    },
+    }
 
     /**
      * This method is called automatically by the Scene when it is starting up.
@@ -79,10 +75,10 @@ var DataManagerPlugin = new Class({
      * @private
      * @since 3.5.0
      */
-    start: function ()
+    start()
     {
         this.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * The Scene that owns this plugin is shutting down.
@@ -92,10 +88,10 @@ var DataManagerPlugin = new Class({
      * @private
      * @since 3.5.0
      */
-    shutdown: function ()
+    shutdown()
     {
         this.systems.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * The Scene that owns this plugin is being destroyed.
@@ -104,7 +100,7 @@ var DataManagerPlugin = new Class({
      * @method Phaser.Data.DataManagerPlugin#destroy
      * @since 3.5.0
      */
-    destroy: function ()
+    destroy()
     {
         DataManager.prototype.destroy.call(this);
 
@@ -114,7 +110,7 @@ var DataManagerPlugin = new Class({
         this.systems = null;
     }
 
-});
+};
 
 PluginCache.register('DataManagerPlugin', DataManagerPlugin, 'data');
 

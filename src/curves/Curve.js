@@ -22,11 +22,9 @@ var Vector2 = require('../math/Vector2');
  *
  * @param {string} type - The curve type.
  */
-var Curve = new Class({
+var Curve = class {
 
-    initialize:
-
-    function Curve (type)
+    constructor(type)
     {
         /**
          * String based identifier for the type of curve.
@@ -106,7 +104,7 @@ var Curve = new Class({
          * @since 3.0.0
          */
         this._tmpVec2B = new Vector2();
-    },
+    }
 
     /**
      * Draws this curve on the given Graphics object.
@@ -124,13 +122,13 @@ var Curve = new Class({
      *
      * @return {Phaser.GameObjects.Graphics} The Graphics object to which the curve was drawn.
      */
-    draw: function (graphics, pointsTotal)
+    draw(graphics, pointsTotal)
     {
         if (pointsTotal === undefined) { pointsTotal = 32; }
 
         //  So you can chain graphics calls
         return graphics.strokePoints(this.getPoints(pointsTotal));
-    },
+    }
 
     /**
      * Returns a Rectangle where the position and dimensions match the bounds of this Curve.
@@ -146,7 +144,7 @@ var Curve = new Class({
      *
      * @return {Phaser.Geom.Rectangle} A Rectangle object holding the bounds of this curve. If `out` was given it will be this object.
      */
-    getBounds: function (out, accuracy)
+    getBounds(out, accuracy)
     {
         if (!out) { out = new Rectangle(); }
         if (accuracy === undefined) { accuracy = 16; }
@@ -164,7 +162,7 @@ var Curve = new Class({
         var spaced = Math.max(1, Math.round(len / accuracy));
 
         return FromPoints(this.getSpacedPoints(spaced), out);
-    },
+    }
 
     /**
      * Returns an array of points, spaced out X distance pixels apart.
@@ -177,14 +175,14 @@ var Curve = new Class({
      *
      * @return {Phaser.Math.Vector2[]} An Array of Vector2 objects.
      */
-    getDistancePoints: function (distance)
+    getDistancePoints(distance)
     {
         var len = this.getLength();
 
         var spaced = Math.max(1, len / distance);
 
         return this.getSpacedPoints(spaced);
-    },
+    }
 
     /**
      * Get a point at the end of the curve.
@@ -196,12 +194,12 @@ var Curve = new Class({
      *
      * @return {Phaser.Math.Vector2} Vector2 containing the coordinates of the curves end point.
      */
-    getEndPoint: function (out)
+    getEndPoint(out)
     {
         if (out === undefined) { out = new Vector2(); }
 
         return this.getPointAt(1, out);
-    },
+    }
 
     /**
      * Get total curve arc length
@@ -211,12 +209,12 @@ var Curve = new Class({
      *
      * @return {number} The total length of the curve.
      */
-    getLength: function ()
+    getLength()
     {
         var lengths = this.getLengths();
 
         return lengths[lengths.length - 1];
-    },
+    }
 
 
     /**
@@ -237,7 +235,7 @@ var Curve = new Class({
      *
      * @return {number[]} An array of cumulative lengths.
      */
-    getLengths: function (divisions)
+    getLengths(divisions)
     {
         if (divisions === undefined) { divisions = this.arcLengthDivisions; }
 
@@ -269,7 +267,7 @@ var Curve = new Class({
         this.cacheArcLengths = cache;
 
         return cache; // { sums: cache, sum:sum }; Sum is in the last element.
-    },
+    }
 
     // Get point at relative position in curve according to arc length
 
@@ -288,12 +286,12 @@ var Curve = new Class({
      *
      * @return {Phaser.Math.Vector2} The point.
      */
-    getPointAt: function (u, out)
+    getPointAt(u, out)
     {
         var t = this.getUtoTmapping(u);
 
         return this.getPoint(t, out);
-    },
+    }
 
     // Get sequence of points using getPoint( t )
 
@@ -321,7 +319,7 @@ var Curve = new Class({
      *
      * @return {Phaser.Math.Vector2[]} An array of Vector2 points from the curve.
      */
-    getPoints: function (divisions, stepRate, out)
+    getPoints(divisions, stepRate, out)
     {
         if (out === undefined) { out = []; }
 
@@ -344,7 +342,7 @@ var Curve = new Class({
         }
 
         return out;
-    },
+    }
 
     /**
      * Get a random point from the curve.
@@ -358,12 +356,12 @@ var Curve = new Class({
      *
      * @return {Phaser.Math.Vector2} The point.
      */
-    getRandomPoint: function (out)
+    getRandomPoint(out)
     {
         if (out === undefined) { out = new Vector2(); }
 
         return this.getPoint(Math.random(), out);
-    },
+    }
 
     // Get sequence of points using getPointAt( u )
 
@@ -381,7 +379,7 @@ var Curve = new Class({
      *
      * @return {Phaser.Math.Vector2[]} An array of Vector2 points.
      */
-    getSpacedPoints: function (divisions, stepRate, out)
+    getSpacedPoints(divisions, stepRate, out)
     {
         if (out === undefined) { out = []; }
 
@@ -406,7 +404,7 @@ var Curve = new Class({
         }
 
         return out;
-    },
+    }
 
     /**
      * Get a point at the start of the curve.
@@ -420,12 +418,12 @@ var Curve = new Class({
      *
      * @return {Phaser.Math.Vector2} The point.
      */
-    getStartPoint: function (out)
+    getStartPoint(out)
     {
         if (out === undefined) { out = new Vector2(); }
 
         return this.getPointAt(0, out);
-    },
+    }
 
     /**
      * Get a unit vector tangent at a relative position on the curve.
@@ -443,7 +441,7 @@ var Curve = new Class({
      *
      * @return {Phaser.Math.Vector2} Vector approximating the tangent line at the point t (delta +/- 0.0001)
      */
-    getTangent: function (t, out)
+    getTangent(t, out)
     {
         if (out === undefined) { out = new Vector2(); }
 
@@ -467,7 +465,7 @@ var Curve = new Class({
         this.getPoint(t2, out);
 
         return out.subtract(this._tmpVec2A).normalize();
-    },
+    }
 
     /**
      * Get a unit vector tangent at a relative position on the curve, by arc length.
@@ -482,12 +480,12 @@ var Curve = new Class({
      *
      * @return {Phaser.Math.Vector2} The tangent vector.
      */
-    getTangentAt: function (u, out)
+    getTangentAt(u, out)
     {
         var t = this.getUtoTmapping(u);
 
         return this.getTangent(t, out);
-    },
+    }
 
     /**
      * Given a distance in pixels, get a t to find p.
@@ -500,7 +498,7 @@ var Curve = new Class({
      *
      * @return {number} The distance.
      */
-    getTFromDistance: function (distance, divisions)
+    getTFromDistance(distance, divisions)
     {
         if (distance <= 0)
         {
@@ -508,7 +506,7 @@ var Curve = new Class({
         }
 
         return this.getUtoTmapping(0, distance, divisions);
-    },
+    }
 
     /**
      * Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant.
@@ -522,7 +520,7 @@ var Curve = new Class({
      *
      * @return {number} The equidistant value.
      */
-    getUtoTmapping: function (u, distance, divisions)
+    getUtoTmapping(u, distance, divisions)
     {
         var arcLengths = this.getLengths(divisions);
 
@@ -589,7 +587,7 @@ var Curve = new Class({
         // add that fractional amount to t
 
         return (i + segmentFraction) / (il - 1);
-    },
+    }
 
     /**
      * Calculate and cache the arc lengths.
@@ -599,13 +597,13 @@ var Curve = new Class({
      *
      * @see Phaser.Curves.Curve#getLengths()
      */
-    updateArcLengths: function ()
+    updateArcLengths()
     {
         this.needsUpdate = true;
 
         this.getLengths();
     }
 
-});
+};
 
 module.exports = Curve;

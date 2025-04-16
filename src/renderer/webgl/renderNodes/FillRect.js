@@ -20,12 +20,11 @@ var RenderNode = require('./RenderNode');
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FillRect = new Class({
-    Extends: RenderNode,
+var FillRect = class extends RenderNode {
 
-    initialize: function FillRect (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'FillRect', manager);
+        super('FillRect', manager);
 
         /**
          * The fallback batch handler for this node.
@@ -62,7 +61,7 @@ var FillRect = new Class({
             0, 1, 2,
             2, 3, 0
         ];
-    },
+    }
 
     /**
      * Render the rectangle.
@@ -82,7 +81,7 @@ var FillRect = new Class({
      * @param {number} tintBR - The bottom-right tint color.
      * @param {boolean} lighting - Whether to apply lighting effects to the rectangle.
      */
-    run: function (drawingContext, currentMatrix, submitterNode, x, y, width, height, tintTL, tintTR, tintBL, tintBR, lighting)
+    run(drawingContext, currentMatrix, submitterNode, x, y, width, height, tintTL, tintTR, tintBL, tintBR, lighting)
     {
         this.onRunBegin(drawingContext);
 
@@ -110,6 +109,6 @@ var FillRect = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = FillRect;

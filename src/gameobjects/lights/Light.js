@@ -44,21 +44,20 @@ var Utils = require('../../renderer/webgl/Utils');
  * @param {number} intensity - The intensity of the light.
  * @param {number} [z] - The z position of the light. If not given, it will be set to `radius * 0.1`.
  */
-var Light = new Class({
+var Light = class extends Circle {
 
-    Extends: Circle,
-
-    Mixins: [
-        Components.Origin,
-        Components.ScrollFactor,
-        Components.Visible
-    ],
-
-    initialize:
-
-    function Light (x, y, radius, r, g, b, intensity, z)
+    static
     {
-        Circle.call(this, x, y, radius);
+        Class.mixin(this, [
+            Components.Origin,
+            Components.ScrollFactor,
+            Components.Visible
+        ], false);
+    }
+
+    constructor(x, y, radius, r, g, b, intensity, z)
+    {
+        super(x, y, radius);
 
         /**
          * The color of the light.
@@ -129,7 +128,7 @@ var Light = new Class({
         this.setScrollFactor(1, 1);
         this.setOrigin();
         this.setDisplayOrigin(radius);
-    },
+    }
 
     /**
      * The width of this Light Game Object. This is the same as `Light.diameter`.
@@ -138,19 +137,16 @@ var Light = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    displayWidth: {
 
-        get: function ()
-        {
-            return this.diameter;
-        },
+    get displayWidth()
+    {
+        return this.diameter;
+    }
 
-        set: function (value)
-        {
-            this.diameter = value;
-        }
-
-    },
+    set displayWidth(value)
+    {
+        this.diameter = value;
+    }
 
     /**
      * The height of this Light Game Object. This is the same as `Light.diameter`.
@@ -159,19 +155,16 @@ var Light = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    displayHeight: {
 
-        get: function ()
-        {
-            return this.diameter;
-        },
+    get displayHeight()
+    {
+        return this.diameter;
+    }
 
-        set: function (value)
-        {
-            this.diameter = value;
-        }
-
-    },
+    set displayHeight(value)
+    {
+        this.diameter = value;
+    }
 
     /**
      * The width of this Light Game Object. This is the same as `Light.diameter`.
@@ -180,19 +173,16 @@ var Light = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    width: {
 
-        get: function ()
-        {
-            return this.diameter;
-        },
+    get width()
+    {
+        return this.diameter;
+    }
 
-        set: function (value)
-        {
-            this.diameter = value;
-        }
-
-    },
+    set width(value)
+    {
+        this.diameter = value;
+    }
 
     /**
      * The height of this Light Game Object. This is the same as `Light.diameter`.
@@ -201,19 +191,16 @@ var Light = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    height: {
 
-        get: function ()
-        {
-            return this.diameter;
-        },
+    get height()
+    {
+        return this.diameter;
+    }
 
-        set: function (value)
-        {
-            this.diameter = value;
-        }
-
-    },
+    set height(value)
+    {
+        this.diameter = value;
+    }
 
     /**
      * The z position of the light, as a fraction of the radius.
@@ -225,17 +212,16 @@ var Light = new Class({
      * @type {number}
      * @since 4.0.0
      */
-    zNormal: {
-        get: function ()
-        {
-            return this.z / this.radius;
-        },
 
-        set: function (value)
-        {
-            this.z = value * this.radius;
-        }
-    },
+    get zNormal()
+    {
+        return this.z / this.radius;
+    }
+
+    set zNormal(value)
+    {
+        this.z = value * this.radius;
+    }
 
     /**
      * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
@@ -248,10 +234,10 @@ var Light = new Class({
      *
      * @return {boolean} True if the Game Object should be rendered, otherwise false.
      */
-    willRender: function (camera)
+    willRender(camera)
     {
         return !(Light.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
-    },
+    }
 
     /**
      * Set the color of the light from a single integer RGB value.
@@ -263,14 +249,14 @@ var Light = new Class({
      *
      * @return {this} This Light object.
      */
-    setColor: function (rgb)
+    setColor(rgb)
     {
         var color = Utils.getFloatsFromUintRGB(rgb);
 
         this.color.set(color[0], color[1], color[2]);
 
         return this;
-    },
+    }
 
     /**
      * Set the intensity of the light.
@@ -282,12 +268,12 @@ var Light = new Class({
      *
      * @return {this} This Light object.
      */
-    setIntensity: function (intensity)
+    setIntensity(intensity)
     {
         this.intensity = intensity;
 
         return this;
-    },
+    }
 
     /**
      * Set the radius of the light.
@@ -299,12 +285,12 @@ var Light = new Class({
      *
      * @return {this} This Light object.
      */
-    setRadius: function (radius)
+    setRadius(radius)
     {
         this.radius = radius;
 
         return this;
-    },
+    }
 
     /**
      * Set the z position of the light.
@@ -316,12 +302,12 @@ var Light = new Class({
      *
      * @return {this} This Light object.
      */
-    setZ: function (z)
+    setZ(z)
     {
         this.z = z;
 
         return this;
-    },
+    }
 
     /**
      * Set the z position of the light as a fraction of the radius.
@@ -336,14 +322,14 @@ var Light = new Class({
      *
      * @return {this} This Light object.
      */
-    setZNormal: function (z)
+    setZNormal(z)
     {
         this.z = z * this.radius;
 
         return this;
     }
 
-});
+};
 
 /**
  * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.

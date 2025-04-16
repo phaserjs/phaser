@@ -29,20 +29,16 @@ var JSONFile = require('./JSONFile');
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
  */
-var PackFile = new Class({
-
-    Extends: JSONFile,
+var PackFile = class extends JSONFile {
 
     //  url can either be a string, in which case it is treated like a proper url, or an object, in which case it is treated as a ready-made JS Object
     //  dataKey allows you to pluck a specific object out of the JSON and put just that into the cache, rather than the whole thing
-    initialize:
-
-    function PackFile (loader, key, url, xhrSettings, dataKey)
+    constructor(loader, key, url, xhrSettings, dataKey)
     {
-        JSONFile.call(this, loader, key, url, xhrSettings, dataKey);
+        super(loader, key, url, xhrSettings, dataKey);
 
         this.type = 'packfile';
-    },
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -51,7 +47,7 @@ var PackFile = new Class({
      * @method Phaser.Loader.FileTypes.PackFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         if (this.state !== CONST.FILE_POPULATED)
         {
@@ -75,7 +71,7 @@ var PackFile = new Class({
         this.onProcessComplete();
     }
 
-});
+};
 
 /**
  * Adds a JSON File Pack, or array of packs, to the current load queue.

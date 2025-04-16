@@ -56,25 +56,24 @@ var Vector2 = require('../../math/Vector2');
  * @param {number} width - The width of the Camera, in pixels.
  * @param {number} height - The height of the Camera, in pixels.
  */
-var BaseCamera = new Class({
+var BaseCamera = class extends EventEmitter {
 
-    Extends: EventEmitter,
+    static
+    {
+        Class.mixin(this, [
+            Components.AlphaSingle,
+            Components.Visible
+        ], false);
+    }
 
-    Mixins: [
-        Components.AlphaSingle,
-        Components.Visible
-    ],
-
-    initialize:
-
-    function BaseCamera (x, y, width, height)
+    constructor(x, y, width, height)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = 0; }
         if (height === undefined) { height = 0; }
 
-        EventEmitter.call(this);
+        super();
 
         /**
          * A reference to the Scene this camera belongs to.
@@ -573,7 +572,7 @@ var BaseCamera = new Class({
          * @since 3.86.0
          */
         this.renderRoundPixels = true;
-    },
+    }
 
     /**
      * Adds the given Game Object to this cameras render list.
@@ -586,10 +585,10 @@ var BaseCamera = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to add to the render list.
      */
-    addToRenderList: function (child)
+    addToRenderList(child)
     {
         this.renderList.push(child);
-    },
+    }
 
     /**
      * Set the Alpha level of this Camera. The alpha controls the opacity of the Camera as it renders.
@@ -621,7 +620,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setOrigin: function (x, y)
+    setOrigin(x, y)
     {
         if (x === undefined) { x = 0.5; }
         if (y === undefined) { y = x; }
@@ -630,7 +629,7 @@ var BaseCamera = new Class({
         this.originY = y;
 
         return this;
-    },
+    }
 
     /**
      * Calculates what the Camera.scrollX and scrollY values would need to be in order to move
@@ -646,7 +645,7 @@ var BaseCamera = new Class({
      *
      * @return {Phaser.Math.Vector2} The scroll coordinates stored in the `x` and `y` properties.
      */
-    getScroll: function (x, y, out)
+    getScroll(x, y, out)
     {
         if (out === undefined) { out = new Vector2(); }
 
@@ -663,7 +662,7 @@ var BaseCamera = new Class({
         }
 
         return out;
-    },
+    }
 
     /**
      * Moves the Camera horizontally so that it is centered on the given x coordinate, bounds allowing.
@@ -676,7 +675,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    centerOnX: function (x)
+    centerOnX(x)
     {
         var originX = this.width * 0.5;
 
@@ -690,7 +689,7 @@ var BaseCamera = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Moves the Camera vertically so that it is centered on the given y coordinate, bounds allowing.
@@ -703,7 +702,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    centerOnY: function (y)
+    centerOnY(y)
     {
         var originY = this.height * 0.5;
 
@@ -717,7 +716,7 @@ var BaseCamera = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Moves the Camera so that it is centered on the given coordinates, bounds allowing.
@@ -730,13 +729,13 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    centerOn: function (x, y)
+    centerOn(x, y)
     {
         this.centerOnX(x);
         this.centerOnY(y);
 
         return this;
-    },
+    }
 
     /**
      * Moves the Camera so that it is looking at the center of the Camera Bounds, if enabled.
@@ -746,7 +745,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    centerToBounds: function ()
+    centerToBounds()
     {
         if (this.useBounds)
         {
@@ -761,7 +760,7 @@ var BaseCamera = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Moves the Camera so that it is re-centered based on its viewport size.
@@ -771,13 +770,13 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    centerToSize: function ()
+    centerToSize()
     {
         this.scrollX = this.width * 0.5;
         this.scrollY = this.height * 0.5;
 
         return this;
-    },
+    }
 
     /**
      * Takes an array of Game Objects and returns a new array featuring only those objects
@@ -792,7 +791,7 @@ var BaseCamera = new Class({
      *
      * @return {Phaser.GameObjects.GameObject[]} An array of Game Objects visible to this Camera.
      */
-    cull: function (renderableObjects)
+    cull(renderableObjects)
     {
         if (this.disableCull)
         {
@@ -855,7 +854,7 @@ var BaseCamera = new Class({
         }
 
         return culledObjects;
-    },
+    }
 
     /**
      * Converts the given `x` and `y` coordinates into World space, based on this Cameras transform.
@@ -872,7 +871,7 @@ var BaseCamera = new Class({
      *
      * @return {Phaser.Math.Vector2} An object holding the converted values in its `x` and `y` properties.
      */
-    getWorldPoint: function (x, y, output)
+    getWorldPoint(x, y, output)
     {
         if (output === undefined) { output = new Vector2(); }
 
@@ -910,7 +909,7 @@ var BaseCamera = new Class({
         output.y = (x * imb + y * imd) + imf;
 
         return output;
-    },
+    }
 
     /**
      * Given a Game Object, or an array of Game Objects, it will update all of their camera filter settings
@@ -923,7 +922,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    ignore: function (entries)
+    ignore(entries)
     {
         var id = this.id;
 
@@ -951,7 +950,7 @@ var BaseCamera = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Takes an x value and checks it's within the range of the Camera bounds, adjusting if required.
@@ -964,7 +963,7 @@ var BaseCamera = new Class({
      *
      * @return {number} The adjusted value to use as scrollX.
      */
-    clampX: function (x)
+    clampX(x)
     {
         var bounds = this._bounds;
 
@@ -983,7 +982,7 @@ var BaseCamera = new Class({
         }
 
         return x;
-    },
+    }
 
     /**
      * Takes a y value and checks it's within the range of the Camera bounds, adjusting if required.
@@ -996,7 +995,7 @@ var BaseCamera = new Class({
      *
      * @return {number} The adjusted value to use as scrollY.
      */
-    clampY: function (y)
+    clampY(y)
     {
         var bounds = this._bounds;
 
@@ -1015,7 +1014,7 @@ var BaseCamera = new Class({
         }
 
         return y;
-    },
+    }
 
     /*
         var gap = this._zoomInversed;
@@ -1030,7 +1029,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    removeBounds: function ()
+    removeBounds()
     {
         this.useBounds = false;
 
@@ -1039,7 +1038,7 @@ var BaseCamera = new Class({
         this._bounds.setEmpty();
 
         return this;
-    },
+    }
 
     /**
      * Set the rotation of this Camera. This causes everything it renders to appear rotated.
@@ -1053,14 +1052,14 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setAngle: function (value)
+    setAngle(value)
     {
         if (value === undefined) { value = 0; }
 
         this.rotation = DegToRad(value);
 
         return this;
-    },
+    }
 
     /**
      * Sets the background color for this Camera.
@@ -1077,7 +1076,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setBackgroundColor: function (color)
+    setBackgroundColor(color)
     {
         if (color === undefined) { color = 'rgba(0,0,0,0)'; }
 
@@ -1086,7 +1085,7 @@ var BaseCamera = new Class({
         this.transparent = (this.backgroundColor.alpha === 0);
 
         return this;
-    },
+    }
 
     /**
      * Set the bounds of the Camera. The bounds are an axis-aligned rectangle.
@@ -1118,7 +1117,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setBounds: function (x, y, width, height, centerOn)
+    setBounds(x, y, width, height, centerOn)
     {
         if (centerOn === undefined) { centerOn = false; }
 
@@ -1138,7 +1137,7 @@ var BaseCamera = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the `forceComposite` property of this Camera.
@@ -1154,12 +1153,12 @@ var BaseCamera = new Class({
      *
      * @returns {this} This Camera instance.
      */
-    setForceComposite: function (value)
+    setForceComposite(value)
     {
         this.forceComposite = value;
 
         return this;
-    },
+    }
 
     /**
      * Returns a rectangle containing the bounds of the Camera.
@@ -1175,7 +1174,7 @@ var BaseCamera = new Class({
      *
      * @return {Phaser.Geom.Rectangle} A rectangle containing the bounds of this Camera.
      */
-    getBounds: function (out)
+    getBounds(out)
     {
         if (out === undefined) { out = new Rectangle(); }
 
@@ -1184,7 +1183,7 @@ var BaseCamera = new Class({
         out.setTo(source.x, source.y, source.width, source.height);
 
         return out;
-    },
+    }
 
     /**
      * Sets the name of this Camera.
@@ -1197,14 +1196,14 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setName: function (value)
+    setName(value)
     {
         if (value === undefined) { value = ''; }
 
         this.name = value;
 
         return this;
-    },
+    }
 
     /**
      * Set the position of the Camera viewport within the game.
@@ -1219,7 +1218,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setPosition: function (x, y)
+    setPosition(x, y)
     {
         if (y === undefined) { y = x; }
 
@@ -1227,7 +1226,7 @@ var BaseCamera = new Class({
         this.y = y;
 
         return this;
-    },
+    }
 
     /**
      * Set the rotation of this Camera. This causes everything it renders to appear rotated.
@@ -1241,14 +1240,14 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setRotation: function (value)
+    setRotation(value)
     {
         if (value === undefined) { value = 0; }
 
         this.rotation = value;
 
         return this;
-    },
+    }
 
     /**
      * Should the Camera round pixel values to whole integers when rendering Game Objects?
@@ -1262,12 +1261,12 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setRoundPixels: function (value)
+    setRoundPixels(value)
     {
         this.roundPixels = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Scene the Camera is bound to.
@@ -1280,7 +1279,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setScene: function (scene, isSceneCamera)
+    setScene(scene, isSceneCamera)
     {
         if (isSceneCamera === undefined) { isSceneCamera = true; }
 
@@ -1301,7 +1300,7 @@ var BaseCamera = new Class({
         this.updateSystem();
 
         return this;
-    },
+    }
 
     /**
      * Set the position of where the Camera is looking within the game.
@@ -1318,7 +1317,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setScroll: function (x, y)
+    setScroll(x, y)
     {
         if (y === undefined) { y = x; }
 
@@ -1326,7 +1325,7 @@ var BaseCamera = new Class({
         this.scrollY = y;
 
         return this;
-    },
+    }
 
     /**
      * Set the size of the Camera viewport.
@@ -1343,7 +1342,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setSize: function (width, height)
+    setSize(width, height)
     {
         if (height === undefined) { height = width; }
 
@@ -1351,7 +1350,7 @@ var BaseCamera = new Class({
         this.height = height;
 
         return this;
-    },
+    }
 
     /**
      * This method sets the position and size of the Camera viewport in a single call.
@@ -1374,7 +1373,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setViewport: function (x, y, width, height)
+    setViewport(x, y, width, height)
     {
         this.x = x;
         this.y = y;
@@ -1382,7 +1381,7 @@ var BaseCamera = new Class({
         this.height = height;
 
         return this;
-    },
+    }
 
     /**
      * Set the zoom value of the Camera.
@@ -1404,7 +1403,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setZoom: function (x, y)
+    setZoom(x, y)
     {
         if (x === undefined) { x = 1; }
         if (y === undefined) { y = x; }
@@ -1423,7 +1422,7 @@ var BaseCamera = new Class({
         this.zoomY = y;
 
         return this;
-    },
+    }
 
     /**
      * Sets the mask to be applied to this Camera during rendering.
@@ -1445,7 +1444,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setMask: function (mask, fixedPosition)
+    setMask(mask, fixedPosition)
     {
         if (fixedPosition === undefined) { fixedPosition = true; }
 
@@ -1454,7 +1453,7 @@ var BaseCamera = new Class({
         this._maskCamera = (fixedPosition) ? this.cameraManager.default : this;
 
         return this;
-    },
+    }
 
     /**
      * Clears the mask that this Camera was using.
@@ -1466,7 +1465,7 @@ var BaseCamera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    clearMask: function (destroyMask)
+    clearMask(destroyMask)
     {
         if (destroyMask === undefined) { destroyMask = false; }
 
@@ -1478,7 +1477,7 @@ var BaseCamera = new Class({
         this.mask = null;
 
         return this;
-    },
+    }
 
     /**
      * Sets the visibility of this Camera.
@@ -1501,7 +1500,7 @@ var BaseCamera = new Class({
      *
      * @return {Phaser.Types.Cameras.Scene2D.JSONCamera} A well-formed object suitable for conversion to JSON.
      */
-    toJSON: function ()
+    toJSON()
     {
         var output = {
             name: this.name,
@@ -1528,7 +1527,7 @@ var BaseCamera = new Class({
         }
 
         return output;
-    },
+    }
 
     /**
      * Internal method called automatically by the Camera Manager.
@@ -1540,10 +1539,10 @@ var BaseCamera = new Class({
      * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    update: function ()
+    update()
     {
         //  NOOP
-    },
+    }
 
     /**
      * Set if this Camera is being used as a Scene Camera, or a Texture
@@ -1554,12 +1553,12 @@ var BaseCamera = new Class({
      *
      * @param {boolean} value - Is this being used as a Scene Camera, or a Texture camera?
      */
-    setIsSceneCamera: function (value)
+    setIsSceneCamera(value)
     {
         this.isSceneCamera = value;
 
         return this;
-    },
+    }
 
     /**
      * Internal method called automatically when the viewport changes.
@@ -1568,7 +1567,7 @@ var BaseCamera = new Class({
      * @private
      * @since 3.12.0
      */
-    updateSystem: function ()
+    updateSystem()
     {
         if (!this.scaleManager || !this.isSceneCamera)
         {
@@ -1592,7 +1591,7 @@ var BaseCamera = new Class({
 
         this.dirty = true;
         this._customViewport = custom;
-    },
+    }
 
     /**
      * Destroys this Camera instance and its internal properties and references.
@@ -1607,7 +1606,7 @@ var BaseCamera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#DESTROY
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.emit(Events.DESTROY, this);
 
@@ -1633,7 +1632,7 @@ var BaseCamera = new Class({
         this.scaleManager = null;
         this.sceneManager = null;
         this.cameraManager = null;
-    },
+    }
 
     /**
      * The x position of the Camera viewport, relative to the top-left of the game canvas.
@@ -1644,20 +1643,17 @@ var BaseCamera = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    x: {
 
-        get: function ()
-        {
-            return this._x;
-        },
+    get x()
+    {
+        return this._x;
+    }
 
-        set: function (value)
-        {
-            this._x = value;
-            this.updateSystem();
-        }
-
-    },
+    set x(value)
+    {
+        this._x = value;
+        this.updateSystem();
+    }
 
     /**
      * The y position of the Camera viewport, relative to the top-left of the game canvas.
@@ -1668,20 +1664,17 @@ var BaseCamera = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    y: {
 
-        get: function ()
-        {
-            return this._y;
-        },
+    get y()
+    {
+        return this._y;
+    }
 
-        set: function (value)
-        {
-            this._y = value;
-            this.updateSystem();
-        }
-
-    },
+    set y(value)
+    {
+        this._y = value;
+        this.updateSystem();
+    }
 
     /**
      * The width of the Camera viewport, in pixels.
@@ -1693,20 +1686,17 @@ var BaseCamera = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    width: {
 
-        get: function ()
-        {
-            return this._width;
-        },
+    get width()
+    {
+        return this._width;
+    }
 
-        set: function (value)
-        {
-            this._width = value;
-            this.updateSystem();
-        }
-
-    },
+    set width(value)
+    {
+        this._width = value;
+        this.updateSystem();
+    }
 
     /**
      * The height of the Camera viewport, in pixels.
@@ -1718,20 +1708,17 @@ var BaseCamera = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    height: {
 
-        get: function ()
-        {
-            return this._height;
-        },
+    get height()
+    {
+        return this._height;
+    }
 
-        set: function (value)
-        {
-            this._height = value;
-            this.updateSystem();
-        }
-
-    },
+    set height(value)
+    {
+        this._height = value;
+        this.updateSystem();
+    }
 
     /**
      * The horizontal scroll position of this Camera.
@@ -1748,23 +1735,20 @@ var BaseCamera = new Class({
      * @default 0
      * @since 3.0.0
      */
-    scrollX: {
 
-        get: function ()
-        {
-            return this._scrollX;
-        },
+    get scrollX()
+    {
+        return this._scrollX;
+    }
 
-        set: function (value)
+    set scrollX(value)
+    {
+        if (value !== this._scrollX)
         {
-            if (value !== this._scrollX)
-            {
-                this._scrollX = value;
-                this.dirty = true;
-            }
+            this._scrollX = value;
+            this.dirty = true;
         }
-
-    },
+    }
 
     /**
      * The vertical scroll position of this Camera.
@@ -1781,23 +1765,20 @@ var BaseCamera = new Class({
      * @default 0
      * @since 3.0.0
      */
-    scrollY: {
 
-        get: function ()
-        {
-            return this._scrollY;
-        },
+    get scrollY()
+    {
+        return this._scrollY;
+    }
 
-        set: function (value)
+    set scrollY(value)
+    {
+        if (value !== this._scrollY)
         {
-            if (value !== this._scrollY)
-            {
-                this._scrollY = value;
-                this.dirty = true;
-            }
+            this._scrollY = value;
+            this.dirty = true;
         }
-
-    },
+    }
 
     /**
      * The Camera zoom value. Change this value to zoom in, or out of, a Scene.
@@ -1815,22 +1796,19 @@ var BaseCamera = new Class({
      * @default 1
      * @since 3.0.0
      */
-    zoom: {
 
-        get: function ()
-        {
-            return (this._zoomX + this._zoomY) / 2;
-        },
+    get zoom()
+    {
+        return (this._zoomX + this._zoomY) / 2;
+    }
 
-        set: function (value)
-        {
-            this._zoomX = value;
-            this._zoomY = value;
+    set zoom(value)
+    {
+        this._zoomX = value;
+        this._zoomY = value;
 
-            this.dirty = true;
-        }
-
-    },
+        this.dirty = true;
+    }
 
     /**
      * The Camera horizontal zoom value. Change this value to zoom in, or out of, a Scene.
@@ -1848,20 +1826,17 @@ var BaseCamera = new Class({
      * @default 1
      * @since 3.50.0
      */
-    zoomX: {
 
-        get: function ()
-        {
-            return this._zoomX;
-        },
+    get zoomX()
+    {
+        return this._zoomX;
+    }
 
-        set: function (value)
-        {
-            this._zoomX = value;
-            this.dirty = true;
-        }
-
-    },
+    set zoomX(value)
+    {
+        this._zoomX = value;
+        this.dirty = true;
+    }
 
     /**
      * The Camera vertical zoom value. Change this value to zoom in, or out of, a Scene.
@@ -1879,20 +1854,17 @@ var BaseCamera = new Class({
      * @default 1
      * @since 3.50.0
      */
-    zoomY: {
 
-        get: function ()
-        {
-            return this._zoomY;
-        },
+    get zoomY()
+    {
+        return this._zoomY;
+    }
 
-        set: function (value)
-        {
-            this._zoomY = value;
-            this.dirty = true;
-        }
-
-    },
+    set zoomY(value)
+    {
+        this._zoomY = value;
+        this.dirty = true;
+    }
 
     /**
      * The rotation of the Camera in radians.
@@ -1909,20 +1881,17 @@ var BaseCamera = new Class({
      * @default 0
      * @since 3.11.0
      */
-    rotation: {
 
-        get: function ()
-        {
-            return this._rotation;
-        },
+    get rotation()
+    {
+        return this._rotation;
+    }
 
-        set: function (value)
-        {
-            this._rotation = value;
-            this.dirty = true;
-        }
-
-    },
+    set rotation(value)
+    {
+        this._rotation = value;
+        this.dirty = true;
+    }
 
     /**
      * The horizontal position of the center of the Camera's viewport, relative to the left of the game canvas.
@@ -1932,14 +1901,11 @@ var BaseCamera = new Class({
      * @readonly
      * @since 3.10.0
      */
-    centerX: {
 
-        get: function ()
-        {
-            return this.x + (0.5 * this.width);
-        }
-
-    },
+    get centerX()
+    {
+        return this.x + (0.5 * this.width);
+    }
 
     /**
      * The vertical position of the center of the Camera's viewport, relative to the top of the game canvas.
@@ -1949,14 +1915,11 @@ var BaseCamera = new Class({
      * @readonly
      * @since 3.10.0
      */
-    centerY: {
 
-        get: function ()
-        {
-            return this.y + (0.5 * this.height);
-        }
-
-    },
+    get centerY()
+    {
+        return this.y + (0.5 * this.height);
+    }
 
     /**
      * The displayed width of the camera viewport, factoring in the camera zoom level.
@@ -1972,14 +1935,11 @@ var BaseCamera = new Class({
      * @readonly
      * @since 3.11.0
      */
-    displayWidth: {
 
-        get: function ()
-        {
-            return this.width / this.zoomX;
-        }
-
-    },
+    get displayWidth()
+    {
+        return this.width / this.zoomX;
+    }
 
     /**
      * The displayed height of the camera viewport, factoring in the camera zoom level.
@@ -1995,15 +1955,12 @@ var BaseCamera = new Class({
      * @readonly
      * @since 3.11.0
      */
-    displayHeight: {
 
-        get: function ()
-        {
-            return this.height / this.zoomY;
-        }
-
+    get displayHeight()
+    {
+        return this.height / this.zoomY;
     }
 
-});
+};
 
 module.exports = BaseCamera;

@@ -28,11 +28,9 @@ var Random = require('./Random');
  * @param {number} [y=0] - The y position of the center of the circle.
  * @param {number} [radius=0] - The radius of the circle.
  */
-var Circle = new Class({
+var Circle = class {
 
-    initialize:
-
-    function Circle (x, y, radius)
+    constructor(x, y, radius)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -88,7 +86,7 @@ var Circle = new Class({
          * @since 3.0.0
          */
         this._diameter = radius * 2;
-    },
+    }
 
     /**
      * Check to see if the Circle contains the given x / y coordinates.
@@ -101,10 +99,10 @@ var Circle = new Class({
      *
      * @return {boolean} True if the coordinates are within the circle, otherwise false.
      */
-    contains: function (x, y)
+    contains(x, y)
     {
         return Contains(this, x, y);
-    },
+    }
 
     /**
      * Returns a Point object containing the coordinates of a point on the circumference of the Circle
@@ -121,10 +119,10 @@ var Circle = new Class({
      *
      * @return {Phaser.Math.Vector2} A Vector2 containing the coordinates of the point around the circle.
      */
-    getPoint: function (position, out)
+    getPoint(position, out)
     {
         return GetPoint(this, position, out);
-    },
+    }
 
     /**
      * Returns an array of Point objects containing the coordinates of the points around the circumference of the Circle,
@@ -141,10 +139,10 @@ var Circle = new Class({
      *
      * @return {Phaser.Math.Vector2[]} An array of Vector2 objects pertaining to the points around the circumference of the circle.
      */
-    getPoints: function (quantity, stepRate, output)
+    getPoints(quantity, stepRate, output)
     {
         return GetPoints(this, quantity, stepRate, output);
-    },
+    }
 
     /**
      * Returns a uniformly distributed random point from anywhere within the Circle.
@@ -158,10 +156,10 @@ var Circle = new Class({
      *
      * @return {Phaser.Math.Vector2} A Vector2 object with the random values set in the `x` and `y` properties.
      */
-    getRandomPoint: function (vec)
+    getRandomPoint(vec)
     {
         return Random(this, vec);
-    },
+    }
 
     /**
      * Sets the x, y and radius of this circle.
@@ -175,7 +173,7 @@ var Circle = new Class({
      *
      * @return {this} This Circle object.
      */
-    setTo: function (x, y, radius)
+    setTo(x, y, radius)
     {
         this.x = x;
         this.y = y;
@@ -183,7 +181,7 @@ var Circle = new Class({
         this._diameter = radius * 2;
 
         return this;
-    },
+    }
 
     /**
      * Sets this Circle to be empty with a radius of zero.
@@ -194,13 +192,13 @@ var Circle = new Class({
      *
      * @return {this} This Circle object.
      */
-    setEmpty: function ()
+    setEmpty()
     {
         this._radius = 0;
         this._diameter = 0;
 
         return this;
-    },
+    }
 
     /**
      * Sets the position of this Circle.
@@ -213,7 +211,7 @@ var Circle = new Class({
      *
      * @return {this} This Circle object.
      */
-    setPosition: function (x, y)
+    setPosition(x, y)
     {
         if (y === undefined) { y = x; }
 
@@ -221,7 +219,7 @@ var Circle = new Class({
         this.y = y;
 
         return this;
-    },
+    }
 
     /**
      * Checks to see if the Circle is empty: has a radius of zero.
@@ -231,10 +229,10 @@ var Circle = new Class({
      *
      * @return {boolean} True if the Circle is empty, otherwise false.
      */
-    isEmpty: function ()
+    isEmpty()
     {
         return (this._radius <= 0);
-    },
+    }
 
     /**
      * The radius of the Circle.
@@ -243,20 +241,17 @@ var Circle = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    radius: {
 
-        get: function ()
-        {
-            return this._radius;
-        },
+    get radius()
+    {
+        return this._radius;
+    }
 
-        set: function (value)
-        {
-            this._radius = value;
-            this._diameter = value * 2;
-        }
-
-    },
+    set radius(value)
+    {
+        this._radius = value;
+        this._diameter = value * 2;
+    }
 
     /**
      * The diameter of the Circle.
@@ -265,20 +260,17 @@ var Circle = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    diameter: {
 
-        get: function ()
-        {
-            return this._diameter;
-        },
+    get diameter()
+    {
+        return this._diameter;
+    }
 
-        set: function (value)
-        {
-            this._diameter = value;
-            this._radius = value * 0.5;
-        }
-
-    },
+    set diameter(value)
+    {
+        this._diameter = value;
+        this._radius = value * 0.5;
+    }
 
     /**
      * The left position of the Circle.
@@ -287,19 +279,16 @@ var Circle = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    left: {
 
-        get: function ()
-        {
-            return this.x - this._radius;
-        },
+    get left()
+    {
+        return this.x - this._radius;
+    }
 
-        set: function (value)
-        {
-            this.x = value + this._radius;
-        }
-
-    },
+    set left(value)
+    {
+        this.x = value + this._radius;
+    }
 
     /**
      * The right position of the Circle.
@@ -308,19 +297,16 @@ var Circle = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    right: {
 
-        get: function ()
-        {
-            return this.x + this._radius;
-        },
+    get right()
+    {
+        return this.x + this._radius;
+    }
 
-        set: function (value)
-        {
-            this.x = value - this._radius;
-        }
-
-    },
+    set right(value)
+    {
+        this.x = value - this._radius;
+    }
 
     /**
      * The top position of the Circle.
@@ -329,19 +315,16 @@ var Circle = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    top: {
 
-        get: function ()
-        {
-            return this.y - this._radius;
-        },
+    get top()
+    {
+        return this.y - this._radius;
+    }
 
-        set: function (value)
-        {
-            this.y = value + this._radius;
-        }
-
-    },
+    set top(value)
+    {
+        this.y = value + this._radius;
+    }
 
     /**
      * The bottom position of the Circle.
@@ -350,20 +333,17 @@ var Circle = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    bottom: {
 
-        get: function ()
-        {
-            return this.y + this._radius;
-        },
-
-        set: function (value)
-        {
-            this.y = value - this._radius;
-        }
-
+    get bottom()
+    {
+        return this.y + this._radius;
     }
 
-});
+    set bottom(value)
+    {
+        this.y = value - this._radius;
+    }
+
+};
 
 module.exports = Circle;

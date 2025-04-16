@@ -38,16 +38,15 @@ var Controller = require('./Controller');
  * @param {number} [x=0.005] - The amount of horizontal displacement to apply. A very small float number, such as 0.005.
  * @param {number} [y=0.005] - The amount of vertical displacement to apply. A very small float number, such as 0.005.
  */
-var Displacement = new Class({
-    Extends: Controller,
+var Displacement = class extends Controller {
 
-    initialize: function Displacement (camera, texture, x, y)
+    constructor(camera, texture, x, y)
     {
         if (texture === undefined) { texture = '__WHITE'; }
         if (x === undefined) { x = 0.005; }
         if (y === undefined) { y = 0.005; }
 
-        Controller.call(this, camera, 'FilterDisplacement');
+        super(camera, 'FilterDisplacement');
 
         /**
          * The amount of horizontal displacement to apply.
@@ -83,7 +82,7 @@ var Displacement = new Class({
         this.glTexture;
 
         this.setTexture(texture);
-    },
+    }
 
     /**
      * Sets the Texture to be used for the displacement effect.
@@ -95,7 +94,7 @@ var Displacement = new Class({
      * @param {string} [texture='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
      * @returns {this} This Filter Controller.
      */
-    setTexture: function (texture)
+    setTexture(texture)
     {
         var phaserTexture = this.camera.scene.sys.textures.getFrame(texture);
 
@@ -105,9 +104,9 @@ var Displacement = new Class({
         }
 
         return this;
-    },
+    }
 
-    getPadding: function ()
+    getPadding()
     {
         var override = this.paddingOverride;
         if (override)
@@ -124,6 +123,6 @@ var Displacement = new Class({
 
         return this.currentPadding;
     }
-});
+};
 
 module.exports = Displacement;

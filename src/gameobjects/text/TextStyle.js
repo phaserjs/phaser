@@ -56,11 +56,9 @@ var propertyMap = {
  * @param {Phaser.GameObjects.Text} text - The Text object that this TextStyle is styling.
  * @param {Phaser.Types.GameObjects.Text.TextStyle} style - The style settings to set.
  */
-var TextStyle = new Class({
+var TextStyle = class {
 
-    initialize:
-
-    function TextStyle (text, style)
+    constructor(text, style)
     {
         /**
          * The Text object that this TextStyle is styling.
@@ -358,7 +356,7 @@ var TextStyle = new Class({
 
         //  Set to defaults + user style
         this.setStyle(style, false, true);
-    },
+    }
 
     /**
      * Set the text style.
@@ -381,7 +379,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setStyle: function (style, updateText, setDefaults)
+    setStyle(style, updateText, setDefaults)
     {
         if (updateText === undefined) { updateText = true; }
         if (setDefaults === undefined) { setDefaults = false; }
@@ -448,7 +446,7 @@ var TextStyle = new Class({
         {
             return this.parent;
         }
-    },
+    }
 
     /**
      * Synchronize the font settings to the given Canvas Rendering Context.
@@ -459,10 +457,10 @@ var TextStyle = new Class({
      * @param {HTMLCanvasElement} canvas - The Canvas Element.
      * @param {CanvasRenderingContext2D} context - The Canvas Rendering Context.
      */
-    syncFont: function (canvas, context)
+    syncFont(canvas, context)
     {
         context.font = this._font;
-    },
+    }
 
     /**
      * Synchronize the text style settings to the given Canvas Rendering Context.
@@ -473,7 +471,7 @@ var TextStyle = new Class({
      * @param {HTMLCanvasElement} canvas - The Canvas Element.
      * @param {CanvasRenderingContext2D} context - The Canvas Rendering Context.
      */
-    syncStyle: function (canvas, context)
+    syncStyle(canvas, context)
     {
         context.textBaseline = 'alphabetic';
 
@@ -483,7 +481,7 @@ var TextStyle = new Class({
         context.lineWidth = this.strokeThickness;
         context.lineCap = 'round';
         context.lineJoin = 'round';
-    },
+    }
 
     /**
      * Synchronize the shadow settings to the given Canvas Rendering Context.
@@ -494,7 +492,7 @@ var TextStyle = new Class({
      * @param {CanvasRenderingContext2D} context - The Canvas Rendering Context.
      * @param {boolean} enabled - Whether shadows are enabled or not.
      */
-    syncShadow: function (context, enabled)
+    syncShadow(context, enabled)
     {
         if (enabled)
         {
@@ -510,7 +508,7 @@ var TextStyle = new Class({
             context.shadowColor = 0;
             context.shadowBlur = 0;
         }
-    },
+    }
 
     /**
      * Update the style settings for the parent Text object.
@@ -522,7 +520,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    update: function (recalculateMetrics)
+    update(recalculateMetrics)
     {
         if (recalculateMetrics)
         {
@@ -532,7 +530,7 @@ var TextStyle = new Class({
         }
 
         return this.parent.updateText();
-    },
+    }
 
     /**
      * Set the font.
@@ -550,7 +548,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setFont: function (font, updateText)
+    setFont(font, updateText)
     {
         if (updateText === undefined) { updateText = true; }
 
@@ -588,7 +586,7 @@ var TextStyle = new Class({
         }
 
         return this.parent;
-    },
+    }
 
     /**
      * Set the font family.
@@ -600,7 +598,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setFontFamily: function (family)
+    setFontFamily(family)
     {
         if (this.fontFamily !== family)
         {
@@ -610,7 +608,7 @@ var TextStyle = new Class({
         }
 
         return this.parent;
-    },
+    }
 
     /**
      * Set the font style.
@@ -622,7 +620,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setFontStyle: function (style)
+    setFontStyle(style)
     {
         if (this.fontStyle !== style)
         {
@@ -632,7 +630,7 @@ var TextStyle = new Class({
         }
 
         return this.parent;
-    },
+    }
 
     /**
      * Set the font size. Can be a string with a valid CSS unit, i.e. `16px`, or a number.
@@ -644,7 +642,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setFontSize: function (size)
+    setFontSize(size)
     {
         if (typeof size === 'number')
         {
@@ -659,7 +657,7 @@ var TextStyle = new Class({
         }
 
         return this.parent;
-    },
+    }
 
     /**
      * Set the test string to use when measuring the font.
@@ -671,12 +669,12 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setTestString: function (string)
+    setTestString(string)
     {
         this.testString = string;
 
         return this.update(true);
-    },
+    }
 
     /**
      * Set a fixed width and height for the text.
@@ -691,7 +689,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setFixedSize: function (width, height)
+    setFixedSize(width, height)
     {
         this.fixedWidth = width;
         this.fixedHeight = height;
@@ -707,7 +705,7 @@ var TextStyle = new Class({
         }
 
         return this.update(false);
-    },
+    }
 
     /**
      * Set the background color.
@@ -719,12 +717,12 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setBackgroundColor: function (color)
+    setBackgroundColor(color)
     {
         this.backgroundColor = color;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Set the text fill color.
@@ -736,12 +734,12 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setFill: function (color)
+    setFill(color)
     {
         this.color = color;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Set the text fill color.
@@ -753,12 +751,12 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setColor: function (color)
+    setColor(color)
     {
         this.color = color;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Set the resolution used by the Text object.
@@ -775,12 +773,12 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setResolution: function (value)
+    setResolution(value)
     {
         this.resolution = value;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Set the stroke settings.
@@ -793,7 +791,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setStroke: function (color, thickness)
+    setStroke(color, thickness)
     {
         if (thickness === undefined) { thickness = this.strokeThickness; }
 
@@ -813,7 +811,7 @@ var TextStyle = new Class({
         }
 
         return this.parent;
-    },
+    }
 
     /**
      * Set the shadow settings.
@@ -833,7 +831,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setShadow: function (x, y, color, blur, shadowStroke, shadowFill)
+    setShadow(x, y, color, blur, shadowStroke, shadowFill)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -850,7 +848,7 @@ var TextStyle = new Class({
         this.shadowFill = shadowFill;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Set the shadow offset.
@@ -863,7 +861,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setShadowOffset: function (x, y)
+    setShadowOffset(x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = x; }
@@ -872,7 +870,7 @@ var TextStyle = new Class({
         this.shadowOffsetY = y;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Set the shadow color.
@@ -884,14 +882,14 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setShadowColor: function (color)
+    setShadowColor(color)
     {
         if (color === undefined) { color = '#000'; }
 
         this.shadowColor = color;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Set the shadow blur radius.
@@ -903,14 +901,14 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setShadowBlur: function (blur)
+    setShadowBlur(blur)
     {
         if (blur === undefined) { blur = 0; }
 
         this.shadowBlur = blur;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Enable or disable shadow stroke.
@@ -922,12 +920,12 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setShadowStroke: function (enabled)
+    setShadowStroke(enabled)
     {
         this.shadowStroke = enabled;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Enable or disable shadow fill.
@@ -939,12 +937,12 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setShadowFill: function (enabled)
+    setShadowFill(enabled)
     {
         this.shadowFill = enabled;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Set the width (in pixels) to use for wrapping lines.
@@ -961,7 +959,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setWordWrapWidth: function (width, useAdvancedWrap)
+    setWordWrapWidth(width, useAdvancedWrap)
     {
         if (useAdvancedWrap === undefined) { useAdvancedWrap = false; }
 
@@ -969,7 +967,7 @@ var TextStyle = new Class({
         this.wordWrapUseAdvanced = useAdvancedWrap;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Set a custom callback for wrapping lines.
@@ -987,7 +985,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setWordWrapCallback: function (callback, scope)
+    setWordWrapCallback(callback, scope)
     {
         if (scope === undefined) { scope = null; }
 
@@ -995,7 +993,7 @@ var TextStyle = new Class({
         this.wordWrapCallbackScope = scope;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Set the alignment of the text in this Text object.
@@ -1011,14 +1009,14 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setAlign: function (align)
+    setAlign(align)
     {
         if (align === undefined) { align = 'left'; }
 
         this.align = align;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Set the maximum number of lines to draw.
@@ -1030,14 +1028,14 @@ var TextStyle = new Class({
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setMaxLines: function (max)
+    setMaxLines(max)
     {
         if (max === undefined) { max = 0; }
 
         this.maxLines = max;
 
         return this.update(false);
-    },
+    }
 
     /**
      * Get the current text metrics.
@@ -1047,7 +1045,7 @@ var TextStyle = new Class({
      *
      * @return {Phaser.Types.GameObjects.Text.TextMetrics} The text metrics.
      */
-    getTextMetrics: function ()
+    getTextMetrics()
     {
         var metrics = this.metrics;
 
@@ -1056,7 +1054,7 @@ var TextStyle = new Class({
             descent: metrics.descent,
             fontSize: metrics.fontSize
         };
-    },
+    }
 
     /**
      * Build a JSON representation of this Text Style.
@@ -1066,7 +1064,7 @@ var TextStyle = new Class({
      *
      * @return {object} A JSON representation of this Text Style.
      */
-    toJSON: function ()
+    toJSON()
     {
         var output = {};
 
@@ -1078,7 +1076,7 @@ var TextStyle = new Class({
         output.metrics = this.getTextMetrics();
 
         return output;
-    },
+    }
 
     /**
      * Destroy this Text Style.
@@ -1086,11 +1084,11 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.TextStyle#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.parent = undefined;
     }
 
-});
+};
 
 module.exports = TextStyle;

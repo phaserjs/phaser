@@ -33,15 +33,16 @@ var Vector2 = require('../../math/Vector2');
  * @param {Phaser.Physics.Arcade.World} world - The Arcade Physics simulation this Static Body belongs to.
  * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object this Body belongs to. As of Phaser 3.60 this is now optional.
  */
-var StaticBody = new Class({
+var StaticBody = class {
 
-    Mixins: [
-        CollisionComponent
-    ],
+    static
+    {
+        Class.mixin(this, [
+            CollisionComponent
+        ], false);
+    }
 
-    initialize:
-
-    function StaticBody (world, gameObject)
+    constructor(world, gameObject)
     {
         var width = 64;
         var height = 64;
@@ -503,7 +504,7 @@ var StaticBody = new Class({
          * @since 3.10.0
          */
         this._dy = 0;
-    },
+    }
 
     /**
      * Changes the Game Object this Body is bound to.
@@ -524,7 +525,7 @@ var StaticBody = new Class({
      *
      * @see Phaser.Physics.Arcade.StaticBody#updateFromGameObject
      */
-    setGameObject: function (gameObject, update, enable)
+    setGameObject(gameObject, update, enable)
     {
         if (update === undefined) { update = true; }
         if (enable === undefined) { enable = true; }
@@ -566,7 +567,7 @@ var StaticBody = new Class({
         this.enable = enable;
 
         return this;
-    },
+    }
 
     /**
      * Syncs the Static Body's position and size with its parent Game Object.
@@ -576,7 +577,7 @@ var StaticBody = new Class({
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      */
-    updateFromGameObject: function ()
+    updateFromGameObject()
     {
         this.world.staticTree.remove(this);
 
@@ -595,7 +596,7 @@ var StaticBody = new Class({
         this.world.staticTree.insert(this);
 
         return this;
-    },
+    }
 
     /**
      * Positions the Static Body at an offset from its Game Object.
@@ -608,7 +609,7 @@ var StaticBody = new Class({
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      */
-    setOffset: function (x, y)
+    setOffset(x, y)
     {
         if (y === undefined) { y = x; }
 
@@ -627,7 +628,7 @@ var StaticBody = new Class({
         this.world.staticTree.insert(this);
 
         return this;
-    },
+    }
 
     /**
      * Sets the size of the Static Body.
@@ -643,7 +644,7 @@ var StaticBody = new Class({
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      */
-    setSize: function (width, height, center)
+    setSize(width, height, center)
     {
         if (center === undefined) { center = true; }
 
@@ -692,7 +693,7 @@ var StaticBody = new Class({
         this.world.staticTree.insert(this);
 
         return this;
-    },
+    }
 
     /**
      * Sets this Static Body to have a circular body and sets its size and position.
@@ -706,7 +707,7 @@ var StaticBody = new Class({
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      */
-    setCircle: function (radius, offsetX, offsetY)
+    setCircle(radius, offsetX, offsetY)
     {
         if (offsetX === undefined) { offsetX = this.offset.x; }
         if (offsetY === undefined) { offsetY = this.offset.y; }
@@ -737,7 +738,7 @@ var StaticBody = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Updates the StaticBody's `center` from its `position` and dimensions.
@@ -745,10 +746,10 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#updateCenter
      * @since 3.0.0
      */
-    updateCenter: function ()
+    updateCenter()
     {
         this.center.set(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
-    },
+    }
 
     /**
      * Resets this Static Body to its parent Game Object's position.
@@ -762,7 +763,7 @@ var StaticBody = new Class({
      * @param {number} [x] - The x coordinate to reset the body to. If not given will use the parent Game Object's coordinate.
      * @param {number} [y] - The y coordinate to reset the body to. If not given will use the parent Game Object's coordinate.
      */
-    reset: function (x, y)
+    reset(x, y)
     {
         var gameObject = this.gameObject;
 
@@ -781,7 +782,7 @@ var StaticBody = new Class({
         this.updateCenter();
 
         this.world.staticTree.insert(this);
-    },
+    }
 
     /**
      * NOOP function. A Static Body cannot be stopped.
@@ -791,10 +792,10 @@ var StaticBody = new Class({
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      */
-    stop: function ()
+    stop()
     {
         return this;
-    },
+    }
 
     /**
      * Returns the x and y coordinates of the top left and bottom right points of the StaticBody.
@@ -806,7 +807,7 @@ var StaticBody = new Class({
      *
      * @return {Phaser.Types.Physics.Arcade.ArcadeBodyBounds} The same object that was passed with `x`, `y`, `right` and `bottom` values matching the respective values of the StaticBody.
      */
-    getBounds: function (obj)
+    getBounds(obj)
     {
         obj.x = this.x;
         obj.y = this.y;
@@ -814,7 +815,7 @@ var StaticBody = new Class({
         obj.bottom = this.bottom;
 
         return obj;
-    },
+    }
 
     /**
      * Checks to see if a given x,y coordinate is colliding with this Static Body.
@@ -827,10 +828,10 @@ var StaticBody = new Class({
      *
      * @return {boolean} `true` if the given coordinate lies within this body, otherwise `false`.
      */
-    hitTest: function (x, y)
+    hitTest(x, y)
     {
         return (this.isCircle) ? CircleContains(this, x, y) : RectangleContains(this, x, y);
-    },
+    }
 
     /**
      * NOOP
@@ -838,9 +839,9 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#postUpdate
      * @since 3.12.0
      */
-    postUpdate: function ()
+    postUpdate()
     {
-    },
+    }
 
     /**
      * The absolute (non-negative) change in this StaticBody's horizontal position from the previous step. Always zero.
@@ -850,10 +851,10 @@ var StaticBody = new Class({
      *
      * @return {number} Always zero for a Static Body.
      */
-    deltaAbsX: function ()
+    deltaAbsX()
     {
         return 0;
-    },
+    }
 
     /**
      * The absolute (non-negative) change in this StaticBody's vertical position from the previous step. Always zero.
@@ -863,10 +864,10 @@ var StaticBody = new Class({
      *
      * @return {number} Always zero for a Static Body.
      */
-    deltaAbsY: function ()
+    deltaAbsY()
     {
         return 0;
-    },
+    }
 
     /**
      * The change in this StaticBody's horizontal position from the previous step. Always zero.
@@ -876,10 +877,10 @@ var StaticBody = new Class({
      *
      * @return {number} The change in this StaticBody's velocity from the previous step. Always zero.
      */
-    deltaX: function ()
+    deltaX()
     {
         return 0;
-    },
+    }
 
     /**
      * The change in this StaticBody's vertical position from the previous step. Always zero.
@@ -889,10 +890,10 @@ var StaticBody = new Class({
      *
      * @return {number} The change in this StaticBody's velocity from the previous step. Always zero.
      */
-    deltaY: function ()
+    deltaY()
     {
         return 0;
-    },
+    }
 
     /**
      * The change in this StaticBody's rotation from the previous step. Always zero.
@@ -902,10 +903,10 @@ var StaticBody = new Class({
      *
      * @return {number} The change in this StaticBody's rotation from the previous step. Always zero.
      */
-    deltaZ: function ()
+    deltaZ()
     {
         return 0;
-    },
+    }
 
     /**
      * Disables this Body and marks it for destruction during the next step.
@@ -913,12 +914,12 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.enable = false;
 
         this.world.pendingDestroy.add(this);
-    },
+    }
 
     /**
      * Draws a graphical representation of the StaticBody for visual debugging purposes.
@@ -928,7 +929,7 @@ var StaticBody = new Class({
      *
      * @param {Phaser.GameObjects.Graphics} graphic - The Graphics object to use for the debug drawing of the StaticBody.
      */
-    drawDebug: function (graphic)
+    drawDebug(graphic)
     {
         var pos = this.position;
 
@@ -949,7 +950,7 @@ var StaticBody = new Class({
             }
 
         }
-    },
+    }
 
     /**
      * Indicates whether the StaticBody is going to be showing a debug visualization during postUpdate.
@@ -959,10 +960,10 @@ var StaticBody = new Class({
      *
      * @return {boolean} Whether or not the StaticBody is going to show the debug visualization during postUpdate.
      */
-    willDrawDebug: function ()
+    willDrawDebug()
     {
         return this.debugShowBody;
-    },
+    }
 
     /**
      * Sets the Mass of the StaticBody. Will set the Mass to 0.1 if the value passed is less than or equal to zero.
@@ -974,7 +975,7 @@ var StaticBody = new Class({
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      */
-    setMass: function (value)
+    setMass(value)
     {
         if (value <= 0)
         {
@@ -985,7 +986,7 @@ var StaticBody = new Class({
         this.mass = value;
 
         return this;
-    },
+    }
 
     /**
      * The x coordinate of the StaticBody.
@@ -994,23 +995,20 @@ var StaticBody = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    x: {
 
-        get: function ()
-        {
-            return this.position.x;
-        },
+    get x()
+    {
+        return this.position.x;
+    }
 
-        set: function (value)
-        {
-            this.world.staticTree.remove(this);
+    set x(value)
+    {
+        this.world.staticTree.remove(this);
 
-            this.position.x = value;
+        this.position.x = value;
 
-            this.world.staticTree.insert(this);
-        }
-
-    },
+        this.world.staticTree.insert(this);
+    }
 
     /**
      * The y coordinate of the StaticBody.
@@ -1019,23 +1017,20 @@ var StaticBody = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    y: {
 
-        get: function ()
-        {
-            return this.position.y;
-        },
+    get y()
+    {
+        return this.position.y;
+    }
 
-        set: function (value)
-        {
-            this.world.staticTree.remove(this);
+    set y(value)
+    {
+        this.world.staticTree.remove(this);
 
-            this.position.y = value;
+        this.position.y = value;
 
-            this.world.staticTree.insert(this);
-        }
-
-    },
+        this.world.staticTree.insert(this);
+    }
 
     /**
      * Returns the left-most x coordinate of the area of the StaticBody.
@@ -1045,14 +1040,11 @@ var StaticBody = new Class({
      * @readonly
      * @since 3.0.0
      */
-    left: {
 
-        get: function ()
-        {
-            return this.position.x;
-        }
-
-    },
+    get left()
+    {
+        return this.position.x;
+    }
 
     /**
      * The right-most x coordinate of the area of the StaticBody.
@@ -1062,14 +1054,11 @@ var StaticBody = new Class({
      * @readonly
      * @since 3.0.0
      */
-    right: {
 
-        get: function ()
-        {
-            return this.position.x + this.width;
-        }
-
-    },
+    get right()
+    {
+        return this.position.x + this.width;
+    }
 
     /**
      * The highest y coordinate of the area of the StaticBody.
@@ -1079,14 +1068,11 @@ var StaticBody = new Class({
      * @readonly
      * @since 3.0.0
      */
-    top: {
 
-        get: function ()
-        {
-            return this.position.y;
-        }
-
-    },
+    get top()
+    {
+        return this.position.y;
+    }
 
     /**
      * The lowest y coordinate of the area of the StaticBody. (y + height)
@@ -1096,15 +1082,12 @@ var StaticBody = new Class({
      * @readonly
      * @since 3.0.0
      */
-    bottom: {
 
-        get: function ()
-        {
-            return this.position.y + this.height;
-        }
-
+    get bottom()
+    {
+        return this.position.y + this.height;
     }
 
-});
+};
 
 module.exports = StaticBody;

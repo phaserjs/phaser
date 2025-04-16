@@ -33,13 +33,9 @@ var XMLFile = require('./XMLFile');
  * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas xml file. Used in replacement of the Loaders default XHR Settings.
  */
-var AtlasXMLFile = new Class({
+var AtlasXMLFile = class extends MultiFile {
 
-    Extends: MultiFile,
-
-    initialize:
-
-    function AtlasXMLFile (loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
+    constructor(loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
     {
         var image;
         var data;
@@ -74,13 +70,13 @@ var AtlasXMLFile = new Class({
         if (image.linkFile)
         {
             //  Image has a normal map
-            MultiFile.call(this, loader, 'atlasxml', key, [ image, data, image.linkFile ]);
+            super(loader, 'atlasxml', key, [ image, data, image.linkFile ]);
         }
         else
         {
-            MultiFile.call(this, loader, 'atlasxml', key, [ image, data ]);
+            super(loader, 'atlasxml', key, [ image, data ]);
         }
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -88,7 +84,7 @@ var AtlasXMLFile = new Class({
      * @method Phaser.Loader.FileTypes.AtlasXMLFile#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         if (this.isReadyToProcess())
         {
@@ -102,7 +98,7 @@ var AtlasXMLFile = new Class({
         }
     }
 
-});
+};
 
 /**
  * Adds an XML based Texture Atlas, or array of atlases, to the current load queue.

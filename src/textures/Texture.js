@@ -36,11 +36,9 @@ var TEXTURE_MISSING_ERROR = 'Texture "%s" has no frame "%s"';
  * @param {number} [width] - The width of the Texture. This is optional and automatically derived from the source images.
  * @param {number} [height] - The height of the Texture. This is optional and automatically derived from the source images.
  */
-var Texture = new Class({
+var Texture = class {
 
-    initialize:
-
-    function Texture (manager, key, source, width, height)
+    constructor(manager, key, source, width, height)
     {
         if (!Array.isArray(source))
         {
@@ -144,7 +142,7 @@ var Texture = new Class({
         {
             this.source.push(new TextureSource(this, source[i], width, height));
         }
-    },
+    }
 
     /**
      * Adds a new Frame to this Texture.
@@ -165,7 +163,7 @@ var Texture = new Class({
      *
      * @return {?Phaser.Textures.Frame} The Frame that was added to this Texture, or `null` if the given name already exists.
      */
-    add: function (name, sourceIndex, x, y, width, height)
+    add(name, sourceIndex, x, y, width, height)
     {
         if (this.has(name))
         {
@@ -188,7 +186,7 @@ var Texture = new Class({
         this.frameTotal++;
 
         return frame;
-    },
+    }
 
     /**
      * Removes the given Frame from this Texture. The Frame is destroyed immediately.
@@ -203,7 +201,7 @@ var Texture = new Class({
      *
      * @return {boolean} True if a Frame with the matching key was removed from this Texture.
      */
-    remove: function (name)
+    remove(name)
     {
         if (this.has(name))
         {
@@ -217,7 +215,7 @@ var Texture = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Checks to see if a Frame matching the given key exists within this Texture.
@@ -229,10 +227,10 @@ var Texture = new Class({
      *
      * @return {boolean} True if a Frame with the matching key exists in this Texture.
      */
-    has: function (name)
+    has(name)
     {
         return this.frames.hasOwnProperty(name);
-    },
+    }
 
     /**
      * Gets a Frame from this Texture based on either the key or the index of the Frame.
@@ -248,7 +246,7 @@ var Texture = new Class({
      *
      * @return {Phaser.Textures.Frame} The Texture Frame.
      */
-    get: function (name)
+    get(name)
     {
         //  null, undefined, empty string, zero
         if (!name)
@@ -266,7 +264,7 @@ var Texture = new Class({
         }
 
         return frame;
-    },
+    }
 
     /**
      * Takes the given TextureSource and returns the index of it within this Texture.
@@ -281,7 +279,7 @@ var Texture = new Class({
      *
      * @return {number} The index of the TextureSource within this Texture, or -1 if not in this Texture.
      */
-    getTextureSourceIndex: function (source)
+    getTextureSourceIndex(source)
     {
         for (var i = 0; i < this.source.length; i++)
         {
@@ -292,7 +290,7 @@ var Texture = new Class({
         }
 
         return -1;
-    },
+    }
 
     /**
      * Returns an array of all the Frames in the given TextureSource.
@@ -305,7 +303,7 @@ var Texture = new Class({
      *
      * @return {Phaser.Textures.Frame[]} An array of Texture Frames.
      */
-    getFramesFromTextureSource: function (sourceIndex, includeBase)
+    getFramesFromTextureSource(sourceIndex, includeBase)
     {
         if (includeBase === undefined) { includeBase = false; }
 
@@ -327,7 +325,7 @@ var Texture = new Class({
         }
 
         return out;
-    },
+    }
 
     /**
      * Based on the given Texture Source Index, this method will get all of the Frames using
@@ -343,7 +341,7 @@ var Texture = new Class({
      *
      * @return {Phaser.Types.Math.RectangleLike} An object containing the bounds of the Frames using the given Texture Source Index.
      */
-    getFrameBounds: function (sourceIndex)
+    getFrameBounds(sourceIndex)
     {
         if (sourceIndex === undefined) { sourceIndex = 0; }
 
@@ -382,7 +380,7 @@ var Texture = new Class({
         }
 
         return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
-    },
+    }
 
     /**
      * Returns an array with all of the names of the Frames in this Texture.
@@ -397,7 +395,7 @@ var Texture = new Class({
      *
      * @return {string[]} An array of all Frame names in this Texture.
      */
-    getFrameNames: function (includeBase)
+    getFrameNames(includeBase)
     {
         if (includeBase === undefined) { includeBase = false; }
 
@@ -414,7 +412,7 @@ var Texture = new Class({
         }
 
         return out;
-    },
+    }
 
     /**
      * Given a Frame name, return the source image it uses to render with.
@@ -428,7 +426,7 @@ var Texture = new Class({
      *
      * @return {(HTMLImageElement|HTMLCanvasElement|Phaser.GameObjects.RenderTexture)} The DOM Image, Canvas Element or Render Texture.
      */
-    getSourceImage: function (name)
+    getSourceImage(name)
     {
         if (name === undefined || name === null || this.frameTotal === 1)
         {
@@ -447,7 +445,7 @@ var Texture = new Class({
 
             return this.frames['__BASE'].source.image;
         }
-    },
+    }
 
     /**
      * Given a Frame name, return the data source image it uses to render with.
@@ -462,7 +460,7 @@ var Texture = new Class({
      *
      * @return {(HTMLImageElement|HTMLCanvasElement)} The DOM Image or Canvas Element.
      */
-    getDataSourceImage: function (name)
+    getDataSourceImage(name)
     {
         if (name === undefined || name === null || this.frameTotal === 1)
         {
@@ -484,7 +482,7 @@ var Texture = new Class({
         }
 
         return this.dataSource[idx].image;
-    },
+    }
 
     /**
      * Adds a data source image to this Texture.
@@ -497,7 +495,7 @@ var Texture = new Class({
      *
      * @param {(HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[])} data - The source image.
      */
-    setDataSource: function (data)
+    setDataSource(data)
     {
         if (!Array.isArray(data))
         {
@@ -510,7 +508,7 @@ var Texture = new Class({
 
             this.dataSource.push(new TextureSource(this, data[i], source.width, source.height));
         }
-    },
+    }
 
     /**
      * Sets the Filter Mode for this Texture.
@@ -526,7 +524,7 @@ var Texture = new Class({
      *
      * @param {Phaser.Textures.FilterMode} filterMode - The Filter Mode.
      */
-    setFilter: function (filterMode)
+    setFilter(filterMode)
     {
         var i;
 
@@ -539,7 +537,7 @@ var Texture = new Class({
         {
             this.dataSource[i].setFilter(filterMode);
         }
-    },
+    }
 
     /**
      * Set the `smoothPixelArt` property for this Texture.
@@ -552,7 +550,7 @@ var Texture = new Class({
      * @since 4.0.0
      * @param {boolean|null} value - The value of the smoothPixelArt property.
      */
-    setSmoothPixelArt: function (value)
+    setSmoothPixelArt(value)
     {
         this.smoothPixelArt = value;
 
@@ -560,7 +558,7 @@ var Texture = new Class({
         {
             this.setFilter(Phaser.Textures.FilterMode.LINEAR);
         }
-    },
+    }
 
     /**
      * Destroys this Texture and releases references to its sources and frames.
@@ -568,7 +566,7 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         var i;
         var source = this.source;
@@ -609,6 +607,6 @@ var Texture = new Class({
         this.manager = null;
     }
 
-});
+};
 
 module.exports = Texture;

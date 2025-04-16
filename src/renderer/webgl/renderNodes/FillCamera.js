@@ -18,12 +18,11 @@ var RenderNode = require('./RenderNode');
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FillCamera = new Class({
-    Extends: RenderNode,
+var FillCamera = class extends RenderNode {
 
-    initialize: function FillCamera (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'FillCamera', manager);
+        super('FillCamera', manager);
 
         /**
          * The RenderNode that draws a filled rectangle.
@@ -33,7 +32,7 @@ var FillCamera = new Class({
          * @since 4.0.0
          */
         this.fillRectNode = this.manager.getNode('FillRect');
-    },
+    }
 
     /**
      * Fills the camera with a color.
@@ -45,7 +44,7 @@ var FillCamera = new Class({
      * @param {number} color - The color to fill the camera with.
      * @param {boolean} [isFramebufferCamera] - Is this camera rendering to a framebuffer? If so, the camera position will not be applied, on the assumption that the camera position will be used to position the framebuffer in the external context.
      */
-    run: function (drawingContext, color, isFramebufferCamera)
+    run(drawingContext, color, isFramebufferCamera)
     {
         this.onRunBegin(drawingContext);
 
@@ -59,6 +58,6 @@ var FillCamera = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = FillCamera;

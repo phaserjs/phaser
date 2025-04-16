@@ -31,13 +31,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {Phaser.Types.Loader.FileTypes.SVGSizeConfig} [svgConfig] - The svg size configuration object.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var SVGFile = new Class({
+var SVGFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function SVGFile (loader, key, url, svgConfig, xhrSettings)
+    constructor(loader, key, url, svgConfig, xhrSettings)
     {
         var extension = 'svg';
 
@@ -67,8 +63,8 @@ var SVGFile = new Class({
             }
         };
 
-        File.call(this, loader, fileConfig);
-    },
+        super(loader, fileConfig);
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -77,7 +73,7 @@ var SVGFile = new Class({
      * @method Phaser.Loader.FileTypes.SVGFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -177,7 +173,7 @@ var SVGFile = new Class({
         };
 
         File.createObjectURL(this.data, blob, 'image/svg+xml');
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -185,12 +181,12 @@ var SVGFile = new Class({
      * @method Phaser.Loader.FileTypes.SVGFile#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         this.cache.addImage(this.key, this.data);
     }
 
-});
+};
 
 /**
  * Adds an SVG File, or array of SVG Files, to the current load queue. When the files are loaded they

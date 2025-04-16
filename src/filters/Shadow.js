@@ -40,11 +40,9 @@ var Controller = require('./Controller');
  * @param {number} [samples=6] - The number of samples that the shadow effect will run for.
  * @param {number} [intensity=1] - The intensity of the shadow effect.
  */
-var Shadow = new Class({
+var Shadow = class extends Controller {
 
-    Extends: Controller,
-
-    initialize: function Shadow (camera, x, y, decay, power, color, samples, intensity)
+    constructor(camera, x, y, decay, power, color, samples, intensity)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -53,7 +51,7 @@ var Shadow = new Class({
         if (samples === undefined) { samples = 6; }
         if (intensity === undefined) { intensity = 1; }
 
-        Controller.call(this, camera, 'FilterShadow');
+        super(camera, 'FilterShadow');
 
         /**
          * The horizontal offset of the shadow effect.
@@ -124,7 +122,7 @@ var Shadow = new Class({
         {
             this.color = color;
         }
-    },
+    }
 
     /**
      * The color of the shadow.
@@ -133,27 +131,24 @@ var Shadow = new Class({
      * @type {number}
      * @since 4.0.0
      */
-    color: {
 
-        get: function ()
-        {
-            var color = this.glcolor;
+    get color()
+    {
+        var color = this.glcolor;
 
-            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
-        },
+        return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+    }
 
-        set: function (value)
-        {
-            var color = this.glcolor;
+    set color(value)
+    {
+        var color = this.glcolor;
 
-            color[0] = ((value >> 16) & 0xFF) / 255;
-            color[1] = ((value >> 8) & 0xFF) / 255;
-            color[2] = (value & 0xFF) / 255;
-        }
+        color[0] = ((value >> 16) & 0xFF) / 255;
+        color[1] = ((value >> 8) & 0xFF) / 255;
+        color[2] = (value & 0xFF) / 255;
+    }
 
-    },
-
-    getPadding: function ()
+    getPadding()
     {
         var override = this.paddingOverride;
         if (override)
@@ -172,6 +167,6 @@ var Shadow = new Class({
 
         return this.currentPadding;
     }
-});
+};
 
 module.exports = Shadow;

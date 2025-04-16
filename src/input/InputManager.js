@@ -38,11 +38,9 @@ var TransformXY = require('../math/TransformXY');
  * @param {Phaser.Game} game - The Game instance that owns the Input Manager.
  * @param {object} config - The Input Configuration object, as set in the Game Config.
  */
-var InputManager = new Class({
+var InputManager = class {
 
-    initialize:
-
-    function InputManager (game, config)
+    constructor(game, config)
     {
         /**
          * The Game instance that owns the Input Manager.
@@ -297,7 +295,7 @@ var InputManager = new Class({
         this.mousePointerContainer = [ this.mousePointer ];
 
         game.events.once(GameEvents.BOOT, this.boot, this);
-    },
+    }
 
     /**
      * The Boot handler is called by Phaser.Game when it first starts up.
@@ -308,7 +306,7 @@ var InputManager = new Class({
      * @fires Phaser.Input.Events#MANAGER_BOOT
      * @since 3.0.0
      */
-    boot: function ()
+    boot()
     {
         var game = this.game;
         var events = game.events;
@@ -322,7 +320,7 @@ var InputManager = new Class({
         events.on(GameEvents.PRE_RENDER, this.preRender, this);
 
         events.once(GameEvents.DESTROY, this.destroy, this);
-    },
+    }
 
     /**
      * Internal canvas state change, called automatically by the Mouse Manager.
@@ -334,12 +332,12 @@ var InputManager = new Class({
      *
      * @param {(MouseEvent|TouchEvent)} event - The DOM Event.
      */
-    setCanvasOver: function (event)
+    setCanvasOver(event)
     {
         this.isOver = true;
 
         this.events.emit(Events.GAME_OVER, event);
-    },
+    }
 
     /**
      * Internal canvas state change, called automatically by the Mouse Manager.
@@ -351,12 +349,12 @@ var InputManager = new Class({
      *
      * @param {(MouseEvent|TouchEvent)} event - The DOM Event.
      */
-    setCanvasOut: function (event)
+    setCanvasOut(event)
     {
         this.isOver = false;
 
         this.events.emit(Events.GAME_OUT, event);
-    },
+    }
 
     /**
      * Internal update, called automatically by the Game Step right at the start.
@@ -365,7 +363,7 @@ var InputManager = new Class({
      * @private
      * @since 3.18.0
      */
-    preRender: function ()
+    preRender()
     {
         var time = this.game.loop.now;
         var delta = this.game.loop.delta;
@@ -385,7 +383,7 @@ var InputManager = new Class({
                 return;
             }
         }
-    },
+    }
 
     /**
      * Tells the Input system to set a custom cursor.
@@ -412,7 +410,7 @@ var InputManager = new Class({
      *
      * @param {string} cursor - The CSS to be used when setting the default cursor.
      */
-    setDefaultCursor: function (cursor)
+    setDefaultCursor(cursor)
     {
         this.defaultCursor = cursor;
 
@@ -420,7 +418,7 @@ var InputManager = new Class({
         {
             this.canvas.style.cursor = cursor;
         }
-    },
+    }
 
     /**
      * Called by the InputPlugin when processing over and out events.
@@ -435,13 +433,13 @@ var InputManager = new Class({
      *
      * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
      */
-    setCursor: function (interactiveObject)
+    setCursor(interactiveObject)
     {
         if (interactiveObject.cursor)
         {
             this.canvas.style.cursor = interactiveObject.cursor;
         }
-    },
+    }
 
     /**
      * Called by the InputPlugin when processing over and out events.
@@ -455,13 +453,13 @@ var InputManager = new Class({
      * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method. Pass `null` if you just want to set the force value.
      * @param {boolean} [forceReset=false] - Should the reset happen regardless of the object's cursor state? Default false.
      */
-    resetCursor: function (interactiveObject, forceReset)
+    resetCursor(interactiveObject, forceReset)
     {
         if ((forceReset || (interactiveObject && interactiveObject.cursor)) && this.canvas)
         {
             this.canvas.style.cursor = this.defaultCursor;
         }
-    },
+    }
 
     /**
      * Adds new Pointer objects to the Input Manager.
@@ -481,7 +479,7 @@ var InputManager = new Class({
      *
      * @return {Phaser.Input.Pointer[]} An array containing all of the new Pointer objects that were created.
      */
-    addPointer: function (quantity)
+    addPointer(quantity)
     {
         if (quantity === undefined) { quantity = 1; }
 
@@ -508,7 +506,7 @@ var InputManager = new Class({
         }
 
         return output;
-    },
+    }
 
     /**
      * Internal method that gets a list of all the active Input Plugins in the game
@@ -521,7 +519,7 @@ var InputManager = new Class({
      * @param {number} type - The type of event to process.
      * @param {Phaser.Input.Pointer[]} pointers - An array of Pointers on which the event occurred.
      */
-    updateInputPlugins: function (type, pointers)
+    updateInputPlugins(type, pointers)
     {
         var scenes = this.game.scene.getScenes(false, true);
 
@@ -542,7 +540,7 @@ var InputManager = new Class({
                 }
             }
         }
-    },
+    }
 
     //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
     //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
@@ -557,7 +555,7 @@ var InputManager = new Class({
      *
      * @param {TouchEvent} event - The native DOM Touch event.
      */
-    onTouchStart: function (event)
+    onTouchStart(event)
     {
         var pointers = this.pointers;
         var changed = [];
@@ -584,7 +582,7 @@ var InputManager = new Class({
         }
 
         this.updateInputPlugins(CONST.TOUCH_START, changed);
-    },
+    }
 
     /**
      * Processes a touch move event, as passed in by the TouchManager.
@@ -595,7 +593,7 @@ var InputManager = new Class({
      *
      * @param {TouchEvent} event - The native DOM Touch event.
      */
-    onTouchMove: function (event)
+    onTouchMove(event)
     {
         var pointers = this.pointers;
         var changed = [];
@@ -637,7 +635,7 @@ var InputManager = new Class({
         }
 
         this.updateInputPlugins(CONST.TOUCH_MOVE, changed);
-    },
+    }
 
     //  For touch end its a list of the touch points that have been removed from the surface
     //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
@@ -652,7 +650,7 @@ var InputManager = new Class({
      *
      * @param {TouchEvent} event - The native DOM Touch event.
      */
-    onTouchEnd: function (event)
+    onTouchEnd(event)
     {
         var pointers = this.pointers;
         var changed = [];
@@ -677,7 +675,7 @@ var InputManager = new Class({
         }
 
         this.updateInputPlugins(CONST.TOUCH_END, changed);
-    },
+    }
 
     /**
      * Processes a touch cancel event, as passed in by the TouchManager.
@@ -688,7 +686,7 @@ var InputManager = new Class({
      *
      * @param {TouchEvent} event - The native DOM Touch event.
      */
-    onTouchCancel: function (event)
+    onTouchCancel(event)
     {
         var pointers = this.pointers;
         var changed = [];
@@ -713,7 +711,7 @@ var InputManager = new Class({
         }
 
         this.updateInputPlugins(CONST.TOUCH_CANCEL, changed);
-    },
+    }
 
     /**
      * Processes a mouse down event, as passed in by the MouseManager.
@@ -724,7 +722,7 @@ var InputManager = new Class({
      *
      * @param {MouseEvent} event - The native DOM Mouse event.
      */
-    onMouseDown: function (event)
+    onMouseDown(event)
     {
         var mousePointer = this.mousePointer;
 
@@ -735,7 +733,7 @@ var InputManager = new Class({
         this.activePointer = mousePointer;
 
         this.updateInputPlugins(CONST.MOUSE_DOWN, this.mousePointerContainer);
-    },
+    }
 
     /**
      * Processes a mouse move event, as passed in by the MouseManager.
@@ -746,7 +744,7 @@ var InputManager = new Class({
      *
      * @param {MouseEvent} event - The native DOM Mouse event.
      */
-    onMouseMove: function (event)
+    onMouseMove(event)
     {
         var mousePointer = this.mousePointer;
 
@@ -757,7 +755,7 @@ var InputManager = new Class({
         this.activePointer = mousePointer;
 
         this.updateInputPlugins(CONST.MOUSE_MOVE, this.mousePointerContainer);
-    },
+    }
 
     /**
      * Processes a mouse up event, as passed in by the MouseManager.
@@ -768,7 +766,7 @@ var InputManager = new Class({
      *
      * @param {MouseEvent} event - The native DOM Mouse event.
      */
-    onMouseUp: function (event)
+    onMouseUp(event)
     {
         var mousePointer = this.mousePointer;
 
@@ -779,7 +777,7 @@ var InputManager = new Class({
         this.activePointer = mousePointer;
 
         this.updateInputPlugins(CONST.MOUSE_UP, this.mousePointerContainer);
-    },
+    }
 
     /**
      * Processes a mouse wheel event, as passed in by the MouseManager.
@@ -790,7 +788,7 @@ var InputManager = new Class({
      *
      * @param {WheelEvent} event - The native DOM Wheel event.
      */
-    onMouseWheel: function (event)
+    onMouseWheel(event)
     {
         var mousePointer = this.mousePointer;
 
@@ -799,7 +797,7 @@ var InputManager = new Class({
         this.activePointer = mousePointer;
 
         this.updateInputPlugins(CONST.MOUSE_WHEEL, this.mousePointerContainer);
-    },
+    }
 
     /**
      * Processes a pointer lock change event, as passed in by the MouseManager.
@@ -811,14 +809,14 @@ var InputManager = new Class({
      *
      * @param {MouseEvent} event - The native DOM Mouse event.
      */
-    onPointerLockChange: function (event)
+    onPointerLockChange(event)
     {
         var isLocked = this.mouse.locked;
 
         this.mousePointer.locked = isLocked;
 
         this.events.emit(Events.POINTERLOCK_CHANGE, event, isLocked);
-    },
+    }
 
     /**
      * Checks if the given Game Object should be considered as a candidate for input or not.
@@ -835,7 +833,7 @@ var InputManager = new Class({
      *
      * @return {boolean} `true` if the Game Object should be considered for input, otherwise `false`.
      */
-    inputCandidate: function (gameObject, camera)
+    inputCandidate(gameObject, camera)
     {
         var input = gameObject.input;
 
@@ -863,7 +861,7 @@ var InputManager = new Class({
         }
 
         return visible;
-    },
+    }
 
     /**
      * Performs a hit test using the given Pointer and camera, against an array of interactive Game Objects.
@@ -885,7 +883,7 @@ var InputManager = new Class({
      *
      * @return {array} An array of the Game Objects that were hit during this hit test.
      */
-    hitTest: function (pointer, gameObjects, camera, output)
+    hitTest(pointer, gameObjects, camera, output)
     {
         if (output === undefined) { output = this._tempHitTest; }
 
@@ -942,7 +940,7 @@ var InputManager = new Class({
         }
 
         return output;
-    },
+    }
 
     /**
      * Checks if the given x and y coordinate are within the hit area of the Game Object.
@@ -960,7 +958,7 @@ var InputManager = new Class({
      *
      * @return {boolean} `true` if the coordinates were inside the Game Objects hit area, otherwise `false`.
      */
-    pointWithinHitArea: function (gameObject, x, y)
+    pointWithinHitArea(gameObject, x, y)
     {
         //  Normalize the origin
         x += gameObject.displayOriginX;
@@ -979,7 +977,7 @@ var InputManager = new Class({
         {
             return false;
         }
-    },
+    }
 
     /**
      * Checks if the given x and y coordinate are within the hit area of the Interactive Object.
@@ -997,7 +995,7 @@ var InputManager = new Class({
      *
      * @return {boolean} `true` if the coordinates were inside the Game Objects hit area, otherwise `false`.
      */
-    pointWithinInteractiveObject: function (object, x, y)
+    pointWithinInteractiveObject(object, x, y)
     {
         if (!object.hitArea)
         {
@@ -1012,7 +1010,7 @@ var InputManager = new Class({
         object.localY = y;
 
         return object.hitAreaCallback(object.hitArea, x, y, object);
-    },
+    }
 
     /**
      * Transforms the pageX and pageY values of a Pointer into the scaled coordinate space of the Input Manager.
@@ -1025,7 +1023,7 @@ var InputManager = new Class({
      * @param {number} pageY - The Page Y value.
      * @param {boolean} wasMove - Are we transforming the Pointer from a move event, or an up / down event?
      */
-    transformPointer: function (pointer, pageX, pageY, wasMove)
+    transformPointer(pointer, pageX, pageY, wasMove)
     {
         var p0 = pointer.position;
         var p1 = pointer.prevPosition;
@@ -1052,7 +1050,7 @@ var InputManager = new Class({
             p0.x = x * a + p1.x * (1 - a);
             p0.y = y * a + p1.y * (1 - a);
         }
-    },
+    }
 
     /**
      * Destroys the Input Manager and all of its systems.
@@ -1062,7 +1060,7 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.events.removeAllListeners();
 
@@ -1095,6 +1093,6 @@ var InputManager = new Class({
         this.game = null;
     }
 
-});
+};
 
 module.exports = InputManager;

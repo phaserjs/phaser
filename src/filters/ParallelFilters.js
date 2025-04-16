@@ -57,12 +57,11 @@ var Blend = require('./Blend');
  * @since 4.0.0
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that owns this filter.
  */
-var ParallelFilters = new Class({
-    Extends: Controller,
+var ParallelFilters = class extends Controller {
 
-    initialize: function ParallelFilters (camera)
+    constructor(camera)
     {
-        Controller.call(this, camera, 'FilterParallelFilters');
+        super(camera, 'FilterParallelFilters');
 
         /**
          * The top FilterList.
@@ -96,6 +95,6 @@ var ParallelFilters = new Class({
          */
         this.blend = new Blend(camera);
     }
-});
+};
 
 module.exports = ParallelFilters;

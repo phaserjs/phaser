@@ -34,15 +34,11 @@ var TWEEN_CONST = require('./const');
  *
  * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.TweenChain)} parent - A reference to the Tween Manager, or TweenChain, that owns this TweenChain.
  */
-var TweenChain = new Class({
+var TweenChain = class extends BaseTween {
 
-    Extends: BaseTween,
-
-    initialize:
-
-    function TweenChain (parent)
+    constructor(parent)
     {
-        BaseTween.call(this, parent);
+        super(parent);
 
         /**
          * A reference to the Tween that this TweenChain is currently playing.
@@ -61,7 +57,7 @@ var TweenChain = new Class({
          * @since 3.60.0
          */
         this.currentIndex = 0;
-    },
+    }
 
     /**
      * Prepares this TweenChain for playback.
@@ -74,7 +70,7 @@ var TweenChain = new Class({
      *
      * @return {this} This TweenChain instance.
      */
-    init: function ()
+    init()
     {
         this.loopCounter = (this.loop === -1) ? TWEEN_CONST.MAX : this.loop;
 
@@ -90,7 +86,7 @@ var TweenChain = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Create a sequence of Tweens, chained to one-another, and add them to this Tween Manager.
@@ -111,7 +107,7 @@ var TweenChain = new Class({
      *
      * @return {this} This TweenChain instance.
      */
-    add: function (tweens)
+    add(tweens)
     {
         var newTweens = this.parent.create(tweens);
 
@@ -134,7 +130,7 @@ var TweenChain = new Class({
         this.totalData = data.length;
 
         return this;
-    },
+    }
 
     /**
      * Removes the given Tween from this Tween Chain.
@@ -152,7 +148,7 @@ var TweenChain = new Class({
      *
      * @return {this} This Tween Chain instance.
      */
-    remove: function (tween)
+    remove(tween)
     {
         //  Remove it immediately
         ArrayRemove(this.data, tween);
@@ -167,7 +163,7 @@ var TweenChain = new Class({
         this.totalData = this.data.length;
 
         return this;
-    },
+    }
 
     /**
      * See if any of the tweens in this Tween Chain is currently acting upon the given target.
@@ -179,7 +175,7 @@ var TweenChain = new Class({
      *
      * @return {boolean} `true` if the given target is a target of this TweenChain, otherwise `false`.
      */
-    hasTarget: function (target)
+    hasTarget(target)
     {
         var data = this.data;
 
@@ -192,7 +188,7 @@ var TweenChain = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Restarts the TweenChain from the beginning.
@@ -206,7 +202,7 @@ var TweenChain = new Class({
      *
      * @return {this} This TweenChain instance.
      */
-    restart: function ()
+    restart()
     {
         if (this.isDestroyed())
         {
@@ -225,7 +221,7 @@ var TweenChain = new Class({
         this.paused = false;
 
         return this.init();
-    },
+    }
 
     /**
      * Resets the given Tween.
@@ -239,14 +235,14 @@ var TweenChain = new Class({
      *
      * @return {this} This TweenChain instance.
      */
-    reset: function (tween)
+    reset(tween)
     {
         tween.seek();
 
         tween.setActiveState();
 
         return this;
-    },
+    }
 
     /**
      * Re-initialises the given Tween and sets it to the Active state.
@@ -259,14 +255,14 @@ var TweenChain = new Class({
      *
      * @return {this} This TweenChain instance.
      */
-    makeActive: function (tween)
+    makeActive(tween)
     {
         tween.reset();
 
         tween.setActiveState();
 
         return this;
-    },
+    }
 
     /**
      * Internal method that advances to the next state of the TweenChain playback.
@@ -278,7 +274,7 @@ var TweenChain = new Class({
      *
      * @return {boolean} `true` if this TweenChain has completed, otherwise `false`.
      */
-    nextState: function ()
+    nextState()
     {
         if (this.loopCounter > 0)
         {
@@ -313,7 +309,7 @@ var TweenChain = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Starts this TweenChain playing.
@@ -330,7 +326,7 @@ var TweenChain = new Class({
      *
      * @return {this} This TweenChain instance.
      */
-    play: function ()
+    play()
     {
         if (this.isDestroyed())
         {
@@ -356,7 +352,7 @@ var TweenChain = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Internal method that resets all of the Tweens and the current index pointer.
@@ -364,7 +360,7 @@ var TweenChain = new Class({
      * @method Phaser.Tweens.TweenChain#resetTweens
      * @since 3.60.0
      */
-    resetTweens: function ()
+    resetTweens()
     {
         var data = this.data;
         var total = this.totalData;
@@ -375,7 +371,7 @@ var TweenChain = new Class({
         }
 
         this.setCurrentTween(0);
-    },
+    }
 
     /**
      * Internal method that advances the TweenChain based on the time values.
@@ -390,7 +386,7 @@ var TweenChain = new Class({
      *
      * @return {boolean} Returns `true` if this TweenChain has finished and should be removed from the Tween Manager, otherwise returns `false`.
      */
-    update: function (delta)
+    update(delta)
     {
         if (this.isPendingRemove() || this.isDestroyed())
         {
@@ -463,7 +459,7 @@ var TweenChain = new Class({
         }
 
         return remove;
-    },
+    }
 
     /**
      * Immediately advances to the next Tween in the chain.
@@ -476,7 +472,7 @@ var TweenChain = new Class({
      *
      * @return {boolean} `true` if there are no more Tweens in the chain, otherwise `false`.
      */
-    nextTween: function ()
+    nextTween()
     {
         this.currentIndex++;
 
@@ -490,7 +486,7 @@ var TweenChain = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Sets the current active Tween to the given index, based on its
@@ -501,14 +497,14 @@ var TweenChain = new Class({
      *
      * @param {number} index - The index of the Tween to be made current.
      */
-    setCurrentTween: function (index)
+    setCurrentTween(index)
     {
         this.currentIndex = index;
 
         this.currentTween = this.data[index];
 
         this.currentTween.setActiveState();
-    },
+    }
 
     /**
      * Internal method that will emit a TweenChain based Event and invoke the given callback.
@@ -519,7 +515,7 @@ var TweenChain = new Class({
      * @param {Phaser.Types.Tweens.Event} event - The Event to be dispatched.
      * @param {Phaser.Types.Tweens.TweenCallbackTypes} [callback] - The name of the callback to be invoked. Can be `null` or `undefined` to skip invocation.
      */
-    dispatchEvent: function (event, callback)
+    dispatchEvent(event, callback)
     {
         this.emit(event, this);
 
@@ -529,7 +525,7 @@ var TweenChain = new Class({
         {
             handler.func.apply(this.callbackScope, [ this ].concat(handler.params));
         }
-    },
+    }
 
     /**
      * Immediately destroys this TweenChain, nulling of all its references.
@@ -537,14 +533,14 @@ var TweenChain = new Class({
      * @method Phaser.Tweens.TweenChain#destroy
      * @since 3.60.0
      */
-    destroy: function ()
+    destroy()
     {
         BaseTween.prototype.destroy.call(this);
 
         this.currentTween = null;
     }
 
-});
+};
 
 /**
  * Creates a new TweenChain object and adds it to the Tween Manager.

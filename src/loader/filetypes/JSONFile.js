@@ -32,15 +32,11 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
  */
-var JSONFile = new Class({
-
-    Extends: File,
+var JSONFile = class extends File {
 
     //  url can either be a string, in which case it is treated like a proper url, or an object, in which case it is treated as a ready-made JS Object
     //  dataKey allows you to pluck a specific object out of the JSON and put just that into the cache, rather than the whole thing
-    initialize:
-
-    function JSONFile (loader, key, url, xhrSettings, dataKey)
+    constructor(loader, key, url, xhrSettings, dataKey)
     {
         var extension = 'json';
 
@@ -66,7 +62,7 @@ var JSONFile = new Class({
             config: dataKey
         };
 
-        File.call(this, loader, fileConfig);
+        super(loader, fileConfig);
 
         //  A JSON object has been provided (instead of a URL), so we'll use it directly as the File.data. No need to load it.
         if (IsPlainObject(url))
@@ -82,7 +78,7 @@ var JSONFile = new Class({
 
             this.state = CONST.FILE_POPULATED;
         }
-    },
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -91,7 +87,7 @@ var JSONFile = new Class({
      * @method Phaser.Loader.FileTypes.JSONFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         if (this.state !== CONST.FILE_POPULATED)
         {
@@ -123,7 +119,7 @@ var JSONFile = new Class({
         this.onProcessComplete();
     }
 
-});
+};
 
 /**
  * Adds a JSON file, or array of JSON files, to the current load queue.

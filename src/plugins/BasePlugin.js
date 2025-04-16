@@ -18,11 +18,9 @@ var Class = require('../utils/Class');
  *
  * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Plugin Manager.
  */
-var BasePlugin = new Class({
+var BasePlugin = class {
 
-    initialize:
-
-    function BasePlugin (pluginManager)
+    constructor(pluginManager)
     {
         /**
          * A handy reference to the Plugin Manager that is responsible for this plugin.
@@ -44,7 +42,7 @@ var BasePlugin = new Class({
          * @since 3.8.0
          */
         this.game = pluginManager.game;
-    },
+    }
 
     /**
      * The PluginManager calls this method on a Global Plugin when the plugin is first instantiated.
@@ -58,9 +56,9 @@ var BasePlugin = new Class({
      *
      * @param {?any} [data] - A value specified by the user, if any, from the `data` property of the plugin's configuration object (if started at game boot) or passed in the PluginManager's `install` method (if started manually).
      */
-    init: function ()
+    init()
     {
-    },
+    }
 
     /**
      * The PluginManager calls this method on a Global Plugin when the plugin is started.
@@ -71,7 +69,7 @@ var BasePlugin = new Class({
      * @method Phaser.Plugins.BasePlugin#start
      * @since 3.8.0
      */
-    start: function ()
+    start()
     {
         //  Here are the game-level events you can listen to.
         //  At the very least you should offer a destroy handler for when the game closes down.
@@ -87,7 +85,7 @@ var BasePlugin = new Class({
         // eventEmitter.on('poststep', this.gamePostStep, this);
         // eventEmitter.on('prerender', this.gamePreRender, this);
         // eventEmitter.on('postrender', this.gamePostRender, this);
-    },
+    }
 
     /**
      * The PluginManager calls this method on a Global Plugin when the plugin is stopped.
@@ -100,9 +98,9 @@ var BasePlugin = new Class({
      * @method Phaser.Plugins.BasePlugin#stop
      * @since 3.8.0
      */
-    stop: function ()
+    stop()
     {
-    },
+    }
 
     /**
      * Game instance has been destroyed.
@@ -111,7 +109,7 @@ var BasePlugin = new Class({
      * @method Phaser.Plugins.BasePlugin#destroy
      * @since 3.8.0
      */
-    destroy: function ()
+    destroy()
     {
         this.pluginManager = null;
         this.game = null;
@@ -119,6 +117,6 @@ var BasePlugin = new Class({
         this.systems = null;
     }
 
-});
+};
 
 module.exports = BasePlugin;

@@ -31,13 +31,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {string} [type='script'] - The script type. Should be either 'script' for classic JavaScript, or 'module' if the file contains an exported module.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var ScriptFile = new Class({
+var ScriptFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function ScriptFile (loader, key, url, type, xhrSettings)
+    constructor(loader, key, url, type, xhrSettings)
     {
         var extension = 'js';
 
@@ -66,8 +62,8 @@ var ScriptFile = new Class({
             xhrSettings: xhrSettings
         };
 
-        File.call(this, loader, fileConfig);
-    },
+        super(loader, fileConfig);
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -76,7 +72,7 @@ var ScriptFile = new Class({
      * @method Phaser.Loader.FileTypes.ScriptFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -91,7 +87,7 @@ var ScriptFile = new Class({
         this.onProcessComplete();
     }
 
-});
+};
 
 /**
  * Adds a Script file, or array of Script files, to the current load queue.

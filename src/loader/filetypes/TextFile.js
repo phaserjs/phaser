@@ -30,13 +30,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var TextFile = new Class({
+var TextFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function TextFile (loader, key, url, xhrSettings)
+    constructor(loader, key, url, xhrSettings)
     {
         var type = 'text';
         var extension = 'txt';
@@ -64,8 +60,8 @@ var TextFile = new Class({
             xhrSettings: xhrSettings
         };
 
-        File.call(this, loader, fileConfig);
-    },
+        super(loader, fileConfig);
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -74,7 +70,7 @@ var TextFile = new Class({
      * @method Phaser.Loader.FileTypes.TextFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -83,7 +79,7 @@ var TextFile = new Class({
         this.onProcessComplete();
     }
 
-});
+};
 
 /**
  * Adds a Text file, or array of Text files, to the current load queue.

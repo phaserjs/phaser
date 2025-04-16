@@ -26,11 +26,9 @@ var XHRSettings = require('./XHRSettings');
  * @param {Phaser.Loader.LoaderPlugin} loader - The Loader that is going to load this File.
  * @param {Phaser.Types.Loader.FileConfig} fileConfig - The file configuration object, as created by the file type.
  */
-var File = new Class({
+var File = class {
 
-    initialize:
-
-    function File (loader, fileConfig)
+    constructor(loader, fileConfig)
     {
         /**
          * A reference to the Loader that is going to load this file.
@@ -260,7 +258,7 @@ var File = new Class({
          * @since 3.85.0
          */
         this.retryAttempts = GetFastValue(fileConfig, 'maxRetries', loader.maxRetries);
-    },
+    }
 
     /**
      * Links this File with another, so they depend upon each other for loading and processing.
@@ -270,12 +268,12 @@ var File = new Class({
      *
      * @param {Phaser.Loader.File} fileB - The file to link to this one.
      */
-    setLink: function (fileB)
+    setLink(fileB)
     {
         this.linkFile = fileB;
 
         fileB.linkFile = this;
-    },
+    }
 
     /**
      * Resets the XHRLoader instance this file is using.
@@ -283,7 +281,7 @@ var File = new Class({
      * @method Phaser.Loader.File#resetXHR
      * @since 3.0.0
      */
-    resetXHR: function ()
+    resetXHR()
     {
         if (this.xhrLoader)
         {
@@ -291,7 +289,7 @@ var File = new Class({
             this.xhrLoader.onerror = undefined;
             this.xhrLoader.onprogress = undefined;
         }
-    },
+    }
 
     /**
      * Called by the Loader, starts the actual file downloading.
@@ -301,7 +299,7 @@ var File = new Class({
      * @method Phaser.Loader.File#load
      * @since 3.0.0
      */
-    load: function ()
+    load()
     {
         if (this.state === CONST.FILE_POPULATED)
         {
@@ -326,7 +324,7 @@ var File = new Class({
 
             this.xhrLoader = XHRLoader(this, this.loader.xhr);
         }
-    },
+    }
 
     /**
      * Called when the file finishes loading, is sent a DOM ProgressEvent.
@@ -337,7 +335,7 @@ var File = new Class({
      * @param {XMLHttpRequest} xhr - The XMLHttpRequest that caused this onload event.
      * @param {ProgressEvent} event - The DOM ProgressEvent that resulted from this load.
      */
-    onLoad: function (xhr, event)
+    onLoad(xhr, event)
     {
         var isLocalFile = xhr.responseURL && this.loader.localSchemes.some(function (scheme)
         {
@@ -359,7 +357,7 @@ var File = new Class({
         this.resetXHR();
 
         this.loader.nextFile(this, success);
-    },
+    }
 
     /**
      * Called by the XHRLoader if it was given a File with base64 data to load.
@@ -369,7 +367,7 @@ var File = new Class({
      *
      * @param {XMLHttpRequest} xhr - The FakeXHR object containing the decoded base64 data.
      */
-    onBase64Load: function (xhr)
+    onBase64Load(xhr)
     {
         this.xhrLoader = xhr;
 
@@ -380,7 +378,7 @@ var File = new Class({
         this.loader.emit(Events.FILE_PROGRESS, this, this.percentComplete);
 
         this.loader.nextFile(this, true);
-    },
+    }
 
     /**
      * Called if the file errors while loading, is sent a DOM ProgressEvent.
@@ -391,7 +389,7 @@ var File = new Class({
      * @param {XMLHttpRequest} xhr - The XMLHttpRequest that caused this onload event.
      * @param {ProgressEvent} event - The DOM ProgressEvent that resulted from this error.
      */
-    onError: function ()
+    onError()
     {
         this.resetXHR();
 
@@ -405,7 +403,7 @@ var File = new Class({
         {
             this.loader.nextFile(this, false);
         }
-    },
+    }
 
     /**
      * Called during the file load progress. Is sent a DOM ProgressEvent.
@@ -416,7 +414,7 @@ var File = new Class({
      *
      * @param {ProgressEvent} event - The DOM ProgressEvent.
      */
-    onProgress: function (event)
+    onProgress(event)
     {
         if (event.lengthComputable)
         {
@@ -427,7 +425,7 @@ var File = new Class({
 
             this.loader.emit(Events.FILE_PROGRESS, this, this.percentComplete);
         }
-    },
+    }
 
     /**
      * Usually overridden by the FileTypes and is called by Loader.nextFile.
@@ -436,12 +434,12 @@ var File = new Class({
      * @method Phaser.Loader.File#onProcess
      * @since 3.0.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
         this.onProcessComplete();
-    },
+    }
 
     /**
      * Called when the File has completed processing.
@@ -450,7 +448,7 @@ var File = new Class({
      * @method Phaser.Loader.File#onProcessComplete
      * @since 3.7.0
      */
-    onProcessComplete: function ()
+    onProcessComplete()
     {
         this.state = CONST.FILE_COMPLETE;
 
@@ -460,7 +458,7 @@ var File = new Class({
         }
 
         this.loader.fileProcessComplete(this);
-    },
+    }
 
     /**
      * Called when the File has completed processing but it generated an error.
@@ -469,7 +467,7 @@ var File = new Class({
      * @method Phaser.Loader.File#onProcessError
      * @since 3.7.0
      */
-    onProcessError: function ()
+    onProcessError()
     {
         // eslint-disable-next-line no-console
         console.error('Failed to process file: %s "%s"', this.type, this.key);
@@ -482,7 +480,7 @@ var File = new Class({
         }
 
         this.loader.fileProcessComplete(this);
-    },
+    }
 
     /**
      * Checks if a key matching the one used by this file exists in the target Cache or not.
@@ -494,10 +492,10 @@ var File = new Class({
      *
      * @return {boolean} `true` if adding this file will cause a conflict, otherwise `false`.
      */
-    hasCacheConflict: function ()
+    hasCacheConflict()
     {
         return (this.cache && this.cache.exists(this.key));
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -506,13 +504,13 @@ var File = new Class({
      * @method Phaser.Loader.File#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         if (this.cache && this.data)
         {
             this.cache.add(this.key, this.data);
         }
-    },
+    }
 
     /**
      * Called once the file has been added to its cache and is now ready for deletion from the Loader.
@@ -523,7 +521,7 @@ var File = new Class({
      * @fires Phaser.Loader.Events#FILE_KEY_COMPLETE
      * @since 3.7.0
      */
-    pendingDestroy: function (data)
+    pendingDestroy(data)
     {
         if (this.state === CONST.FILE_PENDING_DESTROY)
         {
@@ -541,7 +539,7 @@ var File = new Class({
         this.loader.flagForRemoval(this);
 
         this.state = CONST.FILE_PENDING_DESTROY;
-    },
+    }
 
     /**
      * Destroy this File and any references it holds.
@@ -549,7 +547,7 @@ var File = new Class({
      * @method Phaser.Loader.File#destroy
      * @since 3.7.0
      */
-    destroy: function ()
+    destroy()
     {
         this.loader = null;
         this.cache = null;
@@ -559,7 +557,7 @@ var File = new Class({
         this.data = null;
     }
 
-});
+};
 
 /**
  * Static method for creating object URL using URL API and setting it as image 'src' attribute.

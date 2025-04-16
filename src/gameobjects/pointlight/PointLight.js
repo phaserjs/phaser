@@ -61,32 +61,31 @@ var Render = require('./PointLightRender');
  * @param {number} [intensity=1] - The intensity, or color blend, of the Point Light.
  * @param {number} [attenuation=0.1] - The attenuation  of the Point Light. This is the reduction of light from the center point.
  */
-var PointLight = new Class({
+var PointLight = class extends GameObject {
 
-    Extends: GameObject,
+    static
+    {
+        Class.mixin(this, [
+            Components.AlphaSingle,
+            Components.BlendMode,
+            Components.Depth,
+            Components.Mask,
+            Components.RenderNodes,
+            Components.ScrollFactor,
+            Components.Transform,
+            Components.Visible,
+            Render
+        ], false);
+    }
 
-    Mixins: [
-        Components.AlphaSingle,
-        Components.BlendMode,
-        Components.Depth,
-        Components.Mask,
-        Components.RenderNodes,
-        Components.ScrollFactor,
-        Components.Transform,
-        Components.Visible,
-        Render
-    ],
-
-    initialize:
-
-    function PointLight (scene, x, y, color, radius, intensity, attenuation)
+    constructor(scene, x, y, color, radius, intensity, attenuation)
     {
         if (color === undefined) { color = 0xffffff; }
         if (radius === undefined) { radius = 128; }
         if (intensity === undefined) { intensity = 1; }
         if (attenuation === undefined) { attenuation = 0.1; }
 
-        GameObject.call(this, scene, 'PointLight');
+        super(scene, 'PointLight');
 
         this.initRenderNodes(this._defaultRenderNodesMap);
 
@@ -132,7 +131,7 @@ var PointLight = new Class({
         this.height = radius * 2;
 
         this._radius = radius;
-    },
+    }
 
     /**
      * The default render nodes for this Game Object.
@@ -144,12 +143,11 @@ var PointLight = new Class({
      * @readonly
      * @since 4.0.0
      */
-    _defaultRenderNodesMap: {
-        get: function ()
-        {
-            return DefaultPointLightNodes;
-        }
-    },
+
+    get _defaultRenderNodesMap()
+    {
+        return DefaultPointLightNodes;
+    }
 
     /**
      * The radius of the Point Light.
@@ -158,58 +156,43 @@ var PointLight = new Class({
      * @type {number}
      * @since 3.50.0
      */
-    radius: {
 
-        get: function ()
-        {
-            return this._radius;
-        },
-
-        set: function (value)
-        {
-            this._radius = value;
-            this.width = value * 2;
-            this.height = value * 2;
-        }
-
-    },
-
-    originX: {
-
-        get: function ()
-        {
-            return 0.5;
-        }
-
-    },
-
-    originY: {
-
-        get: function ()
-        {
-            return 0.5;
-        }
-
-    },
-
-    displayOriginX: {
-
-        get: function ()
-        {
-            return this._radius;
-        }
-
-    },
-
-    displayOriginY: {
-
-        get: function ()
-        {
-            return this._radius;
-        }
-
+    get radius()
+    {
+        return this._radius;
     }
 
-});
+    set radius(value)
+    {
+        this._radius = value;
+        this.width = value * 2;
+        this.height = value * 2;
+    }
+
+
+    get originX()
+    {
+        return 0.5;
+    }
+
+
+    get originY()
+    {
+        return 0.5;
+    }
+
+
+    get displayOriginX()
+    {
+        return this._radius;
+    }
+
+
+    get displayOriginY()
+    {
+        return this._radius;
+    }
+
+};
 
 module.exports = PointLight;

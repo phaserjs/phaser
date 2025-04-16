@@ -31,13 +31,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {(string|string[]|Phaser.Types.Loader.FileTypes.VideoFileURLConfig|Phaser.Types.Loader.FileTypes.VideoFileURLConfig[])} [urls] - The absolute or relative URL to load the video files from.
  * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
  */
-var VideoFile = new Class({
+var VideoFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function VideoFile (loader, key, url, noAudio)
+    constructor(loader, key, url, noAudio)
     {
         if (noAudio === undefined) { noAudio = false; }
 
@@ -68,8 +64,8 @@ var VideoFile = new Class({
             }
         };
 
-        File.call(this, loader, fileConfig);
-    },
+        super(loader, fileConfig);
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -78,7 +74,7 @@ var VideoFile = new Class({
      * @method Phaser.Loader.FileTypes.VideoFile#onProcess
      * @since 3.20.0
     */
-    onProcess: function ()
+    onProcess()
     {
         this.data = {
             url: this.src,
@@ -87,7 +83,7 @@ var VideoFile = new Class({
         };
 
         this.onProcessComplete();
-    },
+    }
 
     /**
      * Called by the Loader, starts the actual file downloading.
@@ -97,7 +93,7 @@ var VideoFile = new Class({
      * @method Phaser.Loader.FileTypes.VideoFile#load
      * @since 3.20.0
      */
-    load: function ()
+    load()
     {
         //  We set these, but we don't actually load anything (the Video Game Object does that)
 
@@ -108,7 +104,7 @@ var VideoFile = new Class({
         this.loader.nextFile(this, true);
     }
 
-});
+};
 
 /**
  * Adds a Video file, or array of video files, to the current load queue.

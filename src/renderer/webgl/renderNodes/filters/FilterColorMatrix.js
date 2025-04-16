@@ -21,21 +21,20 @@ var ShaderSourceFS = require('../../shaders/FilterColorMatrix-frag.js');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterColorMatrix = new Class({
-    Extends: BaseFilterShader,
+var FilterColorMatrix = class extends BaseFilterShader {
 
-    initialize: function FilterColorMatrix (manager)
+    constructor(manager)
     {
-        BaseFilterShader.call(this, 'FilterColorMatrix', manager, null, ShaderSourceFS);
-    },
+        super('FilterColorMatrix', manager, null, ShaderSourceFS);
+    }
 
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         var programManager = this.programManager;
 
         programManager.setUniform('uColorMatrix[0]', controller.colorMatrix.getData());
         programManager.setUniform('uAlpha', controller.colorMatrix.alpha);
     }
-});
+};
 
 module.exports = FilterColorMatrix;

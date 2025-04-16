@@ -23,11 +23,9 @@ var SceneEvents = require('../scene/events');
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object Factory belongs.
  */
-var GameObjectFactory = new Class({
+var GameObjectFactory = class {
 
-    initialize:
-
-    function GameObjectFactory (scene)
+    constructor(scene)
     {
         /**
          * The Scene to which this Game Object Factory belongs.
@@ -81,7 +79,7 @@ var GameObjectFactory = new Class({
 
         this.events.once(SceneEvents.BOOT, this.boot, this);
         this.events.on(SceneEvents.START, this.start, this);
-    },
+    }
 
     /**
      * This method is called automatically, only once, when the Scene is first created.
@@ -91,13 +89,13 @@ var GameObjectFactory = new Class({
      * @private
      * @since 3.5.1
      */
-    boot: function ()
+    boot()
     {
         this.displayList = this.systems.displayList;
         this.updateList = this.systems.updateList;
 
         this.events.once(SceneEvents.DESTROY, this.destroy, this);
-    },
+    }
 
     /**
      * This method is called automatically by the Scene when it is starting up.
@@ -108,10 +106,10 @@ var GameObjectFactory = new Class({
      * @private
      * @since 3.5.0
      */
-    start: function ()
+    start()
     {
         this.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * Adds an existing Game Object to this Scene.
@@ -128,7 +126,7 @@ var GameObjectFactory = new Class({
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that was added.
      */
-    existing: function (child)
+    existing(child)
     {
         if (child.renderCanvas || child.renderWebGL)
         {
@@ -143,7 +141,7 @@ var GameObjectFactory = new Class({
         }
 
         return child;
-    },
+    }
 
     /**
      * The Scene that owns this plugin is shutting down.
@@ -153,10 +151,10 @@ var GameObjectFactory = new Class({
      * @private
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * The Scene that owns this plugin is being destroyed.
@@ -166,7 +164,7 @@ var GameObjectFactory = new Class({
      * @private
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.shutdown();
 
@@ -180,7 +178,7 @@ var GameObjectFactory = new Class({
         this.updateList = null;
     }
 
-});
+};
 
 /**
  * Static method called directly by the Game Object factory functions.

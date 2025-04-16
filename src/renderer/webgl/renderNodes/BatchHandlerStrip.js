@@ -36,16 +36,15 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} config - The configuration object for this handler.
  */
-var BatchHandlerStrip = new Class({
-    Extends: BatchHandlerQuad,
+var BatchHandlerStrip = class extends BatchHandlerQuad {
 
-    initialize: function BatchHandlerStrip (manager, config)
+    constructor(manager, config)
     {
-        BatchHandlerQuad.call(this, manager, config);
+        super(manager, config);
 
         // We do not expect to use extra textures.
         this.renderOptions.multiTexturing = true;
-    },
+    }
 
     /**
      * The default configuration object for this handler.
@@ -95,7 +94,7 @@ var BatchHandlerStrip = new Class({
                 }
             ]
         }
-    },
+    }
 
     /**
      * Generate element indices for the instance vertices.
@@ -113,7 +112,7 @@ var BatchHandlerStrip = new Class({
      * @param {number} instances - The number of instances to define.
      * @return {ArrayBuffer} The index buffer data.
      */
-    _generateElementIndices: function (instances)
+    _generateElementIndices(instances)
     {
         var buffer = new ArrayBuffer(instances * 2 * 2);
         var indices = new Uint16Array(buffer);
@@ -123,7 +122,7 @@ var BatchHandlerStrip = new Class({
             indices[i] = i;
         }
         return buffer;
-    },
+    }
 
     /**
      * Add a strip to the batch.
@@ -146,7 +145,7 @@ var BatchHandlerStrip = new Class({
      * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerQuadRenderOptions} renderOptions - Optional render features. Strip rendering should always set `multiTexturing` to false. It can use `smoothPixelArt`. Other options are ignored.
      * @param {function} [debugCallback] - The debug callback, called with an array consisting of alternating x,y values of the transformed vertices.
      */
-    batchStrip: function (
+    batchStrip(
         drawingContext,
         src,
         calcMatrix,
@@ -282,6 +281,6 @@ var BatchHandlerStrip = new Class({
             debugCallback.call(src, src, meshVerticesLength, debugVerts);
         }
     }
-});
+};
 
 module.exports = BatchHandlerStrip;

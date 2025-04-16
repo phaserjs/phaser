@@ -51,19 +51,18 @@ var Render = require('./DynamicBitmapTextRender');
  * @param {number} [size] - The font size of this Bitmap Text.
  * @param {number} [align=0] - The alignment of the text in a multi-line BitmapText object.
  */
-var DynamicBitmapText = new Class({
+var DynamicBitmapText = class extends BitmapText {
 
-    Extends: BitmapText,
-
-    Mixins: [
-        Render
-    ],
-
-    initialize:
-
-    function DynamicBitmapText (scene, x, y, font, text, size, align)
+    static
     {
-        BitmapText.call(this, scene, x, y, font, text, size, align);
+        Class.mixin(this, [
+            Render
+        ], false);
+    }
+
+    constructor(scene, x, y, font, text, size, align)
+    {
+        super(scene, x, y, font, text, size, align);
 
         this.type = 'DynamicBitmapText';
 
@@ -145,7 +144,7 @@ var DynamicBitmapText = new Class({
             rotation: 0,
             data: 0
         };
-    },
+    }
 
     /**
      * Set the crop size of this Bitmap Text.
@@ -158,13 +157,13 @@ var DynamicBitmapText = new Class({
      *
      * @return {this} This Game Object.
      */
-    setSize: function (width, height)
+    setSize(width, height)
     {
         this.cropWidth = width;
         this.cropHeight = height;
 
         return this;
-    },
+    }
 
     /**
      * Set a callback that alters how each character of the Bitmap Text is rendered.
@@ -182,12 +181,12 @@ var DynamicBitmapText = new Class({
      *
      * @return {this} This Game Object.
      */
-    setDisplayCallback: function (callback)
+    setDisplayCallback(callback)
     {
         this.displayCallback = callback;
 
         return this;
-    },
+    }
 
     /**
      * Set the horizontal scroll position of this Bitmap Text.
@@ -199,12 +198,12 @@ var DynamicBitmapText = new Class({
      *
      * @return {this} This Game Object.
      */
-    setScrollX: function (value)
+    setScrollX(value)
     {
         this.scrollX = value;
 
         return this;
-    },
+    }
 
     /**
      * Set the vertical scroll position of this Bitmap Text.
@@ -216,13 +215,13 @@ var DynamicBitmapText = new Class({
      *
      * @return {this} This Game Object.
      */
-    setScrollY: function (value)
+    setScrollY(value)
     {
         this.scrollY = value;
 
         return this;
     }
 
-});
+};
 
 module.exports = DynamicBitmapText;

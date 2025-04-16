@@ -35,17 +35,16 @@ var Controller = require('./Controller');
  * @param {number} [amount=1] - The amount of the blend effect to apply to the view. At 0, the original image is preserved. At 1, the blend texture is fully applied. The expected range is 0 to 1, but you can go outside that range for different effects.
  * @param {number[]} [color=[1, 1, 1, 1]] - The color to apply to the blend texture. Each value corresponds to a color channel in RGBA. The expected range is 0 to 1, but you can go outside that range for different effects.
  */
-var Blend = new Class({
-    Extends: Controller,
+var Blend = class extends Controller {
 
-    initialize: function Blend (camera, texture, blendMode, amount, color)
+    constructor(camera, texture, blendMode, amount, color)
     {
         if (texture === undefined) { texture = '__WHITE'; }
         if (blendMode === undefined) { blendMode = 0; }
         if (amount === undefined) { amount = 1; }
         if (color === undefined) { color = [ 1, 1, 1, 1 ]; }
 
-        Controller.call(this, camera, 'FilterBlend');
+        super(camera, 'FilterBlend');
 
         /**
          * The underlying texture used for the mask.
@@ -91,7 +90,7 @@ var Blend = new Class({
         this.color = color;
 
         this.setTexture(texture);
-    },
+    }
 
     /**
      * Sets the texture used for the blend.
@@ -101,7 +100,7 @@ var Blend = new Class({
      * @param {string} [texture='__WHITE'] - The unique string-based key of the texture to use for displacement, which must exist in the Texture Manager.
      * @returns {this} This Filter Controller.
      */
-    setTexture: function (texture)
+    setTexture(texture)
     {
         var phaserTexture = this.camera.scene.sys.textures.getFrame(texture);
 
@@ -112,6 +111,6 @@ var Blend = new Class({
 
         return this;
     }
-});
+};
 
 module.exports = Blend;

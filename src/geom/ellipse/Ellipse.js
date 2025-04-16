@@ -29,11 +29,9 @@ var Random = require('./Random');
  * @param {number} [width=0] - The width of the ellipse.
  * @param {number} [height=0] - The height of the ellipse.
  */
-var Ellipse = new Class({
+var Ellipse = class {
 
-    initialize:
-
-    function Ellipse (x, y, width, height)
+    constructor(x, y, width, height)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -90,7 +88,7 @@ var Ellipse = new Class({
          * @since 3.0.0
          */
         this.height = height;
-    },
+    }
 
     /**
      * Check to see if the Ellipse contains the given x / y coordinates.
@@ -103,10 +101,10 @@ var Ellipse = new Class({
      *
      * @return {boolean} True if the coordinates are within the ellipse, otherwise false.
      */
-    contains: function (x, y)
+    contains(x, y)
     {
         return Contains(this, x, y);
-    },
+    }
 
     /**
      * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse
@@ -123,10 +121,10 @@ var Ellipse = new Class({
      *
      * @return {Phaser.Math.Vector2} A Vector2 instance containing the coordinates of the point around the ellipse.
      */
-    getPoint: function (position, point)
+    getPoint(position, point)
     {
         return GetPoint(this, position, point);
-    },
+    }
 
     /**
      * Returns an array of Vector2 objects containing the coordinates of the points around the circumference of the Ellipse,
@@ -143,10 +141,10 @@ var Ellipse = new Class({
      *
      * @return {Phaser.Math.Vector2[]} An array of Vector2 objects pertaining to the points around the circumference of the ellipse.
      */
-    getPoints: function (quantity, stepRate, output)
+    getPoints(quantity, stepRate, output)
     {
         return GetPoints(this, quantity, stepRate, output);
-    },
+    }
 
     /**
      * Returns a uniformly distributed random point from anywhere within the given Ellipse.
@@ -160,10 +158,10 @@ var Ellipse = new Class({
      *
      * @return {Phaser.Math.Vector2} A Vector2 object with the random values set in the `x` and `y` properties.
      */
-    getRandomPoint: function (vec)
+    getRandomPoint(vec)
     {
         return Random(this, vec);
-    },
+    }
 
     /**
      * Sets the x, y, width and height of this ellipse.
@@ -178,7 +176,7 @@ var Ellipse = new Class({
      *
      * @return {this} This Ellipse object.
      */
-    setTo: function (x, y, width, height)
+    setTo(x, y, width, height)
     {
         this.x = x;
         this.y = y;
@@ -186,7 +184,7 @@ var Ellipse = new Class({
         this.height = height;
 
         return this;
-    },
+    }
 
     /**
      * Sets this Ellipse to be empty with a width and height of zero.
@@ -197,13 +195,13 @@ var Ellipse = new Class({
      *
      * @return {this} This Ellipse object.
      */
-    setEmpty: function ()
+    setEmpty()
     {
         this.width = 0;
         this.height = 0;
 
         return this;
-    },
+    }
 
     /**
      * Sets the position of this Ellipse.
@@ -216,7 +214,7 @@ var Ellipse = new Class({
      *
      * @return {this} This Ellipse object.
      */
-    setPosition: function (x, y)
+    setPosition(x, y)
     {
         if (y === undefined) { y = x; }
 
@@ -224,7 +222,7 @@ var Ellipse = new Class({
         this.y = y;
 
         return this;
-    },
+    }
 
     /**
      * Sets the size of this Ellipse.
@@ -238,7 +236,7 @@ var Ellipse = new Class({
      *
      * @return {this} This Ellipse object.
      */
-    setSize: function (width, height)
+    setSize(width, height)
     {
         if (height === undefined) { height = width; }
 
@@ -246,7 +244,7 @@ var Ellipse = new Class({
         this.height = height;
 
         return this;
-    },
+    }
 
     /**
      * Checks to see if the Ellipse is empty: has a width or height equal to zero.
@@ -256,10 +254,10 @@ var Ellipse = new Class({
      *
      * @return {boolean} True if the Ellipse is empty, otherwise false.
      */
-    isEmpty: function ()
+    isEmpty()
     {
         return (this.width <= 0 || this.height <= 0);
-    },
+    }
 
     /**
      * Returns the minor radius of the ellipse. Also known as the Semi Minor Axis.
@@ -269,10 +267,10 @@ var Ellipse = new Class({
      *
      * @return {number} The minor radius.
      */
-    getMinorRadius: function ()
+    getMinorRadius()
     {
         return Math.min(this.width, this.height) / 2;
-    },
+    }
 
     /**
      * Returns the major radius of the ellipse. Also known as the Semi Major Axis.
@@ -282,10 +280,10 @@ var Ellipse = new Class({
      *
      * @return {number} The major radius.
      */
-    getMajorRadius: function ()
+    getMajorRadius()
     {
         return Math.max(this.width, this.height) / 2;
-    },
+    }
 
     /**
      * The left position of the Ellipse.
@@ -294,19 +292,16 @@ var Ellipse = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    left: {
 
-        get: function ()
-        {
-            return this.x - (this.width / 2);
-        },
+    get left()
+    {
+        return this.x - (this.width / 2);
+    }
 
-        set: function (value)
-        {
-            this.x = value + (this.width / 2);
-        }
-
-    },
+    set left(value)
+    {
+        this.x = value + (this.width / 2);
+    }
 
     /**
      * The right position of the Ellipse.
@@ -315,19 +310,16 @@ var Ellipse = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    right: {
 
-        get: function ()
-        {
-            return this.x + (this.width / 2);
-        },
+    get right()
+    {
+        return this.x + (this.width / 2);
+    }
 
-        set: function (value)
-        {
-            this.x = value - (this.width / 2);
-        }
-
-    },
+    set right(value)
+    {
+        this.x = value - (this.width / 2);
+    }
 
     /**
      * The top position of the Ellipse.
@@ -336,19 +328,16 @@ var Ellipse = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    top: {
 
-        get: function ()
-        {
-            return this.y - (this.height / 2);
-        },
+    get top()
+    {
+        return this.y - (this.height / 2);
+    }
 
-        set: function (value)
-        {
-            this.y = value + (this.height / 2);
-        }
-
-    },
+    set top(value)
+    {
+        this.y = value + (this.height / 2);
+    }
 
     /**
      * The bottom position of the Ellipse.
@@ -357,20 +346,17 @@ var Ellipse = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    bottom: {
 
-        get: function ()
-        {
-            return this.y + (this.height / 2);
-        },
-
-        set: function (value)
-        {
-            this.y = value - (this.height / 2);
-        }
-
+    get bottom()
+    {
+        return this.y + (this.height / 2);
     }
 
-});
+    set bottom(value)
+    {
+        this.y = value - (this.height / 2);
+    }
+
+};
 
 module.exports = Ellipse;

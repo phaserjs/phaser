@@ -34,13 +34,9 @@ var XMLFile = require('./XMLFile');
  * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the font image file. Used in replacement of the Loaders default XHR Settings.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [fontDataXhrSettings] - An XHR Settings configuration object for the font data xml file. Used in replacement of the Loaders default XHR Settings.
  */
-var BitmapFontFile = new Class({
+var BitmapFontFile = class extends MultiFile {
 
-    Extends: MultiFile,
-
-    initialize:
-
-    function BitmapFontFile (loader, key, textureURL, fontDataURL, textureXhrSettings, fontDataXhrSettings)
+    constructor(loader, key, textureURL, fontDataURL, textureXhrSettings, fontDataXhrSettings)
     {
         var image;
         var data;
@@ -75,13 +71,13 @@ var BitmapFontFile = new Class({
         if (image.linkFile)
         {
             //  Image has a normal map
-            MultiFile.call(this, loader, 'bitmapfont', key, [ image, data, image.linkFile ]);
+            super(loader, 'bitmapfont', key, [ image, data, image.linkFile ]);
         }
         else
         {
-            MultiFile.call(this, loader, 'bitmapfont', key, [ image, data ]);
+            super(loader, 'bitmapfont', key, [ image, data ]);
         }
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -89,7 +85,7 @@ var BitmapFontFile = new Class({
      * @method Phaser.Loader.FileTypes.BitmapFontFile#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         if (this.isReadyToProcess())
         {
@@ -108,7 +104,7 @@ var BitmapFontFile = new Class({
         }
     }
 
-});
+};
 
 /**
  * Adds an XML based Bitmap Font, or array of fonts, to the current load queue.

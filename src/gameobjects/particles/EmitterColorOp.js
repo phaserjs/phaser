@@ -26,15 +26,11 @@ var IntegerToRGB = require('../../display/color/IntegerToRGB');
  *
  * @param {string} key - The name of the property.
  */
-var EmitterColorOp = new Class({
+var EmitterColorOp = class extends EmitterOp {
 
-    Extends: EmitterOp,
-
-    initialize:
-
-    function EmitterColorOp (key)
+    constructor(key)
     {
-        EmitterOp.call(this, key, null, false);
+        super(key, null, false);
 
         this.active = false;
 
@@ -72,7 +68,7 @@ var EmitterColorOp = new Class({
          * @since 3.60.0
          */
         this.b = [];
-    },
+    }
 
     /**
      * Checks the type of `EmitterOp.propertyValue` to determine which
@@ -83,10 +79,10 @@ var EmitterColorOp = new Class({
      *
      * @return {number} A number between 0 and 9 which should be passed to `setMethods`.
      */
-    getMethod: function ()
+    getMethod()
     {
         return (this.propertyValue === null) ? 0 : 9;
-    },
+    }
 
     /**
      * Sets the EmitterColorOp method values, if in use.
@@ -96,7 +92,7 @@ var EmitterColorOp = new Class({
      *
      * @return {this} This Emitter Op object.
      */
-    setMethods: function ()
+    setMethods()
     {
         var value = this.propertyValue;
         var current = value;
@@ -137,7 +133,7 @@ var EmitterColorOp = new Class({
         this.current = current;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Ease function to use for Color interpolation.
@@ -147,12 +143,12 @@ var EmitterColorOp = new Class({
      *
      * @param {string} ease - The string-based name of the Ease function to use.
      */
-    setEase: function (value)
+    setEase(value)
     {
         this.easeName = value;
 
         this.ease = GetEaseFunction(value);
-    },
+    }
 
     /**
      * An `onEmit` callback for an eased property.
@@ -167,12 +163,12 @@ var EmitterColorOp = new Class({
      *
      * @return {number} {@link Phaser.GameObjects.Particles.EmitterColorOp#start}, as the new value of the property.
      */
-    easedValueEmit: function ()
+    easedValueEmit()
     {
         this.current = this.start;
 
         return this.start;
-    },
+    }
 
     /**
      * An `onUpdate` callback that returns an eased value between the
@@ -188,7 +184,7 @@ var EmitterColorOp = new Class({
      *
      * @return {number} The new value of the property.
      */
-    easeValueUpdate: function (particle, key, t)
+    easeValueUpdate(particle, key, t)
     {
         var v = this.ease(t);
 
@@ -203,6 +199,6 @@ var EmitterColorOp = new Class({
         return current;
     }
 
-});
+};
 
 module.exports = EmitterColorOp;

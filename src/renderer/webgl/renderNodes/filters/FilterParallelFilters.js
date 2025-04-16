@@ -23,15 +23,14 @@ var BaseFilter = require('./BaseFilter');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterParallelFilters = new Class({
-    Extends: BaseFilter,
+var FilterParallelFilters = class extends BaseFilter {
 
-    initialize: function FilterParallelFilters (manager)
+    constructor(manager)
     {
-        BaseFilter.call(this, 'FilterParallelFilters', manager);
-    },
+        super('FilterParallelFilters', manager);
+    }
 
-    run: function (controller, inputDrawingContext, outputDrawingContext, padding)
+    run(controller, inputDrawingContext, outputDrawingContext, padding)
     {
         this.onRunBegin(outputDrawingContext);
 
@@ -138,6 +137,6 @@ var FilterParallelFilters = new Class({
 
         return outputDrawingContext;
     }
-});
+};
 
 module.exports = FilterParallelFilters;

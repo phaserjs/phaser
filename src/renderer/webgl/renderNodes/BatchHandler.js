@@ -31,10 +31,9 @@ var Renderer = require('../../../renderer');
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} defaultConfig - The default configuration object for this RenderNode. This is used to ensure all required properties are present, so it must be complete.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this RenderNode.
  */
-var BatchHandler = new Class({
-    Extends: RenderNode,
+var BatchHandler = class extends RenderNode {
 
-    initialize: function BatchHandler (manager, defaultConfig, config)
+    constructor(manager, defaultConfig, config)
     {
         var renderer = manager.renderer;
         var gl = renderer.gl;
@@ -47,7 +46,7 @@ var BatchHandler = new Class({
             throw new Error('BatchHandler must have a name');
         }
 
-        RenderNode.call(this, name, manager);
+        super(name, manager);
 
         /**
          * The number of instances per batch, used to determine the size of the
@@ -259,7 +258,7 @@ var BatchHandler = new Class({
         // Set the dimension-related uniforms and listen for resize events.
         this.resize(renderer.width, renderer.height);
         renderer.on(Renderer.Events.RESIZE, this.resize, this);
-    },
+    }
 
     /**
      * Copy and complete the configuration object.
@@ -275,7 +274,7 @@ var BatchHandler = new Class({
      * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} config - The configuration object.
      * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} defaultConfig - The default configuration object.
      */
-    _copyAndCompleteConfig: function (manager, config, defaultConfig)
+    _copyAndCompleteConfig(manager, config, defaultConfig)
     {
         var newConfig = {};
 
@@ -333,7 +332,7 @@ var BatchHandler = new Class({
         }
 
         return newConfig;
-    },
+    }
 
     /**
      * Generate element indices for the instance vertices.
@@ -346,11 +345,11 @@ var BatchHandler = new Class({
      * @param {number} instances - The number of instances to define.
      * @return {ArrayBuffer} The index buffer data.
      */
-    _generateElementIndices: function (instances)
+    _generateElementIndices(instances)
     {
         // This is empty and should be overridden by subclasses.
         return new ArrayBuffer(instances * this.bytesPerInstance);
-    },
+    }
 
     /**
      * Set new dimensions for the renderer.
@@ -363,9 +362,9 @@ var BatchHandler = new Class({
      * @param {number} width - The new width of the renderer.
      * @param {number} height - The new height of the renderer.
      */
-    resize: function (width, height)
+    resize(width, height)
     {
-    },
+    }
 
     /**
      * Update the number of draw calls per batch.
@@ -379,9 +378,9 @@ var BatchHandler = new Class({
      * @since 4.0.0
      * @param {number} [count] - The new number of draw calls per batch. If undefined, the maximum number of texture units is used.
      */
-    updateTextureCount: function (count)
+    updateTextureCount(count)
     {
-    },
+    }
 
     /**
      * Draw then empty the current batch.
@@ -396,9 +395,9 @@ var BatchHandler = new Class({
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {...*} [args] - Additional arguments to pass to the batch handler.
      */
-    run: function (drawingContext)
+    run(drawingContext)
     {
-    },
+    }
 
     /**
      * Add an instance to the batch. Game objects call this method to add
@@ -408,9 +407,9 @@ var BatchHandler = new Class({
      * @param {...*} [args] - Arguments to pass to the batch handler. These will vary depending on the handler.
      * @since 4.0.0
      */
-    batch: function ()
+    batch()
     {
     }
-});
+};
 
 module.exports = BatchHandler;

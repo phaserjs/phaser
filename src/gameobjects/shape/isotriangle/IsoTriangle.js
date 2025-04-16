@@ -41,17 +41,16 @@ var Shape = require('../Shape');
  * @param {number} [fillLeft=0x999999] - The fill color of the left face of the iso triangle.
  * @param {number} [fillRight=0xcccccc] - The fill color of the right face of the iso triangle.
  */
-var IsoTriangle = new Class({
+var IsoTriangle = class extends Shape {
 
-    Extends: Shape,
+    static
+    {
+        Class.mixin(this, [
+            IsoTriangleRender
+        ], false);
+    }
 
-    Mixins: [
-        IsoTriangleRender
-    ],
-
-    initialize:
-
-    function IsoTriangle (scene, x, y, size, height, reversed, fillTop, fillLeft, fillRight)
+    constructor(scene, x, y, size, height, reversed, fillTop, fillLeft, fillRight)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -62,7 +61,7 @@ var IsoTriangle = new Class({
         if (fillLeft === undefined) { fillLeft = 0x999999; }
         if (fillRight === undefined) { fillRight = 0xcccccc; }
 
-        Shape.call(this, scene, 'IsoTriangle', null);
+        super(scene, 'IsoTriangle', null);
 
         /**
          * The projection level of the iso box. Change this to change the 'angle' at which you are looking at the box.
@@ -147,7 +146,7 @@ var IsoTriangle = new Class({
         this.setSize(size, height);
 
         this.updateDisplayOrigin();
-    },
+    }
 
     /**
      * Sets the projection level of the iso triangle. Change this to change the 'angle' at which you are looking at the pyramid.
@@ -160,12 +159,12 @@ var IsoTriangle = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setProjection: function (value)
+    setProjection(value)
     {
         this.projection = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets if the iso triangle will be rendered upside down or not.
@@ -178,12 +177,12 @@ var IsoTriangle = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setReversed: function (reversed)
+    setReversed(reversed)
     {
         this.isReversed = reversed;
 
         return this;
-    },
+    }
 
     /**
      * Sets which faces of the iso triangle will be rendered.
@@ -198,7 +197,7 @@ var IsoTriangle = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setFaces: function (showTop, showLeft, showRight)
+    setFaces(showTop, showLeft, showRight)
     {
         if (showTop === undefined) { showTop = true; }
         if (showLeft === undefined) { showLeft = true; }
@@ -209,7 +208,7 @@ var IsoTriangle = new Class({
         this.showRight = showRight;
 
         return this;
-    },
+    }
 
     /**
      * Sets the fill colors for each face of the iso triangle.
@@ -224,7 +223,7 @@ var IsoTriangle = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setFillStyle: function (fillTop, fillLeft, fillRight)
+    setFillStyle(fillTop, fillLeft, fillRight)
     {
         this.fillTop = fillTop;
         this.fillLeft = fillLeft;
@@ -235,6 +234,6 @@ var IsoTriangle = new Class({
         return this;
     }
 
-});
+};
 
 module.exports = IsoTriangle;

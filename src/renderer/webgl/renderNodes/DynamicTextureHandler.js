@@ -21,12 +21,11 @@ var RenderNode = require('./RenderNode');
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var DynamicTextureHandler = new Class({
-    Extends: RenderNode,
+var DynamicTextureHandler = class extends RenderNode {
 
-    initialize: function DynamicTextureHandler (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'DynamicTextureHandler', manager);
+        super('DynamicTextureHandler', manager);
 
         /**
          * The RenderNode that draws a filled rectangle.
@@ -36,7 +35,7 @@ var DynamicTextureHandler = new Class({
          * @since 4.0.0
          */
         this.fillRectNode = this.manager.getNode('FillRect');
-    },
+    }
 
     /**
      * Renders the DynamicTexture.
@@ -45,7 +44,7 @@ var DynamicTextureHandler = new Class({
      * @since 4.0.0
      * @param {Phaser.Textures.DynamicTexture} dynamicTexture - The DynamicTexture to render.
      */
-    run: function (dynamicTexture)
+    run(dynamicTexture)
     {
         var drawingContext = dynamicTexture.drawingContext;
         var camera = drawingContext.camera;
@@ -323,7 +322,7 @@ var DynamicTextureHandler = new Class({
         camera.emit(CameraEvents.POST_RENDER, camera);
 
         this.onRunEnd(drawingContext);
-    },
+    }
 
     /**
      * Draw an object to the DynamicTexture, handling blend modes.
@@ -341,7 +340,7 @@ var DynamicTextureHandler = new Class({
      *
      * @return {Phaser.Renderer.WebGL.DrawingContext} The new current drawing context.
      */
-    _draw: function (renderer, object, currentContext, drawingContext, eraseContext, parentMatrix)
+    _draw(renderer, object, currentContext, drawingContext, eraseContext, parentMatrix)
     {
         // Handle blend mode.
         if (
@@ -371,6 +370,6 @@ var DynamicTextureHandler = new Class({
 
         return currentContext;
     }
-});
+};
 
 module.exports = DynamicTextureHandler;

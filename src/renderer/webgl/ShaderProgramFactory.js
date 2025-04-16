@@ -26,8 +26,8 @@ var Class = require('../../utils/Class');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer that owns this ShaderProgramFactory.
  */
-var ShaderProgramFactory = new Class({
-    initialize: function ShaderProgramFactory (renderer)
+var ShaderProgramFactory = class {
+    constructor(renderer)
     {
         /**
          * The WebGLRenderer that owns this ShaderProgramFactory.
@@ -52,7 +52,7 @@ var ShaderProgramFactory = new Class({
          * @since 4.0.0
          */
         this.programs = {};
-    },
+    }
 
     /**
      * Checks if a shader program exists based on the given configuration settings.
@@ -61,10 +61,10 @@ var ShaderProgramFactory = new Class({
      * @since 4.0.0
      * @param {string} key - The unique key of the shader program.
      */
-    has: function (key)
+    has(key)
     {
         return this.programs[key] !== undefined;
-    },
+    }
 
     /**
      * Returns a shader program based on the given configuration settings.
@@ -75,7 +75,7 @@ var ShaderProgramFactory = new Class({
      * @param {Phaser.Types.Renderer.WebGL.ShaderAdditionConfig[]} [additions] - An array of shader addition configurations.
      * @param {string[]} [features] - An array of enabled shader feature keys.
      */
-    getShaderProgram: function (base, additions, features)
+    getShaderProgram(base, additions, features)
     {
         var key = this.getKey(base, additions, features);
 
@@ -87,7 +87,7 @@ var ShaderProgramFactory = new Class({
         }
 
         return program;
-    },
+    }
 
     /**
      * Returns a unique key for a shader program based on the given configuration settings.
@@ -104,7 +104,7 @@ var ShaderProgramFactory = new Class({
      * @param {Phaser.Types.Renderer.WebGL.ShaderAdditionConfig[]} [additions] - An array of shader addition configurations.
      * @param {string[]} [features] - An array of enabled shader feature keys.
      */
-    getKey: function (base, additions, features)
+    getKey(base, additions, features)
     {
         var key = base.name;
 
@@ -128,7 +128,7 @@ var ShaderProgramFactory = new Class({
         }
 
         return key;
-    },
+    }
 
     /**
      * Creates a shader program based on the given configuration settings.
@@ -140,7 +140,7 @@ var ShaderProgramFactory = new Class({
      * @param {Phaser.Types.Renderer.WebGL.ShaderAdditionConfig[]} [additions] - An array of shader addition configurations.
      * @param {string[]} [features] - An array of enabled shader feature keys.
      */
-    createShaderProgram: function (name, base, additions, features)
+    createShaderProgram(name, base, additions, features)
     {
         var vertexSource = base.vertexShader;
         var fragmentSource = base.fragmentShader;
@@ -219,6 +219,6 @@ var ShaderProgramFactory = new Class({
 
         return program;
     }
-});
+};
 
 module.exports = ShaderProgramFactory;

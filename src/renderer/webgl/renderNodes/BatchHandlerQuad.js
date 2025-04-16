@@ -35,10 +35,9 @@ var BatchHandler = require('./BatchHandler');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this handler.
  */
-var BatchHandlerQuad = new Class({
-    Extends: BatchHandler,
+var BatchHandlerQuad = class extends BatchHandler {
 
-    initialize: function BatchHandlerQuad (manager, config)
+    constructor(manager, config)
     {
         // Placed before super call because the constructor needs it.
         /**
@@ -60,7 +59,7 @@ var BatchHandlerQuad = new Class({
             roundPixels: false
         };
 
-        BatchHandler.call(this, manager, this.defaultConfig, config);
+        super(manager, this.defaultConfig, config);
 
         // Main sampler will never change after initialization,
         // because it addresses texture units, not textures.
@@ -97,7 +96,7 @@ var BatchHandlerQuad = new Class({
          * @since 4.0.0
          */
         this._lightVector = new Vector2();
-    },
+    }
 
     /**
      * The default configuration object for this handler.
@@ -152,7 +151,7 @@ var BatchHandlerQuad = new Class({
                 }
             ]
         }
-    },
+    }
 
     /**
      * Generate element indices for the instance vertices.
@@ -170,7 +169,7 @@ var BatchHandlerQuad = new Class({
      * @param {number} instances - The number of instances to define.
      * @return {ArrayBuffer} The index buffer data.
      */
-    _generateElementIndices: function (instances)
+    _generateElementIndices(instances)
     {
         var buffer = new ArrayBuffer(instances * 6 * 2);
         var indices = new Uint16Array(buffer);
@@ -186,7 +185,7 @@ var BatchHandlerQuad = new Class({
             indices[offset++] = index + 3;
         }
         return buffer;
-    },
+    }
 
     /**
      * Update the number of draw calls per batch.
@@ -207,7 +206,7 @@ var BatchHandlerQuad = new Class({
      * @since 4.0.0
      * @param {number} [count] - The new number of draw calls per batch. If undefined, the maximum number of texture units is used.
      */
-    updateTextureCount: function (count)
+    updateTextureCount(count)
     {
         var renderer = this.manager.renderer;
 
@@ -249,7 +248,7 @@ var BatchHandlerQuad = new Class({
         }
 
         this.resize(renderer.width, renderer.height);
-    },
+    }
 
     /**
      * Update the uniforms for the current shader program.
@@ -260,7 +259,7 @@ var BatchHandlerQuad = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    setupUniforms: function (drawingContext)
+    setupUniforms(drawingContext)
     {
         var programManager = this.programManager;
         var renderOptions = this.renderOptions;
@@ -297,7 +296,7 @@ var BatchHandlerQuad = new Class({
                 renderOptions.selfShadowPenumbra
             );
         }
-    },
+    }
 
     /**
      * Update the texture uniforms for the current shader program.
@@ -308,7 +307,7 @@ var BatchHandlerQuad = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper[]} textures - The textures to render.
      */
-    setupTextureUniforms: function (textures)
+    setupTextureUniforms(textures)
     {
         var programManager = this.programManager;
 
@@ -335,7 +334,7 @@ var BatchHandlerQuad = new Class({
             );
         }
 
-    },
+    }
 
     /**
      * Update the render options for the current shader program.
@@ -344,7 +343,7 @@ var BatchHandlerQuad = new Class({
      * @since 4.0.0
      * @param {object} renderOptions - The new render options.
      */
-    updateRenderOptions: function (renderOptions)
+    updateRenderOptions(renderOptions)
     {
         var newRenderOptions = this.nextRenderOptions;
         var oldRenderOptions = this.renderOptions;
@@ -401,7 +400,7 @@ var BatchHandlerQuad = new Class({
         }
 
         this._renderOptionsChanged = changed;
-    },
+    }
 
     /**
      * Update the shader configuration based on render options.
@@ -410,7 +409,7 @@ var BatchHandlerQuad = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#updateShaderConfig
      * @since 4.0.0
      */
-    updateShaderConfig: function ()
+    updateShaderConfig()
     {
         var programManager = this.programManager;
         var oldRenderOptions = this.renderOptions;
@@ -503,7 +502,7 @@ var BatchHandlerQuad = new Class({
 
             // Do not update the shader; this will be set as a uniform.
         }
-    },
+    }
 
     /**
      * Draw then empty the current batch.
@@ -515,7 +514,7 @@ var BatchHandlerQuad = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    run: function (drawingContext)
+    run(drawingContext)
     {
         if (this.instanceCount === 0) { return; }
 
@@ -574,7 +573,7 @@ var BatchHandlerQuad = new Class({
         this.batchEntries.length = 0;
 
         this.onRunEnd(drawingContext);
-    },
+    }
 
     /**
      * Add a quad to the batch.
@@ -611,7 +610,7 @@ var BatchHandlerQuad = new Class({
      * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerQuadRenderOptions} renderOptions - Optional render features.
      * @param {...*} [args] - Additional arguments for subclasses.
      */
-    batch: function (
+    batch(
         currentContext,
         glTexture,
         x0, y0,
@@ -695,7 +694,7 @@ var BatchHandlerQuad = new Class({
 
             // Now the batch is empty.
         }
-    },
+    }
 
     /**
      * Process textures for batching.
@@ -711,7 +710,7 @@ var BatchHandlerQuad = new Class({
      * @param {object} renderOptions - The current render options.
      * @return {number} The texture datum.
      */
-    batchTextures: function (glTexture, renderOptions)
+    batchTextures(glTexture, renderOptions)
     {
         var newRenderOptions = this.renderOptions;
 
@@ -783,7 +782,7 @@ var BatchHandlerQuad = new Class({
         }
 
         return textureDatum;
-    },
+    }
 
     /**
      * Push the current batch entry to the batch entry list,
@@ -792,7 +791,7 @@ var BatchHandlerQuad = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#pushCurrentBatchEntry
      * @since 4.0.0
      */
-    pushCurrentBatchEntry: function ()
+    pushCurrentBatchEntry()
     {
         if (this.currentBatchEntry.count < 1)
         {
@@ -815,6 +814,6 @@ var BatchHandlerQuad = new Class({
             texture: []
         };
     }
-});
+};
 
 module.exports = BatchHandlerQuad;

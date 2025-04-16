@@ -23,8 +23,8 @@ var Class = require('../../../utils/Class');
  * @param {?Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} indexBuffer - The index buffer used in this VAO, if any.
  * @param {Phaser.Renderer.WebGL.Wrappers.WebGLVertexBufferLayoutWrapper[]} attributeBufferLayouts - The vertex buffers containing attribute data for this VAO, alongside the relevant attribute layout.
  */
-var WebGLVAOWrapper = new Class({
-    initialize: function WebGLVAOWrapper (renderer, program, indexBuffer, attributeBufferLayouts)
+var WebGLVAOWrapper = class {
+    constructor(renderer, program, indexBuffer, attributeBufferLayouts)
     {
         /**
          * The WebGLRenderer instance that owns this wrapper.
@@ -90,7 +90,7 @@ var WebGLVAOWrapper = new Class({
         };
 
         this.createResource();
-    },
+    }
 
     /**
      * Creates a new WebGLVertexArrayObject.
@@ -98,7 +98,7 @@ var WebGLVAOWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper#createResource
      * @since 4.0.0
      */
-    createResource: function ()
+    createResource()
     {
         var gl = this.renderer.gl;
         var extVAO = this.renderer.vaoExtension;
@@ -197,7 +197,7 @@ var WebGLVAOWrapper = new Class({
                 elementArrayBuffer: null
             }
         });
-    },
+    }
 
     /**
      * Binds this WebGLVAOWrapper to the current WebGLRenderingContext.
@@ -205,10 +205,10 @@ var WebGLVAOWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper#bind
      * @since 4.0.0
      */
-    bind: function ()
+    bind()
     {
         this.renderer.glWrapper.updateVAO(this.glState);
-    },
+    }
 
     /**
      * Destroys this WebGLVAOWrapper and removes all associated resources.
@@ -216,7 +216,7 @@ var WebGLVAOWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper#destroy
      * @since 4.0.0
      */
-    destroy: function ()
+    destroy()
     {
         var extVAO = this.renderer.vaoExtension;
 
@@ -231,6 +231,6 @@ var WebGLVAOWrapper = new Class({
         this.glState = null;
         this.renderer = null;
     }
-});
+};
 
 module.exports = WebGLVAOWrapper;

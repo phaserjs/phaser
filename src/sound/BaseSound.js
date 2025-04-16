@@ -24,15 +24,11 @@ var Extend = require('../utils/object/Extend');
  * @param {string} key - Asset key for the sound.
  * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
  */
-var BaseSound = new Class({
+var BaseSound = class extends EventEmitter {
 
-    Extends: EventEmitter,
-
-    initialize:
-
-    function BaseSound (manager, key, config)
+    constructor(manager, key, config)
     {
-        EventEmitter.call(this);
+        super();
 
         /**
          * Local reference to the sound manager.
@@ -176,7 +172,7 @@ var BaseSound = new Class({
          * @since 3.0.0
          */
         this.pendingRemove = false;
-    },
+    }
 
     /**
      * Adds a marker into the current sound. A marker is represented by name, start time, duration, and optionally config object.
@@ -189,7 +185,7 @@ var BaseSound = new Class({
      *
      * @return {boolean} Whether the marker was added successfully.
      */
-    addMarker: function (marker)
+    addMarker(marker)
     {
         if (!marker || !marker.name || typeof marker.name !== 'string')
         {
@@ -223,7 +219,7 @@ var BaseSound = new Class({
         this.markers[marker.name] = marker;
 
         return true;
-    },
+    }
 
     /**
      * Updates previously added marker.
@@ -235,7 +231,7 @@ var BaseSound = new Class({
      *
      * @return {boolean} Whether the marker was updated successfully.
      */
-    updateMarker: function (marker)
+    updateMarker(marker)
     {
         if (!marker || !marker.name || typeof marker.name !== 'string')
         {
@@ -253,7 +249,7 @@ var BaseSound = new Class({
         this.markers[marker.name] = Extend(true, this.markers[marker.name], marker);
 
         return true;
-    },
+    }
 
     /**
      * Removes a marker from the sound.
@@ -265,7 +261,7 @@ var BaseSound = new Class({
      *
      * @return {?Phaser.Types.Sound.SoundMarker} Removed marker object or 'null' if there was no marker with provided name.
      */
-    removeMarker: function (markerName)
+    removeMarker(markerName)
     {
         var marker = this.markers[markerName];
 
@@ -277,7 +273,7 @@ var BaseSound = new Class({
         this.markers[markerName] = null;
 
         return marker;
-    },
+    }
 
     /**
      * Play this sound, or a marked section of it.
@@ -293,7 +289,7 @@ var BaseSound = new Class({
      *
      * @return {boolean} Whether the sound started playing successfully.
      */
-    play: function (markerName, config)
+    play(markerName, config)
     {
         if (markerName === undefined) { markerName = ''; }
 
@@ -337,7 +333,7 @@ var BaseSound = new Class({
         this.isPaused = false;
 
         return true;
-    },
+    }
 
     /**
      * Pauses the sound. This only works if the sound is currently playing.
@@ -349,7 +345,7 @@ var BaseSound = new Class({
      *
      * @return {boolean} Whether the sound was paused successfully.
      */
-    pause: function ()
+    pause()
     {
         if (this.isPaused || !this.isPlaying)
         {
@@ -360,7 +356,7 @@ var BaseSound = new Class({
         this.isPaused = true;
 
         return true;
-    },
+    }
 
     /**
      * Resumes the sound. This only works if the sound is paused and not already playing.
@@ -372,7 +368,7 @@ var BaseSound = new Class({
      *
      * @return {boolean} Whether the sound was resumed successfully.
      */
-    resume: function ()
+    resume()
     {
         if (!this.isPaused || this.isPlaying)
         {
@@ -383,7 +379,7 @@ var BaseSound = new Class({
         this.isPaused = false;
 
         return true;
-    },
+    }
 
     /**
      * Stop playing this sound.
@@ -393,7 +389,7 @@ var BaseSound = new Class({
      *
      * @return {boolean} Whether the sound was stopped successfully.
      */
-    stop: function ()
+    stop()
     {
         if (!this.isPaused && !this.isPlaying)
         {
@@ -406,7 +402,7 @@ var BaseSound = new Class({
         this.resetConfig();
 
         return true;
-    },
+    }
 
     /**
      * Method used internally for applying config values to some of the sound properties.
@@ -414,7 +410,7 @@ var BaseSound = new Class({
      * @method Phaser.Sound.BaseSound#applyConfig
      * @since 3.0.0
      */
-    applyConfig: function ()
+    applyConfig()
     {
         this.mute = this.currentConfig.mute;
         this.volume = this.currentConfig.volume;
@@ -422,7 +418,7 @@ var BaseSound = new Class({
         this.detune = this.currentConfig.detune;
         this.loop = this.currentConfig.loop;
         this.pan = this.currentConfig.pan;
-    },
+    }
 
     /**
      * Method used internally for resetting values of some of the config properties.
@@ -430,11 +426,11 @@ var BaseSound = new Class({
      * @method Phaser.Sound.BaseSound#resetConfig
      * @since 3.0.0
      */
-    resetConfig: function ()
+    resetConfig()
     {
         this.currentConfig.seek = 0;
         this.currentConfig.delay = 0;
-    },
+    }
 
     /**
      * Update method called automatically by sound manager on every game step.
@@ -445,9 +441,9 @@ var BaseSound = new Class({
      * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      * @param {number} delta - The delta time elapsed since the last frame.
      */
-    update: function ()
+    update()
     {
-    },
+    }
 
     /**
      * Method used internally to calculate total playback rate of the sound.
@@ -455,14 +451,14 @@ var BaseSound = new Class({
      * @method Phaser.Sound.BaseSound#calculateRate
      * @since 3.0.0
      */
-    calculateRate: function ()
+    calculateRate()
     {
         var cent = 1.0005777895065548; // Math.pow(2, 1/1200);
         var totalDetune = this.currentConfig.detune + this.manager.detune;
         var detuneRate = Math.pow(cent, totalDetune);
 
         this.totalRate = this.currentConfig.rate * this.manager.rate * detuneRate;
-    },
+    }
 
     /**
      * Destroys this sound and all associated events and marks it for removal from the sound manager.
@@ -471,7 +467,7 @@ var BaseSound = new Class({
      * @fires Phaser.Sound.Events#DESTROY
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         if (this.pendingRemove)
         {
@@ -493,6 +489,6 @@ var BaseSound = new Class({
         this.currentMarker = null;
     }
 
-});
+};
 
 module.exports = BaseSound;

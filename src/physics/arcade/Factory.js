@@ -25,11 +25,9 @@ var StaticPhysicsGroup = require('./StaticPhysicsGroup');
  *
  * @param {Phaser.Physics.Arcade.World} world - The Arcade Physics World instance.
  */
-var Factory = new Class({
+var Factory = class {
 
-    initialize:
-
-    function Factory (world)
+    constructor(world)
     {
         /**
          * A reference to the Arcade Physics World.
@@ -57,7 +55,7 @@ var Factory = new Class({
          * @since 3.0.0
          */
         this.sys = world.scene.sys;
-    },
+    }
 
     /**
      * Creates a new Arcade Physics Collider object.
@@ -73,10 +71,10 @@ var Factory = new Class({
      *
      * @return {Phaser.Physics.Arcade.Collider} The Collider that was created.
      */
-    collider: function (object1, object2, collideCallback, processCallback, callbackContext)
+    collider(object1, object2, collideCallback, processCallback, callbackContext)
     {
         return this.world.addCollider(object1, object2, collideCallback, processCallback, callbackContext);
-    },
+    }
 
     /**
      * Creates a new Arcade Physics Collider Overlap object.
@@ -92,10 +90,10 @@ var Factory = new Class({
      *
      * @return {Phaser.Physics.Arcade.Collider} The Collider that was created.
      */
-    overlap: function (object1, object2, collideCallback, processCallback, callbackContext)
+    overlap(object1, object2, collideCallback, processCallback, callbackContext)
     {
         return this.world.addOverlap(object1, object2, collideCallback, processCallback, callbackContext);
-    },
+    }
 
     /**
      * Adds an Arcade Physics Body to the given Game Object.
@@ -110,14 +108,14 @@ var Factory = new Class({
      *
      * @return {Phaser.Types.Physics.Arcade.GameObjectWithBody} The Game Object.
      */
-    existing: function (gameObject, isStatic)
+    existing(gameObject, isStatic)
     {
         var type = (isStatic) ? CONST.STATIC_BODY : CONST.DYNAMIC_BODY;
 
         this.world.enableBody(gameObject, type);
 
         return gameObject;
-    },
+    }
 
     /**
      * Creates a new Arcade Image object with a Static body.
@@ -132,7 +130,7 @@ var Factory = new Class({
      *
      * @return {Phaser.Types.Physics.Arcade.ImageWithStaticBody} The Image object that was created.
      */
-    staticImage: function (x, y, key, frame)
+    staticImage(x, y, key, frame)
     {
         var image = new ArcadeImage(this.scene, x, y, key, frame);
 
@@ -141,7 +139,7 @@ var Factory = new Class({
         this.world.enableBody(image, CONST.STATIC_BODY);
 
         return image;
-    },
+    }
 
     /**
      * Creates a new Arcade Image object with a Dynamic body.
@@ -156,7 +154,7 @@ var Factory = new Class({
      *
      * @return {Phaser.Types.Physics.Arcade.ImageWithDynamicBody} The Image object that was created.
      */
-    image: function (x, y, key, frame)
+    image(x, y, key, frame)
     {
         var image = new ArcadeImage(this.scene, x, y, key, frame);
 
@@ -165,7 +163,7 @@ var Factory = new Class({
         this.world.enableBody(image, CONST.DYNAMIC_BODY);
 
         return image;
-    },
+    }
 
     /**
      * Creates a new Arcade Sprite object with a Static body.
@@ -180,7 +178,7 @@ var Factory = new Class({
      *
      * @return {Phaser.Types.Physics.Arcade.SpriteWithStaticBody} The Sprite object that was created.
      */
-    staticSprite: function (x, y, key, frame)
+    staticSprite(x, y, key, frame)
     {
         var sprite = new ArcadeSprite(this.scene, x, y, key, frame);
 
@@ -190,7 +188,7 @@ var Factory = new Class({
         this.world.enableBody(sprite, CONST.STATIC_BODY);
 
         return sprite;
-    },
+    }
 
     /**
      * Creates a new Arcade Sprite object with a Dynamic body.
@@ -205,7 +203,7 @@ var Factory = new Class({
      *
      * @return {Phaser.Types.Physics.Arcade.SpriteWithDynamicBody} The Sprite object that was created.
      */
-    sprite: function (x, y, key, frame)
+    sprite(x, y, key, frame)
     {
         var sprite = new ArcadeSprite(this.scene, x, y, key, frame);
 
@@ -215,7 +213,7 @@ var Factory = new Class({
         this.world.enableBody(sprite, CONST.DYNAMIC_BODY);
 
         return sprite;
-    },
+    }
 
     /**
      * Creates a Static Physics Group object.
@@ -229,10 +227,10 @@ var Factory = new Class({
      *
      * @return {Phaser.Physics.Arcade.StaticGroup} The Static Group object that was created.
      */
-    staticGroup: function (children, config)
+    staticGroup(children, config)
     {
         return this.sys.updateList.add(new StaticPhysicsGroup(this.world, this.world.scene, children, config));
-    },
+    }
 
     /**
      * Creates a Physics Group object.
@@ -246,10 +244,10 @@ var Factory = new Class({
      *
      * @return {Phaser.Physics.Arcade.Group} The Group object that was created.
      */
-    group: function (children, config)
+    group(children, config)
     {
         return this.sys.updateList.add(new PhysicsGroup(this.world, this.world.scene, children, config));
-    },
+    }
 
     /**
      * Creates a new physics Body with the given position and size.
@@ -267,7 +265,7 @@ var Factory = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} The Body that was created.
      */
-    body: function (x, y, width, height)
+    body(x, y, width, height)
     {
         var body = new Body(this.world);
 
@@ -281,7 +279,7 @@ var Factory = new Class({
         this.world.add(body, CONST.DYNAMIC_BODY);
 
         return body;
-    },
+    }
 
     /**
      * Creates a new static physics Body with the given position and size.
@@ -299,7 +297,7 @@ var Factory = new Class({
      *
      * @return {Phaser.Physics.Arcade.StaticBody} The Static Body that was created.
      */
-    staticBody: function (x, y, width, height)
+    staticBody(x, y, width, height)
     {
         var body = new StaticBody(this.world);
 
@@ -313,7 +311,7 @@ var Factory = new Class({
         this.world.add(body, CONST.STATIC_BODY);
 
         return body;
-    },
+    }
 
     /**
      * Destroys this Factory.
@@ -321,13 +319,13 @@ var Factory = new Class({
      * @method Phaser.Physics.Arcade.Factory#destroy
      * @since 3.5.0
      */
-    destroy: function ()
+    destroy()
     {
         this.world = null;
         this.scene = null;
         this.sys = null;
     }
 
-});
+};
 
 module.exports = Factory;

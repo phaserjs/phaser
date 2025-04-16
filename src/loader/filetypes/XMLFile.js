@@ -31,13 +31,9 @@ var ParseXML = require('../../dom/ParseXML');
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var XMLFile = new Class({
+var XMLFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function XMLFile (loader, key, url, xhrSettings)
+    constructor(loader, key, url, xhrSettings)
     {
         var extension = 'xml';
 
@@ -61,8 +57,8 @@ var XMLFile = new Class({
             xhrSettings: xhrSettings
         };
 
-        File.call(this, loader, fileConfig);
-    },
+        super(loader, fileConfig);
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -71,7 +67,7 @@ var XMLFile = new Class({
      * @method Phaser.Loader.FileTypes.XMLFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -87,7 +83,7 @@ var XMLFile = new Class({
         }
     }
 
-});
+};
 
 /**
  * Adds an XML file, or array of XML files, to the current load queue.

@@ -46,10 +46,9 @@ var ShaderSourceVS = require('../../shaders/SpriteGPULayer-vert');
  * @param {string} [config.vertexSource] - The vertex shader source.
  * @param {string} [config.fragmentSource] - The fragment shader source.
  */
-var SubmitterSpriteGPULayer = new Class({
-    Extends: RenderNode,
+var SubmitterSpriteGPULayer = class extends RenderNode {
 
-    initialize: function SubmitterSpriteGPULayer (manager, config, gameObject)
+    constructor(manager, config, gameObject)
     {
         var renderer = manager.renderer;
 
@@ -57,7 +56,7 @@ var SubmitterSpriteGPULayer = new Class({
         var name = finalConfig.name;
         this._completeLayout(finalConfig);
 
-        RenderNode.call(this, name, manager);
+        super(name, manager);
 
         /**
          * The completed configuration object for this RenderNode.
@@ -172,7 +171,7 @@ var SubmitterSpriteGPULayer = new Class({
          * @private
          */
         this._lightVector = new Vector2();
-    },
+    }
 
     /**
      * Default configuration of this RenderNode.
@@ -284,7 +283,7 @@ var SubmitterSpriteGPULayer = new Class({
                 }
             ]
         }
-    },
+    }
 
     /**
      * Fill out the configuration object with default values where needed.
@@ -293,7 +292,7 @@ var SubmitterSpriteGPULayer = new Class({
      * @since 4.0.0
      * @param {object} config - The configuration object to complete.
      */
-    _completeLayout: function (config)
+    _completeLayout(config)
     {
         // Set up vertex buffer layout.
         var layoutSource = config.vertexBufferLayout;
@@ -370,9 +369,9 @@ var SubmitterSpriteGPULayer = new Class({
                 });
             }
         }
-    },
+    }
 
-    setupUniforms: function (drawingContext)
+    setupUniforms(drawingContext)
     {
         var camera = drawingContext.camera;
         var programManager = this.programManager;
@@ -458,9 +457,9 @@ var SubmitterSpriteGPULayer = new Class({
             layer.selfShadow.diffuseFlatThreshold,
             layer.selfShadow.penumbra
         );
-    },
+    }
 
-    updateRenderOptions: function ()
+    updateRenderOptions()
     {
         var programManager = this.programManager;
 
@@ -505,7 +504,7 @@ var SubmitterSpriteGPULayer = new Class({
         {
             programManager.addFeature('SELFSHADOW');
         }
-    },
+    }
 
     /**
      * Render a SpriteGPULayer object.
@@ -514,7 +513,7 @@ var SubmitterSpriteGPULayer = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    run: function (drawingContext)
+    run(drawingContext)
     {
         var i;
         var layer = this.gameObject;
@@ -623,6 +622,6 @@ var SubmitterSpriteGPULayer = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = SubmitterSpriteGPULayer;

@@ -50,22 +50,21 @@ var Smooth = require('../../../geom/polygon/Smooth');
  * @param {number} [fillColor] - The color the polygon will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the polygon will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  */
-var Polygon = new Class({
+var Polygon = class extends Shape {
 
-    Extends: Shape,
+    static
+    {
+        Class.mixin(this, [
+            PolygonRender
+        ], false);
+    }
 
-    Mixins: [
-        PolygonRender
-    ],
-
-    initialize:
-
-    function Polygon (scene, x, y, points, fillColor, fillAlpha)
+    constructor(scene, x, y, points, fillColor, fillAlpha)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
 
-        Shape.call(this, scene, 'Polygon', new GeomPolygon(points));
+        super(scene, 'Polygon', new GeomPolygon(points));
 
         var bounds = GetAABB(this.geom);
 
@@ -79,7 +78,7 @@ var Polygon = new Class({
 
         this.updateDisplayOrigin();
         this.updateData();
-    },
+    }
 
     /**
      * Smooths the polygon over the number of iterations specified.
@@ -93,7 +92,7 @@ var Polygon = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    smooth: function (iterations)
+    smooth(iterations)
     {
         if (iterations === undefined) { iterations = 1; }
 
@@ -103,7 +102,7 @@ var Polygon = new Class({
         }
 
         return this.updateData();
-    },
+    }
 
     /**
      * Sets this Polygon to the given points.
@@ -128,7 +127,7 @@ var Polygon = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setTo: function (points)
+    setTo(points)
     {
         this.geom.setTo(points);
 
@@ -139,7 +138,7 @@ var Polygon = new Class({
         this.updateDisplayOrigin();
 
         return this.updateData();
-    },
+    }
 
     /**
      * Internal method that updates the data and path values.
@@ -150,7 +149,7 @@ var Polygon = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    updateData: function ()
+    updateData()
     {
         var path = [];
         var points = this.geom.points;
@@ -168,6 +167,6 @@ var Polygon = new Class({
         return this;
     }
 
-});
+};
 
 module.exports = Polygon;

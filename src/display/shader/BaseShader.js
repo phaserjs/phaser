@@ -33,8 +33,8 @@ var Class = require('../../utils/Class');
  * @param {string} glsl - The GLSL source code for the shader.
  * @param {object} [metadata] - Additional metadata for this shader code.
  */
-var BaseShader = new Class({
-    initialize: function BaseShader (key, glsl, metadata)
+var BaseShader = class {
+    constructor(key, glsl, metadata)
     {
         if (metadata === undefined) { metadata = {}; }
 
@@ -71,6 +71,6 @@ var BaseShader = new Class({
          */
         this.metadata = metadata;
     }
-});
+};
 
 module.exports = BaseShader;

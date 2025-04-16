@@ -23,15 +23,11 @@ var Vector2 = require('../math/Vector2');
  * @param {Phaser.Math.Vector2} p1 - Control Point 1.
  * @param {Phaser.Math.Vector2} p2 - Control Point 2.
  */
-var QuadraticBezier = new Class({
+var QuadraticBezier = class extends Curve {
 
-    Extends: Curve,
-
-    initialize:
-
-    function QuadraticBezier (p0, p1, p2)
+    constructor(p0, p1, p2)
     {
-        Curve.call(this, 'QuadraticBezierCurve');
+        super('QuadraticBezierCurve');
 
         if (Array.isArray(p0))
         {
@@ -66,7 +62,7 @@ var QuadraticBezier = new Class({
          * @since 3.2.0
          */
         this.p2 = p2;
-    },
+    }
 
     /**
      * Gets the starting point on the curve.
@@ -80,12 +76,12 @@ var QuadraticBezier = new Class({
      *
      * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
-    getStartPoint: function (out)
+    getStartPoint(out)
     {
         if (out === undefined) { out = new Vector2(); }
 
         return out.copy(this.p0);
-    },
+    }
 
     /**
      * Get the resolution of the curve.
@@ -97,10 +93,10 @@ var QuadraticBezier = new Class({
      *
      * @return {number} The curve resolution.
      */
-    getResolution: function (divisions)
+    getResolution(divisions)
     {
         return divisions;
-    },
+    }
 
     /**
      * Get point at relative position in curve according to length.
@@ -115,7 +111,7 @@ var QuadraticBezier = new Class({
      *
      * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
-    getPoint: function (t, out)
+    getPoint(t, out)
     {
         if (out === undefined) { out = new Vector2(); }
 
@@ -127,7 +123,7 @@ var QuadraticBezier = new Class({
             QuadraticBezierInterpolation(t, p0.x, p1.x, p2.x),
             QuadraticBezierInterpolation(t, p0.y, p1.y, p2.y)
         );
-    },
+    }
 
     /**
      * Draws this curve on the given Graphics object.
@@ -145,7 +141,7 @@ var QuadraticBezier = new Class({
      *
      * @return {Phaser.GameObjects.Graphics} `Graphics` object that was drawn to.
      */
-    draw: function (graphics, pointsTotal)
+    draw(graphics, pointsTotal)
     {
         if (pointsTotal === undefined) { pointsTotal = 32; }
 
@@ -163,7 +159,7 @@ var QuadraticBezier = new Class({
 
         //  So you can chain graphics calls
         return graphics;
-    },
+    }
 
     /**
      * Converts the curve into a JSON compatible object.
@@ -173,7 +169,7 @@ var QuadraticBezier = new Class({
      *
      * @return {Phaser.Types.Curves.JSONCurve} The JSON object containing this curve data.
      */
-    toJSON: function ()
+    toJSON()
     {
         return {
             type: this.type,
@@ -185,7 +181,7 @@ var QuadraticBezier = new Class({
         };
     }
 
-});
+};
 
 /**
  * Creates a curve from a JSON object, e. g. created by `toJSON`.

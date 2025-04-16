@@ -36,11 +36,9 @@ var Systems = require('./Systems');
  * @param {Phaser.Game} game - The Phaser.Game instance this Scene Manager belongs to.
  * @param {object} sceneConfig - Scene specific configuration settings.
  */
-var SceneManager = new Class({
+var SceneManager = class {
 
-    initialize:
-
-    function SceneManager (game, sceneConfig)
+    constructor(game, sceneConfig)
     {
         /**
          * The Game that this SceneManager belongs to.
@@ -174,7 +172,7 @@ var SceneManager = new Class({
         }
 
         game.events.once(GameEvents.READY, this.bootQueue, this);
-    },
+    }
 
     /**
      * Internal first-time Scene boot handler.
@@ -184,7 +182,7 @@ var SceneManager = new Class({
      * @fires Phaser.Core.Events#SYSTEM_READY
      * @since 3.2.0
      */
-    bootQueue: function ()
+    bootQueue()
     {
         if (this.isBooted)
         {
@@ -263,7 +261,7 @@ var SceneManager = new Class({
         }
 
         this._start.length = 0;
-    },
+    }
 
     /**
      * Process the Scene operations queue.
@@ -271,7 +269,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#processQueue
      * @since 3.0.0
      */
-    processQueue: function ()
+    processQueue()
     {
         var pendingLength = this._pending.length;
         var queueLength = this._queue.length;
@@ -314,7 +312,7 @@ var SceneManager = new Class({
         }
 
         this._queue.length = 0;
-    },
+    }
 
     /**
      * Adds a new Scene into the SceneManager.
@@ -340,7 +338,7 @@ var SceneManager = new Class({
      *
      * @return {?Phaser.Scene} The added Scene, if it was added immediately, otherwise `null`.
      */
-    add: function (key, sceneConfig, autoStart, data)
+    add(key, sceneConfig, autoStart, data)
     {
         if (autoStart === undefined) { autoStart = false; }
         if (data === undefined) { data = {}; }
@@ -405,7 +403,7 @@ var SceneManager = new Class({
         }
 
         return newScene;
-    },
+    }
 
     /**
      * Removes a Scene from the SceneManager.
@@ -423,7 +421,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    remove: function (key)
+    remove(key)
     {
         if (this.isProcessing)
         {
@@ -455,7 +453,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Boot the given Scene.
@@ -467,7 +465,7 @@ var SceneManager = new Class({
      *
      * @param {Phaser.Scene} scene - The Scene to boot.
      */
-    bootScene: function (scene)
+    bootScene(scene)
     {
         var sys = scene.sys;
         var settings = sys.settings;
@@ -511,7 +509,7 @@ var SceneManager = new Class({
             //  No preload? Then there was nothing to load either
             this.create(scene);
         }
-    },
+    }
 
     /**
      * Handles load completion for a Scene's Loader.
@@ -524,10 +522,10 @@ var SceneManager = new Class({
      *
      * @param {Phaser.Loader.LoaderPlugin} loader - The loader that has completed loading.
      */
-    loadComplete: function (loader)
+    loadComplete(loader)
     {
         this.create(loader.scene);
-    },
+    }
 
     /**
      * Handle payload completion for a Scene.
@@ -538,10 +536,10 @@ var SceneManager = new Class({
      *
      * @param {Phaser.Loader.LoaderPlugin} loader - The loader that has completed loading its Scene's payload.
      */
-    payloadComplete: function (loader)
+    payloadComplete(loader)
     {
         this.bootScene(loader.scene);
-    },
+    }
 
     /**
      * Updates the Scenes.
@@ -552,7 +550,7 @@ var SceneManager = new Class({
      * @param {number} time - Time elapsed.
      * @param {number} delta - Delta time from the last update.
      */
-    update: function (time, delta)
+    update(time, delta)
     {
         this.processQueue();
 
@@ -573,7 +571,7 @@ var SceneManager = new Class({
                 sys.scenePlugin.step(time, delta);
             }
         }
-    },
+    }
 
     /**
      * Renders the Scenes.
@@ -583,7 +581,7 @@ var SceneManager = new Class({
      *
      * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The renderer to use.
      */
-    render: function (renderer)
+    render(renderer)
     {
         //  Loop through the scenes in forward order
         for (var i = 0; i < this.scenes.length; i++)
@@ -597,7 +595,7 @@ var SceneManager = new Class({
         }
 
         this.isProcessing = false;
-    },
+    }
 
     /**
      * Calls the given Scene's {@link Phaser.Scene#create} method and updates its status.
@@ -610,7 +608,7 @@ var SceneManager = new Class({
      *
      * @param {Phaser.Scene} scene - The Scene to create.
      */
-    create: function (scene)
+    create(scene)
     {
         var sys = scene.sys;
         var settings = sys.settings;
@@ -641,7 +639,7 @@ var SceneManager = new Class({
         settings.status = CONST.RUNNING;
 
         sys.events.emit(Events.CREATE, scene);
-    },
+    }
 
     /**
      * Creates and initializes a Scene from a function.
@@ -655,7 +653,7 @@ var SceneManager = new Class({
      *
      * @return {Phaser.Scene} The created Scene.
      */
-    createSceneFromFunction: function (key, scene)
+    createSceneFromFunction(key, scene)
     {
         var newScene = new scene();
 
@@ -685,7 +683,7 @@ var SceneManager = new Class({
 
             return newScene;
         }
-    },
+    }
 
     /**
      * Creates and initializes a Scene instance.
@@ -699,7 +697,7 @@ var SceneManager = new Class({
      *
      * @return {Phaser.Scene} The created Scene.
      */
-    createSceneFromInstance: function (key, newScene)
+    createSceneFromInstance(key, newScene)
     {
         var configKey = newScene.sys.settings.key;
 
@@ -711,7 +709,7 @@ var SceneManager = new Class({
         newScene.sys.init(this.game);
 
         return newScene;
-    },
+    }
 
     /**
      * Creates and initializes a Scene from an Object definition.
@@ -725,7 +723,7 @@ var SceneManager = new Class({
      *
      * @return {Phaser.Scene} The created Scene.
      */
-    createSceneFromObject: function (key, sceneConfig)
+    createSceneFromObject(key, sceneConfig)
     {
         var newScene = new Scene(sceneConfig);
 
@@ -794,7 +792,7 @@ var SceneManager = new Class({
         }
 
         return newScene;
-    },
+    }
 
     /**
      * Retrieves the key of a Scene from a Scene config.
@@ -808,7 +806,7 @@ var SceneManager = new Class({
      *
      * @return {string} The Scene key.
      */
-    getKey: function (key, sceneConfig)
+    getKey(key, sceneConfig)
     {
         if (!key) { key = 'default'; }
 
@@ -835,7 +833,7 @@ var SceneManager = new Class({
         {
             return key;
         }
-    },
+    }
 
     /**
      * Returns an array of all the current Scenes being managed by this Scene Manager.
@@ -854,7 +852,7 @@ var SceneManager = new Class({
      *
      * @return {Phaser.Scene[]} An array containing all of the Scenes in the Scene Manager.
      */
-    getScenes: function (isActive, inReverse)
+    getScenes(isActive, inReverse)
     {
         if (isActive === undefined) { isActive = true; }
         if (inReverse === undefined) { inReverse = false; }
@@ -873,7 +871,7 @@ var SceneManager = new Class({
         }
 
         return (inReverse) ? out.reverse() : out;
-    },
+    }
 
     /**
      * Retrieves a Scene based on the given key.
@@ -892,7 +890,7 @@ var SceneManager = new Class({
      *
      * @return {?Phaser.Scene} The Scene, or `null` if no matching Scene was found.
      */
-    getScene: function (key)
+    getScene(key)
     {
         if (typeof key === 'string')
         {
@@ -913,7 +911,7 @@ var SceneManager = new Class({
         }
 
         return null;
-    },
+    }
 
     /**
      * Determines whether a Scene is running.
@@ -928,7 +926,7 @@ var SceneManager = new Class({
      *
      * @return {boolean} Whether the Scene is running, or `null` if no matching Scene was found.
      */
-    isActive: function (key)
+    isActive(key)
     {
         var scene = this.getScene(key);
 
@@ -938,7 +936,7 @@ var SceneManager = new Class({
         }
 
         return null;
-    },
+    }
 
     /**
      * Determines whether a Scene is paused.
@@ -953,7 +951,7 @@ var SceneManager = new Class({
      *
      * @return {boolean} Whether the Scene is paused, or `null` if no matching Scene was found.
      */
-    isPaused: function (key)
+    isPaused(key)
     {
         var scene = this.getScene(key);
 
@@ -963,7 +961,7 @@ var SceneManager = new Class({
         }
 
         return null;
-    },
+    }
 
     /**
      * Determines whether a Scene is visible.
@@ -978,7 +976,7 @@ var SceneManager = new Class({
      *
      * @return {boolean} Whether the Scene is visible, or `null` if no matching Scene was found.
      */
-    isVisible: function (key)
+    isVisible(key)
     {
         var scene = this.getScene(key);
 
@@ -988,7 +986,7 @@ var SceneManager = new Class({
         }
 
         return null;
-    },
+    }
 
     /**
      * Determines whether a Scene is sleeping.
@@ -1003,7 +1001,7 @@ var SceneManager = new Class({
      *
      * @return {boolean} Whether the Scene is sleeping, or `null` if no matching Scene was found.
      */
-    isSleeping: function (key)
+    isSleeping(key)
     {
         var scene = this.getScene(key);
 
@@ -1013,7 +1011,7 @@ var SceneManager = new Class({
         }
 
         return null;
-    },
+    }
 
     /**
      * Pauses the given Scene.
@@ -1029,7 +1027,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    pause: function (key, data)
+    pause(key, data)
     {
         var scene = this.getScene(key);
 
@@ -1039,7 +1037,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Resumes the given Scene.
@@ -1055,7 +1053,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    resume: function (key, data)
+    resume(key, data)
     {
         var scene = this.getScene(key);
 
@@ -1065,7 +1063,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Puts the given Scene to sleep.
@@ -1081,7 +1079,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    sleep: function (key, data)
+    sleep(key, data)
     {
         var scene = this.getScene(key);
 
@@ -1091,7 +1089,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Awakens the given Scene.
@@ -1107,7 +1105,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    wake: function (key, data)
+    wake(key, data)
     {
         var scene = this.getScene(key);
 
@@ -1117,7 +1115,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Runs the given Scene.
@@ -1139,7 +1137,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    run: function (key, data)
+    run(key, data)
     {
         var scene = this.getScene(key);
 
@@ -1171,7 +1169,7 @@ var SceneManager = new Class({
             //  Not actually running?
             this.start(key, data);
         }
-    },
+    }
 
     /**
      * Starts the given Scene, if it is not starting, loading, or creating.
@@ -1189,7 +1187,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    start: function (key, data)
+    start(key, data)
     {
         //  If the Scene Manager is not running, then put the Scene into a holding pattern
         if (!this.isBooted)
@@ -1267,7 +1265,7 @@ var SceneManager = new Class({
         this.bootScene(scene);
 
         return this;
-    },
+    }
 
     /**
      * Stops the given Scene.
@@ -1283,7 +1281,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    stop: function (key, data)
+    stop(key, data)
     {
         var scene = this.getScene(key);
 
@@ -1301,7 +1299,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sleeps one one Scene and starts the other.
@@ -1318,7 +1316,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    switch: function (from, to, data)
+    switch(from, to, data)
     {
         var sceneA = this.getScene(from);
         var sceneB = this.getScene(to);
@@ -1338,7 +1336,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Retrieves a Scene by numeric index.
@@ -1353,10 +1351,10 @@ var SceneManager = new Class({
      *
      * @return {(Phaser.Scene|undefined)} The Scene.
      */
-    getAt: function (index)
+    getAt(index)
     {
         return this.scenes[index];
-    },
+    }
 
     /**
      * Retrieves the numeric index of a Scene.
@@ -1371,12 +1369,12 @@ var SceneManager = new Class({
      *
      * @return {number} The index of the Scene.
      */
-    getIndex: function (key)
+    getIndex(key)
     {
         var scene = this.getScene(key);
 
         return this.scenes.indexOf(scene);
-    },
+    }
 
     /**
      * Brings a Scene to the top of the Scenes list.
@@ -1393,7 +1391,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    bringToTop: function (key)
+    bringToTop(key)
     {
         if (this.isProcessing)
         {
@@ -1412,7 +1410,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sends a Scene to the back of the Scenes list.
@@ -1429,7 +1427,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    sendToBack: function (key)
+    sendToBack(key)
     {
         if (this.isProcessing)
         {
@@ -1447,7 +1445,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Moves a Scene down one position in the Scenes list.
@@ -1462,7 +1460,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    moveDown: function (key)
+    moveDown(key)
     {
         if (this.isProcessing)
         {
@@ -1482,7 +1480,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Moves a Scene up one position in the Scenes list.
@@ -1497,7 +1495,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    moveUp: function (key)
+    moveUp(key)
     {
         if (this.isProcessing)
         {
@@ -1517,7 +1515,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Moves a Scene so it is immediately above another Scene in the Scenes list.
@@ -1536,7 +1534,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    moveAbove: function (keyA, keyB)
+    moveAbove(keyA, keyB)
     {
         if (keyA === keyB)
         {
@@ -1563,7 +1561,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Moves a Scene so it is immediately below another Scene in the Scenes list.
@@ -1582,7 +1580,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    moveBelow: function (keyA, keyB)
+    moveBelow(keyA, keyB)
     {
         if (keyA === keyB)
         {
@@ -1616,7 +1614,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Queue a Scene operation for the next update.
@@ -1632,12 +1630,12 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    queueOp: function (op, keyA, keyB, data)
+    queueOp(op, keyA, keyB, data)
     {
         this._queue.push({ op: op, keyA: keyA, keyB: keyB, data: data });
 
         return this;
-    },
+    }
 
     /**
      * Swaps the positions of two Scenes in the Scenes list.
@@ -1653,7 +1651,7 @@ var SceneManager = new Class({
      *
      * @return {this} This Scene Manager instance.
      */
-    swapPosition: function (keyA, keyB)
+    swapPosition(keyA, keyB)
     {
         if (keyA === keyB)
         {
@@ -1677,7 +1675,7 @@ var SceneManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Dumps debug information about each Scene to the developer console.
@@ -1685,7 +1683,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#dump
      * @since 3.2.0
      */
-    dump: function ()
+    dump()
     {
         var out = [];
         var map = [ 'pending', 'init', 'start', 'loading', 'creating', 'running', 'paused', 'sleeping', 'shutdown', 'destroyed' ];
@@ -1701,7 +1699,7 @@ var SceneManager = new Class({
         }
 
         console.log(out.join('\n'));
-    },
+    }
 
     /**
      * Destroy this Scene Manager and all of its systems.
@@ -1713,7 +1711,7 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         for (var i = 0; i < this.scenes.length; i++)
         {
@@ -1736,6 +1734,6 @@ var SceneManager = new Class({
         this.systemScene = null;
     }
 
-});
+};
 
 module.exports = SceneManager;

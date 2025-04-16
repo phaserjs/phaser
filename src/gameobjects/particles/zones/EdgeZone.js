@@ -22,11 +22,9 @@ var Class = require('../../../utils/Class');
  * @param {boolean} [seamless=true] - Whether one endpoint will be removed if it's identical to the other.
  * @param {number} [total=-1] - The total number of particles this zone will emit before passing over to the next emission zone in the Emitter. -1 means it will never pass over and you must use `setEmitZone` to change it.
  */
-var EdgeZone = new Class({
+var EdgeZone = class {
 
-    initialize:
-
-    function EdgeZone (source, quantity, stepRate, yoyo, seamless, total)
+    constructor(source, quantity, stepRate, yoyo, seamless, total)
     {
         if (yoyo === undefined) { yoyo = false; }
         if (seamless === undefined) { seamless = true; }
@@ -140,7 +138,7 @@ var EdgeZone = new Class({
         this.total = total;
 
         this.updateSource();
-    },
+    }
 
     /**
      * Update the {@link Phaser.GameObjects.Particles.Zones.EdgeZone#points} from the EdgeZone's
@@ -153,7 +151,7 @@ var EdgeZone = new Class({
      *
      * @return {this} This Edge Zone.
      */
-    updateSource: function ()
+    updateSource()
     {
         this.points = this.source.getPoints(this.quantity, this.stepRate);
 
@@ -180,7 +178,7 @@ var EdgeZone = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Change the source of the EdgeZone.
@@ -192,12 +190,12 @@ var EdgeZone = new Class({
      *
      * @return {this} This Edge Zone.
      */
-    changeSource: function (source)
+    changeSource(source)
     {
         this.source = source;
 
         return this.updateSource();
-    },
+    }
 
     /**
      * Get the next point in the Zone and set its coordinates on the given Particle.
@@ -207,7 +205,7 @@ var EdgeZone = new Class({
      *
      * @param {Phaser.GameObjects.Particles.Particle} particle - The Particle.
      */
-    getPoint: function (particle)
+    getPoint(particle)
     {
         if (this._direction === 0)
         {
@@ -253,6 +251,6 @@ var EdgeZone = new Class({
         }
     }
 
-});
+};
 
 module.exports = EdgeZone;

@@ -25,11 +25,9 @@ var Class = require('../utils/Class');
  * @param {number} [z] - The z component.
  * @param {number} [w] - The w component.
  */
-var Vector4 = new Class({
+var Vector4 = class {
 
-    initialize:
-
-    function Vector4 (x, y, z, w)
+    constructor(x, y, z, w)
     {
         /**
          * The x component of this Vector.
@@ -85,7 +83,7 @@ var Vector4 = new Class({
             this.z = z || 0;
             this.w = w || 0;
         }
-    },
+    }
 
     /**
      * Make a clone of this Vector4.
@@ -95,10 +93,10 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} A clone of this Vector4.
      */
-    clone: function ()
+    clone()
     {
         return new Vector4(this.x, this.y, this.z, this.w);
-    },
+    }
 
     /**
      * Copy the components of a given Vector into this Vector.
@@ -110,7 +108,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    copy: function (src)
+    copy(src)
     {
         this.x = src.x;
         this.y = src.y;
@@ -118,7 +116,7 @@ var Vector4 = new Class({
         this.w = src.w || 0;
 
         return this;
-    },
+    }
 
     /**
      * Check whether this Vector is equal to a given Vector.
@@ -132,10 +130,10 @@ var Vector4 = new Class({
      *
      * @return {boolean} A boolean indicating whether the two Vectors are equal or not.
      */
-    equals: function (v)
+    equals(v)
     {
         return ((this.x === v.x) && (this.y === v.y) && (this.z === v.z) && (this.w === v.w));
-    },
+    }
 
     /**
      * Set the `x`, `y`, `z` and `w` components of the this Vector to the given `x`, `y`, `z` and `w` values.
@@ -150,7 +148,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    set: function (x, y, z, w)
+    set(x, y, z, w)
     {
         if (typeof x === 'object')
         {
@@ -168,7 +166,7 @@ var Vector4 = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Add a given Vector to this Vector. Addition is component-wise.
@@ -180,7 +178,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    add: function (v)
+    add(v)
     {
         this.x += v.x;
         this.y += v.y;
@@ -188,7 +186,7 @@ var Vector4 = new Class({
         this.w += v.w || 0;
 
         return this;
-    },
+    }
 
     /**
      * Subtract the given Vector from this Vector. Subtraction is component-wise.
@@ -200,7 +198,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    subtract: function (v)
+    subtract(v)
     {
         this.x -= v.x;
         this.y -= v.y;
@@ -208,7 +206,7 @@ var Vector4 = new Class({
         this.w -= v.w || 0;
 
         return this;
-    },
+    }
 
     /**
      * Scale this Vector by the given value.
@@ -220,7 +218,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    scale: function (scale)
+    scale(scale)
     {
         this.x *= scale;
         this.y *= scale;
@@ -228,7 +226,7 @@ var Vector4 = new Class({
         this.w *= scale;
 
         return this;
-    },
+    }
 
     /**
      * Calculate the length (or magnitude) of this Vector.
@@ -238,7 +236,7 @@ var Vector4 = new Class({
      *
      * @return {number} The length of this Vector.
      */
-    length: function ()
+    length()
     {
         var x = this.x;
         var y = this.y;
@@ -246,7 +244,7 @@ var Vector4 = new Class({
         var w = this.w;
 
         return Math.sqrt(x * x + y * y + z * z + w * w);
-    },
+    }
 
     /**
      * Calculate the length of this Vector squared.
@@ -256,7 +254,7 @@ var Vector4 = new Class({
      *
      * @return {number} The length of this Vector, squared.
      */
-    lengthSq: function ()
+    lengthSq()
     {
         var x = this.x;
         var y = this.y;
@@ -264,7 +262,7 @@ var Vector4 = new Class({
         var w = this.w;
 
         return x * x + y * y + z * z + w * w;
-    },
+    }
 
     /**
      * Normalize this Vector.
@@ -276,7 +274,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    normalize: function ()
+    normalize()
     {
         var x = this.x;
         var y = this.y;
@@ -295,7 +293,7 @@ var Vector4 = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Calculate the dot product of this Vector and the given Vector.
@@ -307,10 +305,10 @@ var Vector4 = new Class({
      *
      * @return {number} The dot product of this Vector and the given Vector.
      */
-    dot: function (v)
+    dot(v)
     {
         return this.x * v.x + this.y * v.y + this.z * v.z + this.w * v.w;
-    },
+    }
 
     /**
      * Linearly interpolate between this Vector and the given Vector.
@@ -325,7 +323,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    lerp: function (v, t)
+    lerp(v, t)
     {
         if (t === undefined) { t = 0; }
 
@@ -340,7 +338,7 @@ var Vector4 = new Class({
         this.w = aw + t * (v.w - aw);
 
         return this;
-    },
+    }
 
     /**
      * Perform a component-wise multiplication between this Vector and the given Vector.
@@ -354,7 +352,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    multiply: function (v)
+    multiply(v)
     {
         this.x *= v.x;
         this.y *= v.y;
@@ -362,7 +360,7 @@ var Vector4 = new Class({
         this.w *= v.w || 1;
 
         return this;
-    },
+    }
 
     /**
      * Perform a component-wise division between this Vector and the given Vector.
@@ -376,7 +374,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    divide: function (v)
+    divide(v)
     {
         this.x /= v.x;
         this.y /= v.y;
@@ -384,7 +382,7 @@ var Vector4 = new Class({
         this.w /= v.w || 1;
 
         return this;
-    },
+    }
 
     /**
      * Calculate the distance between this Vector and the given Vector.
@@ -396,7 +394,7 @@ var Vector4 = new Class({
      *
      * @return {number} The distance from this Vector to the given Vector.
      */
-    distance: function (v)
+    distance(v)
     {
         var dx = v.x - this.x;
         var dy = v.y - this.y;
@@ -404,7 +402,7 @@ var Vector4 = new Class({
         var dw = v.w - this.w || 0;
 
         return Math.sqrt(dx * dx + dy * dy + dz * dz + dw * dw);
-    },
+    }
 
     /**
      * Calculate the distance between this Vector and the given Vector, squared.
@@ -416,7 +414,7 @@ var Vector4 = new Class({
      *
      * @return {number} The distance from this Vector to the given Vector, squared.
      */
-    distanceSq: function (v)
+    distanceSq(v)
     {
         var dx = v.x - this.x;
         var dy = v.y - this.y;
@@ -424,7 +422,7 @@ var Vector4 = new Class({
         var dw = v.w - this.w || 0;
 
         return dx * dx + dy * dy + dz * dz + dw * dw;
-    },
+    }
 
     /**
      * Negate the `x`, `y`, `z` and `w` components of this Vector.
@@ -434,7 +432,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    negate: function ()
+    negate()
     {
         this.x = -this.x;
         this.y = -this.y;
@@ -442,7 +440,7 @@ var Vector4 = new Class({
         this.w = -this.w;
 
         return this;
-    },
+    }
 
     /**
      * Transform this Vector with the given Matrix.
@@ -454,7 +452,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    transformMat4: function (mat)
+    transformMat4(mat)
     {
         var x = this.x;
         var y = this.y;
@@ -468,7 +466,7 @@ var Vector4 = new Class({
         this.w = m[3] * x + m[7] * y + m[11] * z + m[15] * w;
 
         return this;
-    },
+    }
 
     /**
      * Transform this Vector with the given Quaternion.
@@ -480,7 +478,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    transformQuat: function (q)
+    transformQuat(q)
     {
         var x = this.x;
         var y = this.y;
@@ -502,7 +500,7 @@ var Vector4 = new Class({
         this.z = iz * qw + iw * -qz + ix * -qy - iy * -qx;
 
         return this;
-    },
+    }
 
     /**
      * Make this Vector the zero vector (0, 0, 0, 0).
@@ -512,7 +510,7 @@ var Vector4 = new Class({
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */
-    reset: function ()
+    reset()
     {
         this.x = 0;
         this.y = 0;
@@ -522,7 +520,7 @@ var Vector4 = new Class({
         return this;
     }
 
-});
+};
 
 Vector4.prototype.sub = Vector4.prototype.subtract;
 Vector4.prototype.mul = Vector4.prototype.multiply;

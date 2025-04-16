@@ -21,11 +21,9 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  *
  * @param {Phaser.Types.Tilemaps.LayerDataConfig} [config] - The Layer Data configuration object.
  */
-var LayerData = new Class({
+var LayerData = class {
 
-    initialize:
-
-    function LayerData (config)
+    constructor(config)
     {
         if (config === undefined) { config = {}; }
 
@@ -264,6 +262,6 @@ var LayerData = new Class({
         this.staggerIndex = GetFastValue(config, 'staggerIndex', 'odd');
     }
 
-});
+};
 
 module.exports = LayerData;

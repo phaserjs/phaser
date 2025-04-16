@@ -18,11 +18,9 @@ var WebGLGlobalParametersFactory = require('../parameters/WebGLGlobalParametersF
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer to create the WebGLGlobalWrapper for.
  */
-var WebGLGlobalWrapper = new Class({
+var WebGLGlobalWrapper = class {
 
-    initialize:
-
-    function WebGLGlobalWrapper (renderer)
+    constructor(renderer)
     {
         /**
          * The WebGLRenderer this WebGLGlobalWrapper is associated with.
@@ -41,7 +39,7 @@ var WebGLGlobalWrapper = new Class({
          * @since 4.0.0
          */
         this.state = WebGLGlobalParametersFactory.getDefault(renderer);
-    },
+    }
 
     /**
      * Sets the global WebGL state. Parameters are updated on the
@@ -62,7 +60,7 @@ var WebGLGlobalWrapper = new Class({
      * Otherwise, it will be set first. This is useful when performing state
      * changes that will affect a VAO, such as `bindings.elementArrayBuffer`.
      */
-    update: function (state, force, vaoLast)
+    update(state, force, vaoLast)
     {
         if (state === undefined)
         {
@@ -124,7 +122,7 @@ var WebGLGlobalWrapper = new Class({
         {
             this.updateVAO(state, force);
         }
-    },
+    }
 
     /**
      * Updates the bindings state.
@@ -134,7 +132,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateBindings: function (state, force)
+    updateBindings(state, force)
     {
         var bindings = state.bindings;
 
@@ -162,7 +160,7 @@ var WebGLGlobalWrapper = new Class({
         {
             this.updateBindingsRenderbuffer(state, force);
         }
-    },
+    }
 
     /**
      * Updates the active texture unit state.
@@ -172,7 +170,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateBindingsActiveTexture: function (state, force)
+    updateBindingsActiveTexture(state, force)
     {
         var activeTexture = state.bindings.activeTexture;
 
@@ -187,7 +185,7 @@ var WebGLGlobalWrapper = new Class({
             var gl = this.renderer.gl;
             gl.activeTexture(gl.TEXTURE0 + activeTexture);
         }
-    },
+    }
 
     /**
      * Updates the vertex array buffer state.
@@ -197,7 +195,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateBindingsArrayBuffer: function (state, force)
+    updateBindingsArrayBuffer(state, force)
     {
         var arrayBuffer = state.bindings.arrayBuffer;
         var gl = this.renderer.gl;
@@ -220,7 +218,7 @@ var WebGLGlobalWrapper = new Class({
             var webGLBuffer = arrayBuffer ? arrayBuffer.webGLBuffer : null;
             gl.bindBuffer(gl.ARRAY_BUFFER, webGLBuffer);
         }
-    },
+    }
 
     /**
      * Updates the index array buffer state.
@@ -230,7 +228,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateBindingsElementArrayBuffer: function (state, force)
+    updateBindingsElementArrayBuffer(state, force)
     {
         var elementArrayBuffer = state.bindings.elementArrayBuffer;
         var gl = this.renderer.gl;
@@ -253,7 +251,7 @@ var WebGLGlobalWrapper = new Class({
             var webGLBuffer = elementArrayBuffer ? elementArrayBuffer.webGLBuffer : null;
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webGLBuffer);
         }
-    },
+    }
 
     /**
      * Updates the framebuffer state.
@@ -263,7 +261,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateBindingsFramebuffer: function (state, force)
+    updateBindingsFramebuffer(state, force)
     {
         var framebuffer = state.bindings.framebuffer;
 
@@ -279,7 +277,7 @@ var WebGLGlobalWrapper = new Class({
             var webGLFramebuffer = framebuffer ? framebuffer.webGLFramebuffer : null;
             gl.bindFramebuffer(gl.FRAMEBUFFER, webGLFramebuffer);
         }
-    },
+    }
 
     /**
      * Updates the program state.
@@ -289,7 +287,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateBindingsProgram: function (state, force)
+    updateBindingsProgram(state, force)
     {
         var program = state.bindings.program;
 
@@ -304,7 +302,7 @@ var WebGLGlobalWrapper = new Class({
             var webGLProgram = program ? program.webGLProgram : null;
             this.renderer.gl.useProgram(webGLProgram);
         }
-    },
+    }
 
     /**
      * Updates the renderbuffer state.
@@ -314,7 +312,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateBindingsRenderbuffer: function (state, force)
+    updateBindingsRenderbuffer(state, force)
     {
         var renderbuffer = state.bindings.renderbuffer;
 
@@ -330,7 +328,7 @@ var WebGLGlobalWrapper = new Class({
             var webGLRenderbuffer = renderbuffer || null;
             gl.bindRenderbuffer(gl.RENDERBUFFER, webGLRenderbuffer);
         }
-    },
+    }
 
     /**
      * Updates the blend state.
@@ -340,7 +338,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateBlend: function (state, force)
+    updateBlend(state, force)
     {
         var blend = state.blend;
         if (blend.enabled !== undefined)
@@ -359,7 +357,7 @@ var WebGLGlobalWrapper = new Class({
         {
             this.updateBlendFunc(state, force);
         }
-    },
+    }
 
     /**
      * Updates the blend color.
@@ -369,7 +367,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateBlendColor: function (state, force)
+    updateBlendColor(state, force)
     {
         var color = state.blend.color;
         var r = color[0];
@@ -390,7 +388,7 @@ var WebGLGlobalWrapper = new Class({
         {
             this.renderer.gl.blendColor(r, g, b, a);
         }
-    },
+    }
 
     /**
      * Updates the blend enabled state.
@@ -400,7 +398,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateBlendEnabled: function (state, force)
+    updateBlendEnabled(state, force)
     {
         var enabled = state.blend.enabled;
 
@@ -422,7 +420,7 @@ var WebGLGlobalWrapper = new Class({
                 gl.disable(gl.BLEND);
             }
         }
-    },
+    }
 
     /**
      * Updates the blend equation state.
@@ -434,7 +432,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateBlendEquation: function (state, force)
+    updateBlendEquation(state, force)
     {
         var equation = state.blend.equation;
 
@@ -449,7 +447,7 @@ var WebGLGlobalWrapper = new Class({
         {
             this.renderer.gl.blendEquationSeparate(equation[0], equation[1]);
         }
-    },
+    }
 
     /**
      * Updates the blend function state.
@@ -461,7 +459,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateBlendFunc: function (state, force)
+    updateBlendFunc(state, force)
     {
         var func = state.blend.func;
 
@@ -479,7 +477,7 @@ var WebGLGlobalWrapper = new Class({
         {
             this.renderer.gl.blendFuncSeparate(func[0], func[1], func[2], func[3]);
         }
-    },
+    }
 
     /**
      * Updates the color clear value.
@@ -489,7 +487,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateColorClearValue: function (state, force)
+    updateColorClearValue(state, force)
     {
         var colorClearValue = state.colorClearValue;
         var r = colorClearValue[0];
@@ -511,7 +509,7 @@ var WebGLGlobalWrapper = new Class({
         {
             this.renderer.gl.clearColor(r, g, b, a);
         }
-    },
+    }
 
     /**
      * Updates the color writemask.
@@ -521,7 +519,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateColorWritemask: function (state, force)
+    updateColorWritemask(state, force)
     {
         var colorWritemask = state.colorWritemask;
         var r = colorWritemask[0];
@@ -542,7 +540,7 @@ var WebGLGlobalWrapper = new Class({
         {
             this.renderer.gl.colorMask(r, g, b, a);
         }
-    },
+    }
 
     /**
      * Updates the cull face state.
@@ -552,7 +550,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateCullFace: function (state, force)
+    updateCullFace(state, force)
     {
         var cullFace = !!state.cullFace;
 
@@ -574,7 +572,7 @@ var WebGLGlobalWrapper = new Class({
                 gl.disable(gl.CULL_FACE);
             }
         }
-    },
+    }
 
     /**
      * Updates the depth test state.
@@ -584,7 +582,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateDepthTest: function (state, force)
+    updateDepthTest(state, force)
     {
         var depthTest = !!state.depthTest;
 
@@ -606,7 +604,7 @@ var WebGLGlobalWrapper = new Class({
                 gl.disable(gl.DEPTH_TEST);
             }
         }
-    },
+    }
 
     /**
      * Updates the scissor state.
@@ -616,7 +614,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateScissor: function (state, force)
+    updateScissor(state, force)
     {
         var scissor = state.scissor;
         if (scissor.enable !== undefined)
@@ -627,7 +625,7 @@ var WebGLGlobalWrapper = new Class({
         {
             this.updateScissorBox(state, force);
         }
-    },
+    }
 
     /**
      * Updates the scissor enabled state.
@@ -637,7 +635,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateScissorEnabled: function (state, force)
+    updateScissorEnabled(state, force)
     {
         var enable = state.scissor.enable;
 
@@ -659,7 +657,7 @@ var WebGLGlobalWrapper = new Class({
                 gl.disable(gl.SCISSOR_TEST);
             }
         }
-    },
+    }
 
     /**
      * Updates the scissor box state.
@@ -669,7 +667,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateScissorBox: function (state, force)
+    updateScissorBox(state, force)
     {
         var scissorBox = state.scissor.box;
         var x = scissorBox[0];
@@ -695,7 +693,7 @@ var WebGLGlobalWrapper = new Class({
                 height
             );
         }
-    },
+    }
 
     /**
      * Updates the stencil state.
@@ -705,7 +703,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateStencil: function (state, force)
+    updateStencil(state, force)
     {
         var stencil = state.stencil;
         if (stencil.clear !== undefined)
@@ -724,7 +722,7 @@ var WebGLGlobalWrapper = new Class({
         {
             this.updateStencilOp(state, force);
         }
-    },
+    }
 
     /**
      * Updates the stencil clear state.
@@ -734,7 +732,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateStencilClear: function (state, force)
+    updateStencilClear(state, force)
     {
         var clear = state.stencil.clear;
 
@@ -748,7 +746,7 @@ var WebGLGlobalWrapper = new Class({
         {
             this.renderer.gl.clearStencil(clear);
         }
-    },
+    }
 
     /**
      * Updates the stencil enabled state.
@@ -758,7 +756,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateStencilEnabled: function (state, force)
+    updateStencilEnabled(state, force)
     {
         var enabled = state.stencil.enabled;
 
@@ -780,7 +778,7 @@ var WebGLGlobalWrapper = new Class({
                 gl.disable(gl.STENCIL_TEST);
             }
         }
-    },
+    }
 
     /**
      * Updates the stencil function state.
@@ -790,7 +788,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateStencilFunc: function (state, force)
+    updateStencilFunc(state, force)
     {
         var func = state.stencil.func;
 
@@ -807,7 +805,7 @@ var WebGLGlobalWrapper = new Class({
             var gl = this.renderer.gl;
             gl.stencilFunc(func.func, func.ref, func.mask);
         }
-    },
+    }
 
     /**
      * Updates the stencil operation state.
@@ -817,7 +815,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateStencilOp: function (state, force)
+    updateStencilOp(state, force)
     {
         var op = state.stencil.op;
 
@@ -834,7 +832,7 @@ var WebGLGlobalWrapper = new Class({
             var gl = this.renderer.gl;
             gl.stencilOp(op.fail, op.zfail, op.zpass);
         }
-    },
+    }
 
     /**
      * Updates the texturing state, which takes effect when creating a texture.
@@ -845,7 +843,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateTexturing: function (state, force)
+    updateTexturing(state, force)
     {
         var texturing = state.texturing;
         if (texturing.flipY !== undefined)
@@ -856,7 +854,7 @@ var WebGLGlobalWrapper = new Class({
         {
             this.updateTexturingPremultiplyAlpha(state, force);
         }
-    },
+    }
 
     /**
      * Updates the texture flipY state.
@@ -866,7 +864,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateTexturingFlipY: function (state, force)
+    updateTexturingFlipY(state, force)
     {
         var flipY = state.texturing.flipY;
 
@@ -881,7 +879,7 @@ var WebGLGlobalWrapper = new Class({
             var gl = this.renderer.gl;
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
         }
-    },
+    }
 
     /**
      * Updates the texture premultiplyAlpha state.
@@ -891,7 +889,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateTexturingPremultiplyAlpha: function (state, force)
+    updateTexturingPremultiplyAlpha(state, force)
     {
         var premultiplyAlpha = state.texturing.premultiplyAlpha;
 
@@ -906,7 +904,7 @@ var WebGLGlobalWrapper = new Class({
             var gl = this.renderer.gl;
             gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, premultiplyAlpha);
         }
-    },
+    }
 
     /**
      * Updates the vertex array object state.
@@ -922,7 +920,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateVAO: function (state, force)
+    updateVAO(state, force)
     {
         var vao = state.vao;
 
@@ -945,7 +943,7 @@ var WebGLGlobalWrapper = new Class({
                 extVAO.bindVertexArrayOES(null);
             }
         }
-    },
+    }
 
     /**
      * Updates the viewport state.
@@ -955,7 +953,7 @@ var WebGLGlobalWrapper = new Class({
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */
-    updateViewport: function (state, force)
+    updateViewport(state, force)
     {
         var viewport = state.viewport;
         var x = viewport[0];
@@ -977,6 +975,6 @@ var WebGLGlobalWrapper = new Class({
             this.renderer.gl.viewport(x, y, width, height);
         }
     }
-});
+};
 
 module.exports = WebGLGlobalWrapper;

@@ -24,15 +24,11 @@ var Vector2 = require('../../math/Vector2');
  * @param {number} u - The UV u coordinate of the vertex.
  * @param {number} v - The UV v coordinate of the vertex.
  */
-var Vertex = new Class({
+var Vertex = class extends Vector2 {
 
-    Extends: Vector2,
-
-    initialize:
-
-    function Vertex (x, y, u, v)
+    constructor(x, y, u, v)
     {
-        Vector2.call(this, x, y);
+        super(x, y);
 
         /**
          * The projected x coordinate of this vertex.
@@ -69,7 +65,7 @@ var Vertex = new Class({
          * @since 4.0.0
          */
         this.v = v;
-    },
+    }
 
     /**
      * Sets the U and V properties.
@@ -82,13 +78,13 @@ var Vertex = new Class({
      *
      * @return {this} This Vertex.
      */
-    setUVs: function (u, v)
+    setUVs(u, v)
     {
         this.u = u;
         this.v = v;
 
         return this;
-    },
+    }
 
     /**
      * Resizes this Vertex by setting the x and y coordinates, then transforms this vertex
@@ -106,7 +102,7 @@ var Vertex = new Class({
      *
      * @return {this} This Vertex.
      */
-    resize: function (x, y, width, height, originX, originY)
+    resize(x, y, width, height, originX, originY)
     {
         this.x = x;
         this.y = y;
@@ -134,6 +130,6 @@ var Vertex = new Class({
 
         return this;
     }
-});
+};
 
 module.exports = Vertex;

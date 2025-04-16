@@ -22,15 +22,11 @@ var Events = require('../events');
  * @param {Phaser.Input.Keyboard.KeyboardPlugin} plugin - The Keyboard Plugin instance that owns this Key object.
  * @param {number} keyCode - The keycode of this key.
  */
-var Key = new Class({
+var Key = class extends EventEmitter {
 
-    Extends: EventEmitter,
-
-    initialize:
-
-    function Key (plugin, keyCode)
+    constructor(plugin, keyCode)
     {
-        EventEmitter.call(this);
+        super();
 
         /**
          * The Keyboard Plugin instance that owns this Key object.
@@ -226,7 +222,7 @@ var Key = new Class({
          * @since 3.11.0
          */
         this._tick = -1;
-    },
+    }
 
     /**
      * Controls if this Key will continuously emit a `down` event while being held down (true),
@@ -239,12 +235,12 @@ var Key = new Class({
      *
      * @return {this} This Key instance.
      */
-    setEmitOnRepeat: function (value)
+    setEmitOnRepeat(value)
     {
         this.emitOnRepeat = value;
 
         return this;
-    },
+    }
 
     /**
      * Processes the Key Down action for this Key.
@@ -256,7 +252,7 @@ var Key = new Class({
      *
      * @param {KeyboardEvent} event - The native DOM Keyboard event.
      */
-    onDown: function (event)
+    onDown(event)
     {
         this.originalEvent = event;
 
@@ -288,7 +284,7 @@ var Key = new Class({
         {
             this.emit(Events.DOWN, this, event);
         }
-    },
+    }
 
     /**
      * Processes the Key Up action for this Key.
@@ -300,7 +296,7 @@ var Key = new Class({
      *
      * @param {KeyboardEvent} event - The native DOM Keyboard event.
      */
-    onUp: function (event)
+    onUp(event)
     {
         this.originalEvent = event;
 
@@ -320,7 +316,7 @@ var Key = new Class({
         this._tick = -1;
 
         this.emit(Events.UP, this, event);
-    },
+    }
 
     /**
      * Resets this Key object back to its default un-pressed state.
@@ -332,7 +328,7 @@ var Key = new Class({
      *
      * @return {this} This Key instance.
      */
-    reset: function ()
+    reset()
     {
         this.isDown = false;
         this.isUp = true;
@@ -349,7 +345,7 @@ var Key = new Class({
         this._tick = -1;
 
         return this;
-    },
+    }
 
     /**
      * Returns the duration, in ms, that the Key has been held down for.
@@ -364,7 +360,7 @@ var Key = new Class({
      *
      * @return {number} The duration, in ms, that the Key has been held down for if currently down.
      */
-    getDuration: function ()
+    getDuration()
     {
         if (this.isDown)
         {
@@ -374,7 +370,7 @@ var Key = new Class({
         {
             return 0;
         }
-    },
+    }
 
     /**
      * Removes any bound event handlers and removes local references.
@@ -382,7 +378,7 @@ var Key = new Class({
      * @method Phaser.Input.Keyboard.Key#destroy
      * @since 3.16.0
      */
-    destroy: function ()
+    destroy()
     {
         this.removeAllListeners();
 
@@ -391,6 +387,6 @@ var Key = new Class({
         this.plugin = null;
     }
 
-});
+};
 
 module.exports = Key;

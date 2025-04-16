@@ -28,11 +28,9 @@ var ValueToColor = require('../display/color/ValueToColor');
  *
  * @see Phaser.Game#config
  */
-var Config = new Class({
+var Config = class {
 
-    initialize:
-
-    function Config (config)
+    constructor(config)
     {
         if (config === undefined) { config = {}; }
 
@@ -664,6 +662,6 @@ var Config = new Class({
         }
     }
 
-});
+};
 
 module.exports = Config;

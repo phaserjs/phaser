@@ -23,11 +23,9 @@ var tempMatrix = new Matrix4();
  * @param {number} [y] - The y component.
  * @param {number} [z] - The z component.
  */
-var Euler = new Class({
+var Euler = class {
 
-    initialize:
-
-    function Euler (x, y, z, order)
+    constructor(x, y, z, order)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -40,65 +38,61 @@ var Euler = new Class({
         this._order = order;
 
         this.onChangeCallback = NOOP;
-    },
+    }
 
-    x: {
-        get: function ()
-        {
-            return this._x;
-        },
 
-        set: function (value)
-        {
-            this._x = value;
+    get x()
+    {
+        return this._x;
+    }
 
-            this.onChangeCallback(this);
-        }
-    },
+    set x(value)
+    {
+        this._x = value;
 
-    y: {
-        get: function ()
-        {
-            return this._y;
-        },
+        this.onChangeCallback(this);
+    }
 
-        set: function (value)
-        {
-            this._y = value;
 
-            this.onChangeCallback(this);
-        }
-    },
+    get y()
+    {
+        return this._y;
+    }
 
-    z: {
-        get: function ()
-        {
-            return this._z;
-        },
+    set y(value)
+    {
+        this._y = value;
 
-        set: function (value)
-        {
-            this._z = value;
+        this.onChangeCallback(this);
+    }
 
-            this.onChangeCallback(this);
-        }
-    },
 
-    order: {
-        get: function ()
-        {
-            return this._order;
-        },
+    get z()
+    {
+        return this._z;
+    }
 
-        set: function (value)
-        {
-            this._order = value;
+    set z(value)
+    {
+        this._z = value;
 
-            this.onChangeCallback(this);
-        }
-    },
+        this.onChangeCallback(this);
+    }
 
-    set: function (x, y, z, order)
+
+    get order()
+    {
+        return this._order;
+    }
+
+    set order(value)
+    {
+        this._order = value;
+
+        this.onChangeCallback(this);
+    }
+
+    set(x, y, z, order)
     {
         if (order === undefined) { order = this._order; }
 
@@ -110,14 +104,14 @@ var Euler = new Class({
         this.onChangeCallback(this);
 
         return this;
-    },
+    }
 
-    copy: function (euler)
+    copy(euler)
     {
         return this.set(euler.x, euler.y, euler.z, euler.order);
-    },
+    }
 
-    setFromQuaternion: function (quaternion, order, update)
+    setFromQuaternion(quaternion, order, update)
     {
         if (order === undefined) { order = this._order; }
         if (update === undefined) { update = false; }
@@ -125,9 +119,9 @@ var Euler = new Class({
         tempMatrix.fromQuat(quaternion);
 
         return this.setFromRotationMatrix(tempMatrix, order, update);
-    },
+    }
 
-    setFromRotationMatrix: function (matrix, order, update)
+    setFromRotationMatrix(matrix, order, update)
     {
         if (order === undefined) { order = this._order; }
         if (update === undefined) { update = false; }
@@ -268,7 +262,7 @@ var Euler = new Class({
         return this;
     }
 
-});
+};
 
 Euler.RotationOrders = [ 'XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY' ];
 

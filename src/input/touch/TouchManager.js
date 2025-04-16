@@ -27,11 +27,9 @@ var NOOP = require('../../utils/NOOP');
  *
  * @param {Phaser.Input.InputManager} inputManager - A reference to the Input Manager.
  */
-var TouchManager = new Class({
+var TouchManager = class {
 
-    initialize:
-
-    function TouchManager (inputManager)
+    constructor(inputManager)
     {
         /**
          * A reference to the Input Manager.
@@ -158,7 +156,7 @@ var TouchManager = new Class({
         this.isTop = true;
 
         inputManager.events.once(InputEvents.MANAGER_BOOT, this.boot, this);
-    },
+    }
 
     /**
      * The Touch Manager boot process.
@@ -167,7 +165,7 @@ var TouchManager = new Class({
      * @private
      * @since 3.0.0
      */
-    boot: function ()
+    boot()
     {
         var config = this.manager.config;
 
@@ -193,7 +191,7 @@ var TouchManager = new Class({
         {
             this.startListeners();
         }
-    },
+    }
 
     /**
      * Attempts to disable the context menu from appearing if you touch-hold on the browser.
@@ -207,7 +205,7 @@ var TouchManager = new Class({
      *
      * @return {this} This Touch Manager instance.
      */
-    disableContextMenu: function ()
+    disableContextMenu()
     {
         this.target.addEventListener('contextmenu', function (event)
         {
@@ -216,7 +214,7 @@ var TouchManager = new Class({
         });
 
         return this;
-    },
+    }
 
     /**
      * Starts the Touch Event listeners running as long as an input target is set.
@@ -228,7 +226,7 @@ var TouchManager = new Class({
      * @method Phaser.Input.Touch.TouchManager#startListeners
      * @since 3.0.0
      */
-    startListeners: function ()
+    startListeners()
     {
         var target = this.target;
 
@@ -353,7 +351,7 @@ var TouchManager = new Class({
         }
 
         this.enabled = true;
-    },
+    }
 
     /**
      * Stops the Touch Event listeners.
@@ -362,7 +360,7 @@ var TouchManager = new Class({
      * @method Phaser.Input.Touch.TouchManager#stopListeners
      * @since 3.0.0
      */
-    stopListeners: function ()
+    stopListeners()
     {
         var target = this.target;
 
@@ -379,7 +377,7 @@ var TouchManager = new Class({
             target.removeEventListener('touchend', this.onTouchEndWindow);
             target.removeEventListener('touchcancel', this.onTouchCancelWindow);
         }
-    },
+    }
 
     /**
      * Destroys this Touch Manager instance.
@@ -387,7 +385,7 @@ var TouchManager = new Class({
      * @method Phaser.Input.Touch.TouchManager#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.stopListeners();
 
@@ -396,6 +394,6 @@ var TouchManager = new Class({
         this.manager = null;
     }
 
-});
+};
 
 module.exports = TouchManager;

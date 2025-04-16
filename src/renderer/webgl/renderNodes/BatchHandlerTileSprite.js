@@ -37,13 +37,12 @@ var BatchHandlerQuad = require('./BatchHandlerQuad');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this handler.
  */
-var BatchHandlerTileSprite = new Class({
-    Extends: BatchHandlerQuad,
+var BatchHandlerTileSprite = class extends BatchHandlerQuad {
 
-    initialize: function BatchHandlerTileSprite (manager, config)
+    constructor(manager, config)
     {
-        BatchHandlerQuad.call(this, manager, config);
-    },
+        super(manager, config);
+    }
 
     defaultConfig: {
         name: 'BatchHandlerTileSprite',
@@ -97,9 +96,9 @@ var BatchHandlerTileSprite = new Class({
                 }
             ]
         }
-    },
+    }
 
-    updateRenderOptions: function (renderOptions)
+    updateRenderOptions(renderOptions)
     {
         BatchHandlerQuad.prototype.updateRenderOptions.call(this, renderOptions);
 
@@ -130,9 +129,9 @@ var BatchHandlerTileSprite = new Class({
         {
             this._renderOptionsChanged = true;
         }
-    },
+    }
 
-    updateShaderConfig: function ()
+    updateShaderConfig()
     {
         BatchHandlerQuad.prototype.updateShaderConfig.call(this);
 
@@ -157,7 +156,7 @@ var BatchHandlerTileSprite = new Class({
             var wrapAddition = programManager.getAddition('TexCoordFrameWrap');
             wrapAddition.disable = !wrapFrame;
         }
-    },
+    }
 
     /**
      * Add a quad to the batch.
@@ -193,7 +192,7 @@ var BatchHandlerTileSprite = new Class({
      * @param {number} u3 - The u coordinate of the distorted bottom-right corner.
      * @param {number} v3 - The v coordinate of the distorted bottom-right corner.
      */
-    batch: function (
+    batch(
         drawingContext,
         glTexture,
         x0, y0,
@@ -295,6 +294,6 @@ var BatchHandlerTileSprite = new Class({
             // Now the batch is empty.
         }
     }
-});
+};
 
 module.exports = BatchHandlerTileSprite;

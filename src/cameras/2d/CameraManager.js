@@ -50,11 +50,9 @@ var SceneEvents = require('../../scene/events');
  *
  * @param {Phaser.Scene} scene - The Scene that owns the Camera Manager plugin.
  */
-var CameraManager = new Class({
+var CameraManager = class {
 
-    initialize:
-
-    function CameraManager (scene)
+    constructor(scene)
     {
         /**
          * The Scene that owns the Camera Manager plugin.
@@ -129,7 +127,7 @@ var CameraManager = new Class({
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
-    },
+    }
 
     /**
      * This method is called automatically, only once, when the Scene is first created.
@@ -140,7 +138,7 @@ var CameraManager = new Class({
      * @listens Phaser.Scenes.Events#DESTROY
      * @since 3.5.1
      */
-    boot: function ()
+    boot()
     {
         var sys = this.systems;
 
@@ -163,7 +161,7 @@ var CameraManager = new Class({
         sys.game.scale.on(ScaleEvents.RESIZE, this.onResize, this);
 
         this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
-    },
+    }
 
     /**
      * This method is called automatically by the Scene when it is starting up.
@@ -176,7 +174,7 @@ var CameraManager = new Class({
      * @listens Phaser.Scenes.Events#SHUTDOWN
      * @since 3.5.0
      */
-    start: function ()
+    start()
     {
         if (!this.main)
         {
@@ -200,7 +198,7 @@ var CameraManager = new Class({
 
         eventEmitter.on(SceneEvents.UPDATE, this.update, this);
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * Adds a new Camera into the Camera Manager. The Camera Manager can support up to 31 different Cameras.
@@ -231,7 +229,7 @@ var CameraManager = new Class({
      *
      * @return {Phaser.Cameras.Scene2D.Camera} The newly created Camera.
      */
-    add: function (x, y, width, height, makeMain, name)
+    add(x, y, width, height, makeMain, name)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -256,7 +254,7 @@ var CameraManager = new Class({
         }
 
         return camera;
-    },
+    }
 
     /**
      * Adds an existing Camera into the Camera Manager.
@@ -279,7 +277,7 @@ var CameraManager = new Class({
      *
      * @return {?Phaser.Cameras.Scene2D.Camera} The Camera that was added to the Camera Manager, or `null` if it couldn't be added.
      */
-    addExisting: function (camera, makeMain)
+    addExisting(camera, makeMain)
     {
         if (makeMain === undefined) { makeMain = false; }
 
@@ -302,7 +300,7 @@ var CameraManager = new Class({
         }
 
         return null;
-    },
+    }
 
     /**
      * Gets the next available Camera ID number.
@@ -316,7 +314,7 @@ var CameraManager = new Class({
      *
      * @return {number} The next available Camera ID, or 0 if they're all already in use.
      */
-    getNextID: function ()
+    getNextID()
     {
         var cameras = this.cameras;
 
@@ -350,7 +348,7 @@ var CameraManager = new Class({
         }
 
         return 0;
-    },
+    }
 
     /**
      * Gets the total number of Cameras in this Camera Manager.
@@ -364,7 +362,7 @@ var CameraManager = new Class({
      *
      * @return {number} The total number of Cameras in this Camera Manager.
      */
-    getTotal: function (isVisible)
+    getTotal(isVisible)
     {
         if (isVisible === undefined) { isVisible = false; }
 
@@ -383,7 +381,7 @@ var CameraManager = new Class({
         }
 
         return total;
-    },
+    }
 
     /**
      * Populates this Camera Manager based on the given configuration object, or an array of config objects.
@@ -397,7 +395,7 @@ var CameraManager = new Class({
      *
      * @return {this} This Camera Manager instance.
      */
-    fromJSON: function (config)
+    fromJSON(config)
     {
         if (!Array.isArray(config))
         {
@@ -452,7 +450,7 @@ var CameraManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Gets a Camera based on its name.
@@ -467,7 +465,7 @@ var CameraManager = new Class({
      *
      * @return {?Phaser.Cameras.Scene2D.Camera} The first Camera with a name matching the given string, otherwise `null`.
      */
-    getCamera: function (name)
+    getCamera(name)
     {
         var cameras = this.cameras;
 
@@ -480,7 +478,7 @@ var CameraManager = new Class({
         }
 
         return null;
-    },
+    }
 
     /**
      * Returns an array of all cameras below the given Pointer.
@@ -494,7 +492,7 @@ var CameraManager = new Class({
      *
      * @return {Phaser.Cameras.Scene2D.Camera[]} An array of cameras below the Pointer.
      */
-    getCamerasBelowPointer: function (pointer)
+    getCamerasBelowPointer(pointer)
     {
         var cameras = this.cameras;
 
@@ -515,7 +513,7 @@ var CameraManager = new Class({
         }
 
         return output;
-    },
+    }
 
     /**
      * Removes the given Camera, or an array of Cameras, from this Camera Manager.
@@ -535,7 +533,7 @@ var CameraManager = new Class({
      *
      * @return {number} The total number of Cameras removed.
      */
-    remove: function (camera, runDestroy)
+    remove(camera, runDestroy)
     {
         if (runDestroy === undefined) { runDestroy = true; }
 
@@ -574,7 +572,7 @@ var CameraManager = new Class({
         }
 
         return total;
-    },
+    }
 
     /**
      * The internal render method. This is called automatically by the Scene and should not be invoked directly.
@@ -589,7 +587,7 @@ var CameraManager = new Class({
      * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The Renderer that will render the children to this camera.
      * @param {Phaser.GameObjects.DisplayList} displayList - The Display List for the Scene.
      */
-    render: function (renderer, displayList)
+    render(renderer, displayList)
     {
         var scene = this.scene;
         var cameras = this.cameras;
@@ -607,7 +605,7 @@ var CameraManager = new Class({
                 renderer.render(scene, visibleChildren, camera);
             }
         }
-    },
+    }
 
     /**
      * Takes an array of Game Objects and a Camera and returns a new array
@@ -622,13 +620,13 @@ var CameraManager = new Class({
      *
      * @return {Phaser.GameObjects.GameObject[]} A filtered list of only Game Objects within the Scene that will render against the given Camera.
      */
-    getVisibleChildren: function (children, camera)
+    getVisibleChildren(children, camera)
     {
         return children.filter(function (child)
         {
             return child.willRender(camera);
         });
-    },
+    }
 
     /**
      * Resets this Camera Manager.
@@ -641,7 +639,7 @@ var CameraManager = new Class({
      *
      * @return {Phaser.Cameras.Scene2D.Camera} The freshly created main Camera.
      */
-    resetAll: function ()
+    resetAll()
     {
         for (var i = 0; i < this.cameras.length; i++)
         {
@@ -653,7 +651,7 @@ var CameraManager = new Class({
         this.main = this.add();
 
         return this.main;
-    },
+    }
 
     /**
      * The main update loop. Called automatically when the Scene steps.
@@ -665,13 +663,13 @@ var CameraManager = new Class({
      * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    update: function (time, delta)
+    update(time, delta)
     {
         for (var i = 0; i < this.cameras.length; i++)
         {
             this.cameras[i].update(time, delta);
         }
-    },
+    }
 
     /**
      * The event handler that manages the `resize` event dispatched by the Scale Manager.
@@ -682,7 +680,7 @@ var CameraManager = new Class({
      * @param {Phaser.Structs.Size} gameSize - The default Game Size object. This is the un-modified game dimensions.
      * @param {Phaser.Structs.Size} baseSize - The base Size object. The game dimensions. The canvas width / height values match this.
      */
-    onResize: function (gameSize, baseSize, displaySize, previousWidth, previousHeight)
+    onResize(gameSize, baseSize, displaySize, previousWidth, previousHeight)
     {
         for (var i = 0; i < this.cameras.length; i++)
         {
@@ -696,7 +694,7 @@ var CameraManager = new Class({
                 cam.setSize(baseSize.width, baseSize.height);
             }
         }
-    },
+    }
 
     /**
      * Resizes all cameras to the given dimensions.
@@ -707,13 +705,13 @@ var CameraManager = new Class({
      * @param {number} width - The new width of the camera.
      * @param {number} height - The new height of the camera.
      */
-    resize: function (width, height)
+    resize(width, height)
     {
         for (var i = 0; i < this.cameras.length; i++)
         {
             this.cameras[i].setSize(width, height);
         }
-    },
+    }
 
     /**
      * The Scene that owns this plugin is shutting down.
@@ -723,7 +721,7 @@ var CameraManager = new Class({
      * @private
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         this.main = undefined;
 
@@ -738,7 +736,7 @@ var CameraManager = new Class({
 
         eventEmitter.off(SceneEvents.UPDATE, this.update, this);
         eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * The Scene that owns this plugin is being destroyed.
@@ -748,7 +746,7 @@ var CameraManager = new Class({
      * @private
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.shutdown();
 
@@ -762,7 +760,7 @@ var CameraManager = new Class({
         this.systems = null;
     }
 
-});
+};
 
 PluginCache.register('CameraManager', CameraManager, 'cameras');
 

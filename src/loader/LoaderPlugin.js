@@ -50,15 +50,11 @@ var XHRSettings = require('./XHRSettings');
  *
  * @param {Phaser.Scene} scene - The Scene which owns this Loader instance.
  */
-var LoaderPlugin = new Class({
+var LoaderPlugin = class extends EventEmitter {
 
-    Extends: EventEmitter,
-
-    initialize:
-
-    function LoaderPlugin (scene)
+    constructor(scene)
     {
-        EventEmitter.call(this);
+        super();
 
         var gameConfig = scene.sys.game.config;
         var sceneConfig = scene.sys.settings.loader;
@@ -366,7 +362,7 @@ var LoaderPlugin = new Class({
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.pluginStart, this);
-    },
+    }
 
     /**
      * This method is called automatically, only once, when the Scene is first created.
@@ -376,10 +372,10 @@ var LoaderPlugin = new Class({
      * @private
      * @since 3.5.1
      */
-    boot: function ()
+    boot()
     {
         this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
-    },
+    }
 
     /**
      * This method is called automatically by the Scene when it is starting up.
@@ -390,10 +386,10 @@ var LoaderPlugin = new Class({
      * @private
      * @since 3.5.1
      */
-    pluginStart: function ()
+    pluginStart()
     {
         this.systems.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * If you want to append a URL before the path of any asset you can set this here.
@@ -410,7 +406,7 @@ var LoaderPlugin = new Class({
      *
      * @return {this} This Loader object.
      */
-    setBaseURL: function (url)
+    setBaseURL(url)
     {
         if (url === undefined) { url = ''; }
 
@@ -422,7 +418,7 @@ var LoaderPlugin = new Class({
         this.baseURL = url;
 
         return this;
-    },
+    }
 
     /**
      * The value of `path`, if set, is placed before any _relative_ file path given. For example:
@@ -450,7 +446,7 @@ var LoaderPlugin = new Class({
      *
      * @return {this} This Loader object.
      */
-    setPath: function (path)
+    setPath(path)
     {
         if (path === undefined) { path = ''; }
 
@@ -462,7 +458,7 @@ var LoaderPlugin = new Class({
         this.path = path;
 
         return this;
-    },
+    }
 
     /**
      * An optional prefix that is automatically prepended to the start of every file key.
@@ -479,14 +475,14 @@ var LoaderPlugin = new Class({
      *
      * @return {this} This Loader object.
      */
-    setPrefix: function (prefix)
+    setPrefix(prefix)
     {
         if (prefix === undefined) { prefix = ''; }
 
         this.prefix = prefix;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Cross Origin Resource Sharing value used when loading files.
@@ -505,12 +501,12 @@ var LoaderPlugin = new Class({
      *
      * @return {this} This Loader object.
      */
-    setCORS: function (crossOrigin)
+    setCORS(crossOrigin)
     {
         this.crossOrigin = crossOrigin;
 
         return this;
-    },
+    }
 
     /**
      * Adds a file, or array of files, into the load queue.
@@ -529,7 +525,7 @@ var LoaderPlugin = new Class({
      *
      * @param {(Phaser.Loader.File|Phaser.Loader.File[])} file - The file, or array of files, to be added to the load queue.
      */
-    addFile: function (file)
+    addFile(file)
     {
         if (!Array.isArray(file))
         {
@@ -555,7 +551,7 @@ var LoaderPlugin = new Class({
                 }
             }
         }
-    },
+    }
 
     /**
      * Checks the key and type of the given file to see if it will conflict with anything already
@@ -568,7 +564,7 @@ var LoaderPlugin = new Class({
      *
      * @return {boolean} `true` if adding this file will cause a cache or queue conflict, otherwise `false`.
      */
-    keyExists: function (file)
+    keyExists(file)
     {
         var keyConflict = file.hasCacheConflict();
 
@@ -612,7 +608,7 @@ var LoaderPlugin = new Class({
         }
 
         return keyConflict;
-    },
+    }
 
     /**
      * Takes a well formed, fully parsed pack file object and adds its entries into the load queue. Usually you do not call
@@ -631,7 +627,7 @@ var LoaderPlugin = new Class({
      *
      * @return {boolean} `true` if any files were added to the queue, otherwise `false`.
      */
-    addPack: function (pack, packKey)
+    addPack(pack, packKey)
     {
         //  if no packKey provided we'll add everything to the queue
         if (typeof(packKey) === 'string')
@@ -694,7 +690,7 @@ var LoaderPlugin = new Class({
         this.setPrefix(currentPrefix);
 
         return (total > 0);
-    },
+    }
 
     /**
      * Remove the resources listed in an Asset Pack.
@@ -709,7 +705,7 @@ var LoaderPlugin = new Class({
      * @param {(string|object)} packKey - The key of an Asset Pack in the JSON cache, or a Pack File data.
      * @param {string} [dataKey] - A key in the Pack data, if you want to process only a section of it.
      */
-    removePack: function (packKey, dataKey)
+    removePack(packKey, dataKey)
     {
         var animationManager = this.systems.anims;
         var cacheManager = this.cacheManager;
@@ -868,7 +864,7 @@ var LoaderPlugin = new Class({
                 }
             }
         }
-    },
+    }
 
     /**
      * Is the Loader actively loading, or processing loaded files?
@@ -878,10 +874,10 @@ var LoaderPlugin = new Class({
      *
      * @return {boolean} `true` if the Loader is busy loading or processing, otherwise `false`.
      */
-    isLoading: function ()
+    isLoading()
     {
         return (this.state === CONST.LOADER_LOADING || this.state === CONST.LOADER_PROCESSING);
-    },
+    }
 
     /**
      * Is the Loader ready to start a new load?
@@ -891,10 +887,10 @@ var LoaderPlugin = new Class({
      *
      * @return {boolean} `true` if the Loader is ready to start a new load, otherwise `false`.
      */
-    isReady: function ()
+    isReady()
     {
         return (this.state === CONST.LOADER_IDLE || this.state === CONST.LOADER_COMPLETE);
-    },
+    }
 
     /**
      * Starts the Loader running. This will reset the progress and totals and then emit a `start` event.
@@ -911,7 +907,7 @@ var LoaderPlugin = new Class({
      * @fires Phaser.Loader.Events#START
      * @since 3.0.0
      */
-    start: function ()
+    start()
     {
         if (!this.isReady())
         {
@@ -943,7 +939,7 @@ var LoaderPlugin = new Class({
 
             this.systems.events.on(SceneEvents.UPDATE, this.update, this);
         }
-    },
+    }
 
     /**
      * Called automatically during the load process.
@@ -954,12 +950,12 @@ var LoaderPlugin = new Class({
      * @fires Phaser.Loader.Events#PROGRESS
      * @since 3.0.0
      */
-    updateProgress: function ()
+    updateProgress()
     {
         this.progress = 1 - ((this.list.size + this.inflight.size) / this.totalToLoad);
 
         this.emit(Events.PROGRESS, this.progress);
-    },
+    }
 
     /**
      * Called automatically during the load process.
@@ -967,13 +963,13 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#update
      * @since 3.10.0
      */
-    update: function ()
+    update()
     {
         if (this.state === CONST.LOADER_LOADING && this.list.size > 0 && this.inflight.size < this.maxParallelDownloads)
         {
             this.checkLoadQueue();
         }
-    },
+    }
 
     /**
      * An internal method called by the Loader.
@@ -987,7 +983,7 @@ var LoaderPlugin = new Class({
      * @private
      * @since 3.7.0
      */
-    checkLoadQueue: function ()
+    checkLoadQueue()
     {
         this.list.forEach(function (file)
         {
@@ -1013,7 +1009,7 @@ var LoaderPlugin = new Class({
             }
 
         }, this);
-    },
+    }
 
     /**
      * An internal method called automatically by the XHRLoader belonging to a File.
@@ -1029,7 +1025,7 @@ var LoaderPlugin = new Class({
      * @param {Phaser.Loader.File} file - The File that just finished loading, or errored during load.
      * @param {boolean} success - `true` if the file loaded successfully, otherwise `false`.
      */
-    nextFile: function (file, success)
+    nextFile(file, success)
     {
         //  Has the game been destroyed during load? If so, bail out now.
         if (!this.inflight)
@@ -1061,7 +1057,7 @@ var LoaderPlugin = new Class({
 
             this.fileProcessComplete(file);
         }
-    },
+    }
 
     /**
      * An internal method that is called automatically by the File when it has finished processing.
@@ -1075,7 +1071,7 @@ var LoaderPlugin = new Class({
      *
      * @param {Phaser.Loader.File} file - The file that has finished processing.
      */
-    fileProcessComplete: function (file)
+    fileProcessComplete(file)
     {
         //  Has the game been destroyed during load? If so, bail out now.
         if (!this.scene || !this.systems || !this.systems.game || this.systems.game.pendingDestroy)
@@ -1119,7 +1115,7 @@ var LoaderPlugin = new Class({
         {
             this.loadComplete();
         }
-    },
+    }
 
     /**
      * Called at the end when the load queue is exhausted and all files have either loaded or errored.
@@ -1132,7 +1128,7 @@ var LoaderPlugin = new Class({
      * @fires Phaser.Loader.Events#POST_PROCESS
      * @since 3.7.0
      */
-    loadComplete: function ()
+    loadComplete()
     {
         this.emit(Events.POST_PROCESS, this);
 
@@ -1155,7 +1151,7 @@ var LoaderPlugin = new Class({
         this._deleteQueue.clear();
 
         this.emit(Events.COMPLETE, this, this.totalComplete, this.totalFailed);
-    },
+    }
 
     /**
      * Adds a File into the pending-deletion queue.
@@ -1165,10 +1161,10 @@ var LoaderPlugin = new Class({
      *
      * @param {Phaser.Loader.File} file - The File to be queued for deletion when the Loader completes.
      */
-    flagForRemoval: function (file)
+    flagForRemoval(file)
     {
         this._deleteQueue.add(file);
-    },
+    }
 
     /**
      * Converts the given JSON data into a file that the browser then prompts you to download so you can save it locally.
@@ -1183,10 +1179,10 @@ var LoaderPlugin = new Class({
      *
      * @return {this} This Loader plugin.
      */
-    saveJSON: function (data, filename)
+    saveJSON(data, filename)
     {
         return this.save(JSON.stringify(data), filename);
-    },
+    }
 
     /**
      * Causes the browser to save the given data as a file to its default Downloads folder.
@@ -1203,7 +1199,7 @@ var LoaderPlugin = new Class({
      *
      * @return {this} This Loader plugin.
      */
-    save: function (data, filename, filetype)
+    save(data, filename, filetype)
     {
         if (filename === undefined) { filename = 'file.json'; }
         if (filetype === undefined) { filetype = 'application/json'; }
@@ -1220,7 +1216,7 @@ var LoaderPlugin = new Class({
         a.click();
 
         return this;
-    },
+    }
 
     /**
      * Resets the Loader.
@@ -1232,7 +1228,7 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#reset
      * @since 3.0.0
      */
-    reset: function ()
+    reset()
     {
         this.list.clear();
         this.inflight.clear();
@@ -1246,7 +1242,7 @@ var LoaderPlugin = new Class({
         this.setPrefix(GetFastValue(sceneConfig, 'prefix', gameConfig.loaderPrefix));
 
         this.state = CONST.LOADER_IDLE;
-    },
+    }
 
     /**
      * The Scene that owns this plugin is shutting down.
@@ -1256,7 +1252,7 @@ var LoaderPlugin = new Class({
      * @private
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         this.reset();
 
@@ -1266,7 +1262,7 @@ var LoaderPlugin = new Class({
 
         this.systems.events.off(SceneEvents.UPDATE, this.update, this);
         this.systems.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * The Scene that owns this plugin is being destroyed.
@@ -1276,7 +1272,7 @@ var LoaderPlugin = new Class({
      * @private
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.shutdown();
 
@@ -1296,7 +1292,7 @@ var LoaderPlugin = new Class({
         this.sceneManager = null;
     }
 
-});
+};
 
 PluginCache.register('Loader', LoaderPlugin, 'load');
 

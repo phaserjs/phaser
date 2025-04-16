@@ -38,11 +38,9 @@ var Class = require('../utils/Class');
  *
  * @param {Array.<*>} elements - An optional array of key-value pairs to populate this Map with.
  */
-var Map = new Class({
+var Map = class {
 
-    initialize:
-
-    function Map (elements)
+    constructor(elements)
     {
         /**
          * The entries in this Map.
@@ -67,7 +65,7 @@ var Map = new Class({
         this.size = 0;
 
         this.setAll(elements);
-    },
+    }
 
     /**
      * Adds all the elements in the given array to this Map.
@@ -85,7 +83,7 @@ var Map = new Class({
      *
      * @return {this} This Map object.
      */
-    setAll: function (elements)
+    setAll(elements)
     {
         if (Array.isArray(elements))
         {
@@ -96,7 +94,7 @@ var Map = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Adds an element with a specified `key` and `value` to this Map.
@@ -117,7 +115,7 @@ var Map = new Class({
      *
      * @return {this} This Map object.
      */
-    set: function (key, value)
+    set(key, value)
     {
         if (!this.has(key))
         {
@@ -127,7 +125,7 @@ var Map = new Class({
         this.entries[key] = value;
 
         return this;
-    },
+    }
 
     /**
      * Returns the value associated to the `key`, or `undefined` if there is none.
@@ -142,13 +140,13 @@ var Map = new Class({
      *
      * @return {*} The element associated with the specified key or `undefined` if the key can't be found in this Map object.
      */
-    get: function (key)
+    get(key)
     {
         if (this.has(key))
         {
             return this.entries[key];
         }
-    },
+    }
 
     /**
      * Returns an `Array` of all the values stored in this Map.
@@ -160,7 +158,7 @@ var Map = new Class({
      *
      * @return {Array.<*>} An array of the values stored in this Map.
      */
-    getArray: function ()
+    getArray()
     {
         var output = [];
         var entries = this.entries;
@@ -171,7 +169,7 @@ var Map = new Class({
         }
 
         return output;
-    },
+    }
 
     /**
      * Returns a boolean indicating whether an element with the specified key exists or not.
@@ -185,10 +183,10 @@ var Map = new Class({
      *
      * @return {boolean} Returns `true` if an element with the specified key exists in this Map, otherwise `false`.
      */
-    has: function (key)
+    has(key)
     {
         return (this.entries.hasOwnProperty(key));
-    },
+    }
 
     /**
      * Delete the specified element from this Map.
@@ -203,7 +201,7 @@ var Map = new Class({
      *
      * @return {this} This Map object.
      */
-    delete: function (key)
+    delete(key)
     {
         if (this.has(key))
         {
@@ -212,7 +210,7 @@ var Map = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Delete all entries from this Map.
@@ -224,7 +222,7 @@ var Map = new Class({
      *
      * @return {this} This Map object.
      */
-    clear: function ()
+    clear()
     {
         Object.keys(this.entries).forEach(function (prop)
         {
@@ -235,7 +233,7 @@ var Map = new Class({
         this.size = 0;
 
         return this;
-    },
+    }
 
     /**
      * Returns all entries keys in this Map.
@@ -247,10 +245,10 @@ var Map = new Class({
      *
      * @return {string[]} Array containing entries' keys.
      */
-    keys: function ()
+    keys()
     {
         return Object.keys(this.entries);
-    },
+    }
 
     /**
      * Returns an `Array` of all entries.
@@ -262,7 +260,7 @@ var Map = new Class({
      *
      * @return {Array.<*>} An `Array` of entries.
      */
-    values: function ()
+    values()
     {
         var output = [];
         var entries = this.entries;
@@ -273,7 +271,7 @@ var Map = new Class({
         }
 
         return output;
-    },
+    }
 
     /**
      * Dumps the contents of this Map to the console via `console.group`.
@@ -281,7 +279,7 @@ var Map = new Class({
      * @method Phaser.Structs.Map#dump
      * @since 3.0.0
      */
-    dump: function ()
+    dump()
     {
         var entries = this.entries;
 
@@ -295,7 +293,7 @@ var Map = new Class({
 
         // eslint-disable-next-line no-console
         console.groupEnd();
-    },
+    }
 
     /**
      * Iterates through all entries in this Map, passing each one to the given callback.
@@ -312,7 +310,7 @@ var Map = new Class({
      *
      * @return {this} This Map object.
      */
-    each: function (callback)
+    each(callback)
     {
         var entries = this.entries;
 
@@ -325,7 +323,7 @@ var Map = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Returns `true` if the value exists within this Map. Otherwise, returns `false`.
@@ -339,7 +337,7 @@ var Map = new Class({
      *
      * @return {boolean} `true` if the value is found, otherwise `false`.
      */
-    contains: function (value)
+    contains(value)
     {
         var entries = this.entries;
 
@@ -352,7 +350,7 @@ var Map = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Merges all new keys from the given Map into this one.
@@ -368,7 +366,7 @@ var Map = new Class({
      *
      * @return {this} This Map object.
      */
-    merge: function (map, override)
+    merge(map, override)
     {
         if (override === undefined) { override = false; }
 
@@ -390,6 +388,6 @@ var Map = new Class({
         return this;
     }
 
-});
+};
 
 module.exports = Map;

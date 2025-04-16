@@ -30,15 +30,16 @@ var Vector2 = require('../../math/Vector2');
  * @param {Phaser.Physics.Arcade.World} world - The Arcade Physics simulation this Body belongs to.
  * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object this Body belongs to. As of Phaser 3.60 this is now optional.
  */
-var Body = new Class({
+var Body = class {
 
-    Mixins: [
-        CollisionComponent
-    ],
+    static
+    {
+        Class.mixin(this, [
+            CollisionComponent
+        ], false);
+    }
 
-    initialize:
-
-    function Body (world, gameObject)
+    constructor(world, gameObject)
     {
         var width = 64;
         var height = 64;
@@ -955,7 +956,7 @@ var Body = new Class({
          * @since 3.70.0
          */
         this.autoFrame = this.position.clone();
-    },
+    }
 
     /**
      * Updates the Body's `transform`, `width`, `height`, and `center` from its Game Object.
@@ -964,7 +965,7 @@ var Body = new Class({
      * @method Phaser.Physics.Arcade.Body#updateBounds
      * @since 3.0.0
      */
-    updateBounds: function ()
+    updateBounds()
     {
         var sprite = this.gameObject;
 
@@ -1026,7 +1027,7 @@ var Body = new Class({
             this.halfHeight = Math.floor(this.height / 2);
             this.updateCenter();
         }
-    },
+    }
 
     /**
      * Updates the Body's `center` from its `position`, `width`, and `height`.
@@ -1034,10 +1035,10 @@ var Body = new Class({
      * @method Phaser.Physics.Arcade.Body#updateCenter
      * @since 3.0.0
      */
-    updateCenter: function ()
+    updateCenter()
     {
         this.center.set(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
-    },
+    }
 
     /**
      * Updates the Body's `position`, `width`, `height`, and `center` from its Game Object and `offset`.
@@ -1051,7 +1052,7 @@ var Body = new Class({
      * @method Phaser.Physics.Arcade.Body#updateFromGameObject
      * @since 3.24.0
      */
-    updateFromGameObject: function ()
+    updateFromGameObject()
     {
         this.updateBounds();
 
@@ -1061,7 +1062,7 @@ var Body = new Class({
         this.position.y = transform.y + transform.scaleY * (this.offset.y - transform.displayOriginY);
 
         this.updateCenter();
-    },
+    }
 
     /**
      * Prepares the Body for a physics step by resetting the `wasTouching`, `touching` and `blocked` states.
@@ -1073,7 +1074,7 @@ var Body = new Class({
      *
      * @param {boolean} [clear=false] - Set the `wasTouching` values to their defaults.
      */
-    resetFlags: function (clear)
+    resetFlags(clear)
     {
         if (clear === undefined)
         {
@@ -1106,7 +1107,7 @@ var Body = new Class({
         this.overlapY = 0;
 
         this.embedded = false;
-    },
+    }
 
     /**
      * Syncs the position body position with the parent Game Object.
@@ -1119,7 +1120,7 @@ var Body = new Class({
      * @param {boolean} willStep - Will this Body run an update as well?
      * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
      */
-    preUpdate: function (willStep, delta)
+    preUpdate(willStep, delta)
     {
         if (willStep)
         {
@@ -1149,7 +1150,7 @@ var Body = new Class({
         {
             this.update(delta);
         }
-    },
+    }
 
     /**
      * Performs a single physics step and updates the body velocity, angle, speed and other properties.
@@ -1164,7 +1165,7 @@ var Body = new Class({
      *
      * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
      */
-    update: function (delta)
+    update(delta)
     {
         var prev = this.prev;
         var pos = this.position;
@@ -1223,7 +1224,7 @@ var Body = new Class({
 
             this.world.emit(Events.WORLD_BOUNDS, this, blocked.up, blocked.down, blocked.left, blocked.right);
         }
-    },
+    }
 
     /**
      * Feeds the Body results back into the parent Game Object.
@@ -1233,7 +1234,7 @@ var Body = new Class({
      * @method Phaser.Physics.Arcade.Body#postUpdate
      * @since 3.0.0
      */
-    postUpdate: function ()
+    postUpdate()
     {
         var pos = this.position;
 
@@ -1305,7 +1306,7 @@ var Body = new Class({
         this._ty = dy;
 
         this.autoFrame.set(pos.x, pos.y);
-    },
+    }
 
     /**
      * Sets a custom collision boundary rectangle. Use if you want to have a custom
@@ -1318,12 +1319,12 @@ var Body = new Class({
      *
      * @return {this} This Body object.
      */
-    setBoundsRectangle: function (bounds)
+    setBoundsRectangle(bounds)
     {
         this.customBoundsRectangle = (!bounds) ? this.world.bounds : bounds;
 
         return this;
-    },
+    }
 
     /**
      * Checks for collisions between this Body and the world boundary and separates them.
@@ -1333,7 +1334,7 @@ var Body = new Class({
      *
      * @return {boolean} True if this Body is colliding with the world boundary.
      */
-    checkWorldBounds: function ()
+    checkWorldBounds()
     {
         var pos = this.position;
         var vel = this.velocity;
@@ -1383,7 +1384,7 @@ var Body = new Class({
         }
 
         return wasSet;
-    },
+    }
 
     /**
      * Sets the offset of the Body's position from its Game Object's position.
@@ -1397,14 +1398,14 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setOffset: function (x, y)
+    setOffset(x, y)
     {
         if (y === undefined) { y = x; }
 
         this.offset.set(x, y);
 
         return this;
-    },
+    }
 
     /**
      * Assign this Body to a new Game Object.
@@ -1424,7 +1425,7 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setGameObject: function (gameObject, enable)
+    setGameObject(gameObject, enable)
     {
         if (enable === undefined) { enable = true; }
 
@@ -1460,7 +1461,7 @@ var Body = new Class({
         this.enable = enable;
 
         return this;
-    },
+    }
 
     /**
      * Sizes and positions this Body, as a rectangle.
@@ -1476,7 +1477,7 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setSize: function (width, height, center)
+    setSize(width, height, center)
     {
         if (center === undefined) { center = true; }
 
@@ -1518,7 +1519,7 @@ var Body = new Class({
         this.radius = 0;
 
         return this;
-    },
+    }
 
     /**
      * Sizes and positions this Body, as a circle.
@@ -1532,7 +1533,7 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setCircle: function (radius, offsetX, offsetY)
+    setCircle(radius, offsetX, offsetY)
     {
         if (offsetX === undefined) { offsetX = this.offset.x; }
         if (offsetY === undefined) { offsetY = this.offset.y; }
@@ -1561,7 +1562,7 @@ var Body = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets this Body's parent Game Object to the given coordinates and resets this Body at the new coordinates.
@@ -1573,7 +1574,7 @@ var Body = new Class({
      * @param {number} x - The horizontal position to place the Game Object.
      * @param {number} y - The vertical position to place the Game Object.
      */
-    reset: function (x, y)
+    reset(x, y)
     {
         this.stop();
 
@@ -1615,7 +1616,7 @@ var Body = new Class({
         }
 
         this.resetFlags(true);
-    },
+    }
 
     /**
      * Sets acceleration, velocity, and speed to zero.
@@ -1625,7 +1626,7 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    stop: function ()
+    stop()
     {
         this.velocity.set(0);
         this.acceleration.set(0);
@@ -1634,7 +1635,7 @@ var Body = new Class({
         this.angularAcceleration = 0;
 
         return this;
-    },
+    }
 
     /**
      * Copies the coordinates of this Body's edges into an object.
@@ -1646,7 +1647,7 @@ var Body = new Class({
      *
      * @return {Phaser.Types.Physics.Arcade.ArcadeBodyBounds} - An object with {x, y, right, bottom}.
      */
-    getBounds: function (obj)
+    getBounds(obj)
     {
         obj.x = this.x;
         obj.y = this.y;
@@ -1654,7 +1655,7 @@ var Body = new Class({
         obj.bottom = this.bottom;
 
         return obj;
-    },
+    }
 
     /**
      * Tests if the coordinates are within this Body.
@@ -1667,7 +1668,7 @@ var Body = new Class({
      *
      * @return {boolean} True if (x, y) is within this Body.
      */
-    hitTest: function (x, y)
+    hitTest(x, y)
     {
         if (!this.isCircle)
         {
@@ -1684,7 +1685,7 @@ var Body = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Whether this Body is touching a tile or the world boundary while moving down.
@@ -1695,10 +1696,10 @@ var Body = new Class({
      *
      * @return {boolean} True if touching.
      */
-    onFloor: function ()
+    onFloor()
     {
         return this.blocked.down;
-    },
+    }
 
     /**
      * Whether this Body is touching a tile or the world boundary while moving up.
@@ -1709,10 +1710,10 @@ var Body = new Class({
      *
      * @return {boolean} True if touching.
      */
-    onCeiling: function ()
+    onCeiling()
     {
         return this.blocked.up;
-    },
+    }
 
     /**
      * Whether this Body is touching a tile or the world boundary while moving left or right.
@@ -1723,10 +1724,10 @@ var Body = new Class({
      *
      * @return {boolean} True if touching.
      */
-    onWall: function ()
+    onWall()
     {
         return (this.blocked.left || this.blocked.right);
-    },
+    }
 
     /**
      * The absolute (non-negative) change in this Body's horizontal position from the previous step.
@@ -1736,10 +1737,10 @@ var Body = new Class({
      *
      * @return {number} The delta value.
      */
-    deltaAbsX: function ()
+    deltaAbsX()
     {
         return (this._dx > 0) ? this._dx : -this._dx;
-    },
+    }
 
     /**
      * The absolute (non-negative) change in this Body's vertical position from the previous step.
@@ -1749,10 +1750,10 @@ var Body = new Class({
      *
      * @return {number} The delta value.
      */
-    deltaAbsY: function ()
+    deltaAbsY()
     {
         return (this._dy > 0) ? this._dy : -this._dy;
-    },
+    }
 
     /**
      * The change in this Body's horizontal position from the previous step.
@@ -1766,10 +1767,10 @@ var Body = new Class({
      *
      * @return {number} The delta value.
      */
-    deltaX: function ()
+    deltaX()
     {
         return this._dx;
-    },
+    }
 
     /**
      * The change in this Body's vertical position from the previous step.
@@ -1783,10 +1784,10 @@ var Body = new Class({
      *
      * @return {number} The delta value.
      */
-    deltaY: function ()
+    deltaY()
     {
         return this._dy;
-    },
+    }
 
     /**
      * The change in this Body's horizontal position from the previous game update.
@@ -1804,10 +1805,10 @@ var Body = new Class({
      *
      * @return {number} The final delta x value.
      */
-    deltaXFinal: function ()
+    deltaXFinal()
     {
         return this._tx;
-    },
+    }
 
     /**
      * The change in this Body's vertical position from the previous game update.
@@ -1825,10 +1826,10 @@ var Body = new Class({
      *
      * @return {number} The final delta y value.
      */
-    deltaYFinal: function ()
+    deltaYFinal()
     {
         return this._ty;
-    },
+    }
 
     /**
      * The change in this Body's rotation from the previous step, in degrees.
@@ -1838,10 +1839,10 @@ var Body = new Class({
      *
      * @return {number} The delta value.
      */
-    deltaZ: function ()
+    deltaZ()
     {
         return this.rotation - this.preRotation;
-    },
+    }
 
     /**
      * Disables this Body and marks it for deletion by the simulation.
@@ -1849,7 +1850,7 @@ var Body = new Class({
      * @method Phaser.Physics.Arcade.Body#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.enable = false;
 
@@ -1857,7 +1858,7 @@ var Body = new Class({
         {
             this.world.pendingDestroy.add(this);
         }
-    },
+    }
 
     /**
      * Draws this Body and its velocity, if enabled.
@@ -1867,7 +1868,7 @@ var Body = new Class({
      *
      * @param {Phaser.GameObjects.Graphics} graphic - The Graphics object to draw on.
      */
-    drawDebug: function (graphic)
+    drawDebug(graphic)
     {
         var pos = this.position;
 
@@ -1912,7 +1913,7 @@ var Body = new Class({
             graphic.lineStyle(graphic.defaultStrokeWidth, this.world.defaults.velocityDebugColor, 1);
             graphic.lineBetween(x, y, x + this.velocity.x / 2, y + this.velocity.y / 2);
         }
-    },
+    }
 
     /**
      * Whether this Body will be drawn to the debug display.
@@ -1922,10 +1923,10 @@ var Body = new Class({
      *
      * @return {boolean} True if either `debugShowBody` or `debugShowVelocity` are enabled.
      */
-    willDrawDebug: function ()
+    willDrawDebug()
     {
         return (this.debugShowBody || this.debugShowVelocity);
-    },
+    }
 
     /**
      * Sets whether this Body should calculate its velocity based on its change in
@@ -1942,14 +1943,14 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setDirectControl: function (value)
+    setDirectControl(value)
     {
         if (value === undefined) { value = true; }
 
         this.directControl = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets whether this Body collides with the world boundary.
@@ -1966,7 +1967,7 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setCollideWorldBounds: function (value, bounceX, bounceY, onWorldBounds)
+    setCollideWorldBounds(value, bounceX, bounceY, onWorldBounds)
     {
         if (value === undefined) { value = true; }
 
@@ -1999,7 +2000,7 @@ var Body = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's velocity.
@@ -2012,7 +2013,7 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setVelocity: function (x, y)
+    setVelocity(x, y)
     {
         this.velocity.set(x, y);
 
@@ -2022,7 +2023,7 @@ var Body = new Class({
         this.speed = Math.sqrt(x * x + y * y);
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's horizontal velocity.
@@ -2034,10 +2035,10 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setVelocityX: function (value)
+    setVelocityX(value)
     {
         return this.setVelocity(value, this.velocity.y);
-    },
+    }
 
     /**
      * Sets the Body's vertical velocity.
@@ -2049,10 +2050,10 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setVelocityY: function (value)
+    setVelocityY(value)
     {
         return this.setVelocity(this.velocity.x, value);
-    },
+    }
 
     /**
      * Sets the Body's maximum velocity.
@@ -2065,12 +2066,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setMaxVelocity: function (x, y)
+    setMaxVelocity(x, y)
     {
         this.maxVelocity.set(x, y);
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's maximum horizontal velocity.
@@ -2082,12 +2083,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setMaxVelocityX: function (value)
+    setMaxVelocityX(value)
     {
         this.maxVelocity.x = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's maximum vertical velocity.
@@ -2099,12 +2100,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setMaxVelocityY: function (value)
+    setMaxVelocityY(value)
     {
         this.maxVelocity.y = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the maximum speed the Body can move.
@@ -2116,12 +2117,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setMaxSpeed: function (value)
+    setMaxSpeed(value)
     {
         this.maxSpeed = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Slide Factor of this Body.
@@ -2149,12 +2150,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setSlideFactor: function (x, y)
+    setSlideFactor(x, y)
     {
         this.slideFactor.set(x, y);
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's bounce.
@@ -2167,12 +2168,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setBounce: function (x, y)
+    setBounce(x, y)
     {
         this.bounce.set(x, y);
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's horizontal bounce.
@@ -2184,12 +2185,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setBounceX: function (value)
+    setBounceX(value)
     {
         this.bounce.x = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's vertical bounce.
@@ -2201,12 +2202,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setBounceY: function (value)
+    setBounceY(value)
     {
         this.bounce.y = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's acceleration.
@@ -2219,12 +2220,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setAcceleration: function (x, y)
+    setAcceleration(x, y)
     {
         this.acceleration.set(x, y);
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's horizontal acceleration.
@@ -2236,12 +2237,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setAccelerationX: function (value)
+    setAccelerationX(value)
     {
         this.acceleration.x = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's vertical acceleration.
@@ -2253,12 +2254,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setAccelerationY: function (value)
+    setAccelerationY(value)
     {
         this.acceleration.y = value;
 
         return this;
-    },
+    }
 
     /**
      * Enables or disables drag.
@@ -2271,14 +2272,14 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setAllowDrag: function (value)
+    setAllowDrag(value)
     {
         if (value === undefined) { value = true; }
 
         this.allowDrag = value;
 
         return this;
-    },
+    }
 
     /**
      * Enables or disables gravity's effect on this Body.
@@ -2291,14 +2292,14 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setAllowGravity: function (value)
+    setAllowGravity(value)
     {
         if (value === undefined) { value = true; }
 
         this.allowGravity = value;
 
         return this;
-    },
+    }
 
     /**
      * Enables or disables rotation.
@@ -2311,14 +2312,14 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setAllowRotation: function (value)
+    setAllowRotation(value)
     {
         if (value === undefined) { value = true; }
 
         this.allowRotation = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's drag.
@@ -2331,12 +2332,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setDrag: function (x, y)
+    setDrag(x, y)
     {
         this.drag.set(x, y);
 
         return this;
-    },
+    }
 
     /**
      * If this Body is using `drag` for deceleration this property controls how the drag is applied.
@@ -2356,12 +2357,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setDamping: function (value)
+    setDamping(value)
     {
         this.useDamping = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's horizontal drag.
@@ -2373,12 +2374,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setDragX: function (value)
+    setDragX(value)
     {
         this.drag.x = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's vertical drag.
@@ -2390,12 +2391,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setDragY: function (value)
+    setDragY(value)
     {
         this.drag.y = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's gravity.
@@ -2408,12 +2409,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setGravity: function (x, y)
+    setGravity(x, y)
     {
         this.gravity.set(x, y);
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's horizontal gravity.
@@ -2425,12 +2426,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setGravityX: function (value)
+    setGravityX(value)
     {
         this.gravity.x = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's vertical gravity.
@@ -2442,12 +2443,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setGravityY: function (value)
+    setGravityY(value)
     {
         this.gravity.y = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's friction.
@@ -2460,12 +2461,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setFriction: function (x, y)
+    setFriction(x, y)
     {
         this.friction.set(x, y);
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's horizontal friction.
@@ -2477,12 +2478,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setFrictionX: function (value)
+    setFrictionX(value)
     {
         this.friction.x = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's vertical friction.
@@ -2494,12 +2495,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setFrictionY: function (value)
+    setFrictionY(value)
     {
         this.friction.y = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's angular velocity.
@@ -2511,12 +2512,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setAngularVelocity: function (value)
+    setAngularVelocity(value)
     {
         this.angularVelocity = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's angular acceleration.
@@ -2528,12 +2529,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setAngularAcceleration: function (value)
+    setAngularAcceleration(value)
     {
         this.angularAcceleration = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's angular drag.
@@ -2545,12 +2546,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setAngularDrag: function (value)
+    setAngularDrag(value)
     {
         this.angularDrag = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's mass.
@@ -2562,12 +2563,12 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setMass: function (value)
+    setMass(value)
     {
         this.mass = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's `immovable` property.
@@ -2579,14 +2580,14 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setImmovable: function (value)
+    setImmovable(value)
     {
         if (value === undefined) { value = true; }
 
         this.immovable = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Body's `enable` property.
@@ -2598,14 +2599,14 @@ var Body = new Class({
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
-    setEnable: function (value)
+    setEnable(value)
     {
         if (value === undefined) { value = true; }
 
         this.enable = value;
 
         return this;
-    },
+    }
 
     /**
      * This is an internal handler, called by the `ProcessX` function as part
@@ -2619,7 +2620,7 @@ var Body = new Class({
      * @param {boolean} [left] - Set the blocked.left value?
      * @param {boolean} [right] - Set the blocked.right value?
      */
-    processX: function (x, vx, left, right)
+    processX(x, vx, left, right)
     {
         this.x += x;
 
@@ -2643,7 +2644,7 @@ var Body = new Class({
             blocked.right = true;
             blocked.none = false;
         }
-    },
+    }
 
     /**
      * This is an internal handler, called by the `ProcessY` function as part
@@ -2657,7 +2658,7 @@ var Body = new Class({
      * @param {boolean} [up] - Set the blocked.up value?
      * @param {boolean} [down] - Set the blocked.down value?
      */
-    processY: function (y, vy, up, down)
+    processY(y, vy, up, down)
     {
         this.y += y;
 
@@ -2681,7 +2682,7 @@ var Body = new Class({
             blocked.down = true;
             blocked.none = false;
         }
-    },
+    }
 
     /**
      * The Bodys horizontal position (left edge).
@@ -2690,19 +2691,16 @@ var Body = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    x: {
 
-        get: function ()
-        {
-            return this.position.x;
-        },
+    get x()
+    {
+        return this.position.x;
+    }
 
-        set: function (value)
-        {
-            this.position.x = value;
-        }
-
-    },
+    set x(value)
+    {
+        this.position.x = value;
+    }
 
     /**
      * The Bodys vertical position (top edge).
@@ -2711,19 +2709,16 @@ var Body = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    y: {
 
-        get: function ()
-        {
-            return this.position.y;
-        },
+    get y()
+    {
+        return this.position.y;
+    }
 
-        set: function (value)
-        {
-            this.position.y = value;
-        }
-
-    },
+    set y(value)
+    {
+        this.position.y = value;
+    }
 
     /**
      * The left edge of the Body. Identical to x.
@@ -2733,14 +2728,11 @@ var Body = new Class({
      * @readonly
      * @since 3.0.0
      */
-    left: {
 
-        get: function ()
-        {
-            return this.position.x;
-        }
-
-    },
+    get left()
+    {
+        return this.position.x;
+    }
 
     /**
      * The right edge of the Body.
@@ -2750,14 +2742,11 @@ var Body = new Class({
      * @readonly
      * @since 3.0.0
      */
-    right: {
 
-        get: function ()
-        {
-            return this.position.x + this.width;
-        }
-
-    },
+    get right()
+    {
+        return this.position.x + this.width;
+    }
 
     /**
      * The top edge of the Body. Identical to y.
@@ -2767,14 +2756,11 @@ var Body = new Class({
      * @readonly
      * @since 3.0.0
      */
-    top: {
 
-        get: function ()
-        {
-            return this.position.y;
-        }
-
-    },
+    get top()
+    {
+        return this.position.y;
+    }
 
     /**
      * The bottom edge of this Body.
@@ -2784,15 +2770,12 @@ var Body = new Class({
      * @readonly
      * @since 3.0.0
      */
-    bottom: {
 
-        get: function ()
-        {
-            return this.position.y + this.height;
-        }
-
+    get bottom()
+    {
+        return this.position.y + this.height;
     }
 
-});
+};
 
 module.exports = Body;

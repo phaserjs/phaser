@@ -32,13 +32,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {string} [sceneKey] - If this plugin is to be added to the Scene, this is the property key for it.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var ScenePluginFile = new Class({
+var ScenePluginFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function ScenePluginFile (loader, key, url, systemKey, sceneKey, xhrSettings)
+    constructor(loader, key, url, systemKey, sceneKey, xhrSettings)
     {
         var extension = 'js';
 
@@ -68,7 +64,7 @@ var ScenePluginFile = new Class({
             }
         };
 
-        File.call(this, loader, fileConfig);
+        super(loader, fileConfig);
 
         // If the url variable refers to a class, add the plugin directly
         if (typeof url === 'function')
@@ -77,7 +73,7 @@ var ScenePluginFile = new Class({
 
             this.state = CONST.FILE_POPULATED;
         }
-    },
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -86,7 +82,7 @@ var ScenePluginFile = new Class({
      * @method Phaser.Loader.FileTypes.ScenePluginFile#onProcess
      * @since 3.8.0
      */
-    onProcess: function ()
+    onProcess()
     {
         var pluginManager = this.loader.systems.plugins;
         var config = this.config;
@@ -118,7 +114,7 @@ var ScenePluginFile = new Class({
         this.onProcessComplete();
     }
 
-});
+};
 
 /**
  * Adds a Scene Plugin Script file, or array of plugin files, to the current load queue.

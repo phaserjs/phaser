@@ -35,24 +35,23 @@ var RectangleRender = require('./RectangleRender');
  * @param {number} [fillColor] - The color the rectangle will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the rectangle will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  */
-var Rectangle = new Class({
+var Rectangle = class extends Shape {
 
-    Extends: Shape,
+    static
+    {
+        Class.mixin(this, [
+            RectangleRender
+        ], false);
+    }
 
-    Mixins: [
-        RectangleRender
-    ],
-
-    initialize:
-
-    function Rectangle (scene, x, y, width, height, fillColor, fillAlpha)
+    constructor(scene, x, y, width, height, fillColor, fillAlpha)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = 128; }
         if (height === undefined) { height = 128; }
 
-        Shape.call(this, scene, 'Rectangle', new GeomRectangle(0, 0, width, height));
+        super(scene, 'Rectangle', new GeomRectangle(0, 0, width, height));
 
         /**
          * The radius of the rectangle if this is set to use rounded corners.
@@ -90,7 +89,7 @@ var Rectangle = new Class({
 
         this.updateDisplayOrigin();
         this.updateData();
-    },
+    }
 
     /**
      * Sets this rectangle to have rounded corners by specifying the radius of the corner.
@@ -106,7 +105,7 @@ var Rectangle = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setRounded: function (radius)
+    setRounded(radius)
     {
         if (radius === undefined) { radius = 16; }
 
@@ -114,7 +113,7 @@ var Rectangle = new Class({
         this.isRounded = radius > 0;
 
         return this.updateRoundedData();
-    },
+    }
 
     /**
      * Sets the internal size of this Rectangle, as used for frame or physics body creation.
@@ -130,7 +129,7 @@ var Rectangle = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setSize: function (width, height)
+    setSize(width, height)
     {
         this.width = width;
         this.height = height;
@@ -150,7 +149,7 @@ var Rectangle = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Internal method that updates the data and path values.
@@ -161,7 +160,7 @@ var Rectangle = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    updateData: function ()
+    updateData()
     {
         if (this.isRounded)
         {
@@ -191,7 +190,7 @@ var Rectangle = new Class({
         this.pathData = path;
 
         return this;
-    },
+    }
 
     /**
      * Internal method that updates the data and path values when this rectangle is rounded.
@@ -202,7 +201,7 @@ var Rectangle = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    updateRoundedData: function ()
+    updateRoundedData()
     {
         var path = [];
         var halfWidth = this.width / 2;
@@ -245,7 +244,7 @@ var Rectangle = new Class({
         this.pathData = path;
         
         return this;
-    },
+    }
     
     /**
      * Internal method placing points around the circumference of a circle for the rounded corners.
@@ -264,7 +263,7 @@ var Rectangle = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    arcTo: function (path, centerX, centerY, radius, startAngle, endAngle, segments)
+    arcTo(path, centerX, centerY, radius, startAngle, endAngle, segments)
     {
         var angleInc = (endAngle - startAngle) / segments;
         
@@ -279,6 +278,6 @@ var Rectangle = new Class({
         }
     }
 
-});
+};
 
 module.exports = Rectangle;

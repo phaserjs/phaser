@@ -28,20 +28,16 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var TilemapImpactFile = new Class({
+var TilemapImpactFile = class extends JSONFile {
 
-    Extends: JSONFile,
-
-    initialize:
-
-    function TilemapImpactFile (loader, key, url, xhrSettings)
+    constructor(loader, key, url, xhrSettings)
     {
-        JSONFile.call(this, loader, key, url, xhrSettings);
+        super(loader, key, url, xhrSettings);
 
         this.type = 'tilemapJSON';
 
         this.cache = loader.cacheManager.tilemap;
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -49,14 +45,14 @@ var TilemapImpactFile = new Class({
      * @method Phaser.Loader.FileTypes.TilemapImpactFile#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         var tiledata = { format: TILEMAP_FORMATS.WELTMEISTER, data: this.data };
 
         this.cache.add(this.key, tiledata);
     }
 
-});
+};
 
 /**
  * Adds an Impact.js Tilemap file, or array of map files, to the current load queue.

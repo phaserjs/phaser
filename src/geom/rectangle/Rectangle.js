@@ -26,11 +26,9 @@ var Random = require('./Random');
  * @param {number} [width=0] - The width of the Rectangle.
  * @param {number} [height=0] - The height of the Rectangle.
  */
-var Rectangle = new Class({
+var Rectangle = class {
 
-    initialize:
-
-    function Rectangle (x, y, width, height)
+    constructor(x, y, width, height)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -87,7 +85,7 @@ var Rectangle = new Class({
          * @since 3.0.0
          */
         this.height = height;
-    },
+    }
 
     /**
      * Checks if the given point is inside the Rectangle's bounds.
@@ -100,10 +98,10 @@ var Rectangle = new Class({
      *
      * @return {boolean} `true` if the point is within the Rectangle's bounds, otherwise `false`.
      */
-    contains: function (x, y)
+    contains(x, y)
     {
         return Contains(this, x, y);
-    },
+    }
 
     /**
      * Calculates the coordinates of a point at a certain `position` on the Rectangle's perimeter.
@@ -122,10 +120,10 @@ var Rectangle = new Class({
      *
      * @return {Phaser.Math.Vector2} The updated `output` object, or a new Vector2 if no `output` object was given.
      */
-    getPoint: function (position, output)
+    getPoint(position, output)
     {
         return GetPoint(this, position, output);
-    },
+    }
 
     /**
      * Returns an array of points from the perimeter of the Rectangle, each spaced out based on the quantity or step required.
@@ -141,10 +139,10 @@ var Rectangle = new Class({
      *
      * @return {Phaser.Math.Vector2[]} The modified `output` array, or a new array if none was provided.
      */
-    getPoints: function (quantity, stepRate, output)
+    getPoints(quantity, stepRate, output)
     {
         return GetPoints(this, quantity, stepRate, output);
-    },
+    }
 
     /**
      * Returns a random point within the Rectangle's bounds.
@@ -158,10 +156,10 @@ var Rectangle = new Class({
      *
      * @return {Phaser.Math.Vector2} The updated `vec`, or a new Vector2 if none was provided.
      */
-    getRandomPoint: function (vec)
+    getRandomPoint(vec)
     {
         return Random(this, vec);
-    },
+    }
 
     /**
      * Sets the position, width, and height of the Rectangle.
@@ -176,7 +174,7 @@ var Rectangle = new Class({
      *
      * @return {this} This Rectangle object.
      */
-    setTo: function (x, y, width, height)
+    setTo(x, y, width, height)
     {
         this.x = x;
         this.y = y;
@@ -184,7 +182,7 @@ var Rectangle = new Class({
         this.height = height;
 
         return this;
-    },
+    }
 
     /**
      * Resets the position, width, and height of the Rectangle to 0.
@@ -194,10 +192,10 @@ var Rectangle = new Class({
      *
      * @return {this} This Rectangle object.
      */
-    setEmpty: function ()
+    setEmpty()
     {
         return this.setTo(0, 0, 0, 0);
-    },
+    }
 
     /**
      * Sets the position of the Rectangle.
@@ -210,7 +208,7 @@ var Rectangle = new Class({
      *
      * @return {this} This Rectangle object.
      */
-    setPosition: function (x, y)
+    setPosition(x, y)
     {
         if (y === undefined) { y = x; }
 
@@ -218,7 +216,7 @@ var Rectangle = new Class({
         this.y = y;
 
         return this;
-    },
+    }
 
     /**
      * Sets the width and height of the Rectangle.
@@ -231,7 +229,7 @@ var Rectangle = new Class({
      *
      * @return {this} This Rectangle object.
      */
-    setSize: function (width, height)
+    setSize(width, height)
     {
         if (height === undefined) { height = width; }
 
@@ -239,7 +237,7 @@ var Rectangle = new Class({
         this.height = height;
 
         return this;
-    },
+    }
 
     /**
      * Determines if the Rectangle is empty. A Rectangle is empty if its width or height is less than or equal to 0.
@@ -249,10 +247,10 @@ var Rectangle = new Class({
      *
      * @return {boolean} `true` if the Rectangle is empty. A Rectangle object is empty if its width or height is less than or equal to 0.
      */
-    isEmpty: function ()
+    isEmpty()
     {
         return (this.width <= 0 || this.height <= 0);
-    },
+    }
 
     /**
      * Returns a Line object that corresponds to the top of this Rectangle.
@@ -266,14 +264,14 @@ var Rectangle = new Class({
      *
      * @return {Phaser.Geom.Line} A Line object that corresponds to the top of this Rectangle.
      */
-    getLineA: function (line)
+    getLineA(line)
     {
         if (line === undefined) { line = new Line(); }
 
         line.setTo(this.x, this.y, this.right, this.y);
 
         return line;
-    },
+    }
 
     /**
      * Returns a Line object that corresponds to the right of this Rectangle.
@@ -287,14 +285,14 @@ var Rectangle = new Class({
      *
      * @return {Phaser.Geom.Line} A Line object that corresponds to the right of this Rectangle.
      */
-    getLineB: function (line)
+    getLineB(line)
     {
         if (line === undefined) { line = new Line(); }
 
         line.setTo(this.right, this.y, this.right, this.bottom);
 
         return line;
-    },
+    }
 
     /**
      * Returns a Line object that corresponds to the bottom of this Rectangle.
@@ -308,14 +306,14 @@ var Rectangle = new Class({
      *
      * @return {Phaser.Geom.Line} A Line object that corresponds to the bottom of this Rectangle.
      */
-    getLineC: function (line)
+    getLineC(line)
     {
         if (line === undefined) { line = new Line(); }
 
         line.setTo(this.right, this.bottom, this.x, this.bottom);
 
         return line;
-    },
+    }
 
     /**
      * Returns a Line object that corresponds to the left of this Rectangle.
@@ -329,14 +327,14 @@ var Rectangle = new Class({
      *
      * @return {Phaser.Geom.Line} A Line object that corresponds to the left of this Rectangle.
      */
-    getLineD: function (line)
+    getLineD(line)
     {
         if (line === undefined) { line = new Line(); }
 
         line.setTo(this.x, this.bottom, this.x, this.y);
 
         return line;
-    },
+    }
 
     /**
      * The x coordinate of the left of the Rectangle.
@@ -346,28 +344,25 @@ var Rectangle = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    left: {
 
-        get: function ()
+    get left()
+    {
+        return this.x;
+    }
+
+    set left(value)
+    {
+        if (value >= this.right)
         {
-            return this.x;
-        },
-
-        set: function (value)
+            this.width = 0;
+        }
+        else
         {
-            if (value >= this.right)
-            {
-                this.width = 0;
-            }
-            else
-            {
-                this.width = this.right - value;
-            }
-
-            this.x = value;
+            this.width = this.right - value;
         }
 
-    },
+        this.x = value;
+    }
 
     /**
      * The sum of the x and width properties.
@@ -377,26 +372,23 @@ var Rectangle = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    right: {
 
-        get: function ()
-        {
-            return this.x + this.width;
-        },
+    get right()
+    {
+        return this.x + this.width;
+    }
 
-        set: function (value)
+    set right(value)
+    {
+        if (value <= this.x)
         {
-            if (value <= this.x)
-            {
-                this.width = 0;
-            }
-            else
-            {
-                this.width = value - this.x;
-            }
+            this.width = 0;
         }
-
-    },
+        else
+        {
+            this.width = value - this.x;
+        }
+    }
 
     /**
      * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
@@ -406,28 +398,25 @@ var Rectangle = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    top: {
 
-        get: function ()
+    get top()
+    {
+        return this.y;
+    }
+
+    set top(value)
+    {
+        if (value >= this.bottom)
         {
-            return this.y;
-        },
-
-        set: function (value)
+            this.height = 0;
+        }
+        else
         {
-            if (value >= this.bottom)
-            {
-                this.height = 0;
-            }
-            else
-            {
-                this.height = (this.bottom - value);
-            }
-
-            this.y = value;
+            this.height = (this.bottom - value);
         }
 
-    },
+        this.y = value;
+    }
 
     /**
      * The sum of the y and height properties.
@@ -437,26 +426,23 @@ var Rectangle = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    bottom: {
 
-        get: function ()
-        {
-            return this.y + this.height;
-        },
+    get bottom()
+    {
+        return this.y + this.height;
+    }
 
-        set: function (value)
+    set bottom(value)
+    {
+        if (value <= this.y)
         {
-            if (value <= this.y)
-            {
-                this.height = 0;
-            }
-            else
-            {
-                this.height = value - this.y;
-            }
+            this.height = 0;
         }
-
-    },
+        else
+        {
+            this.height = value - this.y;
+        }
+    }
 
     /**
      * The x coordinate of the center of the Rectangle.
@@ -465,19 +451,16 @@ var Rectangle = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    centerX: {
 
-        get: function ()
-        {
-            return this.x + (this.width / 2);
-        },
+    get centerX()
+    {
+        return this.x + (this.width / 2);
+    }
 
-        set: function (value)
-        {
-            this.x = value - (this.width / 2);
-        }
-
-    },
+    set centerX(value)
+    {
+        this.x = value - (this.width / 2);
+    }
 
     /**
      * The y coordinate of the center of the Rectangle.
@@ -486,20 +469,17 @@ var Rectangle = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    centerY: {
 
-        get: function ()
-        {
-            return this.y + (this.height / 2);
-        },
-
-        set: function (value)
-        {
-            this.y = value - (this.height / 2);
-        }
-
+    get centerY()
+    {
+        return this.y + (this.height / 2);
     }
 
-});
+    set centerY(value)
+    {
+        this.y = value - (this.height / 2);
+    }
+
+};
 
 module.exports = Rectangle;

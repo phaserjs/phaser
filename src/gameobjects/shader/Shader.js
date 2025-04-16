@@ -99,22 +99,24 @@ var ShaderRender = require('./ShaderRender');
  * @param {number} [height=128] - The height of the Game Object.
  * @param {string[]|Phaser.Textures.Texture[]} [textures] - The textures that the shader uses, if any. If you intend to define the textures later, use `'__DEFAULT'` as a placeholder, to avoid initialization errors.
  */
-var Shader = new Class({
-    Extends: GameObject,
+var Shader = class extends GameObject {
 
-    Mixins: [
-        Components.BlendMode,
-        Components.ComputedSize,
-        Components.Depth,
-        Components.GetBounds,
-        Components.Origin,
-        Components.ScrollFactor,
-        Components.Transform,
-        Components.Visible,
-        ShaderRender
-    ],
+    static
+    {
+        Class.mixin(this, [
+            Components.BlendMode,
+            Components.ComputedSize,
+            Components.Depth,
+            Components.GetBounds,
+            Components.Origin,
+            Components.ScrollFactor,
+            Components.Transform,
+            Components.Visible,
+            ShaderRender
+        ], false);
+    }
 
-    initialize: function Shader (scene, config, x, y, width, height, textures)
+    constructor(scene, config, x, y, width, height, textures)
     {
         if (config === undefined) { config = {}; }
         if (typeof config === 'string')
@@ -126,7 +128,7 @@ var Shader = new Class({
         if (width === undefined) { width = 128; }
         if (height === undefined) { height = 128; }
 
-        GameObject.call(this, scene, 'Shader');
+        super(scene, 'Shader');
 
         var renderer = scene.sys.renderer;
 
@@ -246,7 +248,7 @@ var Shader = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
-    },
+    }
 
     /**
      * Returns the current value of a uniform from the render node.
@@ -263,10 +265,10 @@ var Shader = new Class({
      * @param {string} name - The name of the uniform to get.
      * @return {any} The value of the uniform.
      */
-    getUniform: function (name)
+    getUniform(name)
     {
         return this.renderNode.programManager.uniforms[name];
-    },
+    }
 
     /**
      * Set the textures that the shader uses.
@@ -297,7 +299,7 @@ var Shader = new Class({
      * @since 4.0.0
      * @param {string[]|Phaser.Textures.Texture[]} [textures] - The textures that the shader uses.
      */
-    setTextures: function (textures)
+    setTextures(textures)
     {
         if (textures === undefined) { textures = []; }
 
@@ -314,7 +316,7 @@ var Shader = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Changes this Shader so instead of rendering to the display list
@@ -366,7 +368,7 @@ var Shader = new Class({
      *
      * @return {this} This Shader instance.
      */
-    setRenderToTexture: function (key)
+    setRenderToTexture(key)
     {
         if (this.renderToTexture)
         {
@@ -399,7 +401,7 @@ var Shader = new Class({
         this.renderWebGLStep(renderer, this, this.drawingContext);
 
         return this;
-    },
+    }
 
     /**
      * The function which sets uniforms for the shader.
@@ -427,10 +429,10 @@ var Shader = new Class({
      * @param {function} setUniform - The function which sets uniforms. `(name: string, value: any) => void`.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - A reference to the current drawing context.
      */
-    setupUniforms: function (setUniform, drawingContext)
+    setupUniforms(setUniform, drawingContext)
     {
         // NOOP
-    },
+    }
 
     /**
      * A NOOP method so you can pass a Shader to a Container.
@@ -441,10 +443,10 @@ var Shader = new Class({
      * @since 3.17.0
      * @return {this} This Shader instance.
      */
-    setAlpha: function ()
+    setAlpha()
     {
         return this;
-    },
+    }
 
     /**
      * Set the texture coordinates of the shader.
@@ -480,7 +482,7 @@ var Shader = new Class({
      * @param {number} [bottomRightY=0] - The bottom-right y coordinate of the texture.
      * @return {this} This Shader instance
      */
-    setTextureCoordinates: function (
+    setTextureCoordinates(
         topLeftX, topLeftY,
         topRightX, topRightY,
         bottomLeftX, bottomLeftY,
@@ -502,7 +504,7 @@ var Shader = new Class({
         this.textureCoordinateBottomRight.set(bottomRightX, bottomRightY);
 
         return this;
-    },
+    }
 
     /**
      * Set the texture coordinates of the shader from a frame.
@@ -514,7 +516,7 @@ var Shader = new Class({
      * @param {Phaser.Textures.Frame|string} frame - The frame to set the texture coordinates from. If a string is given, it will be used to look up the frame in the texture.
      * @param {Phaser.Textures.Texture|string} [texture] - The texture that the frame is from. This is only used if `frame` is a string. If a string is given, it will be used to look up the texture in the Texture Manager. If not given, the first member of `Shader.textures` is used. If `Shader.textures` is empty, an error will occur.
      */
-    setTextureCoordinatesFromFrame: function (frame, texture)
+    setTextureCoordinatesFromFrame(frame, texture)
     {
         if (typeof frame === 'string')
         {
@@ -535,7 +537,7 @@ var Shader = new Class({
         var v1 = frame.v1;
 
         this.setTextureCoordinates(u0, v0, u1, v0, u0, v1, u1, v1);
-    },
+    }
 
     /**
      * Internal destroy handler, called as part of the destroy process.
@@ -544,7 +546,7 @@ var Shader = new Class({
      * @protected
      * @since 3.17.0
      */
-    preDestroy: function ()
+    preDestroy()
     {
         this.renderNode = null;
 
@@ -563,6 +565,6 @@ var Shader = new Class({
             this.texture = null;
         }
     }
-});
+};
 
 module.exports = Shader;

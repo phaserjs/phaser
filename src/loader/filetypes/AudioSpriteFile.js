@@ -34,13 +34,9 @@ var MultiFile = require('../MultiFile');
  * @param {Phaser.Types.Loader.XHRSettingsObject} [audioXhrSettings] - An XHR Settings configuration object for the audio file. Used in replacement of the Loaders default XHR Settings.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [jsonXhrSettings] - An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
  */
-var AudioSpriteFile = new Class({
+var AudioSpriteFile = class extends MultiFile {
 
-    Extends: MultiFile,
-
-    initialize:
-
-    function AudioSpriteFile (loader, key, jsonURL, audioURL, audioConfig, audioXhrSettings, jsonXhrSettings)
+    constructor(loader, key, jsonURL, audioURL, audioConfig, audioXhrSettings, jsonXhrSettings)
     {
         if (IsPlainObject(key))
         {
@@ -61,7 +57,7 @@ var AudioSpriteFile = new Class({
         {
             data = new JSONFile(loader, key, jsonURL, jsonXhrSettings);
 
-            MultiFile.call(this, loader, 'audiosprite', key, [ data ]);
+            super(loader, 'audiosprite', key, [ data ]);
 
             this.config.resourceLoad = true;
             this.config.audioConfig = audioConfig;
@@ -75,12 +71,12 @@ var AudioSpriteFile = new Class({
             {
                 data = new JSONFile(loader, key, jsonURL, jsonXhrSettings);
 
-                MultiFile.call(this, loader, 'audiosprite', key, [ audio, data ]);
+                super(loader, 'audiosprite', key, [ audio, data ]);
 
                 this.config.resourceLoad = false;
             }
         }
-    },
+    }
 
     /**
      * Called by each File when it finishes loading.
@@ -90,7 +86,7 @@ var AudioSpriteFile = new Class({
      *
      * @param {Phaser.Loader.File} file - The File that has completed processing.
      */
-    onFileComplete: function (file)
+    onFileComplete(file)
     {
         var index = this.files.indexOf(file);
 
@@ -116,7 +112,7 @@ var AudioSpriteFile = new Class({
                 }
             }
         }
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -124,7 +120,7 @@ var AudioSpriteFile = new Class({
      * @method Phaser.Loader.FileTypes.AudioSpriteFile#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         if (this.isReadyToProcess())
         {
@@ -138,7 +134,7 @@ var AudioSpriteFile = new Class({
         }
     }
 
-});
+};
 
 /**
  * Adds a JSON based Audio Sprite, or array of audio sprites, to the current load queue.
