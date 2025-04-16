@@ -219,13 +219,13 @@ var DynamicTextureHandler = new Class({
                     if (x !== undefined)
                     {
                         var prevX = object.x;
-                        object.x = x;
+                        object.x += x;
                     }
 
                     if (y !== undefined)
                     {
                         var prevY = object.y;
-                        object.y = y;
+                        object.y += y;
                     }
 
                     currentContext = this._draw(renderer, object, currentContext, drawingContext, eraseContext);
