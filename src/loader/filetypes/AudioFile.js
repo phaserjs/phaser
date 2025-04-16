@@ -36,9 +36,9 @@ var AudioFile = new Class({
 
     Extends: File,
 
+    //  URL is an object created by AudioFile.findAudioURL
     initialize:
 
-    //  URL is an object created by AudioFile.findAudioURL
     function AudioFile (loader, key, urlConfig, xhrSettings, audioContext)
     {
         if (IsPlainObject(key))

@@ -33,10 +33,9 @@ var AnimationJSONFile = new Class({
 
     Extends: JSONFile,
 
-    initialize:
-
     //  url can either be a string, in which case it is treated like a proper url, or an object, in which case it is treated as a ready-made JS Object
     //  dataKey allows you to pluck a specific object out of the JSON and put just that into the cache, rather than the whole thing
+    initialize:
 
     function AnimationJSONFile (loader, key, url, xhrSettings, dataKey)
     {

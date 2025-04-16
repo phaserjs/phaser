@@ -29,9 +29,9 @@ var LineCurve = new Class({
 
     Extends: Curve,
 
+    //  vec2s or array
     initialize:
 
-    //  vec2s or array
     function LineCurve (p0, p1)
     {
         Curve.call(this, 'LineCurve');
