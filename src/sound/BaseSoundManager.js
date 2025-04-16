@@ -12,7 +12,6 @@ var Events = require('./events');
 var GameEvents = require('../core/events');
 var GetAll = require('../utils/array/GetAll');
 var GetFirst = require('../utils/array/GetFirst');
-var NOOP = require('../utils/NOOP');
 var Vector2 = require('../math/Vector2');
 
 /**
@@ -193,7 +192,9 @@ var BaseSoundManager = new Class({
      *
      * @return {Phaser.Sound.BaseSound} The new sound instance.
      */
-    add: NOOP,
+    add: function ()
+    {
+    },
 
     /**
      * Adds a new audio sprite sound into the sound manager.
@@ -494,7 +495,9 @@ var BaseSoundManager = new Class({
      * @param {number} [x] - The x position of the Spatial Audio listener.
      * @param {number} [y] - The y position of the Spatial Audio listener.
      */
-    setListenerPosition: NOOP,
+    setListenerPosition: function ()
+    {
+    },
 
     /**
      * Stops all the sounds in the game.
@@ -592,7 +595,9 @@ var BaseSoundManager = new Class({
      * @protected
      * @since 3.0.0
      */
-    unlock: NOOP,
+    unlock: function ()
+    {
+    },
 
     /**
      * Method used internally for pausing sound manager if
@@ -603,7 +608,9 @@ var BaseSoundManager = new Class({
      * @protected
      * @since 3.0.0
      */
-    onBlur: NOOP,
+    onBlur: function ()
+    {
+    },
 
     /**
      * Method used internally for resuming sound manager if
@@ -614,7 +621,9 @@ var BaseSoundManager = new Class({
      * @protected
      * @since 3.0.0
      */
-    onFocus: NOOP,
+    onFocus: function ()
+    {
+    },
 
     /**
      * Internal handler for Phaser.Core.Events#BLUR.

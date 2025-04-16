@@ -9,7 +9,6 @@ var BaseSoundManager = require('../BaseSoundManager');
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
 var NoAudioSound = require('./NoAudioSound');
-var NOOP = require('../../utils/NOOP');
 
 /**
  * @classdesc
@@ -227,7 +226,9 @@ var NoAudioSoundManager = new Class({
      * @method Phaser.Sound.NoAudioSoundManager#onBlur
      * @since 3.0.0
      */
-    onBlur: NOOP,
+    onBlur: function ()
+    {
+    },
 
     /**
      * Empty function for the No Audio Sound Manager.
@@ -235,7 +236,9 @@ var NoAudioSoundManager = new Class({
      * @method Phaser.Sound.NoAudioSoundManager#onFocus
      * @since 3.0.0
      */
-    onFocus: NOOP,
+    onFocus: function ()
+    {
+    },
 
     /**
      * Empty function for the No Audio Sound Manager.
@@ -243,7 +246,9 @@ var NoAudioSoundManager = new Class({
      * @method Phaser.Sound.NoAudioSoundManager#onGameBlur
      * @since 3.0.0
      */
-    onGameBlur: NOOP,
+    onGameBlur: function ()
+    {
+    },
 
     /**
      * Empty function for the No Audio Sound Manager.
@@ -251,7 +256,9 @@ var NoAudioSoundManager = new Class({
      * @method Phaser.Sound.NoAudioSoundManager#onGameFocus
      * @since 3.0.0
      */
-    onGameFocus: NOOP,
+    onGameFocus: function ()
+    {
+    },
 
     /**
      * Empty function for the No Audio Sound Manager.
@@ -259,7 +266,9 @@ var NoAudioSoundManager = new Class({
      * @method Phaser.Sound.NoAudioSoundManager#pauseAll
      * @since 3.0.0
      */
-    pauseAll: NOOP,
+    pauseAll: function ()
+    {
+    },
 
     /**
      * Empty function for the No Audio Sound Manager.
@@ -267,7 +276,9 @@ var NoAudioSoundManager = new Class({
      * @method Phaser.Sound.NoAudioSoundManager#resumeAll
      * @since 3.0.0
      */
-    resumeAll: NOOP,
+    resumeAll: function ()
+    {
+    },
 
     /**
      * Empty function for the No Audio Sound Manager.
@@ -275,7 +286,9 @@ var NoAudioSoundManager = new Class({
      * @method Phaser.Sound.NoAudioSoundManager#stopAll
      * @since 3.0.0
      */
-    stopAll: NOOP,
+    stopAll: function ()
+    {
+    },
 
     /**
      * Empty function for the No Audio Sound Manager.
@@ -283,7 +296,9 @@ var NoAudioSoundManager = new Class({
      * @method Phaser.Sound.NoAudioSoundManager#update
      * @since 3.0.0
      */
-    update: NOOP,
+    update: function ()
+    {
+    },
 
     /**
      * Empty function for the No Audio Sound Manager.
@@ -293,7 +308,9 @@ var NoAudioSoundManager = new Class({
      *
      * @return {this} This Sound Manager.
      */
-    setRate: NOOP,
+    setRate: function ()
+    {
+    },
 
     /**
      * Empty function for the No Audio Sound Manager.
@@ -303,7 +320,9 @@ var NoAudioSoundManager = new Class({
      *
      * @return {this} This Sound Manager.
      */
-    setDetune: NOOP,
+    setDetune: function ()
+    {
+    },
 
     /**
      * Empty function for the No Audio Sound Manager.
@@ -311,7 +330,9 @@ var NoAudioSoundManager = new Class({
      * @method Phaser.Sound.NoAudioSoundManager#setMute
      * @since 3.0.0
      */
-    setMute: NOOP,
+    setMute: function ()
+    {
+    },
 
     /**
      * Empty function for the No Audio Sound Manager.
@@ -319,7 +340,9 @@ var NoAudioSoundManager = new Class({
      * @method Phaser.Sound.NoAudioSoundManager#setVolume
      * @since 3.0.0
      */
-    setVolume: NOOP,
+    setVolume: function ()
+    {
+    },
 
     /**
      * Empty function for the No Audio Sound Manager.
@@ -327,7 +350,9 @@ var NoAudioSoundManager = new Class({
      * @method Phaser.Sound.NoAudioSoundManager#unlock
      * @since 3.0.0
      */
-    unlock: NOOP,
+    unlock: function ()
+    {
+    },
 
     /**
      * Method used internally for iterating only over active sounds and skipping sounds that are marked for removal.
