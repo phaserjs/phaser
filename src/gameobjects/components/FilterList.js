@@ -366,7 +366,7 @@ var FilterList = new Class({
      * @param {number} [innerStrength=0] - The strength of the glow inward from the edge of textures.
      * @param {number} [scale=1] - The scale of the glow effect. This multiplies the fixed distance.
      * @param {boolean} [knockout=false] - If `true` only the glow is drawn, not the texture itself.
-     * @param {number} [quality=0.1] - The quality of the glow effect. This cannot be changed after the filter has been created.
+     * @param {number} [quality=10] - The quality of the glow effect. This cannot be changed after the filter has been created.
      * @param {number} [distance=10] - The distance of the glow effect. This cannot be changed after the filter has been created.
      *
      * @return {Phaser.Filters.Glow} The new Glow filter controller.
