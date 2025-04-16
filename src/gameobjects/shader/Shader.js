@@ -157,6 +157,12 @@ var Shader = new Class({
             this.renderNode.updateShaderConfig = config.updateShaderConfig;
         }
 
+        var initialUniforms = GetFastValue(config, 'initialUniforms', {});
+        Object.entries(initialUniforms).forEach(function (entry)
+        {
+            this.setUniform(entry[0], entry[1]);
+        }, this);
+
         /**
          * The drawing context containing the framebuffer and texture that the shader is rendered to.
          * This is only set if the shader is rendering to a texture.
@@ -255,7 +261,7 @@ var Shader = new Class({
      * will modify the original.
      *
      * It's generally better to use the `setupUniforms` function in the
-     * shader configuration object to set the uniform values.
+     * shader configuration object to set uniform values on changing uniforms.
      * This method is provided in the spirit of reading back the values.
      *
      * @method Phaser.GameObjects.Shader#getUniform
@@ -266,6 +272,26 @@ var Shader = new Class({
     getUniform: function (name)
     {
         return this.renderNode.programManager.uniforms[name];
+    },
+
+    /**
+     * Set the value of a uniform in the shader.
+     * This value is actually copied to all shaders that use it.
+     *
+     * It's generally better to use the `setupUniforms` function in the
+     * shader configuration object to set uniform values on changing uniforms.
+     * Use this method to set uniforms just once.
+     *
+     * @method Phaser.GameObjects.Shader#setUniform
+     * @since 4.0.0
+     * @param {string} name - The name of the uniform to set.
+     * @param {any} value - The value to set the uniform to.
+     * @return {this}
+     */
+    setUniform: function (name, value)
+    {
+        this.renderNode.programManager.setUniform(name, value);
+        return this;
     },
 
     /**
