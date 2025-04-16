@@ -816,7 +816,7 @@ var DynamicTexture = new Class({
                     var child = children[c];
                     if (child.willRender(this.camera))
                     {
-                        this.draw(child, child.x + x || 0, child.y + y || 0);
+                        this.draw(child, x, y);
                     }
                 }
             }
