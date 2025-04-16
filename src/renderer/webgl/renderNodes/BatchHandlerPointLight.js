@@ -25,7 +25,7 @@ var BatchHandlerPointLight = new Class({
 
     Extends: BatchHandler,
 
-    initialize: function (manager, config)
+    initialize: function BatchHandlerPointLight (manager, config)
     {
         BatchHandler.call(this, manager, this.defaultConfig, config);
 
