@@ -363,7 +363,9 @@ var BatchHandler = new Class({
      * @param {number} width - The new width of the renderer.
      * @param {number} height - The new height of the renderer.
      */
-    resize: function (width, height) {},
+    resize: function (width, height)
+    {
+    },
 
     /**
      * Update the number of draw calls per batch.
@@ -377,7 +379,9 @@ var BatchHandler = new Class({
      * @since 4.0.0
      * @param {number} [count] - The new number of draw calls per batch. If undefined, the maximum number of texture units is used.
      */
-    updateTextureCount: function (count) {},
+    updateTextureCount: function (count)
+    {
+    },
 
     /**
      * Draw then empty the current batch.
@@ -392,7 +396,9 @@ var BatchHandler = new Class({
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {...*} [args] - Additional arguments to pass to the batch handler.
      */
-    run: function (drawingContext) {},
+    run: function (drawingContext)
+    {
+    },
 
     /**
      * Add an instance to the batch. Game objects call this method to add
@@ -402,7 +408,9 @@ var BatchHandler = new Class({
      * @param {...*} [args] - Arguments to pass to the batch handler. These will vary depending on the handler.
      * @since 4.0.0
      */
-    batch: function () {}
+    batch: function ()
+    {
+    }
 });
 
 module.exports = BatchHandler;
