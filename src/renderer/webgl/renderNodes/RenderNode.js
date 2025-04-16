@@ -82,7 +82,8 @@ var RenderNode = new Class({
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
      */
     onRunBegin: function (drawingContext)
-    {},
+    {
+    },
 
     /**
      * By default this is an empty method hook that you can override and use in your own custom render nodes.
@@ -95,7 +96,8 @@ var RenderNode = new Class({
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
      */
     onRunEnd: function (drawingContext)
-    {},
+    {
+    },
 
     /**
      * Set whether the node should report debug information.
