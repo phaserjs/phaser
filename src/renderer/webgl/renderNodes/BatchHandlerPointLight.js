@@ -25,6 +25,48 @@ var BatchHandlerPointLight = class extends BatchHandler {
 
     constructor(manager, config)
     {
+        /**
+         * The default configuration for this handler.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerPointLight#defaultConfig
+         * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
+         * @since 4.0.0
+         * @readonly
+         */
+        this.defaultConfig = {
+            name: 'BatchHandlerPointLight',
+            verticesPerInstance: 4,
+            indicesPerInstance: 6,
+            shaderName: 'POINTLIGHT',
+            vertexSource: ShaderSourceVS,
+            fragmentSource: ShaderSourceFS,
+            vertexBufferLayout: {
+                usage: 'DYNAMIC_DRAW',
+                layout: [
+                    {
+                        name: 'inPosition',
+                        size: 2
+                    },
+                    {
+                        name: 'inLightPosition',
+                        size: 2
+                    },
+                    {
+                        name: 'inLightRadius',
+                        size: 1
+                    },
+                    {
+                        name: 'inLightAttenuation',
+                        size: 1
+                    },
+                    {
+                        name: 'inLightColor',
+                        size: 4
+                    }
+                ]
+            }
+        };
+
         super(manager, this.defaultConfig, config);
 
         /**
@@ -38,48 +80,6 @@ var BatchHandlerPointLight = class extends BatchHandler {
          * @readonly
          */
         this._emptyTextures = [];
-    }
-
-    /**
-     * The default configuration for this handler.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerPointLight#defaultConfig
-     * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
-     * @since 4.0.0
-     * @readonly
-     */
-    defaultConfig: {
-        name: 'BatchHandlerPointLight',
-        verticesPerInstance: 4,
-        indicesPerInstance: 6,
-        shaderName: 'POINTLIGHT',
-        vertexSource: ShaderSourceVS,
-        fragmentSource: ShaderSourceFS,
-        vertexBufferLayout: {
-            usage: 'DYNAMIC_DRAW',
-            layout: [
-                {
-                    name: 'inPosition',
-                    size: 2
-                },
-                {
-                    name: 'inLightPosition',
-                    size: 2
-                },
-                {
-                    name: 'inLightRadius',
-                    size: 1
-                },
-                {
-                    name: 'inLightAttenuation',
-                    size: 1
-                },
-                {
-                    name: 'inLightColor',
-                    size: 4
-                }
-            ]
-        }
     }
 
     /**

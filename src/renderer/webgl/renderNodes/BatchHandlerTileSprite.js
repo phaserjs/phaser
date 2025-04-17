@@ -41,61 +41,61 @@ var BatchHandlerTileSprite = class extends BatchHandlerQuad {
 
     constructor(manager, config)
     {
-        super(manager, config);
-    }
+        this.defaultConfig = {
+            name: 'BatchHandlerTileSprite',
+            verticesPerInstance: 4,
+            indicesPerInstance: 6,
+            shaderName: 'TILESPRITE',
+            vertexSource: ShaderSourceVS,
+            fragmentSource: ShaderSourceFS,
+            shaderAdditions: [
+                MakeOutFrame(),
+                MakeGetTexCoordOut(),
+                MakeGetTexRes(true),
+                MakeTexCoordFrameWrap(true),
+                MakeTexCoordFrameClamp(true),
+                MakeSmoothPixelArt(true),
+                MakeDefineTexCount(1),
+                MakeGetTexture(),
+                MakeApplyTint(),
+                MakeDefineLights(true),
+                MakeRotationDatum(true),
+                MakeOutInverseRotation(true),
+                MakeGetNormalFromMap(true),
+                MakeApplyLighting(true)
+            ],
+            vertexBufferLayout: {
+                usage: 'DYNAMIC_DRAW',
+                layout: [
+                    {
+                        name: 'inPosition',
+                        size: 2
+                    },
+                    {
+                        name: 'inTexCoord',
+                        size: 2
+                    },
+                    {
+                        name: 'inFrame',
+                        size: 4
+                    },
+                    {
+                        name: 'inTexDatum'
+                    },
+                    {
+                        name: 'inTintEffect'
+                    },
+                    {
+                        name: 'inTint',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    }
+                ]
+            }
+        };
 
-    defaultConfig: {
-        name: 'BatchHandlerTileSprite',
-        verticesPerInstance: 4,
-        indicesPerInstance: 6,
-        shaderName: 'TILESPRITE',
-        vertexSource: ShaderSourceVS,
-        fragmentSource: ShaderSourceFS,
-        shaderAdditions: [
-            MakeOutFrame(),
-            MakeGetTexCoordOut(),
-            MakeGetTexRes(true),
-            MakeTexCoordFrameWrap(true),
-            MakeTexCoordFrameClamp(true),
-            MakeSmoothPixelArt(true),
-            MakeDefineTexCount(1),
-            MakeGetTexture(),
-            MakeApplyTint(),
-            MakeDefineLights(true),
-            MakeRotationDatum(true),
-            MakeOutInverseRotation(true),
-            MakeGetNormalFromMap(true),
-            MakeApplyLighting(true)
-        ],
-        vertexBufferLayout: {
-            usage: 'DYNAMIC_DRAW',
-            layout: [
-                {
-                    name: 'inPosition',
-                    size: 2
-                },
-                {
-                    name: 'inTexCoord',
-                    size: 2
-                },
-                {
-                    name: 'inFrame',
-                    size: 4
-                },
-                {
-                    name: 'inTexDatum'
-                },
-                {
-                    name: 'inTintEffect'
-                },
-                {
-                    name: 'inTint',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                }
-            ]
-        }
+        super(manager, config);
     }
 
     updateRenderOptions(renderOptions)

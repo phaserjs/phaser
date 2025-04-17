@@ -50,6 +50,118 @@ var SubmitterSpriteGPULayer = class extends RenderNode {
 
     constructor(manager, config, gameObject)
     {
+        /**
+         * Default configuration of this RenderNode.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterSpriteGPULayer#defaultConfig
+         * @type {object}
+         * @since 4.0.0
+         * @readonly
+         * @property {string} name - The name of this RenderNode.
+         * @property {string} vertexSource - The vertex shader source.
+         * @property {string} fragmentSource - The fragment shader source.
+         */
+        this.defaultConfig = {
+            name: 'SubmitterSpriteGPULayer',
+            count: 0,
+            shaderName: 'SpriteGPULayer',
+            vertexSource: ShaderSourceVS,
+            fragmentSource: ShaderSourceFS,
+            shaderAdditions: [
+                MakeGetTexCoordOut(),
+                MakeGetTexRes(),
+                MakeSmoothPixelArt(true),
+                MakeDefineTexCount(1),
+                MakeGetTexture(),
+                MakeApplyTint(),
+                MakeDefineLights(true),
+                MakeOutInverseRotation(true),
+                MakeGetNormalFromMap(true),
+                MakeApplyLighting(true)
+            ],
+            instanceBufferLayout: {
+                usage: 'STATIC_DRAW',
+                instanceDivisor: 1,
+                layout: [
+                    {
+                        name: 'inPositionX',
+                        size: 4
+                    },
+                    {
+                        name: 'inPositionY',
+                        size: 4
+                    },
+                    {
+                        name: 'inRotation',
+                        size: 4
+                    },
+                    {
+                        name: 'inScaleX',
+                        size: 4
+                    },
+                    {
+                        name: 'inScaleY',
+                        size: 4
+                    },
+                    {
+                        name: 'inAlpha',
+                        size: 4
+                    },
+                    {
+                        name: 'inFrame',
+                        size: 4
+                    },
+                    {
+                        name: 'inTintBlend',
+                        size: 4
+                    },
+                    {
+                        name: 'inTintBL',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    },
+                    {
+                        name: 'inTintTL',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    },
+                    {
+                        name: 'inTintBR',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    },
+                    {
+                        name: 'inTintTR',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    },
+                    {
+                        name: 'inOriginAndTintFillAndCreationTime',
+                        size: 4
+                    },
+                    {
+                        name: 'inScrollFactor',
+                        size: 2
+                    }
+                ]
+            },
+            vertexBufferLayout: {
+                usage: 'STATIC_DRAW',
+                count: 4,
+                layout: [
+                    {
+                        // The vertex index, 0-3.
+                        name: 'inVertex',
+                        type: 'UNSIGNED_BYTE'
+                    }
+                ]
+            }
+        };
+
         var renderer = manager.renderer;
 
         var finalConfig = Merge(config || {}, this.defaultConfig);
@@ -171,118 +283,6 @@ var SubmitterSpriteGPULayer = class extends RenderNode {
          * @private
          */
         this._lightVector = new Vector2();
-    }
-
-    /**
-     * Default configuration of this RenderNode.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterSpriteGPULayer#defaultConfig
-     * @type {object}
-     * @since 4.0.0
-     * @readonly
-     * @property {string} name - The name of this RenderNode.
-     * @property {string} vertexSource - The vertex shader source.
-     * @property {string} fragmentSource - The fragment shader source.
-     */
-    defaultConfig: {
-        name: 'SubmitterSpriteGPULayer',
-        count: 0,
-        shaderName: 'SpriteGPULayer',
-        vertexSource: ShaderSourceVS,
-        fragmentSource: ShaderSourceFS,
-        shaderAdditions: [
-            MakeGetTexCoordOut(),
-            MakeGetTexRes(),
-            MakeSmoothPixelArt(true),
-            MakeDefineTexCount(1),
-            MakeGetTexture(),
-            MakeApplyTint(),
-            MakeDefineLights(true),
-            MakeOutInverseRotation(true),
-            MakeGetNormalFromMap(true),
-            MakeApplyLighting(true)
-        ],
-        instanceBufferLayout: {
-            usage: 'STATIC_DRAW',
-            instanceDivisor: 1,
-            layout: [
-                {
-                    name: 'inPositionX',
-                    size: 4
-                },
-                {
-                    name: 'inPositionY',
-                    size: 4
-                },
-                {
-                    name: 'inRotation',
-                    size: 4
-                },
-                {
-                    name: 'inScaleX',
-                    size: 4
-                },
-                {
-                    name: 'inScaleY',
-                    size: 4
-                },
-                {
-                    name: 'inAlpha',
-                    size: 4
-                },
-                {
-                    name: 'inFrame',
-                    size: 4
-                },
-                {
-                    name: 'inTintBlend',
-                    size: 4
-                },
-                {
-                    name: 'inTintBL',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                },
-                {
-                    name: 'inTintTL',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                },
-                {
-                    name: 'inTintBR',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                },
-                {
-                    name: 'inTintTR',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                },
-                {
-                    name: 'inOriginAndTintFillAndCreationTime',
-                    size: 4
-                },
-                {
-                    name: 'inScrollFactor',
-                    size: 2
-                }
-            ]
-        },
-        vertexBufferLayout: {
-            usage: 'STATIC_DRAW',
-            count: 4,
-            layout: [
-                {
-                    // The vertex index, 0-3.
-                    name: 'inVertex',
-                    type: 'UNSIGNED_BYTE'
-                }
-            ]
-        }
     }
 
     /**

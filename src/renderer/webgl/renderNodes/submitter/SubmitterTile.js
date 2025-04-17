@@ -23,21 +23,21 @@ var SubmitterTile = class extends SubmitterQuad {
 
     constructor(manager, config)
     {
+        /**
+         * The default configuration for this RenderNode.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterTile#defaultConfig
+         * @type {Phaser.Types.Renderer.WebGL.RenderNodes.SubmitterQuadConfig}
+         */
+        this.defaultConfig = {
+            name: 'SubmitterTile',
+            role: 'Submitter',
+            batchHandler: 'BatchHandler'
+        };
+
         super(manager, config);
 
         this._renderOptions.clampFrame = true;
-    }
-
-    /**
-     * The default configuration for this RenderNode.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterTile#defaultConfig
-     * @type {Phaser.Types.Renderer.WebGL.RenderNodes.SubmitterQuadConfig}
-     */
-    defaultConfig: {
-        name: 'SubmitterTile',
-        role: 'Submitter',
-        batchHandler: 'BatchHandler'
     }
 
     /**

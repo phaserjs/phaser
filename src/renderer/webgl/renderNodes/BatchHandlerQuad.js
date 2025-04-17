@@ -39,6 +39,61 @@ var BatchHandlerQuad = class extends BatchHandler {
 
     constructor(manager, config)
     {
+        /**
+         * The default configuration object for this handler.
+         * This is merged with the `config` object passed in the constructor.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#defaultConfig
+         * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
+         * @since 4.0.0
+         */
+        this.defaultConfig = {
+            name: 'BatchHandlerQuad',
+            verticesPerInstance: 4,
+            indicesPerInstance: 6,
+            shaderName: 'STANDARD',
+            vertexSource: ShaderSourceVS,
+            fragmentSource: ShaderSourceFS,
+            shaderAdditions: [
+                MakeGetTexCoordOut(),
+                MakeGetTexRes(true),
+                MakeSmoothPixelArt(true),
+                MakeDefineTexCount(1),
+                MakeGetTexture(),
+                MakeApplyTint(),
+                MakeDefineLights(true),
+                MakeRotationDatum(true),
+                MakeOutInverseRotation(true),
+                MakeGetNormalFromMap(true),
+                MakeApplyLighting(true)
+            ],
+            vertexBufferLayout: {
+                usage: 'DYNAMIC_DRAW',
+                layout: [
+                    {
+                        name: 'inPosition',
+                        size: 2
+                    },
+                    {
+                        name: 'inTexCoord',
+                        size: 2
+                    },
+                    {
+                        name: 'inTexDatum'
+                    },
+                    {
+                        name: 'inTintEffect'
+                    },
+                    {
+                        name: 'inTint',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    }
+                ]
+            }
+        };
+
         // Placed before super call because the constructor needs it.
         /**
          * The current render options to which the batch is built.
@@ -96,61 +151,6 @@ var BatchHandlerQuad = class extends BatchHandler {
          * @since 4.0.0
          */
         this._lightVector = new Vector2();
-    }
-
-    /**
-     * The default configuration object for this handler.
-     * This is merged with the `config` object passed in the constructor.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#defaultConfig
-     * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
-     * @since 4.0.0
-     */
-    defaultConfig: {
-        name: 'BatchHandlerQuad',
-        verticesPerInstance: 4,
-        indicesPerInstance: 6,
-        shaderName: 'STANDARD',
-        vertexSource: ShaderSourceVS,
-        fragmentSource: ShaderSourceFS,
-        shaderAdditions: [
-            MakeGetTexCoordOut(),
-            MakeGetTexRes(true),
-            MakeSmoothPixelArt(true),
-            MakeDefineTexCount(1),
-            MakeGetTexture(),
-            MakeApplyTint(),
-            MakeDefineLights(true),
-            MakeRotationDatum(true),
-            MakeOutInverseRotation(true),
-            MakeGetNormalFromMap(true),
-            MakeApplyLighting(true)
-        ],
-        vertexBufferLayout: {
-            usage: 'DYNAMIC_DRAW',
-            layout: [
-                {
-                    name: 'inPosition',
-                    size: 2
-                },
-                {
-                    name: 'inTexCoord',
-                    size: 2
-                },
-                {
-                    name: 'inTexDatum'
-                },
-                {
-                    name: 'inTintEffect'
-                },
-                {
-                    name: 'inTint',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                }
-            ]
-        }
     }
 
     /**

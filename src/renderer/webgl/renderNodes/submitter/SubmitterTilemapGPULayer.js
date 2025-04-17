@@ -39,6 +39,44 @@ var SubmitterTilemapGPULayer = class extends RenderNode {
 
     constructor(manager, config)
     {
+        /**
+         * Default configuration of this RenderNode.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterTilemapGPULayer#defaultConfig
+         * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
+         * @since 4.0.0
+         * @readonly
+         * @property {string} name - The name of this RenderNode.
+         * @property {string} vertexSource - The vertex shader source.
+         * @property {string} fragmentSource - The fragment shader source.
+         */
+        this.defaultConfig = {
+            name: 'SubmitterTilemapGPULayer',
+            shaderName: 'TilemapGPULayer',
+            vertexSource: ShaderSourceVS,
+            fragmentSource: ShaderSourceFS,
+            shaderAdditions: [
+                MakeSmoothPixelArt(true),
+                MakeSampleNormal(true),
+                MakeDefineLights(true),
+                MakeApplyLighting(true)
+            ],
+            vertexBufferLayout: {
+                usage: 'DYNAMIC_DRAW',
+                count: 4,
+                layout: [
+                    {
+                        name: 'inPosition',
+                        size: 2
+                    },
+                    {
+                        name: 'inTexCoord',
+                        size: 2
+                    }
+                ]
+            }
+        };
+
         var renderer = manager.renderer;
 
         var finalConfig = Merge(config || {}, this.defaultConfig);
@@ -157,44 +195,6 @@ var SubmitterTilemapGPULayer = class extends RenderNode {
          * @private
          */
         this._quad = new Float32Array(8);
-    }
-
-    /**
-     * Default configuration of this RenderNode.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterTilemapGPULayer#defaultConfig
-     * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
-     * @since 4.0.0
-     * @readonly
-     * @property {string} name - The name of this RenderNode.
-     * @property {string} vertexSource - The vertex shader source.
-     * @property {string} fragmentSource - The fragment shader source.
-     */
-    defaultConfig: {
-        name: 'SubmitterTilemapGPULayer',
-        shaderName: 'TilemapGPULayer',
-        vertexSource: ShaderSourceVS,
-        fragmentSource: ShaderSourceFS,
-        shaderAdditions: [
-            MakeSmoothPixelArt(true),
-            MakeSampleNormal(true),
-            MakeDefineLights(true),
-            MakeApplyLighting(true)
-        ],
-        vertexBufferLayout: {
-            usage: 'DYNAMIC_DRAW',
-            count: 4,
-            layout: [
-                {
-                    name: 'inPosition',
-                    size: 2
-                },
-                {
-                    name: 'inTexCoord',
-                    size: 2
-                }
-            ]
-        }
     }
 
     /**

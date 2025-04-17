@@ -30,6 +30,36 @@ var BatchHandlerTriFlat = class extends BatchHandler {
 
     constructor(manager, config)
     {
+        this.defaultConfig = {
+            name: 'BatchHandlerTriFlat',
+            verticesPerInstance: 3,
+            indicesPerInstance: 3,
+            shaderName: 'FLAT',
+            vertexSource: ShaderSourceVS,
+            fragmentSource: ShaderSourceFS,
+            shaderAdditions: [
+                MakeDefineLights(true),
+                MakeFlatNormal(true),
+                MakeApplyLighting(true)
+            ],
+            indexBufferDynamic: true,
+            vertexBufferLayout: {
+                usage: 'DYNAMIC_DRAW',
+                layout: [
+                    {
+                        name: 'inPosition',
+                        size: 2
+                    },
+                    {
+                        name: 'inTint',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    }
+                ]
+            }
+        };
+
         super(manager, this.defaultConfig, config);
 
         /**
@@ -95,36 +125,6 @@ var BatchHandlerTriFlat = class extends BatchHandler {
          * @since 4.0.0
          */
         this._renderOptionsChanged = false;
-    }
-
-    defaultConfig: {
-        name: 'BatchHandlerTriFlat',
-        verticesPerInstance: 3,
-        indicesPerInstance: 3,
-        shaderName: 'FLAT',
-        vertexSource: ShaderSourceVS,
-        fragmentSource: ShaderSourceFS,
-        shaderAdditions: [
-            MakeDefineLights(true),
-            MakeFlatNormal(true),
-            MakeApplyLighting(true)
-        ],
-        indexBufferDynamic: true,
-        vertexBufferLayout: {
-            usage: 'DYNAMIC_DRAW',
-            layout: [
-                {
-                    name: 'inPosition',
-                    size: 2
-                },
-                {
-                    name: 'inTint',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                }
-            ]
-        }
     }
 
     /**

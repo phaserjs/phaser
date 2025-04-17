@@ -25,7 +25,7 @@ var getTint = Utils.getTintAppendFloatAlpha;
  *
  * If a strip is submitted with too many vertices (usually >32,768),
  * it will throw an error.
- * 
+ *
  * Note that you should call `batchStrip` instead of `batch` to add strips.
  *
  * @class BatchHandlerStrip
@@ -40,60 +40,60 @@ var BatchHandlerStrip = class extends BatchHandlerQuad {
 
     constructor(manager, config)
     {
+        /**
+         * The default configuration object for this handler.
+         * This is merged with the `config` object passed in the constructor.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerStrip#defaultConfig
+         * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
+         * @since 4.0.0
+         */
+        this.defaultConfig = {
+            name: 'BatchHandlerStrip',
+            verticesPerInstance: 2,
+            indicesPerInstance: 2,
+            shaderName: 'STRIP',
+            vertexSource: ShaderSourceVS,
+            fragmentSource: ShaderSourceFS,
+            shaderAdditions: [
+                MakeGetTexCoordOut(),
+                MakeGetTexRes(true),
+                MakeSmoothPixelArt(true),
+                MakeDefineTexCount(1),
+                MakeGetTexture(),
+                MakeApplyTint()
+            ],
+            vertexBufferLayout: {
+                usage: 'DYNAMIC_DRAW',
+                layout: [
+                    {
+                        name: 'inPosition',
+                        size: 2
+                    },
+                    {
+                        name: 'inTexCoord',
+                        size: 2
+                    },
+                    {
+                        name: 'inTexDatum'
+                    },
+                    {
+                        name: 'inTintEffect'
+                    },
+                    {
+                        name: 'inTint',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    }
+                ]
+            }
+        };
+
         super(manager, config);
 
         // We do not expect to use extra textures.
         this.renderOptions.multiTexturing = true;
-    }
-
-    /**
-     * The default configuration object for this handler.
-     * This is merged with the `config` object passed in the constructor.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerStrip#defaultConfig
-     * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
-     * @since 4.0.0
-     */
-    defaultConfig: {
-        name: 'BatchHandlerStrip',
-        verticesPerInstance: 2,
-        indicesPerInstance: 2,
-        shaderName: 'STRIP',
-        vertexSource: ShaderSourceVS,
-        fragmentSource: ShaderSourceFS,
-        shaderAdditions: [
-            MakeGetTexCoordOut(),
-            MakeGetTexRes(true),
-            MakeSmoothPixelArt(true),
-            MakeDefineTexCount(1),
-            MakeGetTexture(),
-            MakeApplyTint()
-        ],
-        vertexBufferLayout: {
-            usage: 'DYNAMIC_DRAW',
-            layout: [
-                {
-                    name: 'inPosition',
-                    size: 2
-                },
-                {
-                    name: 'inTexCoord',
-                    size: 2
-                },
-                {
-                    name: 'inTexDatum'
-                },
-                {
-                    name: 'inTintEffect'
-                },
-                {
-                    name: 'inTint',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                }
-            ]
-        }
     }
 
     /**

@@ -35,6 +35,18 @@ var SubmitterQuad = class extends RenderNode {
 
     constructor(manager, config)
     {
+        /**
+         * The default configuration for this RenderNode.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad#defaultConfig
+         * @type {Phaser.Types.Renderer.WebGL.RenderNodes.SubmitterQuadConfig}
+         */
+        this.defaultConfig = {
+            name: 'SubmitterQuad',
+            role: 'Submitter',
+            batchHandler: 'BatchHandler'
+        };
+
         config = Merge(config || {}, this.defaultConfig);
 
         super(config.name, manager);
@@ -80,18 +92,6 @@ var SubmitterQuad = class extends RenderNode {
                 diffuseFlatThreshold: 0
             }
         };
-    }
-
-    /**
-     * The default configuration for this RenderNode.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad#defaultConfig
-     * @type {Phaser.Types.Renderer.WebGL.RenderNodes.SubmitterQuadConfig}
-     */
-    defaultConfig: {
-        name: 'SubmitterQuad',
-        role: 'Submitter',
-        batchHandler: 'BatchHandler'
     }
 
     /**

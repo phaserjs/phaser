@@ -25,6 +25,11 @@ var TransformerImage = class extends RenderNode {
 
     constructor(manager, config)
     {
+        this.defaultConfig = {
+            name: 'TransformerImage',
+            role: 'Transformer'
+        };
+
         config = Merge(config || {}, this.defaultConfig);
 
         super(config.name, manager);
@@ -66,11 +71,6 @@ var TransformerImage = class extends RenderNode {
          * @private
          */
         this._calcMatrix = new TransformMatrix();
-    }
-
-    defaultConfig: {
-        name: 'TransformerImage',
-        role: 'Transformer'
     }
 
     /**

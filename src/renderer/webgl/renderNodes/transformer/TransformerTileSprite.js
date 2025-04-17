@@ -23,12 +23,12 @@ var TransformerTileSprite = class extends TransformerImage {
 
     constructor(manager, config)
     {
-        super(manager, config);
-    }
+        this.defaultConfig = {
+            name: 'TransformerTileSprite',
+            role: 'Transformer'
+        };
 
-    defaultConfig: {
-        name: 'TransformerTileSprite',
-        role: 'Transformer'
+        super(manager, config);
     }
 
     /**

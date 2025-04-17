@@ -34,21 +34,21 @@ var SubmitterTileSprite = class extends SubmitterQuad {
 
     constructor(manager, config)
     {
+        /**
+         * The default configuration for this RenderNode.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterTileSprite#defaultConfig
+         * @type {Phaser.Types.Renderer.WebGL.RenderNodes.SubmitterQuadConfig}
+         */
+        this.defaultConfig = {
+            name: 'SubmitterTileSprite',
+            role: 'Submitter',
+            batchHandler: 'BatchHandler'
+        };
+
         super(manager, config);
 
         this._renderOptions.wrapFrame = true;
-    }
-
-    /**
-     * The default configuration for this RenderNode.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterTileSprite#defaultConfig
-     * @type {Phaser.Types.Renderer.WebGL.RenderNodes.SubmitterQuadConfig}
-     */
-    defaultConfig: {
-        name: 'SubmitterTileSprite',
-        role: 'Submitter',
-        batchHandler: 'BatchHandler'
     }
 
     /**

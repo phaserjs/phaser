@@ -28,6 +28,11 @@ var TransformerStamp = class extends RenderNode {
 
     constructor(manager, config)
     {
+        this.defaultConfig = {
+            name: 'TransformerStamp',
+            role: 'Transformer'
+        };
+
         config = Merge(config || {}, this.defaultConfig);
 
         super(config.name, manager);
@@ -59,11 +64,6 @@ var TransformerStamp = class extends RenderNode {
          * @since 4.0.0
          */
         this.onlyTranslate = false;
-    }
-
-    defaultConfig: {
-        name: 'TransformerStamp',
-        role: 'Transformer'
     }
 
     /**
