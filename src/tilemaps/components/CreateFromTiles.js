@@ -83,7 +83,7 @@ var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, came
             if (config.hasOwnProperty('useSpriteSheet'))
             {
                 config.key = tile.tileset.image;
-                config.frame = tile.index - 1;
+                config.frame = tile.index - tile.tileset.firstgid;
             }
 
             sprites.push(scene.make.sprite(config));
