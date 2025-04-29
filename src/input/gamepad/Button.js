@@ -19,12 +19,13 @@ var Events = require('./events');
  *
  * @param {Phaser.Input.Gamepad.Gamepad} pad - A reference to the Gamepad that this Button belongs to.
  * @param {number} index - The index of this Button.
+ * @param {boolean} isPressed - Whether or not the button is already being pressed at creation time.  This prevents the Button from emitting spurious 'down' events at first update.
  */
 var Button = new Class({
 
     initialize:
 
-    function Button (pad, index)
+    function Button (pad, index, isPressed)
     {
         /**
          * A reference to the Gamepad that this Button belongs to.
@@ -82,7 +83,7 @@ var Button = new Class({
          * @default false
          * @since 3.0.0
          */
-        this.pressed = false;
+        this.pressed = isPressed;
     },
 
     /**
