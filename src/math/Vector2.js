@@ -196,22 +196,22 @@ var Vector2 = new Class({
     },
 
     /**
-     * Sets the `x` and `y` values of this object from a given polar coordinate.
+     * Sets the x and y components of this Vector from the given angle and length.
      *
      * @method Phaser.Math.Vector2#setToPolar
      * @since 3.0.0
      *
-     * @param {number} azimuth - The angular coordinate, in radians.
-     * @param {number} [radius=1] - The radial coordinate (length).
+     * @param {number} angle - The angle from the positive x-axis, in radians.
+     * @param {number} [length=1] - The distance from the origin.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
-    setToPolar: function (azimuth, radius)
+    setToPolar: function (angle, length)
     {
-        if (radius == null) { radius = 1; }
+        if (length == null) { length = 1; }
 
-        this.x = Math.cos(azimuth) * radius;
-        this.y = Math.sin(azimuth) * radius;
+        this.x = Math.cos(angle) * length;
+        this.y = Math.sin(angle) * length;
 
         return this;
     },
