@@ -300,7 +300,9 @@ var GamepadPlugin = new Class({
 
         for (var i = 0; i < this.gamepads.length; i++)
         {
-            this.gamepads[i].removeAllListeners();
+            if (this.gamepads[i]) {
+                this.gamepads[i].removeAllListeners();
+            }
         }
     },
 
