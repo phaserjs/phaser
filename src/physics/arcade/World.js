@@ -946,7 +946,6 @@ var World = new Class({
         this._elapsed += delta;
 
         //  Update all active bodies
-        var body;
         var bodies = this.bodies;
 
         //  Will a step happen this frame?
