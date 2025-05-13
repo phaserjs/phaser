@@ -459,7 +459,7 @@ var ArcadePhysics = new Class({
     {
         if (!targets)
         {
-            targets = this.world.bodies.entries;
+            targets = Array.from(this.world.bodies);
         }
 
         var min = Number.MAX_VALUE;
@@ -513,7 +513,7 @@ var ArcadePhysics = new Class({
     {
         if (!targets)
         {
-            targets = this.world.bodies.entries;
+            targets = Array.from(this.world.bodies);
         }
 
         var max = -1;
