@@ -41,7 +41,7 @@ var WebGLSnapshot = function (sourceContext, config)
     {
         var pixel = new Uint8Array(4);
 
-        var destY = bufferHeight - y;
+        var destY = bufferHeight - y - 1;
 
         gl.readPixels(x, destY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
 
