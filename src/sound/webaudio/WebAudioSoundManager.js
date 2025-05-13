@@ -29,13 +29,9 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  *
  * @param {Phaser.Game} game - Reference to the current game instance.
  */
-var WebAudioSoundManager = new Class({
+var WebAudioSoundManager = class extends BaseSoundManager {
 
-    Extends: BaseSoundManager,
-
-    initialize:
-
-    function WebAudioSoundManager (game)
+    constructor(game)
     {
         /**
          * The AudioContext being used for playback.
@@ -79,7 +75,7 @@ var WebAudioSoundManager = new Class({
 
         this.locked = this.context.state === 'suspended';
 
-        BaseSoundManager.call(this, game);
+        super(game);
 
         if (this.locked)
         {
@@ -94,7 +90,7 @@ var WebAudioSoundManager = new Class({
         }
 
         game.events.on(GameEvents.VISIBLE, this.onGameVisible, this);
-    },
+    }
 
     /**
      * Internal handler for Phaser.Core.Events#VISIBLE.
@@ -106,7 +102,7 @@ var WebAudioSoundManager = new Class({
      * @private
      * @since 3.88.0
      */
-    onGameVisible: function ()
+    onGameVisible()
     {
         var context = this.context;
 
@@ -120,7 +116,7 @@ var WebAudioSoundManager = new Class({
             }
 
         }, 100);
-    },
+    }
 
     /**
      * Method responsible for instantiating and returning AudioContext instance.
@@ -136,7 +132,7 @@ var WebAudioSoundManager = new Class({
      *
      * @return {AudioContext} The AudioContext instance to be used for playback.
      */
-    createAudioContext: function (game)
+    createAudioContext(game)
     {
         var audioConfig = game.config.audio;
 
@@ -155,7 +151,7 @@ var WebAudioSoundManager = new Class({
         {
             return new window.webkitAudioContext();
         }
-    },
+    }
 
     /**
      * This method takes a new AudioContext reference and then sets
@@ -171,7 +167,7 @@ var WebAudioSoundManager = new Class({
      *
      * @return {this} The WebAudioSoundManager instance.
      */
-    setAudioContext: function (context)
+    setAudioContext(context)
     {
         if (this.context)
         {
@@ -199,7 +195,7 @@ var WebAudioSoundManager = new Class({
         this.destination = this.masterMuteNode;
 
         return this;
-    },
+    }
 
     /**
      * Adds a new sound into the sound manager.
@@ -212,14 +208,14 @@ var WebAudioSoundManager = new Class({
      *
      * @return {Phaser.Sound.WebAudioSound} The new sound instance.
      */
-    add: function (key, config)
+    add(key, config)
     {
         var sound = new WebAudioSound(this, key, config);
 
         this.sounds.push(sound);
 
         return sound;
-    },
+    }
 
     /**
      * Decode audio data into a format ready for playback via Web Audio.
@@ -243,7 +239,7 @@ var WebAudioSoundManager = new Class({
      * @param {(Phaser.Types.Sound.DecodeAudioConfig[]|string)} [audioKey] - The string-based key to be used to reference the decoded audio in the audio cache, or an array of audio config objects.
      * @param {(ArrayBuffer|string)} [audioData] - The audio data, either a base64 encoded string, an audio media-type data uri, or an ArrayBuffer instance.
      */
-    decodeAudio: function (audioKey, audioData)
+    decodeAudio(audioKey, audioData)
     {
         var audioFiles;
 
@@ -300,7 +296,7 @@ var WebAudioSoundManager = new Class({
 
             this.context.decodeAudioData(data, success, failure);
         }
-    },
+    }
 
     /**
      * Sets the X and Y position of the Spatial Audio listener on this Web Audios context.
@@ -317,7 +313,7 @@ var WebAudioSoundManager = new Class({
      * @param {number} [x] - The x position of the Spatial Audio listener.
      * @param {number} [y] - The y position of the Spatial Audio listener.
      */
-    setListenerPosition: function (x, y)
+    setListenerPosition(x, y)
     {
         if (x === undefined) { x = this.game.scale.width / 2; }
         if (y === undefined) { y = this.game.scale.height / 2; }
@@ -325,7 +321,7 @@ var WebAudioSoundManager = new Class({
         this.listenerPosition.set(x, y);
 
         return this;
-    },
+    }
 
     /**
      * Unlocks Web Audio API on the initial input event.
@@ -335,7 +331,7 @@ var WebAudioSoundManager = new Class({
      * @method Phaser.Sound.WebAudioSoundManager#unlock
      * @since 3.0.0
      */
-    unlock: function ()
+    unlock()
     {
         var _this = this;
 
@@ -376,7 +372,7 @@ var WebAudioSoundManager = new Class({
             body.addEventListener('mouseup', unlockHandler, false);
             body.addEventListener('keydown', unlockHandler, false);
         }
-    },
+    }
 
     /**
      * Method used internally for pausing sound manager if
@@ -386,13 +382,13 @@ var WebAudioSoundManager = new Class({
      * @protected
      * @since 3.0.0
      */
-    onBlur: function ()
+    onBlur()
     {
         if (!this.locked)
         {
             this.context.suspend();
         }
-    },
+    }
 
     /**
      * Method used internally for resuming sound manager if
@@ -402,7 +398,7 @@ var WebAudioSoundManager = new Class({
      * @protected
      * @since 3.0.0
      */
-    onFocus: function ()
+    onFocus()
     {
         var context = this.context;
 
@@ -410,7 +406,7 @@ var WebAudioSoundManager = new Class({
         {
             context.resume();
         }
-    },
+    }
 
     /**
      * Update method called on every game step.
@@ -425,7 +421,7 @@ var WebAudioSoundManager = new Class({
      * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      * @param {number} delta - The delta time elapsed since the last frame.
      */
-    update: function (time, delta)
+    update(time, delta)
     {
         var listener = this.context.listener;
 
@@ -451,7 +447,7 @@ var WebAudioSoundManager = new Class({
         {
             this.onFocus();
         }
-    },
+    }
 
     /**
      * Calls Phaser.Sound.BaseSoundManager#destroy method
@@ -460,7 +456,7 @@ var WebAudioSoundManager = new Class({
      * @method Phaser.Sound.WebAudioSoundManager#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.destination = null;
         this.masterVolumeNode.disconnect();
@@ -485,7 +481,7 @@ var WebAudioSoundManager = new Class({
         this.game.events.off(GameEvents.VISIBLE, this.onGameVisible, this);
 
         BaseSoundManager.prototype.destroy.call(this);
-    },
+    }
 
     /**
      * Sets the muted state of all this Sound Manager.
@@ -498,12 +494,12 @@ var WebAudioSoundManager = new Class({
      *
      * @return {Phaser.Sound.WebAudioSoundManager} This Sound Manager.
      */
-    setMute: function (value)
+    setMute(value)
     {
         this.mute = value;
 
         return this;
-    },
+    }
 
     /**
      * @name Phaser.Sound.WebAudioSoundManager#mute
@@ -511,21 +507,18 @@ var WebAudioSoundManager = new Class({
      * @fires Phaser.Sound.Events#GLOBAL_MUTE
      * @since 3.0.0
      */
-    mute: {
 
-        get: function ()
-        {
-            return (this.masterMuteNode.gain.value === 0);
-        },
+    get mute()
+    {
+        return (this.masterMuteNode.gain.value === 0);
+    }
 
-        set: function (value)
-        {
-            this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
+    set mute(value)
+    {
+        this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
 
-            this.emit(Events.GLOBAL_MUTE, this, value);
-        }
-
-    },
+        this.emit(Events.GLOBAL_MUTE, this, value);
+    }
 
     /**
      * Sets the volume of this Sound Manager.
@@ -538,12 +531,12 @@ var WebAudioSoundManager = new Class({
      *
      * @return {Phaser.Sound.WebAudioSoundManager} This Sound Manager.
      */
-    setVolume: function (value)
+    setVolume(value)
     {
         this.volume = value;
 
         return this;
-    },
+    }
 
     /**
      * @name Phaser.Sound.WebAudioSoundManager#volume
@@ -551,22 +544,19 @@ var WebAudioSoundManager = new Class({
      * @fires Phaser.Sound.Events#GLOBAL_VOLUME
      * @since 3.0.0
      */
-    volume: {
 
-        get: function ()
-        {
-            return this.masterVolumeNode.gain.value;
-        },
-
-        set: function (value)
-        {
-            this.masterVolumeNode.gain.setValueAtTime(value, 0);
-
-            this.emit(Events.GLOBAL_VOLUME, this, value);
-        }
-
+    get volume()
+    {
+        return this.masterVolumeNode.gain.value;
     }
 
-});
+    set volume(value)
+    {
+        this.masterVolumeNode.gain.setValueAtTime(value, 0);
+
+        this.emit(Events.GLOBAL_VOLUME, this, value);
+    }
+
+};
 
 module.exports = WebAudioSoundManager;

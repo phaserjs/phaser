@@ -48,11 +48,9 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * @param {(string|number[]|object[])} keys - The keys that comprise this combo.
  * @param {Phaser.Types.Input.Keyboard.KeyComboConfig} [config] - A Key Combo configuration object.
  */
-var KeyCombo = new Class({
+var KeyCombo = class {
 
-    initialize:
-
-    function KeyCombo (keyboardPlugin, keys, config)
+    constructor(keyboardPlugin, keys, config)
     {
         if (config === undefined) { config = {}; }
 
@@ -247,7 +245,7 @@ var KeyCombo = new Class({
         this.onKeyDown = onKeyDownHandler;
 
         this.manager.on(Events.ANY_KEY_DOWN, this.onKeyDown);
-    },
+    }
 
     /**
      * How far complete is this combo? A value between 0 and 1.
@@ -257,14 +255,11 @@ var KeyCombo = new Class({
      * @readonly
      * @since 3.0.0
      */
-    progress: {
 
-        get: function ()
-        {
-            return this.index / this.size;
-        }
-
-    },
+    get progress()
+    {
+        return this.index / this.size;
+    }
 
     /**
      * Destroys this Key Combo and all of its references.
@@ -272,7 +267,7 @@ var KeyCombo = new Class({
      * @method Phaser.Input.Keyboard.KeyCombo#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.enabled = false;
         this.keyCodes = [];
@@ -282,6 +277,6 @@ var KeyCombo = new Class({
         this.manager = null;
     }
 
-});
+};
 
 module.exports = KeyCombo;

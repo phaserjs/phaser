@@ -73,12 +73,11 @@ var YieldContext = require('./YieldContext');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this manager.
  */
-var RenderNodeManager = new Class({
-    Extends: EventEmitter,
+var RenderNodeManager = class extends EventEmitter {
 
-    initialize: function RenderNodeManager (renderer)
+    constructor(renderer)
     {
-        EventEmitter.call(this);
+        super();
 
         /**
          * The renderer that owns this manager.
@@ -250,7 +249,7 @@ var RenderNodeManager = new Class({
          * @default null
          */
         this.currentDebugNode = null;
-    },
+    }
 
     /**
      * Add a node to the manager.
@@ -261,7 +260,7 @@ var RenderNodeManager = new Class({
      * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNode} node - The node to add.
      * @throws {Error} Will throw an error if the node already exists.
      */
-    addNode: function (name, node)
+    addNode(name, node)
     {
         if (this._nodes[name])
         {
@@ -275,7 +274,7 @@ var RenderNodeManager = new Class({
         {
             node.setDebug(true);
         }
-    },
+    }
 
     /**
      * Add a constructor for a node to the manager.
@@ -287,14 +286,14 @@ var RenderNodeManager = new Class({
      * @param {function} constructor - The constructor for the node.
      * @throws {Error} Will throw an error if the node constructor already exists.
      */
-    addNodeConstructor: function (name, constructor)
+    addNodeConstructor(name, constructor)
     {
         if (this._nodeConstructors[name])
         {
             throw new Error('node constructor ' + name + ' already exists.');
         }
         this._nodeConstructors[name] = constructor;
-    },
+    }
 
     /**
      * Get a node from the manager.
@@ -308,7 +307,7 @@ var RenderNodeManager = new Class({
      * @param {string} name - The name of the node.
      * @return {?Phaser.Renderer.WebGL.RenderNodes.RenderNode} The node, or null if it does not exist.
      */
-    getNode: function (name)
+    getNode(name)
     {
         if (this._nodes[name])
         {
@@ -321,7 +320,7 @@ var RenderNodeManager = new Class({
             return node;
         }
         return null;
-    },
+    }
 
     /**
      * Check if a node exists in the manager.
@@ -336,10 +335,10 @@ var RenderNodeManager = new Class({
      * @param {boolean} [constructed=false] - Whether the node must be constructed to be considered to exist.
      * @return {boolean} Whether the node exists.
      */
-    hasNode: function (name, constructed)
+    hasNode(name, constructed)
     {
         return !!this._nodes[name] || (!constructed && !!this._nodeConstructors[name]);
-    },
+    }
 
     /**
      * Set the current batch node. If a batch node is already in progress,
@@ -350,7 +349,7 @@ var RenderNodeManager = new Class({
      * @param {?Phaser.Renderer.WebGL.RenderNodes.BatchHandler} node - The node to set, or null to clear the current node.
      * @param {Phaser.Renderer.WebGL.DrawingContext} [drawingContext] - The drawing context. Only used if `node` is defined.
      */
-    setCurrentBatchNode: function (node, drawingContext)
+    setCurrentBatchNode(node, drawingContext)
     {
         if (this.currentBatchNode !== node)
         {
@@ -365,7 +364,7 @@ var RenderNodeManager = new Class({
 
             this.currentBatchDrawingContext = node ? drawingContext : null;
         }
-    },
+    }
 
     /**
      * Set `maxParallelTextureUnits` to a new value.
@@ -379,12 +378,12 @@ var RenderNodeManager = new Class({
      * @param {number} [value] - The new value for `maxParallelTextureUnits`. If not provided, it will be set to the renderer's `maxTextures`.
      * @fires Phaser.Renderer.Events#SET_PARALLEL_TEXTURE_UNITS
      */
-    setMaxParallelTextureUnits: function (value)
+    setMaxParallelTextureUnits(value)
     {
         this.maxParallelTextureUnits = Math.max(1, Math.min(value, this.renderer.maxTextures));
 
         this.emit(Events.SET_PARALLEL_TEXTURE_UNITS, this.maxParallelTextureUnits);
-    },
+    }
 
     /**
      * Finish rendering the current batch.
@@ -393,13 +392,13 @@ var RenderNodeManager = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#finishBatch
      * @since 4.0.0
      */
-    finishBatch: function ()
+    finishBatch()
     {
         if (this.currentBatchNode !== null)
         {
             this.setCurrentBatchNode(null);
         }
-    },
+    }
 
     /**
      * Start a standalone render (SAR), which is not part of a batch.
@@ -408,10 +407,10 @@ var RenderNodeManager = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#startStandAloneRender
      * @since 4.0.0
      */
-    startStandAloneRender: function ()
+    startStandAloneRender()
     {
         this.finishBatch();
-    },
+    }
 
     /**
      * Set whether nodes should record their run method for debugging.
@@ -422,7 +421,7 @@ var RenderNodeManager = new Class({
      * @since 4.0.0
      * @param {boolean} value - Whether nodes should record their run method for debugging.
      */
-    setDebug: function (value)
+    setDebug(value)
     {
         this.debug = value;
 
@@ -448,7 +447,7 @@ var RenderNodeManager = new Class({
                 this
             );
         }
-    },
+    }
 
     /**
      * Record a newly run RenderNode in the debug graph.
@@ -457,7 +456,7 @@ var RenderNodeManager = new Class({
      * @since 4.0.0
      * @param {string} name - The name of the node.
      */
-    pushDebug: function (name)
+    pushDebug(name)
     {
         if (!this.debug)
         {
@@ -480,7 +479,7 @@ var RenderNodeManager = new Class({
         }
 
         this.currentDebugNode = node;
-    },
+    }
 
     /**
      * Pop the last recorded RenderNode from the debug graph.
@@ -488,7 +487,7 @@ var RenderNodeManager = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager#popDebug
      * @since 4.0.0
      */
-    popDebug: function ()
+    popDebug()
     {
         if (!this.debug)
         {
@@ -503,7 +502,7 @@ var RenderNodeManager = new Class({
         {
             this.currentDebugNode = null;
         }
-    },
+    }
 
     /**
      * Format the current debug graph as an indented string.
@@ -512,7 +511,7 @@ var RenderNodeManager = new Class({
      * @since 4.0.0
      * @return {string} The formatted debug graph.
      */
-    debugToString: function ()
+    debugToString()
     {
         var output = '';
         var indent = 0;
@@ -539,6 +538,6 @@ var RenderNodeManager = new Class({
 
         return output;
     }
-});
+};
 
 module.exports = RenderNodeManager;

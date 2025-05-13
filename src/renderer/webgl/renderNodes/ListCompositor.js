@@ -18,13 +18,12 @@ var RenderNode = require('./RenderNode');
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var ListCompositor = new Class({
-    Extends: RenderNode,
+var ListCompositor = class extends RenderNode {
 
-    initialize: function ListCompositor (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'ListCompositor', manager);
-    },
+        super('ListCompositor', manager);
+    }
 
     /**
      * Render each child in the display list.
@@ -39,7 +38,7 @@ var ListCompositor = new Class({
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - This transform matrix is defined if the game object is nested
      * @param {number} [renderStep=0] - Which step of the rendering process is this? This is the index of the currently running function in a list of functions.
      */
-    run: function (
+    run(
         displayContext,
         children,
         parentTransformMatrix,
@@ -96,6 +95,6 @@ var ListCompositor = new Class({
 
         this.onRunEnd(displayContext);
     }
-});
+};
 
 module.exports = ListCompositor;

@@ -21,15 +21,14 @@ var ShaderSourceFS = require('../../shaders/FilterShadow-frag.js');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterShadow = new Class({
-    Extends: BaseFilterShader,
+var FilterShadow = class extends BaseFilterShader {
 
-    initialize: function FilterShadow (manager)
+    constructor(manager)
     {
-        BaseFilterShader.call(this, 'FilterShadow', manager, null, ShaderSourceFS);
-    },
+        super('FilterShadow', manager, null, ShaderSourceFS);
+    }
 
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         var programManager = this.programManager;
         var samples = controller.samples;
@@ -41,6 +40,6 @@ var FilterShadow = new Class({
         programManager.setUniform('samples', samples);
         programManager.setUniform('intensity', controller.intensity);
     }
-});
+};
 
 module.exports = FilterShadow;

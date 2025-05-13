@@ -26,15 +26,11 @@ var Vector2 = require('../math/Vector2');
  * @param {Phaser.Math.Vector2} p2 - Control Point 2.
  * @param {Phaser.Math.Vector2} p3 - End Point.
  */
-var CubicBezierCurve = new Class({
+var CubicBezierCurve = class extends Curve {
 
-    Extends: Curve,
-
-    initialize:
-
-    function CubicBezierCurve (p0, p1, p2, p3)
+    constructor(p0, p1, p2, p3)
     {
-        Curve.call(this, 'CubicBezierCurve');
+        super('CubicBezierCurve');
 
         if (Array.isArray(p0))
         {
@@ -79,7 +75,7 @@ var CubicBezierCurve = new Class({
          * @since 3.0.0
          */
         this.p3 = p3;
-    },
+    }
 
     /**
      * Gets the starting point on the curve.
@@ -93,12 +89,12 @@ var CubicBezierCurve = new Class({
      *
      * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
-    getStartPoint: function (out)
+    getStartPoint(out)
     {
         if (out === undefined) { out = new Vector2(); }
 
         return out.copy(this.p0);
-    },
+    }
 
     /**
      * Returns the resolution of this curve.
@@ -110,10 +106,10 @@ var CubicBezierCurve = new Class({
      *
      * @return {number} The resolution of the curve.
      */
-    getResolution: function (divisions)
+    getResolution(divisions)
     {
         return divisions;
-    },
+    }
 
     /**
      * Get point at relative position in curve according to length.
@@ -128,7 +124,7 @@ var CubicBezierCurve = new Class({
      *
      * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
-    getPoint: function (t, out)
+    getPoint(t, out)
     {
         if (out === undefined) { out = new Vector2(); }
 
@@ -138,7 +134,7 @@ var CubicBezierCurve = new Class({
         var p3 = this.p3;
 
         return out.set(CubicBezier(t, p0.x, p1.x, p2.x, p3.x), CubicBezier(t, p0.y, p1.y, p2.y, p3.y));
-    },
+    }
 
     /**
      * Draws this curve to the specified graphics object.
@@ -153,7 +149,7 @@ var CubicBezierCurve = new Class({
      *
      * @return {Phaser.GameObjects.Graphics} The graphics object this curve was drawn to. Useful for method chaining.
      */
-    draw: function (graphics, pointsTotal)
+    draw(graphics, pointsTotal)
     {
         if (pointsTotal === undefined) { pointsTotal = 32; }
 
@@ -171,7 +167,7 @@ var CubicBezierCurve = new Class({
 
         //  So you can chain graphics calls
         return graphics;
-    },
+    }
 
     /**
      * Returns a JSON object that describes this curve.
@@ -181,7 +177,7 @@ var CubicBezierCurve = new Class({
      *
      * @return {Phaser.Types.Curves.JSONCurve} The JSON object containing this curve data.
      */
-    toJSON: function ()
+    toJSON()
     {
         return {
             type: this.type,
@@ -194,7 +190,7 @@ var CubicBezierCurve = new Class({
         };
     }
 
-});
+};
 
 /**
  * Generates a curve from a JSON object.

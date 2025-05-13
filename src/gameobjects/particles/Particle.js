@@ -26,11 +26,9 @@ var Vector2 = require('../../math/Vector2');
  *
  * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - The Emitter to which this Particle belongs.
  */
-var Particle = new Class({
+var Particle = class {
 
-    initialize:
-
-    function Particle (emitter)
+    constructor(emitter)
     {
         /**
          * The Emitter to which this Particle belongs.
@@ -353,7 +351,7 @@ var Particle = new Class({
          * @since 3.60.0
          */
         this.bounds = new Rectangle();
-    },
+    }
 
     /**
      * The Event Emitter proxy.
@@ -372,10 +370,10 @@ var Particle = new Class({
      *
      * @return {boolean} `true` if the event had listeners, else `false`.
      */
-    emit: function (event, a1, a2, a3, a4, a5)
+    emit(event, a1, a2, a3, a4, a5)
     {
         return this.emitter.emit(event, a1, a2, a3, a4, a5);
-    },
+    }
 
     /**
      * Checks to see if this Particle is alive and updating.
@@ -385,10 +383,10 @@ var Particle = new Class({
      *
      * @return {boolean} `true` if this Particle is alive and updating, otherwise `false`.
      */
-    isAlive: function ()
+    isAlive()
     {
         return (this.lifeCurrent > 0);
-    },
+    }
 
     /**
      * Kills this particle. This sets the `lifeCurrent` value to 0, which forces
@@ -397,10 +395,10 @@ var Particle = new Class({
      * @method Phaser.GameObjects.Particles.Particle#kill
      * @since 3.60.0
      */
-    kill: function ()
+    kill()
     {
         this.lifeCurrent = 0;
-    },
+    }
 
     /**
      * Sets the position of this particle to the given x/y coordinates.
@@ -413,14 +411,14 @@ var Particle = new Class({
      * @param {number} [x=0] - The x coordinate to set this Particle to.
      * @param {number} [y=0] - The y coordinate to set this Particle to.
      */
-    setPosition: function (x, y)
+    setPosition(x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
 
         this.x = x;
         this.y = y;
-    },
+    }
 
     /**
      * Starts this Particle from the given coordinates.
@@ -433,7 +431,7 @@ var Particle = new Class({
      *
      * @return {boolean} `true` if the Particle is alive, or `false` if it was spawned inside a DeathZone.
      */
-    fire: function (x, y)
+    fire(x, y)
     {
         var emitter = this.emitter;
         var ops = emitter.ops;
@@ -558,7 +556,7 @@ var Particle = new Class({
         }
 
         return true;
-    },
+    }
 
     /**
      * The main update method for this Particle.
@@ -574,7 +572,7 @@ var Particle = new Class({
      *
      * @return {boolean} Returns `true` if this Particle has now expired and should be removed, otherwise `false` if still active.
      */
-    update: function (delta, step, processors)
+    update(delta, step, processors)
     {
         if (this.lifeCurrent <= 0)
         {
@@ -663,7 +661,7 @@ var Particle = new Class({
         this.lifeCurrent -= delta;
 
         return (this.lifeCurrent <= 0 && this.holdCurrent <= 0);
-    },
+    }
 
     /**
      * An internal method that calculates the velocity of the Particle and
@@ -679,7 +677,7 @@ var Particle = new Class({
      * @param {Phaser.GameObjects.Particles.ParticleProcessor[]} processors - An array of all active Particle Processors.
      * @param {number} t - The current normalized lifetime of the particle, between 0 (birth) and 1 (death).
      */
-    computeVelocity: function (emitter, delta, step, processors, t)
+    computeVelocity(emitter, delta, step, processors, t)
     {
         var ops = emitter.ops;
 
@@ -719,7 +717,7 @@ var Particle = new Class({
                 processor.update(this, delta, step, t);
             }
         }
-    },
+    }
 
     /**
      * This is a NOOP method and does nothing when called.
@@ -727,10 +725,10 @@ var Particle = new Class({
      * @method Phaser.GameObjects.Particles.Particle#setSizeToFrame
      * @since 3.60.0
      */
-    setSizeToFrame: function ()
+    setSizeToFrame()
     {
         //  NOOP
-    },
+    }
 
     /**
      * Gets the bounds of this particle as a Geometry Rectangle, factoring in any
@@ -745,7 +743,7 @@ var Particle = new Class({
      *
      * @return {Phaser.Geom.Rectangle} A Rectangle containing the transformed bounds of this particle.
      */
-    getBounds: function (matrix)
+    getBounds(matrix)
     {
         if (matrix === undefined) { matrix = this.emitter.getWorldTransformMatrix(); }
 
@@ -784,7 +782,7 @@ var Particle = new Class({
         bounds.height = Math.max(topLeft.y, topRight.y, bottomLeft.y, bottomRight.y) - bounds.y;
 
         return bounds;
-    },
+    }
 
     /**
      * Destroys this Particle.
@@ -792,7 +790,7 @@ var Particle = new Class({
      * @method Phaser.GameObjects.Particles.Particle#destroy
      * @since 3.60.0
      */
-    destroy: function ()
+    destroy()
     {
         if (this.anims)
         {
@@ -806,6 +804,6 @@ var Particle = new Class({
         this.scene = null;
     }
 
-});
+};
 
 module.exports = Particle;

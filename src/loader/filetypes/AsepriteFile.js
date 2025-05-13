@@ -35,13 +35,9 @@ var MultiFile = require('../MultiFile');
  * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
  */
-var AsepriteFile = new Class({
+var AsepriteFile = class extends MultiFile {
 
-    Extends: MultiFile,
-
-    initialize:
-
-    function AsepriteFile (loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
+    constructor(loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
     {
         var image;
         var data;
@@ -76,13 +72,13 @@ var AsepriteFile = new Class({
         if (image.linkFile)
         {
             //  Image has a normal map
-            MultiFile.call(this, loader, 'atlasjson', key, [ image, data, image.linkFile ]);
+            super(loader, 'atlasjson', key, [ image, data, image.linkFile ]);
         }
         else
         {
-            MultiFile.call(this, loader, 'atlasjson', key, [ image, data ]);
+            super(loader, 'atlasjson', key, [ image, data ]);
         }
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -90,7 +86,7 @@ var AsepriteFile = new Class({
      * @method Phaser.Loader.FileTypes.AsepriteFile#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         if (this.isReadyToProcess())
         {
@@ -106,7 +102,7 @@ var AsepriteFile = new Class({
         }
     }
 
-});
+};
 
 /**
  * Aseprite is a powerful animated sprite editor and pixel art tool.

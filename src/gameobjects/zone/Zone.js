@@ -46,27 +46,26 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  * @param {number} [width=1] - The width of the Game Object.
  * @param {number} [height=1] - The height of the Game Object.
  */
-var Zone = new Class({
+var Zone = class extends GameObject {
 
-    Extends: GameObject,
+    static
+    {
+        Class.mixin(this, [
+            Components.Depth,
+            Components.GetBounds,
+            Components.Origin,
+            Components.Transform,
+            Components.ScrollFactor,
+            Components.Visible
+        ], false);
+    }
 
-    Mixins: [
-        Components.Depth,
-        Components.GetBounds,
-        Components.Origin,
-        Components.Transform,
-        Components.ScrollFactor,
-        Components.Visible
-    ],
-
-    initialize:
-
-    function Zone (scene, x, y, width, height)
+    constructor(scene, x, y, width, height)
     {
         if (width === undefined) { width = 1; }
         if (height === undefined) { height = width; }
 
-        GameObject.call(this, scene, 'Zone');
+        super(scene, 'Zone');
 
         this.setPosition(x, y);
 
@@ -100,7 +99,7 @@ var Zone = new Class({
         this.blendMode = BlendModes.NORMAL;
 
         this.updateDisplayOrigin();
-    },
+    }
 
     /**
      * The displayed width of this Game Object.
@@ -110,19 +109,16 @@ var Zone = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    displayWidth: {
 
-        get: function ()
-        {
-            return this.scaleX * this.width;
-        },
+    get displayWidth()
+    {
+        return this.scaleX * this.width;
+    }
 
-        set: function (value)
-        {
-            this.scaleX = value / this.width;
-        }
-
-    },
+    set displayWidth(value)
+    {
+        this.scaleX = value / this.width;
+    }
 
     /**
      * The displayed height of this Game Object.
@@ -132,19 +128,16 @@ var Zone = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    displayHeight: {
 
-        get: function ()
-        {
-            return this.scaleY * this.height;
-        },
+    get displayHeight()
+    {
+        return this.scaleY * this.height;
+    }
 
-        set: function (value)
-        {
-            this.scaleY = value / this.height;
-        }
-
-    },
+    set displayHeight(value)
+    {
+        this.scaleY = value / this.height;
+    }
 
     /**
      * Sets the size of this Game Object.
@@ -158,7 +151,7 @@ var Zone = new Class({
      *
      * @return {this} This Game Object.
      */
-    setSize: function (width, height, resizeInput)
+    setSize(width, height, resizeInput)
     {
         if (resizeInput === undefined) { resizeInput = true; }
 
@@ -176,7 +169,7 @@ var Zone = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the display size of this Game Object.
@@ -190,13 +183,13 @@ var Zone = new Class({
      *
      * @return {this} This Game Object.
      */
-    setDisplaySize: function (width, height)
+    setDisplaySize(width, height)
     {
         this.displayWidth = width;
         this.displayHeight = height;
 
         return this;
-    },
+    }
 
     /**
      * Sets this Zone to be a Circular Drop Zone.
@@ -209,10 +202,10 @@ var Zone = new Class({
      *
      * @return {this} This Game Object.
      */
-    setCircleDropZone: function (radius)
+    setCircleDropZone(radius)
     {
         return this.setDropZone(new Circle(0, 0, radius), CircleContains);
-    },
+    }
 
     /**
      * Sets this Zone to be a Rectangle Drop Zone.
@@ -226,10 +219,10 @@ var Zone = new Class({
      *
      * @return {this} This Game Object.
      */
-    setRectangleDropZone: function (width, height)
+    setRectangleDropZone(width, height)
     {
         return this.setDropZone(new Rectangle(0, 0, width, height), RectangleContains);
-    },
+    }
 
     /**
      * Allows you to define your own Geometry shape to be used as a Drop Zone.
@@ -242,7 +235,7 @@ var Zone = new Class({
      *
      * @return {this} This Game Object.
      */
-    setDropZone: function (hitArea, hitAreaCallback)
+    setDropZone(hitArea, hitAreaCallback)
     {
         if (!this.input)
         {
@@ -250,7 +243,7 @@ var Zone = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * A NOOP method so you can pass a Zone to a Container.
@@ -260,9 +253,9 @@ var Zone = new Class({
      * @private
      * @since 3.11.0
      */
-    setAlpha: function ()
+    setAlpha()
     {
-    },
+    }
 
     /**
      * A NOOP method so you can pass a Zone to a Container in Canvas.
@@ -272,9 +265,9 @@ var Zone = new Class({
      * @private
      * @since 3.16.2
      */
-    setBlendMode: function ()
+    setBlendMode()
     {
-    },
+    }
 
     /**
      * A Zone does not render.
@@ -288,10 +281,10 @@ var Zone = new Class({
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
      */
-    renderCanvas: function (renderer, src, camera)
+    renderCanvas(renderer, src, camera)
     {
         camera.addToRenderList(src);
-    },
+    }
 
     /**
      * A Zone does not render.
@@ -304,11 +297,11 @@ var Zone = new Class({
      * @param {Phaser.GameObjects.Image} src - The Game Object being rendered in this call.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    renderWebGL: function (renderer, src, drawingContext)
+    renderWebGL(renderer, src, drawingContext)
     {
         drawingContext.camera.addToRenderList(src);
     }
 
-});
+};
 
 module.exports = Zone;

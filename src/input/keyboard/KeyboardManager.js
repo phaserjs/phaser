@@ -27,11 +27,9 @@ var NOOP = require('../../utils/NOOP');
  *
  * @param {Phaser.Input.InputManager} inputManager - A reference to the Input Manager.
  */
-var KeyboardManager = new Class({
+var KeyboardManager = class {
 
-    initialize:
-
-    function KeyboardManager (inputManager)
+    constructor(inputManager)
     {
         /**
          * A reference to the Input Manager.
@@ -141,7 +139,7 @@ var KeyboardManager = new Class({
         this.onKeyUp = NOOP;
 
         inputManager.events.once(InputEvents.MANAGER_BOOT, this.boot, this);
-    },
+    }
 
     /**
      * The Keyboard Manager boot process.
@@ -150,7 +148,7 @@ var KeyboardManager = new Class({
      * @private
      * @since 3.16.0
      */
-    boot: function ()
+    boot()
     {
         var config = this.manager.config;
 
@@ -170,7 +168,7 @@ var KeyboardManager = new Class({
         }
 
         this.manager.game.events.on(GameEvents.POST_STEP, this.postUpdate, this);
-    },
+    }
 
     /**
      * Starts the Keyboard Event listeners running.
@@ -179,7 +177,7 @@ var KeyboardManager = new Class({
      * @method Phaser.Input.Keyboard.KeyboardManager#startListeners
      * @since 3.16.0
      */
-    startListeners: function ()
+    startListeners()
     {
         var _this = this;
 
@@ -232,7 +230,7 @@ var KeyboardManager = new Class({
 
             this.enabled = true;
         }
-    },
+    }
 
     /**
      * Stops the Key Event listeners.
@@ -241,7 +239,7 @@ var KeyboardManager = new Class({
      * @method Phaser.Input.Keyboard.KeyboardManager#stopListeners
      * @since 3.16.0
      */
-    stopListeners: function ()
+    stopListeners()
     {
         var target = this.target;
 
@@ -249,7 +247,7 @@ var KeyboardManager = new Class({
         target.removeEventListener('keyup', this.onKeyUp, false);
 
         this.enabled = false;
-    },
+    }
 
     /**
      * Clears the event queue.
@@ -259,10 +257,10 @@ var KeyboardManager = new Class({
      * @private
      * @since 3.16.0
      */
-    postUpdate: function ()
+    postUpdate()
     {
         this.queue = [];
-    },
+    }
 
     /**
      * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
@@ -303,7 +301,7 @@ var KeyboardManager = new Class({
      *
      * @param {(string|number|number[]|any[])} keycode - The Key Codes to enable capture for, preventing them reaching the browser.
      */
-    addCapture: function (keycode)
+    addCapture(keycode)
     {
         if (typeof keycode === 'string')
         {
@@ -333,7 +331,7 @@ var KeyboardManager = new Class({
         }
 
         this.preventDefault = captures.length > 0;
-    },
+    }
 
     /**
      * Removes an existing key capture.
@@ -370,7 +368,7 @@ var KeyboardManager = new Class({
      *
      * @param {(string|number|number[]|any[])} keycode - The Key Codes to disable capture for, allowing them reaching the browser again.
      */
-    removeCapture: function (keycode)
+    removeCapture(keycode)
     {
         if (typeof keycode === 'string')
         {
@@ -397,7 +395,7 @@ var KeyboardManager = new Class({
         }
 
         this.preventDefault = captures.length > 0;
-    },
+    }
 
     /**
      * Removes all keyboard captures and sets the `preventDefault` property to `false`.
@@ -405,12 +403,12 @@ var KeyboardManager = new Class({
      * @method Phaser.Input.Keyboard.KeyboardManager#clearCaptures
      * @since 3.16.0
      */
-    clearCaptures: function ()
+    clearCaptures()
     {
         this.captures = [];
 
         this.preventDefault = false;
-    },
+    }
 
     /**
      * Destroys this Keyboard Manager instance.
@@ -418,7 +416,7 @@ var KeyboardManager = new Class({
      * @method Phaser.Input.Keyboard.KeyboardManager#destroy
      * @since 3.16.0
      */
-    destroy: function ()
+    destroy()
     {
         this.stopListeners();
 
@@ -433,6 +431,6 @@ var KeyboardManager = new Class({
         this.manager = null;
     }
 
-});
+};
 
 module.exports = KeyboardManager;

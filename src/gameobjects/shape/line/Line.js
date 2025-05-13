@@ -43,17 +43,16 @@ var LineRender = require('./LineRender');
  * @param {number} [strokeColor] - The color the line will be drawn in, i.e. 0xff0000 for red.
  * @param {number} [strokeAlpha] - The alpha the line will be drawn in. You can also set the alpha of the overall Shape using its `alpha` property.
  */
-var Line = new Class({
+var Line = class extends Shape {
 
-    Extends: Shape,
+    static
+    {
+        Class.mixin(this, [
+            LineRender
+        ], false);
+    }
 
-    Mixins: [
-        LineRender
-    ],
-
-    initialize:
-
-    function Line (scene, x, y, x1, y1, x2, y2, strokeColor, strokeAlpha)
+    constructor(scene, x, y, x1, y1, x2, y2, strokeColor, strokeAlpha)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -62,7 +61,7 @@ var Line = new Class({
         if (x2 === undefined) { x2 = 128; }
         if (y2 === undefined) { y2 = 0; }
 
-        Shape.call(this, scene, 'Line', new GeomLine(x1, y1, x2, y2));
+        super(scene, 'Line', new GeomLine(x1, y1, x2, y2));
 
         var width = Math.max(1, this.geom.right - this.geom.left);
         var height = Math.max(1, this.geom.bottom - this.geom.top);
@@ -106,7 +105,7 @@ var Line = new Class({
         }
 
         this.updateDisplayOrigin();
-    },
+    }
 
     /**
      * Sets the width of the line.
@@ -124,7 +123,7 @@ var Line = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setLineWidth: function (startWidth, endWidth)
+    setLineWidth(startWidth, endWidth)
     {
         if (endWidth === undefined) { endWidth = startWidth; }
 
@@ -134,7 +133,7 @@ var Line = new Class({
         this.lineWidth = startWidth;
 
         return this;
-    },
+    }
 
     /**
      * Sets the start and end coordinates of this Line.
@@ -149,13 +148,13 @@ var Line = new Class({
      *
      * @return {this} This Line object.
      */
-    setTo: function (x1, y1, x2, y2)
+    setTo(x1, y1, x2, y2)
     {
         this.geom.setTo(x1, y1, x2, y2);
 
         return this;
     }
 
-});
+};
 
 module.exports = Line;

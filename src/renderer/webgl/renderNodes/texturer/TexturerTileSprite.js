@@ -22,12 +22,11 @@ var RenderNode = require('../RenderNode');
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var TexturerTileSprite = new Class({
-    Extends: RenderNode,
+var TexturerTileSprite = class extends RenderNode {
 
-    initialize: function TexturerTileSprite (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'TexturerTileSprite', manager);
+        super('TexturerTileSprite', manager);
 
         /**
          * The frame data of the GameObject being rendered.
@@ -46,7 +45,7 @@ var TexturerTileSprite = new Class({
          * @since 4.0.0
          */
         this.uvMatrix = new TransformMatrix();
-    },
+    }
 
     /**
      * Set this RenderNode to temporarily store the texture data for the given
@@ -58,7 +57,7 @@ var TexturerTileSprite = new Class({
      * @param {Phaser.GameObjects.Image} gameObject - The GameObject being rendered.
      * @param {object} [element] - The specific element within the game object. This is used for objects that consist of multiple quads. It is unused here.
      */
-    run: function (drawingContext, gameObject, element)
+    run(drawingContext, gameObject, element)
     {
         this.onRunBegin(drawingContext);
 
@@ -95,6 +94,6 @@ var TexturerTileSprite = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = TexturerTileSprite;

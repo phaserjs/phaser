@@ -94,15 +94,11 @@ var Events = require('./events');
  * @param {Phaser.Scene} scene - The Scene which owns this Timeline.
  * @param {Phaser.Types.Time.TimelineEventConfig|Phaser.Types.Time.TimelineEventConfig[]} [config] - The configuration object for this Timeline Event, or an array of them.
  */
-var Timeline = new Class({
+var Timeline = class extends EventEmitter {
 
-    Extends: EventEmitter,
-
-    initialize:
-
-    function Timeline (scene, config)
+    constructor(scene, config)
     {
-        EventEmitter.call(this);
+        super();
 
         /**
          * The Scene to which this Timeline belongs.
@@ -239,7 +235,7 @@ var Timeline = new Class({
         {
             this.add(config);
         }
-    },
+    }
 
     /**
      * Updates the elapsed time counter, if this Timeline is not paused.
@@ -250,7 +246,7 @@ var Timeline = new Class({
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    preUpdate: function (time, delta)
+    preUpdate(time, delta)
     {
         if (this.paused)
         {
@@ -258,7 +254,7 @@ var Timeline = new Class({
         }
 
         this.elapsed += delta * this.timeScale;
-    },
+    }
 
     /**
      * Called automatically by the Scene update step.
@@ -284,7 +280,7 @@ var Timeline = new Class({
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    update: function ()
+    update()
     {
         if (this.paused || this.complete)
         {
@@ -407,7 +403,7 @@ var Timeline = new Class({
         {
             this.emit(Events.COMPLETE, this);
         }
-    },
+    }
 
     /**
      * Starts this Timeline running.
@@ -424,7 +420,7 @@ var Timeline = new Class({
      *
      * @return {this} This Timeline instance.
      */
-    play: function (fromStart)
+    play(fromStart)
     {
         if (fromStart === undefined) { fromStart = true; }
 
@@ -438,7 +434,7 @@ var Timeline = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Pauses this Timeline.
@@ -456,7 +452,7 @@ var Timeline = new Class({
      *
      * @return {this} This Timeline instance.
      */
-    pause: function ()
+    pause()
     {
         this.paused = true;
 
@@ -473,7 +469,7 @@ var Timeline = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Repeats this Timeline.
@@ -493,7 +489,7 @@ var Timeline = new Class({
      *
      * @return {this} This Timeline instance.
      */
-    repeat: function (amount)
+    repeat(amount)
     {
         if (amount === undefined || amount === true) { amount = -1; }
         if (amount === false) { amount = 0; }
@@ -501,7 +497,7 @@ var Timeline = new Class({
         this.loop = amount;
 
         return this;
-    },
+    }
 
     /**
      * Resumes this Timeline from a paused state.
@@ -515,7 +511,7 @@ var Timeline = new Class({
      *
      * @return {this} This Timeline instance.
      */
-    resume: function ()
+    resume()
     {
         this.paused = false;
 
@@ -532,7 +528,7 @@ var Timeline = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Stops this Timeline.
@@ -546,13 +542,13 @@ var Timeline = new Class({
      *
      * @return {this} This Timeline instance.
      */
-    stop: function ()
+    stop()
     {
         this.paused = true;
         this.complete = true;
 
         return this;
-    },
+    }
 
     /**
      * Resets this Timeline back to the start.
@@ -574,7 +570,7 @@ var Timeline = new Class({
      * 
      * @return {this} This Timeline instance.
      */
-    reset: function (loop)
+    reset(loop)
     {
         if (loop === undefined) { loop = false; }
 
@@ -605,7 +601,7 @@ var Timeline = new Class({
         }
 
         return this.play(false);
-    },
+    }
 
     /**
      * Adds one or more events to this Timeline.
@@ -628,7 +624,7 @@ var Timeline = new Class({
      *
      * @return {this} This Timeline instance.
      */
-    add: function (config)
+    add(config)
     {
         if (!Array.isArray(config))
         {
@@ -688,7 +684,7 @@ var Timeline = new Class({
         this.complete = false;
 
         return this;
-    },
+    }
 
     /**
      * Removes all events from this Timeline, resets the elapsed time to zero
@@ -701,7 +697,7 @@ var Timeline = new Class({
      *
      * @return {this} This Timeline instance.
      */
-    clear: function ()
+    clear()
     {
         var events = this.events;
 
@@ -721,7 +717,7 @@ var Timeline = new Class({
         this.paused = true;
 
         return this;
-    },
+    }
 
     /**
      * Returns `true` if this Timeline is currently playing.
@@ -733,10 +729,10 @@ var Timeline = new Class({
      *
      * @return {boolean} `true` if this Timeline is playing, otherwise `false`.
      */
-    isPlaying: function ()
+    isPlaying()
     {
         return (!this.paused && !this.complete);
-    },
+    }
 
     /**
      * Returns a number between 0 and 1 representing the progress of this Timeline.
@@ -756,12 +752,12 @@ var Timeline = new Class({
      *
      * @return {number} A number between 0 and 1 representing the progress of this Timeline.
      */
-    getProgress: function ()
+    getProgress()
     {
         var total = Math.min(this.totalComplete, this.events.length);
 
         return total / this.events.length;
-    },
+    }
 
     /**
      * Destroys this Timeline.
@@ -776,7 +772,7 @@ var Timeline = new Class({
      * @method Phaser.Time.Timeline#destroy
      * @since 3.60.0
      */
-    destroy: function ()
+    destroy()
     {
         var eventEmitter = this.systems.events;
 
@@ -790,7 +786,7 @@ var Timeline = new Class({
         this.systems = null;
     }
 
-});
+};
 
 /**
  * A Timeline is a way to schedule events to happen at specific times in the future.

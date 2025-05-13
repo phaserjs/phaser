@@ -21,12 +21,11 @@ var RenderNode = require('../RenderNode');
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var TexturerImage = new Class({
-    Extends: RenderNode,
+var TexturerImage = class extends RenderNode {
 
-    initialize: function TexturerImage (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'TexturerImage', manager);
+        super('TexturerImage', manager);
 
         /**
          * The frame data of the GameObject being rendered.
@@ -66,7 +65,7 @@ var TexturerImage = new Class({
          * @since 4.0.0
          */
         this.uvSource = null;
-    },
+    }
 
     /**
      * Set this RenderNode to temporarily store the texture data for the given
@@ -78,7 +77,7 @@ var TexturerImage = new Class({
      * @param {Phaser.GameObjects.Image} gameObject - The GameObject being rendered.
      * @param {object} [element] - The specific element within the game object. This is used for objects that consist of multiple quads. It is unused here.
      */
-    run: function (drawingContext, gameObject, element)
+    run(drawingContext, gameObject, element)
     {
         this.onRunBegin(drawingContext);
 
@@ -110,6 +109,6 @@ var TexturerImage = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = TexturerImage;

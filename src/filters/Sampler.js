@@ -36,14 +36,13 @@ var Controller = require('./Controller');
  * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The callback to call with the results of the sampler.
  * @param {null|Phaser.Types.Math.Vector2Like|Phaser.Geom.Rectangle} [region=null] - The region to sample. If `null`, the entire camera view is sampled. If a `Phaser.Types.Math.Vector2Like`, a point is sampled. If a `Phaser.Geom.Rectangle`, the region is sampled.
  */
-var Sampler = new Class({
-    Extends: Controller,
+var Sampler = class extends Controller {
 
-    initialize: function Sampler (camera, callback, region)
+    constructor(camera, callback, region)
     {
         if (region === undefined) { region = null; }
 
-        Controller.call(this, camera, 'FilterSampler');
+        super(camera, 'FilterSampler');
 
         this.allowBaseDraw = false;
 
@@ -66,6 +65,6 @@ var Sampler = new Class({
          */
         this.region = region;
     }
-});
+};
 
 module.exports = Sampler;

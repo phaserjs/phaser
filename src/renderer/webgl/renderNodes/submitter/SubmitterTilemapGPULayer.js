@@ -35,18 +35,55 @@ var Utils = require('../../Utils');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this handler.
  */
-var SubmitterTilemapGPULayer = new Class({
-    Extends: RenderNode,
+var SubmitterTilemapGPULayer = class extends RenderNode {
 
-    initialize: function SubmitterTilemapGPULayer (manager, config)
+    constructor(manager, config)
     {
+        /**
+         * Default configuration of this RenderNode.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterTilemapGPULayer#defaultConfig
+         * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
+         * @since 4.0.0
+         * @readonly
+         * @property {string} name - The name of this RenderNode.
+         * @property {string} vertexSource - The vertex shader source.
+         * @property {string} fragmentSource - The fragment shader source.
+         */
+        this.defaultConfig = {
+            name: 'SubmitterTilemapGPULayer',
+            shaderName: 'TilemapGPULayer',
+            vertexSource: ShaderSourceVS,
+            fragmentSource: ShaderSourceFS,
+            shaderAdditions: [
+                MakeSmoothPixelArt(true),
+                MakeSampleNormal(true),
+                MakeDefineLights(true),
+                MakeApplyLighting(true)
+            ],
+            vertexBufferLayout: {
+                usage: 'DYNAMIC_DRAW',
+                count: 4,
+                layout: [
+                    {
+                        name: 'inPosition',
+                        size: 2
+                    },
+                    {
+                        name: 'inTexCoord',
+                        size: 2
+                    }
+                ]
+            }
+        };
+
         var renderer = manager.renderer;
 
         var finalConfig = Merge(config || {}, this.defaultConfig);
         var name = finalConfig.name;
         this._completeLayout(finalConfig);
 
-        RenderNode.call(this, name, manager);
+        super(name, manager);
 
         /**
          * The completed configuration object for this RenderNode.
@@ -158,45 +195,7 @@ var SubmitterTilemapGPULayer = new Class({
          * @private
          */
         this._quad = new Float32Array(8);
-    },
-
-    /**
-     * Default configuration of this RenderNode.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterTilemapGPULayer#defaultConfig
-     * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
-     * @since 4.0.0
-     * @readonly
-     * @property {string} name - The name of this RenderNode.
-     * @property {string} vertexSource - The vertex shader source.
-     * @property {string} fragmentSource - The fragment shader source.
-     */
-    defaultConfig: {
-        name: 'SubmitterTilemapGPULayer',
-        shaderName: 'TilemapGPULayer',
-        vertexSource: ShaderSourceVS,
-        fragmentSource: ShaderSourceFS,
-        shaderAdditions: [
-            MakeSmoothPixelArt(true),
-            MakeSampleNormal(true),
-            MakeDefineLights(true),
-            MakeApplyLighting(true)
-        ],
-        vertexBufferLayout: {
-            usage: 'DYNAMIC_DRAW',
-            count: 4,
-            layout: [
-                {
-                    name: 'inPosition',
-                    size: 2
-                },
-                {
-                    name: 'inTexCoord',
-                    size: 2
-                }
-            ]
-        }
-    },
+    }
 
     /**
      * Fill out the configuration object with default values where needed.
@@ -205,7 +204,7 @@ var SubmitterTilemapGPULayer = new Class({
      * @since 4.0.0
      * @param {object} config - The configuration object to complete.
      */
-    _completeLayout: function (config)
+    _completeLayout(config)
     {
         // Set up vertex buffer layout.
         var layoutSource = config.vertexBufferLayout;
@@ -243,7 +242,7 @@ var SubmitterTilemapGPULayer = new Class({
                 });
             }
         }
-    },
+    }
 
     /**
      * Set up uniforms for rendering.
@@ -253,7 +252,7 @@ var SubmitterTilemapGPULayer = new Class({
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.Tilemaps.TilemapGPULayer} tilemapLayer - The TilemapGPULayer being rendered.
      */
-    setupUniforms: function (drawingContext, tilemapLayer)
+    setupUniforms(drawingContext, tilemapLayer)
     {
         var camera = drawingContext.camera;
         var programManager = this.programManager;
@@ -339,7 +338,7 @@ var SubmitterTilemapGPULayer = new Class({
             tilemapLayer.selfShadow.diffuseFlatThreshold,
             tilemapLayer.selfShadow.penumbra
         );
-    },
+    }
 
     /**
      * Update render options for a TilemapGPULayer object.
@@ -350,7 +349,7 @@ var SubmitterTilemapGPULayer = new Class({
      * @since 4.0.0
      * @param {Phaser.Tilemaps.TilemapGPULayer} gameObject - The TilemapGPULayer being rendered.
      */
-    updateRenderOptions: function (gameObject)
+    updateRenderOptions(gameObject)
     {
         var programManager = this.programManager;
         var texture = gameObject.tileset.image;
@@ -428,7 +427,7 @@ var SubmitterTilemapGPULayer = new Class({
         {
             programManager.removeFeature('BORDERFILTER');
         }
-    },
+    }
 
     /**
      * Render a TilemapGPULayer object.
@@ -439,7 +438,7 @@ var SubmitterTilemapGPULayer = new Class({
      * @param {Phaser.Tilemaps.TilemapGPULayer} tilemapLayer - The TilemapGPULayer being rendered.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - The parent matrix describing the game object's context.
      */
-    run: function (
+    run(
         drawingContext,
         tilemapLayer,
         parentMatrix
@@ -580,6 +579,6 @@ var SubmitterTilemapGPULayer = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = SubmitterTilemapGPULayer;

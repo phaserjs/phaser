@@ -20,11 +20,9 @@ var Vector2 = require('../../math/Vector2');
  * @param {number} [x=0] - `x` pixel coordinate.
  * @param {number} [y=0] - `y` pixel coordinate.
  */
-var MoveTo = new Class({
+var MoveTo = class {
 
-    initialize:
-
-    function MoveTo (x, y)
+    constructor(x, y)
     {
         /**
          * Denotes that this Curve does not influence the bounds, points, and drawing of its parent Path. Must be `false` or some methods in the parent Path will throw errors.
@@ -44,7 +42,7 @@ var MoveTo = new Class({
          * @since 3.0.0
          */
         this.p0 = new Vector2(x, y);
-    },
+    }
 
     /**
      * Get point at relative position in curve according to length.
@@ -59,12 +57,12 @@ var MoveTo = new Class({
      *
      * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
      */
-    getPoint: function (t, out)
+    getPoint(t, out)
     {
         if (out === undefined) { out = new Vector2(); }
 
         return out.copy(this.p0);
-    },
+    }
 
     /**
      * Retrieves the point at given position in the curve. This will always return this curve's only point.
@@ -79,10 +77,10 @@ var MoveTo = new Class({
      *
      * @return {Phaser.Math.Vector2} The modified `out` vector, or a new `Vector2` if none was provided.
      */
-    getPointAt: function (u, out)
+    getPointAt(u, out)
     {
         return this.getPoint(u, out);
-    },
+    }
 
     /**
      * Gets the resolution of this curve.
@@ -92,10 +90,10 @@ var MoveTo = new Class({
      *
      * @return {number} The resolution of this curve. For a MoveTo the value is always 1.
      */
-    getResolution: function ()
+    getResolution()
     {
         return 1;
-    },
+    }
 
     /**
      * Gets the length of this curve.
@@ -105,10 +103,10 @@ var MoveTo = new Class({
      *
      * @return {number} The length of this curve. For a MoveTo the value is always 0.
      */
-    getLength: function ()
+    getLength()
     {
         return 0;
-    },
+    }
 
     /**
      * Converts this curve into a JSON-serializable object.
@@ -118,7 +116,7 @@ var MoveTo = new Class({
      *
      * @return {Phaser.Types.Curves.JSONCurve} A primitive object with the curve's type and only point.
      */
-    toJSON: function ()
+    toJSON()
     {
         return {
             type: 'MoveTo',
@@ -128,6 +126,6 @@ var MoveTo = new Class({
         };
     }
 
-});
+};
 
 module.exports = MoveTo;

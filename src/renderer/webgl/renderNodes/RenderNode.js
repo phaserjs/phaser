@@ -18,11 +18,9 @@ var Class = require('../../../utils/Class');
  * @param {string} name - The name of the RenderNode.
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var RenderNode = new Class({
+var RenderNode = class {
 
-    initialize:
-
-    function RenderNode (name, manager)
+    constructor(name, manager)
     {
         /**
          * The name of the RenderNode.
@@ -53,7 +51,7 @@ var RenderNode = new Class({
          * @default null
          */
         this._run = null;
-    },
+    }
 
     /**
      * Run the RenderNode.
@@ -66,10 +64,10 @@ var RenderNode = new Class({
      * @param {...*} [args] - Arguments to pass to the node. These will vary depending on the node.
      * @since 4.0.0
      */
-    run: function ()
+    run()
     {
         // Insert code here.
-    },
+    }
 
     /**
      * By default this is an empty method hook that you can override and use in your own custom render nodes.
@@ -81,8 +79,9 @@ var RenderNode = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
      */
-    onRunBegin: function (drawingContext)
-    {},
+    onRunBegin(drawingContext)
+    {
+    }
 
     /**
      * By default this is an empty method hook that you can override and use in your own custom render nodes.
@@ -94,8 +93,9 @@ var RenderNode = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
      */
-    onRunEnd: function (drawingContext)
-    {},
+    onRunEnd(drawingContext)
+    {
+    }
 
     /**
      * Set whether the node should report debug information.
@@ -105,7 +105,7 @@ var RenderNode = new Class({
      * @since 4.0.0
      * @param {boolean} debug - Whether to report debug information.
      */
-    setDebug: function (debug)
+    setDebug(debug)
     {
         if (debug)
         {
@@ -129,6 +129,6 @@ var RenderNode = new Class({
             this._run = null;
         }
     }
-});
+};
 
 module.exports = RenderNode;

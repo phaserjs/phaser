@@ -19,8 +19,8 @@ var Class = require('../../../utils/Class');
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance that owns this WebGLShaderSetterWrapper.
  */
-var WebGLShaderSetterWrapper = new Class({
-    initialize: function WebGLShaderSetterWrapper (renderer)
+var WebGLShaderSetterWrapper = class {
+    constructor(renderer)
     {
         var gl = renderer.gl;
 
@@ -233,6 +233,6 @@ var WebGLShaderSetterWrapper = new Class({
             }
         };
     }
-});
+};
 
 module.exports = WebGLShaderSetterWrapper;

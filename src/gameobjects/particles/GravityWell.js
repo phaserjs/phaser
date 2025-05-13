@@ -30,13 +30,9 @@ var ParticleProcessor = require('./ParticleProcessor');
  * @param {number} [epsilon=100] - The minimum distance for which the gravity force is calculated.
  * @param {number} [gravity=50] - The gravitational force of this Gravity Well.
  */
-var GravityWell = new Class({
+var GravityWell = class extends ParticleProcessor {
 
-    Extends: ParticleProcessor,
-
-    initialize:
-
-    function GravityWell (x, y, power, epsilon, gravity)
+    constructor(x, y, power, epsilon, gravity)
     {
         if (typeof x === 'object')
         {
@@ -57,7 +53,7 @@ var GravityWell = new Class({
             if (gravity === undefined) { gravity = 50; }
         }
 
-        ParticleProcessor.call(this, x, y, true);
+        super(x, y, true);
 
         /**
          * Internal gravity value.
@@ -90,7 +86,7 @@ var GravityWell = new Class({
          * @since 3.0.0
          */
         this._epsilon = epsilon * epsilon;
-    },
+    }
 
     /**
      * Takes a Particle and updates it based on the properties of this Gravity Well.
@@ -102,7 +98,7 @@ var GravityWell = new Class({
      * @param {number} delta - The delta time in ms.
      * @param {number} step - The delta value divided by 1000.
      */
-    update: function (particle, delta)
+    update(particle, delta)
     {
         var x = this.x - particle.x;
         var y = this.y - particle.y;
@@ -124,7 +120,7 @@ var GravityWell = new Class({
 
         particle.velocityX += x * factor;
         particle.velocityY += y * factor;
-    },
+    }
 
     /**
      * The minimum distance for which the gravity force is calculated.
@@ -135,19 +131,16 @@ var GravityWell = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    epsilon: {
 
-        get: function ()
-        {
-            return Math.sqrt(this._epsilon);
-        },
+    get epsilon()
+    {
+        return Math.sqrt(this._epsilon);
+    }
 
-        set: function (value)
-        {
-            this._epsilon = value * value;
-        }
-
-    },
+    set epsilon(value)
+    {
+        this._epsilon = value * value;
+    }
 
     /**
      * The strength of the gravity force - larger numbers produce a stronger force.
@@ -158,19 +151,16 @@ var GravityWell = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    power: {
 
-        get: function ()
-        {
-            return this._power / this._gravity;
-        },
+    get power()
+    {
+        return this._power / this._gravity;
+    }
 
-        set: function (value)
-        {
-            this._power = value * this._gravity;
-        }
-
-    },
+    set power(value)
+    {
+        this._power = value * this._gravity;
+    }
 
     /**
      * The gravitational force of this Gravity Well.
@@ -181,22 +171,19 @@ var GravityWell = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    gravity: {
 
-        get: function ()
-        {
-            return this._gravity;
-        },
-
-        set: function (value)
-        {
-            var pwr = this.power;
-            this._gravity = value;
-            this.power = pwr;
-        }
-
+    get gravity()
+    {
+        return this._gravity;
     }
 
-});
+    set gravity(value)
+    {
+        var pwr = this.power;
+        this._gravity = value;
+        this.power = pwr;
+    }
+
+};
 
 module.exports = GravityWell;

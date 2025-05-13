@@ -21,15 +21,14 @@ var ShaderSourceFS = require('../../shaders/FilterThreshold-frag.js');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterThreshold = new Class({
-    Extends: BaseFilterShader,
+var FilterThreshold = class extends BaseFilterShader {
 
-    initialize: function FilterThreshold (manager)
+    constructor(manager)
     {
-        BaseFilterShader.call(this, 'FilterThreshold', manager, null, ShaderSourceFS);
-    },
+        super('FilterThreshold', manager, null, ShaderSourceFS);
+    }
 
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         var programManager = this.programManager;
 
@@ -37,6 +36,6 @@ var FilterThreshold = new Class({
         programManager.setUniform('edge2', controller.edge2);
         programManager.setUniform('invert', controller.invert);
     }
-});
+};
 
 module.exports = FilterThreshold;

@@ -121,28 +121,27 @@ var Vertex = require('./NineSliceVertex');
  * @param {number} [topHeight=0] - The size of the top horizontal row (C). Set to zero or undefined to create a 3 slice object.
  * @param {number} [bottomHeight=0] - The size of the bottom horizontal row (D). Set to zero or undefined to create a 3 slice object.
  */
-var NineSlice = new Class({
+var NineSlice = class extends GameObject {
 
-    Extends: GameObject,
+    static
+    {
+        Class.mixin(this, [
+            Components.AlphaSingle,
+            Components.BlendMode,
+            Components.Depth,
+            Components.GetBounds,
+            Components.Mask,
+            Components.Origin,
+            Components.RenderNodes,
+            Components.ScrollFactor,
+            Components.Texture,
+            Components.Transform,
+            Components.Visible,
+            NineSliceRender
+        ], false);
+    }
 
-    Mixins: [
-        Components.AlphaSingle,
-        Components.BlendMode,
-        Components.Depth,
-        Components.GetBounds,
-        Components.Mask,
-        Components.Origin,
-        Components.RenderNodes,
-        Components.ScrollFactor,
-        Components.Texture,
-        Components.Transform,
-        Components.Visible,
-        NineSliceRender
-    ],
-
-    initialize:
-
-    function NineSlice (scene, x, y, texture, frame, width, height, leftWidth, rightWidth, topHeight, bottomHeight)
+    constructor(scene, x, y, texture, frame, width, height, leftWidth, rightWidth, topHeight, bottomHeight)
     {
         // if (width === undefined) { width = 256; }
         // if (height === undefined) { height = 256; }
@@ -152,7 +151,7 @@ var NineSlice = new Class({
         // if (topHeight === undefined) { topHeight = 0; }
         // if (bottomHeight === undefined) { bottomHeight = 0; }
 
-        GameObject.call(this, scene, 'NineSlice');
+        super(scene, 'NineSlice');
 
         /**
          * Internal width value. Do not modify this property directly.
@@ -336,7 +335,7 @@ var NineSlice = new Class({
         this.updateDisplayOrigin();
 
         this.initRenderNodes(this._defaultRenderNodesMap);
-    },
+    }
 
     /**
      * The default render nodes for this Game Object.
@@ -348,12 +347,11 @@ var NineSlice = new Class({
      * @readonly
      * @since 4.0.0
      */
-    _defaultRenderNodesMap: {
-        get: function ()
-        {
-            return DefaultNineSliceNodes;
-        }
-    },
+
+    get _defaultRenderNodesMap()
+    {
+        return DefaultNineSliceNodes;
+    }
 
     /**
      * Resets the width, height and slices for this NineSlice Game Object.
@@ -376,7 +374,7 @@ var NineSlice = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setSlices: function (width, height, leftWidth, rightWidth, topHeight, bottomHeight, skipScale9)
+    setSlices(width, height, leftWidth, rightWidth, topHeight, bottomHeight, skipScale9)
     {
         if (leftWidth === undefined) { leftWidth = 10; }
         if (rightWidth === undefined) { rightWidth = 10; }
@@ -450,7 +448,7 @@ var NineSlice = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Updates all of the vertice UV coordinates. This is called automatically
@@ -462,7 +460,7 @@ var NineSlice = new Class({
      * @method Phaser.GameObjects.NineSlice#updateUVs
      * @since 3.60.0
      */
-    updateUVs: function ()
+    updateUVs()
     {
         var left = this.leftWidth;
         var right = this.rightWidth;
@@ -485,7 +483,7 @@ var NineSlice = new Class({
             this.updateQuadUVs(42, left / width, 1 - bot / height, 1 - right / width, 1);
             this.updateQuadUVs(48, 1 - right / width, 1 - bot / height, 1, 1);
         }
-    },
+    }
 
     /**
      * Recalculates all of the vertices in this Nine Slice Game Object
@@ -502,7 +500,7 @@ var NineSlice = new Class({
      * @method Phaser.GameObjects.NineSlice#updateVertices
      * @since 3.60.0
      */
-    updateVertices: function ()
+    updateVertices()
     {
         var left = this.leftWidth;
         var right = this.rightWidth;
@@ -525,7 +523,7 @@ var NineSlice = new Class({
             this.updateQuad(42, -0.5 + (left / width), -0.5 + (bot / height), 0.5 - (right / width), -0.5);
             this.updateQuad(48, 0.5 - (right / width), -0.5 + (bot / height), 0.5, -0.5);
         }
-    },
+    }
 
     /**
      * Internally updates the position coordinates across all vertices of the
@@ -543,7 +541,7 @@ var NineSlice = new Class({
      * @param {number} x2 - The bottom-right quad coordinate.
      * @param {number} y2 - The bottom-right quad coordinate.
      */
-    updateQuad: function (offset, x1, y1, x2, y2)
+    updateQuad(offset, x1, y1, x2, y2)
     {
         var width = this.width;
         var height = this.height;
@@ -558,7 +556,7 @@ var NineSlice = new Class({
         verts[offset + 3].resize(x1, y2, width, height, originX, originY);
         verts[offset + 4].resize(x2, y2, width, height, originX, originY);
         verts[offset + 5].resize(x2, y1, width, height, originX, originY);
-    },
+    }
 
     /**
      * Internally updates the UV coordinates across all vertices of the
@@ -576,7 +574,7 @@ var NineSlice = new Class({
      * @param {number} u2 - The bottom-right UV coordinate.
      * @param {number} v2 - The bottom-right UV coordinate.
      */
-    updateQuadUVs: function (offset, u1, v1, u2, v2)
+    updateQuadUVs(offset, u1, v1, u2, v2)
     {
         var verts = this.vertices;
 
@@ -611,7 +609,7 @@ var NineSlice = new Class({
         verts[offset + 3].setUVs(u1, v2);
         verts[offset + 4].setUVs(u2, v2);
         verts[offset + 5].setUVs(u2, v1);
-    },
+    }
 
     /**
      * Clears all tint values associated with this Game Object.
@@ -625,12 +623,12 @@ var NineSlice = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    clearTint: function ()
+    clearTint()
     {
         this.setTint(0xffffff);
 
         return this;
-    },
+    }
 
     /**
      * Sets an additive tint on this Game Object.
@@ -653,7 +651,7 @@ var NineSlice = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setTint: function (color)
+    setTint(color)
     {
         if (color === undefined) { color = 0xffffff; }
 
@@ -662,7 +660,7 @@ var NineSlice = new Class({
         this.tintFill = false;
 
         return this;
-    },
+    }
 
     /**
      * Sets a fill-based tint on this Game Object.
@@ -686,14 +684,14 @@ var NineSlice = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setTintFill: function (color)
+    setTintFill(color)
     {
         this.setTint(color);
 
         this.tintFill = true;
 
         return this;
-    },
+    }
 
     /**
      * Does this Game Object have a tint applied?
@@ -707,14 +705,11 @@ var NineSlice = new Class({
      * @readonly
      * @since 3.60.0
      */
-    isTinted: {
 
-        get: function ()
-        {
-            return (this.tint !== 0xffffff);
-        }
-
-    },
+    get isTinted()
+    {
+        return (this.tint !== 0xffffff);
+    }
 
     /**
      * The displayed width of this Game Object.
@@ -730,21 +725,18 @@ var NineSlice = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    width: {
 
-        get: function ()
-        {
-            return this._width;
-        },
+    get width()
+    {
+        return this._width;
+    }
 
-        set: function (value)
-        {
-            this._width = Math.max(value, this.leftWidth + this.rightWidth);
+    set width(value)
+    {
+        this._width = Math.max(value, this.leftWidth + this.rightWidth);
 
-            this.updateVertices();
-        }
-
-    },
+        this.updateVertices();
+    }
 
     /**
      * The displayed height of this Game Object.
@@ -763,24 +755,21 @@ var NineSlice = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    height: {
 
-        get: function ()
+    get height()
+    {
+        return this._height;
+    }
+
+    set height(value)
+    {
+        if (!this.is3Slice)
         {
-            return this._height;
-        },
+            this._height = Math.max(value, this.topHeight + this.bottomHeight);
 
-        set: function (value)
-        {
-            if (!this.is3Slice)
-            {
-                this._height = Math.max(value, this.topHeight + this.bottomHeight);
-
-                this.updateVertices();
-            }
+            this.updateVertices();
         }
-
-    },
+    }
 
     /**
      * The displayed width of this Game Object.
@@ -793,19 +782,16 @@ var NineSlice = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    displayWidth: {
 
-        get: function ()
-        {
-            return this.scaleX * this.width;
-        },
+    get displayWidth()
+    {
+        return this.scaleX * this.width;
+    }
 
-        set: function (value)
-        {
-            this.scaleX = value / this.width;
-        }
-
-    },
+    set displayWidth(value)
+    {
+        this.scaleX = value / this.width;
+    }
 
     /**
      * The displayed height of this Game Object.
@@ -818,19 +804,16 @@ var NineSlice = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    displayHeight: {
 
-        get: function ()
-        {
-            return this.scaleY * this.height;
-        },
+    get displayHeight()
+    {
+        return this.scaleY * this.height;
+    }
 
-        set: function (value)
-        {
-            this.scaleY = value / this.height;
-        }
-
-    },
+    set displayHeight(value)
+    {
+        this.scaleY = value / this.height;
+    }
 
     /**
      * Sets the size of this Game Object.
@@ -853,7 +836,7 @@ var NineSlice = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setSize: function (width, height)
+    setSize(width, height)
     {
         this.width = width;
         this.height = height;
@@ -869,7 +852,7 @@ var NineSlice = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the display size of this Game Object.
@@ -884,13 +867,13 @@ var NineSlice = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setDisplaySize: function (width, height)
+    setDisplaySize(width, height)
     {
         this.displayWidth = width;
         this.displayHeight = height;
 
         return this;
-    },
+    }
 
     /**
      * The horizontal origin of this Game Object.
@@ -902,20 +885,17 @@ var NineSlice = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    originX: {
 
-        get: function ()
-        {
-            return this._originX;
-        },
+    get originX()
+    {
+        return this._originX;
+    }
 
-        set: function (value)
-        {
-            this._originX = value;
-            this.updateVertices();
-        }
-
-    },
+    set originX(value)
+    {
+        this._originX = value;
+        this.updateVertices();
+    }
 
     /**
      * The vertical origin of this Game Object.
@@ -927,20 +907,17 @@ var NineSlice = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    originY: {
 
-        get: function ()
-        {
-            return this._originY;
-        },
+    get originY()
+    {
+        return this._originY;
+    }
 
-        set: function (value)
-        {
-            this._originY = value;
-            this.updateVertices();
-        }
-
-    },
+    set originY(value)
+    {
+        this._originY = value;
+        this.updateVertices();
+    }
 
     /**
      * Sets the origin of this Game Object.
@@ -955,7 +932,7 @@ var NineSlice = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setOrigin: function (x, y)
+    setOrigin(x, y)
     {
         if (x === undefined) { x = 0.5; }
         if (y === undefined) { y = x; }
@@ -966,7 +943,7 @@ var NineSlice = new Class({
         this.updateVertices();
 
         return this.updateDisplayOrigin();
-    },
+    }
 
     /**
      * This method is included but does nothing for the Nine Slice Game Object,
@@ -979,7 +956,7 @@ var NineSlice = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setSizeToFrame: function ()
+    setSizeToFrame()
     {
         if (this.is3Slice)
         {
@@ -993,7 +970,7 @@ var NineSlice = new Class({
         this.updateUVs();
 
         return this;
-    },
+    }
 
     /**
      * Handles the pre-destroy step for the Nine Slice, which removes the vertices.
@@ -1002,11 +979,11 @@ var NineSlice = new Class({
      * @private
      * @since 3.60.0
      */
-    preDestroy: function ()
+    preDestroy()
     {
         this.vertices = [];
     }
 
-});
+};
 
 module.exports = NineSlice;

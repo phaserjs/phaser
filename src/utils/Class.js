@@ -75,12 +75,18 @@ function hasNonConfigurable (obj, k)
  * @param {Object} definition A dictionary of functions for the class.
  * @param {boolean} isClassDescriptor Is the definition a class descriptor?
  * @param {Object} [extend] The parent constructor object.
+ * @param {boolean} [override=true] Overrides same property.
  */
-function extend (ctor, definition, isClassDescriptor, extend)
+function extend (ctor, definition, isClassDescriptor, extend, override = true)
 {
     for (var k in definition)
     {
         if (!definition.hasOwnProperty(k))
+        {
+            continue;
+        }
+
+        if (!override && Object.hasOwn(ctor.prototype, k))
         {
             continue;
         }
@@ -125,8 +131,9 @@ function extend (ctor, definition, isClassDescriptor, extend)
  * @ignore
  * @param {Object} myClass The constructor object to mix into.
  * @param {Object|Array<Object>} mixins The mixins to apply to the constructor.
+ * @param {boolean} [override=true] Overrides same property.
  */
-function mixin (myClass, mixins)
+function mixin (myClass, mixins, override = true)
 {
     if (!mixins)
     {
@@ -140,7 +147,7 @@ function mixin (myClass, mixins)
 
     for (var i = 0; i < mixins.length; i++)
     {
-        extend(myClass, mixins[i].prototype || mixins[i]);
+        extend(myClass, mixins[i].prototype || mixins[i], undefined, undefined, override);
     }
 }
 

@@ -21,15 +21,14 @@ var BaseFilter = require('./BaseFilter');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterSampler = new Class({
-    Extends: BaseFilter,
+var FilterSampler = class extends BaseFilter {
 
-    initialize: function FilterSampler (manager)
+    constructor(manager)
     {
-        BaseFilter.call(this, 'FilterSampler', manager);
-    },
+        super('FilterSampler', manager);
+    }
 
-    run: function (controller, inputDrawingContext, outputDrawingContext, padding)
+    run(controller, inputDrawingContext, outputDrawingContext, padding)
     {
         this.onRunBegin(inputDrawingContext);
 
@@ -79,6 +78,6 @@ var FilterSampler = new Class({
 
         return inputDrawingContext;
     }
-});
+};
 
 module.exports = FilterSampler;

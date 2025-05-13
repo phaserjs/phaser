@@ -83,37 +83,36 @@ var UUID = require('../../utils/string/UUID');
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-family#Valid_family_names
  */
-var Text = new Class({
+var Text = class extends GameObject {
 
-    Extends: GameObject,
+    static
+    {
+        Class.mixin(this, [
+            Components.Alpha,
+            Components.BlendMode,
+            Components.ComputedSize,
+            Components.Crop,
+            Components.Depth,
+            Components.Flip,
+            Components.GetBounds,
+            Components.Lighting,
+            Components.Mask,
+            Components.Origin,
+            Components.RenderNodes,
+            Components.ScrollFactor,
+            Components.Tint,
+            Components.Transform,
+            Components.Visible,
+            TextRender
+        ], false);
+    }
 
-    Mixins: [
-        Components.Alpha,
-        Components.BlendMode,
-        Components.ComputedSize,
-        Components.Crop,
-        Components.Depth,
-        Components.Flip,
-        Components.GetBounds,
-        Components.Lighting,
-        Components.Mask,
-        Components.Origin,
-        Components.RenderNodes,
-        Components.ScrollFactor,
-        Components.Tint,
-        Components.Transform,
-        Components.Visible,
-        TextRender
-    ],
-
-    initialize:
-
-    function Text (scene, x, y, text, style)
+    constructor(scene, x, y, text, style)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
 
-        GameObject.call(this, scene, 'Text');
+        super(scene, 'Text');
 
         /**
          * The renderer in use by this Text object.
@@ -309,7 +308,7 @@ var Text = new Class({
         {
             this.setLetterSpacing(style.letterSpacing);
         }
-    },
+    }
 
     /**
      * The default render nodes for this Game Object.
@@ -321,12 +320,11 @@ var Text = new Class({
      * @readonly
      * @since 4.0.0
      */
-    _defaultRenderNodesMap: {
-        get: function ()
-        {
-            return DefaultImageNodes;
-        }
-    },
+
+    get _defaultRenderNodesMap()
+    {
+        return DefaultImageNodes;
+    }
 
     /**
      * Initialize right to left text.
@@ -334,7 +332,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#initRTL
      * @since 3.0.0
      */
-    initRTL: function ()
+    initRTL()
     {
         if (!this.style.rtl)
         {
@@ -360,7 +358,7 @@ var Text = new Class({
 
         //  And finally we set the x origin
         this.originX = 1;
-    },
+    }
 
     /**
      * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal
@@ -373,7 +371,7 @@ var Text = new Class({
      *
      * @return {string} The text after wrapping has been applied.
      */
-    runWordWrap: function (text)
+    runWordWrap(text)
     {
         var style = this.style;
 
@@ -403,7 +401,7 @@ var Text = new Class({
         {
             return text;
         }
-    },
+    }
 
     /**
      * Advanced wrapping algorithm that will wrap words as the line grows longer than its horizontal
@@ -420,7 +418,7 @@ var Text = new Class({
      *
      * @return {string} The wrapped text.
      */
-    advancedWordWrap: function (text, context, wordWrapWidth)
+    advancedWordWrap(text, context, wordWrapWidth)
     {
         var output = '';
 
@@ -527,7 +525,7 @@ var Text = new Class({
         output = output.replace(/[\s|\n]*$/gi, '');
 
         return output;
-    },
+    }
 
     /**
      * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal
@@ -542,7 +540,7 @@ var Text = new Class({
      *
      * @return {string} The wrapped text.
      */
-    basicWordWrap: function (text, context, wordWrapWidth)
+    basicWordWrap(text, context, wordWrapWidth)
     {
         var result = '';
         var lines = text.split(this.splitRegExp);
@@ -598,7 +596,7 @@ var Text = new Class({
         }
 
         return result;
-    },
+    }
 
     /**
      * Runs the given text through this Text objects word wrapping and returns the results as an
@@ -611,7 +609,7 @@ var Text = new Class({
      *
      * @return {string[]} An array of strings with the pieces of wrapped text.
      */
-    getWrappedText: function (text)
+    getWrappedText(text)
     {
         if (text === undefined) { text = this._text; }
 
@@ -620,7 +618,7 @@ var Text = new Class({
         var wrappedLines = this.runWordWrap(text);
 
         return wrappedLines.split(this.splitRegExp);
-    },
+    }
 
     /**
      * Set the text to display.
@@ -634,7 +632,7 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setText: function (value)
+    setText(value)
     {
         if (!value && value !== 0)
         {
@@ -654,7 +652,7 @@ var Text = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Appends the given text to the content already being displayed by this Text object.
@@ -669,7 +667,7 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    appendText: function (value, addCR)
+    appendText(value, addCR)
     {
         if (addCR === undefined) { addCR = true; }
 
@@ -695,7 +693,7 @@ var Text = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Set the text style.
@@ -716,10 +714,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setStyle: function (style)
+    setStyle(style)
     {
         return this.style.setStyle(style);
-    },
+    }
 
     /**
      * Set the font.
@@ -752,10 +750,10 @@ var Text = new Class({
      *
      * @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-family#Valid_family_names
      */
-    setFont: function (font)
+    setFont(font)
     {
         return this.style.setFont(font);
-    },
+    }
 
     /**
      * Set the font family.
@@ -783,10 +781,10 @@ var Text = new Class({
      *
      * @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-family#Valid_family_names
      */
-    setFontFamily: function (family)
+    setFontFamily(family)
     {
         return this.style.setFontFamily(family);
-    },
+    }
 
     /**
      * Set the font size. Can be a string with a valid CSS unit, i.e. `16px`, or a number.
@@ -798,10 +796,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setFontSize: function (size)
+    setFontSize(size)
     {
         return this.style.setFontSize(size);
-    },
+    }
 
     /**
      * Set the font style.
@@ -813,10 +811,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setFontStyle: function (style)
+    setFontStyle(style)
     {
         return this.style.setFontStyle(style);
-    },
+    }
 
     /**
      * Set a fixed width and height for the text.
@@ -831,10 +829,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setFixedSize: function (width, height)
+    setFixedSize(width, height)
     {
         return this.style.setFixedSize(width, height);
-    },
+    }
 
     /**
      * Set the background color.
@@ -846,10 +844,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setBackgroundColor: function (color)
+    setBackgroundColor(color)
     {
         return this.style.setBackgroundColor(color);
-    },
+    }
 
     /**
      * Set the fill style to be used by the Text object.
@@ -866,10 +864,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setFill: function (fillStyle)
+    setFill(fillStyle)
     {
         return this.style.setFill(fillStyle);
-    },
+    }
 
     /**
      * Set the text fill color.
@@ -881,10 +879,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setColor: function (color)
+    setColor(color)
     {
         return this.style.setColor(color);
-    },
+    }
 
     /**
      * Set the stroke settings.
@@ -897,10 +895,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setStroke: function (color, thickness)
+    setStroke(color, thickness)
     {
         return this.style.setStroke(color, thickness);
-    },
+    }
 
     /**
      * Set the shadow settings.
@@ -917,10 +915,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setShadow: function (x, y, color, blur, shadowStroke, shadowFill)
+    setShadow(x, y, color, blur, shadowStroke, shadowFill)
     {
         return this.style.setShadow(x, y, color, blur, shadowStroke, shadowFill);
-    },
+    }
 
     /**
      * Set the shadow offset.
@@ -933,10 +931,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setShadowOffset: function (x, y)
+    setShadowOffset(x, y)
     {
         return this.style.setShadowOffset(x, y);
-    },
+    }
 
     /**
      * Set the shadow color.
@@ -948,10 +946,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setShadowColor: function (color)
+    setShadowColor(color)
     {
         return this.style.setShadowColor(color);
-    },
+    }
 
     /**
      * Set the shadow blur radius.
@@ -963,10 +961,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setShadowBlur: function (blur)
+    setShadowBlur(blur)
     {
         return this.style.setShadowBlur(blur);
-    },
+    }
 
     /**
      * Enable or disable shadow stroke.
@@ -978,10 +976,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setShadowStroke: function (enabled)
+    setShadowStroke(enabled)
     {
         return this.style.setShadowStroke(enabled);
-    },
+    }
 
     /**
      * Enable or disable shadow fill.
@@ -993,10 +991,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setShadowFill: function (enabled)
+    setShadowFill(enabled)
     {
         return this.style.setShadowFill(enabled);
-    },
+    }
 
     /**
      * Set the width (in pixels) to use for wrapping lines. Pass in null to remove wrapping by width.
@@ -1011,10 +1009,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setWordWrapWidth: function (width, useAdvancedWrap)
+    setWordWrapWidth(width, useAdvancedWrap)
     {
         return this.style.setWordWrapWidth(width, useAdvancedWrap);
-    },
+    }
 
     /**
      * Set a custom callback for wrapping lines. Pass in null to remove wrapping by callback.
@@ -1030,10 +1028,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setWordWrapCallback: function (callback, scope)
+    setWordWrapCallback(callback, scope)
     {
         return this.style.setWordWrapCallback(callback, scope);
-    },
+    }
 
     /**
      * Set the alignment of the text in this Text object.
@@ -1049,10 +1047,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setAlign: function (align)
+    setAlign(align)
     {
         return this.style.setAlign(align);
-    },
+    }
 
     /**
      * Set the resolution used by this Text object.
@@ -1069,10 +1067,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setResolution: function (value)
+    setResolution(value)
     {
         return this.style.setResolution(value);
-    },
+    }
 
     /**
      * Sets the line spacing value.
@@ -1087,12 +1085,12 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setLineSpacing: function (value)
+    setLineSpacing(value)
     {
         this.lineSpacing = value;
 
         return this.updateText();
-    },
+    }
 
     /**
      * Sets the letter spacing value.
@@ -1113,12 +1111,12 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setLetterSpacing: function (value)
+    setLetterSpacing(value)
     {
         this.letterSpacing = value;
 
         return this.updateText();
-    },
+    }
 
     /**
      * Set the text padding.
@@ -1137,7 +1135,7 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setPadding: function (left, top, right, bottom)
+    setPadding(left, top, right, bottom)
     {
         if (typeof left === 'object')
         {
@@ -1184,7 +1182,7 @@ var Text = new Class({
         this.padding.bottom = bottom;
 
         return this.updateText();
-    },
+    }
 
     /**
      * Set the maximum number of lines to draw.
@@ -1196,10 +1194,10 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setMaxLines: function (max)
+    setMaxLines(max)
     {
         return this.style.setMaxLines(max);
-    },
+    }
 
     /**
      * Render text from right-to-left or left-to-right.
@@ -1211,7 +1209,7 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    setRTL: function (rtl)
+    setRTL(rtl)
     {
         if (rtl === undefined) { rtl = true; }
 
@@ -1248,7 +1246,7 @@ var Text = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Update the displayed text.
@@ -1258,7 +1256,7 @@ var Text = new Class({
      *
      * @return {this} This Text object.
      */
-    updateText: function ()
+    updateText()
     {
         var canvas = this.canvas;
         var context = this.context;
@@ -1492,7 +1490,7 @@ var Text = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Get the current text metrics.
@@ -1502,10 +1500,10 @@ var Text = new Class({
      *
      * @return {Phaser.Types.GameObjects.Text.TextMetrics} The text metrics.
      */
-    getTextMetrics: function ()
+    getTextMetrics()
     {
         return this.style.getTextMetrics();
-    },
+    }
 
     /**
      * The text string being rendered by this Text Game Object.
@@ -1514,19 +1512,16 @@ var Text = new Class({
      * @type {string}
      * @since 3.0.0
      */
-    text: {
 
-        get: function ()
-        {
-            return this._text;
-        },
+    get text()
+    {
+        return this._text;
+    }
 
-        set: function (value)
-        {
-            this.setText(value);
-        }
-
-    },
+    set text(value)
+    {
+        this.setText(value);
+    }
 
     /**
      * Build a JSON representation of the Text object.
@@ -1536,7 +1531,7 @@ var Text = new Class({
      *
      * @return {Phaser.Types.GameObjects.JSONGameObject} A JSON representation of the Text object.
      */
-    toJSON: function ()
+    toJSON()
     {
         var out = Components.ToJSON(this);
 
@@ -1557,7 +1552,7 @@ var Text = new Class({
         out.data = data;
 
         return out;
-    },
+    }
 
     /**
      * Internal destroy handler, called as part of the destroy process.
@@ -1566,7 +1561,7 @@ var Text = new Class({
      * @protected
      * @since 3.0.0
      */
-    preDestroy: function ()
+    preDestroy()
     {
         RemoveFromDOM(this.canvas);
 
@@ -1604,6 +1599,6 @@ var Text = new Class({
      * @since 3.0.0
      */
 
-});
+};
 
 module.exports = Text;

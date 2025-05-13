@@ -32,14 +32,13 @@ var Controller = require('./Controller');
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that owns this filter.
  * @param {number} [amount=1] - The amount of pixelation to apply.
  */
-var Pixelate = new Class({
-    Extends: Controller,
+var Pixelate = class extends Controller {
 
-    initialize: function Pixelate (camera, amount)
+    constructor(camera, amount)
     {
         if (amount === undefined) { amount = 1; }
 
-        Controller.call(this, camera, 'FilterPixelate');
+        super(camera, 'FilterPixelate');
 
         /**
          * The amount of pixelation to apply.
@@ -53,6 +52,6 @@ var Pixelate = new Class({
          */
         this.amount = amount;
     }
-});
+};
 
 module.exports = Pixelate;

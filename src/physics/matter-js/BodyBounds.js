@@ -27,11 +27,9 @@ var Vector2 = require('../../math/Vector2');
  * @constructor
  * @since 3.22.0
  */
-var BodyBounds = new Class({
+var BodyBounds = class {
 
-    initialize:
-
-    function BodyBounds ()
+    constructor()
     {
         /**
          * A Vector2 that stores the temporary bounds center value during calculations by methods in this class.
@@ -50,7 +48,7 @@ var BodyBounds = new Class({
          * @since 3.22.0
          */
         this.centerDiff = new Vector2();
-    },
+    }
 
     /**
      * Parses the given body to get the bounds diff values from it.
@@ -66,7 +64,7 @@ var BodyBounds = new Class({
      *
      * @return {boolean} `true` if it was able to get the bounds, otherwise `false`.
      */
-    parseBody: function (body)
+    parseBody(body)
     {
         body = (body.hasOwnProperty('body')) ? body.body : body;
 
@@ -88,7 +86,7 @@ var BodyBounds = new Class({
         centerDiff.set(bodyCenterX - boundsCenter.x, bodyCenterY - boundsCenter.y);
 
         return true;
-    },
+    }
 
     /**
      * Takes a Body and returns the world coordinates of the top-left of its _bounds_.
@@ -105,7 +103,7 @@ var BodyBounds = new Class({
      *
      * @return {(Phaser.Math.Vector2|false)} A Vector2 containing the coordinates, or `false` if it was unable to parse the body.
      */
-    getTopLeft: function (body, x, y)
+    getTopLeft(body, x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -122,7 +120,7 @@ var BodyBounds = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Takes a Body and returns the world coordinates of the top-center of its _bounds_.
@@ -139,7 +137,7 @@ var BodyBounds = new Class({
      *
      * @return {(Phaser.Math.Vector2|false)} A Vector2 containing the coordinates, or `false` if it was unable to parse the body.
      */
-    getTopCenter: function (body, x, y)
+    getTopCenter(body, x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -156,7 +154,7 @@ var BodyBounds = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Takes a Body and returns the world coordinates of the top-right of its _bounds_.
@@ -173,7 +171,7 @@ var BodyBounds = new Class({
      *
      * @return {(Phaser.Math.Vector2|false)} A Vector2 containing the coordinates, or `false` if it was unable to parse the body.
      */
-    getTopRight: function (body, x, y)
+    getTopRight(body, x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -190,7 +188,7 @@ var BodyBounds = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Takes a Body and returns the world coordinates of the left-center of its _bounds_.
@@ -207,7 +205,7 @@ var BodyBounds = new Class({
      *
      * @return {(Phaser.Math.Vector2|false)} A Vector2 containing the coordinates, or `false` if it was unable to parse the body.
      */
-    getLeftCenter: function (body, x, y)
+    getLeftCenter(body, x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -224,7 +222,7 @@ var BodyBounds = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Takes a Body and returns the world coordinates of the center of its _bounds_.
@@ -241,7 +239,7 @@ var BodyBounds = new Class({
      *
      * @return {(Phaser.Math.Vector2|false)} A Vector2 containing the coordinates, or `false` if it was unable to parse the body.
      */
-    getCenter: function (body, x, y)
+    getCenter(body, x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -257,7 +255,7 @@ var BodyBounds = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Takes a Body and returns the world coordinates of the right-center of its _bounds_.
@@ -274,7 +272,7 @@ var BodyBounds = new Class({
      *
      * @return {(Phaser.Math.Vector2|false)} A Vector2 containing the coordinates, or `false` if it was unable to parse the body.
      */
-    getRightCenter: function (body, x, y)
+    getRightCenter(body, x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -291,7 +289,7 @@ var BodyBounds = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Takes a Body and returns the world coordinates of the bottom-left of its _bounds_.
@@ -308,7 +306,7 @@ var BodyBounds = new Class({
      *
      * @return {(Phaser.Math.Vector2|false)} A Vector2 containing the coordinates, or `false` if it was unable to parse the body.
      */
-    getBottomLeft: function (body, x, y)
+    getBottomLeft(body, x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -325,7 +323,7 @@ var BodyBounds = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Takes a Body and returns the world coordinates of the bottom-center of its _bounds_.
@@ -342,7 +340,7 @@ var BodyBounds = new Class({
      *
      * @return {(Phaser.Math.Vector2|false)} A Vector2 containing the coordinates, or `false` if it was unable to parse the body.
      */
-    getBottomCenter: function (body, x, y)
+    getBottomCenter(body, x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -359,7 +357,7 @@ var BodyBounds = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Takes a Body and returns the world coordinates of the bottom-right of its _bounds_.
@@ -376,7 +374,7 @@ var BodyBounds = new Class({
      *
      * @return {(Phaser.Math.Vector2|false)} A Vector2 containing the coordinates, or `false` if it was unable to parse the body.
      */
-    getBottomRight: function (body, x, y)
+    getBottomRight(body, x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -395,6 +393,6 @@ var BodyBounds = new Class({
         return false;
     }
 
-});
+};
 
 module.exports = BodyBounds;

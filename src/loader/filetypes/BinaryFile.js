@@ -31,13 +31,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {any} [dataType] - Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
  */
-var BinaryFile = new Class({
+var BinaryFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function BinaryFile (loader, key, url, xhrSettings, dataType)
+    constructor(loader, key, url, xhrSettings, dataType)
     {
         var extension = 'bin';
 
@@ -63,8 +59,8 @@ var BinaryFile = new Class({
             config: { dataType: dataType }
         };
 
-        File.call(this, loader, fileConfig);
-    },
+        super(loader, fileConfig);
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -73,7 +69,7 @@ var BinaryFile = new Class({
      * @method Phaser.Loader.FileTypes.BinaryFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -84,7 +80,7 @@ var BinaryFile = new Class({
         this.onProcessComplete();
     }
 
-});
+};
 
 /**
  * Adds a Binary file, or array of Binary files, to the current load queue.

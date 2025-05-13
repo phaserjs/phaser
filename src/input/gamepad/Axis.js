@@ -19,11 +19,9 @@ var Class = require('../../utils/Class');
  * @param {Phaser.Input.Gamepad.Gamepad} pad - A reference to the Gamepad that this Axis belongs to.
  * @param {number} index - The index of this Axis.
  */
-var Axis = new Class({
+var Axis = class {
 
-    initialize:
-
-    function Axis (pad, index)
+    constructor(pad, index)
     {
         /**
          * A reference to the Gamepad that this Axis belongs to.
@@ -72,7 +70,7 @@ var Axis = new Class({
          * @since 3.0.0
          */
         this.threshold = 0.1;
-    },
+    }
 
     /**
      * Internal update handler for this Axis.
@@ -84,10 +82,10 @@ var Axis = new Class({
      *
      * @param {number} value - The value of the axis movement.
      */
-    update: function (value)
+    update(value)
     {
         this.value = value;
-    },
+    }
 
     /**
      * Applies the `threshold` value to the axis and returns it.
@@ -97,10 +95,10 @@ var Axis = new Class({
      *
      * @return {number} The axis value, adjusted for the movement threshold.
      */
-    getValue: function ()
+    getValue()
     {
         return (Math.abs(this.value) < this.threshold) ? 0 : this.value;
-    },
+    }
 
     /**
      * Destroys this Axis instance and releases external references it holds.
@@ -108,12 +106,12 @@ var Axis = new Class({
      * @method Phaser.Input.Gamepad.Axis#destroy
      * @since 3.10.0
      */
-    destroy: function ()
+    destroy()
     {
         this.pad = null;
         this.events = null;
     }
 
-});
+};
 
 module.exports = Axis;

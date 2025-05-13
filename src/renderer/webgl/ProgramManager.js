@@ -23,8 +23,8 @@ var DeepCopy = require('../../utils/object/DeepCopy');
  * @param {Phaser.Types.Renderer.WebGL.WebGLAttributeBufferLayout[]} attributeBufferLayouts - The attribute buffer layouts to use in the program.
  * @param {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper} [indexBuffer] - The index buffer to use in the program, if any.
  */
-var ProgramManager = new Class({
-    initialize: function ProgramManager (renderer, attributeBufferLayouts, indexBuffer)
+var ProgramManager = class {
+    constructor(renderer, attributeBufferLayouts, indexBuffer)
     {
         /**
          * The current WebGLRenderer instance.
@@ -105,7 +105,7 @@ var ProgramManager = new Class({
          * @since 4.0.0
          */
         this.uniforms = {};
-    },
+    }
 
     /**
      * Returns a program suite based on the current configuration.
@@ -125,7 +125,7 @@ var ProgramManager = new Class({
      * @since 4.0.0
      * @return {?{ program: Phaser.Renderer.WebGL.Wrappers.WebGLProgramWrapper, vao: Phaser.Renderer.WebGL.Wrappers.WebGLVAOWrapper, config: object }} The program suite, or `null` if the program is not available.
      */
-    getCurrentProgramSuite: function ()
+    getCurrentProgramSuite()
     {
         var config = this.currentConfig;
         var renderer = this.renderer;
@@ -157,7 +157,7 @@ var ProgramManager = new Class({
         }
 
         return this.programs[key] || null;
-    },
+    }
 
     /**
      * Resets the current configuration object.
@@ -165,13 +165,13 @@ var ProgramManager = new Class({
      * @method Phaser.Renderer.WebGL.ProgramManager#resetCurrentConfig
      * @since 4.0.0
      */
-    resetCurrentConfig: function ()
+    resetCurrentConfig()
     {
         this.currentConfig.base.vertexShader = '';
         this.currentConfig.base.fragmentShader = '';
         this.currentConfig.additions.length = 0;
         this.currentConfig.features.length = 0;
-    },
+    }
 
     /**
      * Set the value of a uniform,
@@ -182,10 +182,10 @@ var ProgramManager = new Class({
      * @param {string} name - The name of the uniform.
      * @param {any} value - The value of the uniform.
      */
-    setUniform: function (name, value)
+    setUniform(name, value)
     {
         this.uniforms[name] = value;
-    },
+    }
 
     /**
      * Delete a uniform value. While unused uniforms are not harmful,
@@ -195,10 +195,10 @@ var ProgramManager = new Class({
      * @since 4.0.0
      * @param {string} name - The name of the uniform.
      */
-    removeUniform: function (name)
+    removeUniform(name)
     {
         delete this.uniforms[name];
-    },
+    }
 
     /**
      * Remove all uniforms.
@@ -206,10 +206,10 @@ var ProgramManager = new Class({
      * @method Phaser.Renderer.WebGL.ProgramManager#clearUniforms
      * @since 4.0.0
      */
-    clearUniforms: function ()
+    clearUniforms()
     {
         this.uniforms.length = 0;
-    },
+    }
 
     /**
      * Set the stored uniforms on a shader program.
@@ -217,7 +217,7 @@ var ProgramManager = new Class({
      * @method Phaser.Renderer.WebGL.ProgramManager#applyUniforms
      * @since 4.0.0
      */
-    applyUniforms: function (program)
+    applyUniforms(program)
     {
         var uniforms = this.uniforms;
 
@@ -225,7 +225,7 @@ var ProgramManager = new Class({
         {
             program.setUniform(name, uniforms[name]);
         }
-    },
+    }
 
     /**
      * Set the base shader for the current configuration.
@@ -236,13 +236,13 @@ var ProgramManager = new Class({
      * @param {string} vertexShader - The vertex shader source code.
      * @param {string} fragmentShader - The fragment shader source code.
      */
-    setBaseShader: function (name, vertexShader, fragmentShader)
+    setBaseShader(name, vertexShader, fragmentShader)
     {
         var base = this.currentConfig.base;
         base.name = name;
         base.vertexShader = vertexShader;
         base.fragmentShader = fragmentShader;
-    },
+    }
 
     /**
      * Add a shader addition to the current configuration.
@@ -252,7 +252,7 @@ var ProgramManager = new Class({
      * @param {Phaser.Types.Renderer.WebGL.ShaderAdditionConfig} addition - The shader addition to add.
      * @param {number} [index] - The index at which to insert the addition. If not specified, it will be added at the end.
      */
-    addAddition: function (addition, index)
+    addAddition(addition, index)
     {
         if (index === undefined)
         {
@@ -262,7 +262,7 @@ var ProgramManager = new Class({
         {
             this.currentConfig.additions.splice(index, 0, addition);
         }
-    },
+    }
 
     /**
      * Returns the addition with the given name.
@@ -272,7 +272,7 @@ var ProgramManager = new Class({
      * @param {string} name - The name to find.
      * @returns {?Phaser.Types.Renderer.WebGL.ShaderAdditionConfig} The addition, or `null` if it was not found.
      */
-    getAddition: function (name)
+    getAddition(name)
     {
         var additions = this.currentConfig.additions;
         for (var i = 0; i < additions.length; i++)
@@ -284,7 +284,7 @@ var ProgramManager = new Class({
             }
         }
         return null;
-    },
+    }
 
     /**
      * Returns a list of shader additions in the current config
@@ -295,7 +295,7 @@ var ProgramManager = new Class({
      * @param {string} tag - The tag to filter by.
      * @returns {Phaser.Types.Renderer.WebGL.ShaderAdditionConfig[]} The shader additions with the tag.
      */
-    getAdditionsByTag: function (tag)
+    getAdditionsByTag(tag)
     {
         return this.currentConfig.additions.filter(function (addition)
         {
@@ -305,7 +305,7 @@ var ProgramManager = new Class({
             }
             return addition.tags.includes(tag);
         });
-    },
+    }
 
     /**
      * Returns the index of a shader addition with the given name.
@@ -315,13 +315,13 @@ var ProgramManager = new Class({
      * @param {string} name - The name to find.
      * @returns {number} The index of the addition, or `-1` if it was not found.
      */
-    getAdditionIndex: function (name)
+    getAdditionIndex(name)
     {
         return this.currentConfig.additions.findIndex(function (addition)
         {
             return addition.name === name;
         });
-    },
+    }
 
     /**
      * Remove a shader addition from the current configuration.
@@ -330,13 +330,13 @@ var ProgramManager = new Class({
      * @since 4.0.0
      * @param {string} name - The name of the shader addition to remove.
      */
-    removeAddition: function (name)
+    removeAddition(name)
     {
         this.currentConfig.additions = this.currentConfig.additions.filter(function (addition)
         {
             return addition.name !== name;
         });
-    },
+    }
 
     /**
      * Replace a shader addition in the current configuration.
@@ -346,7 +346,7 @@ var ProgramManager = new Class({
      * @param {string} name - The name of the shader addition to replace.
      * @param {Phaser.Types.Renderer.WebGL.ShaderAdditionConfig} addition - The new shader addition.
      */
-    replaceAddition: function (name, addition)
+    replaceAddition(name, addition)
     {
         var index = this.currentConfig.additions.findIndex(function (a)
         {
@@ -357,7 +357,7 @@ var ProgramManager = new Class({
         {
             this.currentConfig.additions[index] = addition;
         }
-    },
+    }
 
     /**
      * Add a feature to the current configuration.
@@ -366,13 +366,13 @@ var ProgramManager = new Class({
      * @since 4.0.0
      * @param {string} feature - The feature to add.
      */
-    addFeature: function (feature)
+    addFeature(feature)
     {
         if (this.currentConfig.features.indexOf(feature) === -1)
         {
             this.currentConfig.features.push(feature);
         }
-    },
+    }
 
     /**
      * Remove a feature from the current configuration.
@@ -381,13 +381,13 @@ var ProgramManager = new Class({
      * @since 4.0.0
      * @param {string} feature - The feature to remove.
      */
-    removeFeature: function (feature)
+    removeFeature(feature)
     {
         this.currentConfig.features = this.currentConfig.features.filter(function (f)
         {
             return f !== feature;
         });
-    },
+    }
 
     /**
      * Clear all features from the current configuration.
@@ -395,10 +395,10 @@ var ProgramManager = new Class({
      * @method Phaser.Renderer.WebGL.ProgramManager#clearFeatures
      * @since 4.0.0
      */
-    clearFeatures: function ()
+    clearFeatures()
     {
         this.currentConfig.features.length = 0;
     }
-});
+};
 
 module.exports = ProgramManager;

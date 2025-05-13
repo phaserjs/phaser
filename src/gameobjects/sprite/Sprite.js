@@ -51,34 +51,33 @@ var SpriteRender = require('./SpriteRender');
  * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|number)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  */
-var Sprite = new Class({
+var Sprite = class extends GameObject {
 
-    Extends: GameObject,
-
-    Mixins: [
-        Components.Alpha,
-        Components.BlendMode,
-        Components.Depth,
-        Components.Flip,
-        Components.GetBounds,
-        Components.Lighting,
-        Components.Mask,
-        Components.Origin,
-        Components.RenderNodes,
-        Components.ScrollFactor,
-        Components.Size,
-        Components.TextureCrop,
-        Components.Tint,
-        Components.Transform,
-        Components.Visible,
-        SpriteRender
-    ],
-
-    initialize:
-
-    function Sprite (scene, x, y, texture, frame)
+    static
     {
-        GameObject.call(this, scene, 'Sprite');
+        Class.mixin(this, [
+            Components.Alpha,
+            Components.BlendMode,
+            Components.Depth,
+            Components.Flip,
+            Components.GetBounds,
+            Components.Lighting,
+            Components.Mask,
+            Components.Origin,
+            Components.RenderNodes,
+            Components.ScrollFactor,
+            Components.Size,
+            Components.TextureCrop,
+            Components.Tint,
+            Components.Transform,
+            Components.Visible,
+            SpriteRender
+        ], false);
+    }
+
+    constructor(scene, x, y, texture, frame)
+    {
+        super(scene, 'Sprite');
 
         /**
          * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
@@ -108,7 +107,7 @@ var Sprite = new Class({
         this.setSizeToFrame();
         this.setOriginFromFrame();
         this.initRenderNodes(this._defaultRenderNodesMap);
-    },
+    }
 
     /**
      * The default render nodes for this Game Object.
@@ -120,24 +119,23 @@ var Sprite = new Class({
      * @readonly
      * @since 4.0.0
      */
-    _defaultRenderNodesMap: {
-        get: function ()
-        {
-            return DefaultImageNodes;
-        }
-    },
+
+    get _defaultRenderNodesMap()
+    {
+        return DefaultImageNodes;
+    }
 
     //  Overrides Game Object method
-    addedToScene: function ()
+    addedToScene()
     {
         this.scene.sys.updateList.add(this);
-    },
+    }
 
     //  Overrides Game Object method
-    removedFromScene: function ()
+    removedFromScene()
     {
         this.scene.sys.updateList.remove(this);
-    },
+    }
 
     /**
      * Update this Sprite's animations.
@@ -149,10 +147,10 @@ var Sprite = new Class({
      * @param {number} time - The current timestamp.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    preUpdate: function (time, delta)
+    preUpdate(time, delta)
     {
         this.anims.update(time, delta);
-    },
+    }
 
     /**
      * Start playing the given animation on this Sprite.
@@ -214,10 +212,10 @@ var Sprite = new Class({
      *
      * @return {this} This Game Object.
      */
-    play: function (key, ignoreIfPlaying)
+    play(key, ignoreIfPlaying)
     {
         return this.anims.play(key, ignoreIfPlaying);
-    },
+    }
 
     /**
      * Start playing the given animation on this Sprite, in reverse.
@@ -279,10 +277,10 @@ var Sprite = new Class({
      *
      * @return {this} This Game Object.
      */
-    playReverse: function (key, ignoreIfPlaying)
+    playReverse(key, ignoreIfPlaying)
     {
         return this.anims.playReverse(key, ignoreIfPlaying);
-    },
+    }
 
     /**
      * Waits for the specified delay, in milliseconds, then starts playback of the given animation.
@@ -309,10 +307,10 @@ var Sprite = new Class({
      *
      * @return {this} This Game Object.
      */
-    playAfterDelay: function (key, delay)
+    playAfterDelay(key, delay)
     {
         return this.anims.playAfterDelay(key, delay);
-    },
+    }
 
     /**
      * Waits for the current animation to complete the `repeatCount` number of repeat cycles, then starts playback
@@ -336,10 +334,10 @@ var Sprite = new Class({
      *
      * @return {this} This Game Object.
      */
-    playAfterRepeat: function (key, repeatCount)
+    playAfterRepeat(key, repeatCount)
     {
         return this.anims.playAfterRepeat(key, repeatCount);
-    },
+    }
 
     /**
      * Sets an animation, or an array of animations, to be played immediately after the current one completes or stops.
@@ -368,10 +366,10 @@ var Sprite = new Class({
      *
      * @return {this} This Game Object.
      */
-    chain: function (key)
+    chain(key)
     {
         return this.anims.chain(key);
-    },
+    }
 
     /**
      * Immediately stops the current animation from playing and dispatches the `ANIMATION_STOP` events.
@@ -386,10 +384,10 @@ var Sprite = new Class({
      *
      * @return {this} This Game Object.
      */
-    stop: function ()
+    stop()
     {
         return this.anims.stop();
-    },
+    }
 
     /**
      * Stops the current animation from playing after the specified time delay, given in milliseconds.
@@ -409,10 +407,10 @@ var Sprite = new Class({
      *
      * @return {this} This Game Object.
      */
-    stopAfterDelay: function (delay)
+    stopAfterDelay(delay)
     {
         return this.anims.stopAfterDelay(delay);
-    },
+    }
 
     /**
      * Stops the current animation from playing after the given number of repeats.
@@ -432,10 +430,10 @@ var Sprite = new Class({
      *
      * @return {this} This Game Object.
      */
-    stopAfterRepeat: function (repeatCount)
+    stopAfterRepeat(repeatCount)
     {
         return this.anims.stopAfterRepeat(repeatCount);
-    },
+    }
 
     /**
      * Stops the current animation from playing when it next sets the given frame.
@@ -456,10 +454,10 @@ var Sprite = new Class({
      *
      * @return {this} This Game Object.
      */
-    stopOnFrame: function (frame)
+    stopOnFrame(frame)
     {
         return this.anims.stopOnFrame(frame);
-    },
+    }
 
     /**
      * Build a JSON representation of this Sprite.
@@ -469,10 +467,10 @@ var Sprite = new Class({
      *
      * @return {Phaser.Types.GameObjects.JSONGameObject} A JSON representation of the Game Object.
      */
-    toJSON: function ()
+    toJSON()
     {
         return Components.ToJSON(this);
-    },
+    }
 
     /**
      * Handles the pre-destroy step for the Sprite, which removes the Animation component.
@@ -481,13 +479,13 @@ var Sprite = new Class({
      * @private
      * @since 3.14.0
      */
-    preDestroy: function ()
+    preDestroy()
     {
         this.anims.destroy();
 
         this.anims = undefined;
     }
 
-});
+};
 
 module.exports = Sprite;

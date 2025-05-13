@@ -24,15 +24,14 @@ var ShaderSourceFS = require('../../shaders/FilterBlurHigh-frag.js');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterBlurHigh = new Class({
-    Extends: BaseFilterShader,
+var FilterBlurHigh = class extends BaseFilterShader {
 
-    initialize: function FilterBlurHigh (manager)
+    constructor(manager)
     {
-        BaseFilterShader.call(this, 'FilterBlurHigh', manager, null, ShaderSourceFS);
-    },
+        super('FilterBlurHigh', manager, null, ShaderSourceFS);
+    }
 
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         var programManager = this.programManager;
 
@@ -41,6 +40,6 @@ var FilterBlurHigh = new Class({
         programManager.setUniform('color', controller.color);
         programManager.setUniform('offset', [ controller.x, controller.y ]);
     }
-});
+};
 
 module.exports = FilterBlurHigh;

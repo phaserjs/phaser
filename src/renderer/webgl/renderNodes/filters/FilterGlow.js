@@ -21,10 +21,9 @@ var ShaderSourceFS = require('../../shaders/FilterGlow-frag.js');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterGlow = new Class({
-    Extends: BaseFilterShader,
+var FilterGlow = class extends BaseFilterShader {
 
-    initialize: function FilterGlow (manager)
+    constructor(manager)
     {
         var shaderAdditions = [
             {
@@ -43,10 +42,10 @@ var FilterGlow = new Class({
             }
         ];
 
-        BaseFilterShader.call(this, 'FilterGlow', manager, null, ShaderSourceFS, shaderAdditions);
-    },
+        super('FilterGlow', manager, null, ShaderSourceFS, shaderAdditions);
+    }
 
-    updateShaderConfig: function (controller, drawingContext)
+    updateShaderConfig(controller, drawingContext)
     {
         var programManager = this.programManager;
 
@@ -59,9 +58,9 @@ var FilterGlow = new Class({
         var qualityAddition = programManager.getAdditionsByTag('quality')[0];
         qualityAddition.name = 'quality_' + quality;
         qualityAddition.additions.fragmentDefine = '#undef QUALITY\n#define QUALITY ' + quality;
-    },
+    }
 
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         var programManager = this.programManager;
 
@@ -72,6 +71,6 @@ var FilterGlow = new Class({
         programManager.setUniform('scale', controller.scale);
         programManager.setUniform('knockout', controller.knockout);
     }
-});
+};
 
 module.exports = FilterGlow;

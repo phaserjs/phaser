@@ -21,11 +21,9 @@ var tempMatrix = new Float32Array(20);
  * @constructor
  * @since 3.50.0
  */
-var ColorMatrix = new Class({
+var ColorMatrix = class {
 
-    initialize:
-
-    function ColorMatrix ()
+    constructor()
     {
         /**
          * Internal ColorMatrix array.
@@ -70,7 +68,7 @@ var ColorMatrix = new Class({
         this._data = new Float32Array(20);
 
         this.reset();
-    },
+    }
 
     /**
      * Sets this ColorMatrix from the given array of color values.
@@ -82,14 +80,14 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    set: function (value)
+    set(value)
     {
         this._matrix.set(value);
 
         this._dirty = true;
 
         return this;
-    },
+    }
 
     /**
      * Resets the ColorMatrix to default values and also resets
@@ -100,7 +98,7 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    reset: function ()
+    reset()
     {
         var m = this._matrix;
 
@@ -116,7 +114,7 @@ var ColorMatrix = new Class({
         this._dirty = true;
 
         return this;
-    },
+    }
 
     /**
      * Gets the ColorMatrix as a Float32Array.
@@ -128,7 +126,7 @@ var ColorMatrix = new Class({
      *
      * @return {Float32Array} The ColorMatrix as a Float32Array.
      */
-    getData: function ()
+    getData()
     {
         var data = this._data;
 
@@ -145,7 +143,7 @@ var ColorMatrix = new Class({
         }
 
         return data;
-    },
+    }
 
     /**
      * Changes the brightness of this ColorMatrix by the given amount.
@@ -158,7 +156,7 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    brightness: function (value, multiply)
+    brightness(value, multiply)
     {
         if (value === undefined) { value = 0; }
         if (multiply === undefined) { multiply = false; }
@@ -171,7 +169,7 @@ var ColorMatrix = new Class({
             0, 0, b, 0, 0,
             0, 0, 0, 1, 0
         ], multiply);
-    },
+    }
 
     /**
      * Changes the saturation of this ColorMatrix by the given amount.
@@ -184,7 +182,7 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    saturate: function (value, multiply)
+    saturate(value, multiply)
     {
         if (value === undefined) { value = 0; }
         if (multiply === undefined) { multiply = false; }
@@ -198,7 +196,7 @@ var ColorMatrix = new Class({
             y, y, x, 0, 0,
             0, 0, 0, 1, 0
         ], multiply);
-    },
+    }
 
     /**
      * Desaturates this ColorMatrix (removes color from it).
@@ -210,12 +208,12 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    desaturate: function (multiply)
+    desaturate(multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
         return this.saturate(-1, multiply);
-    },
+    }
 
     /**
      * Rotates the hues of this ColorMatrix by the value given.
@@ -228,7 +226,7 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    hue: function (rotation, multiply)
+    hue(rotation, multiply)
     {
         if (rotation === undefined) { rotation = 0; }
         if (multiply === undefined) { multiply = false; }
@@ -247,7 +245,7 @@ var ColorMatrix = new Class({
             lumR + cos * (-lumR) + sin * (-(1 - lumR)),lumG + cos * (-lumG) + sin * (lumG),lumB + cos * (1 - lumB) + sin * (lumB), 0, 0,
             0, 0, 0, 1, 0
         ], multiply);
-    },
+    }
 
     /**
      * Sets this ColorMatrix to be grayscale.
@@ -260,13 +258,13 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    grayscale: function (value, multiply)
+    grayscale(value, multiply)
     {
         if (value === undefined) { value = 1; }
         if (multiply === undefined) { multiply = false; }
 
         return this.saturate(-value, multiply);
-    },
+    }
 
     /**
      * Sets this ColorMatrix to be black and white.
@@ -278,12 +276,12 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    blackWhite: function (multiply)
+    blackWhite(multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
         return this.multiply(ColorMatrix.BLACK_WHITE, multiply);
-    },
+    }
 
     /**
      * Change the contrast of this ColorMatrix by the amount given.
@@ -296,7 +294,7 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    contrast: function (value, multiply)
+    contrast(value, multiply)
     {
         if (value === undefined) { value = 0; }
         if (multiply === undefined) { multiply = false; }
@@ -310,7 +308,7 @@ var ColorMatrix = new Class({
             0, 0, v, 0, o,
             0, 0, 0, 1, 0
         ], multiply);
-    },
+    }
 
     /**
      * Converts this ColorMatrix to have negative values.
@@ -322,12 +320,12 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    negative: function (multiply)
+    negative(multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
         return this.multiply(ColorMatrix.NEGATIVE, multiply);
-    },
+    }
 
     /**
      * Apply a desaturated luminance to this ColorMatrix.
@@ -339,12 +337,12 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    desaturateLuminance: function (multiply)
+    desaturateLuminance(multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
         return this.multiply(ColorMatrix.DESATURATE_LUMINANCE, multiply);
-    },
+    }
 
     /**
      * Applies a sepia tone to this ColorMatrix.
@@ -356,12 +354,12 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    sepia: function (multiply)
+    sepia(multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
         return this.multiply(ColorMatrix.SEPIA, multiply);
-    },
+    }
 
     /**
      * Applies a night vision tone to this ColorMatrix.
@@ -374,7 +372,7 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    night: function (intensity, multiply)
+    night(intensity, multiply)
     {
         if (intensity === undefined) { intensity = 0.1; }
         if (multiply === undefined) { multiply = false; }
@@ -385,7 +383,7 @@ var ColorMatrix = new Class({
             0, intensity, intensity * 2.0, 0, 0,
             0, 0, 0, 1, 0
         ], multiply);
-    },
+    }
 
     /**
      * Applies a trippy color tone to this ColorMatrix.
@@ -397,12 +395,12 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    lsd: function (multiply)
+    lsd(multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
         return this.multiply(ColorMatrix.LSD, multiply);
-    },
+    }
 
     /**
      * Applies a brown tone to this ColorMatrix.
@@ -414,12 +412,12 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    brown: function (multiply)
+    brown(multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
         return this.multiply(ColorMatrix.BROWN, multiply);
-    },
+    }
 
     /**
      * Applies a vintage pinhole color effect to this ColorMatrix.
@@ -431,12 +429,12 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    vintagePinhole: function (multiply)
+    vintagePinhole(multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
         return this.multiply(ColorMatrix.VINTAGE, multiply);
-    },
+    }
 
     /**
      * Applies a kodachrome color effect to this ColorMatrix.
@@ -448,12 +446,12 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    kodachrome: function (multiply)
+    kodachrome(multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
         return this.multiply(ColorMatrix.KODACHROME, multiply);
-    },
+    }
 
     /**
      * Applies a technicolor color effect to this ColorMatrix.
@@ -465,12 +463,12 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    technicolor: function (multiply)
+    technicolor(multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
         return this.multiply(ColorMatrix.TECHNICOLOR, multiply);
-    },
+    }
 
     /**
      * Applies a polaroid color effect to this ColorMatrix.
@@ -482,12 +480,12 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    polaroid: function (multiply)
+    polaroid(multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
         return this.multiply(ColorMatrix.POLAROID, multiply);
-    },
+    }
 
     /**
      * Shifts the values of this ColorMatrix into BGR order.
@@ -499,12 +497,12 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    shiftToBGR: function (multiply)
+    shiftToBGR(multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
         return this.multiply(ColorMatrix.SHIFT_BGR, multiply);
-    },
+    }
 
     /**
      * Multiplies the two given matrices.
@@ -517,7 +515,7 @@ var ColorMatrix = new Class({
      *
      * @return {this} This ColorMatrix instance.
      */
-    multiply: function (a, multiply)
+    multiply(a, multiply)
     {
         if (multiply === undefined) { multiply = false; }
 
@@ -570,7 +568,7 @@ var ColorMatrix = new Class({
         return this;
     }
 
-});
+};
 
 /**
  * A constant array used by the ColorMatrix class for black_white operations.

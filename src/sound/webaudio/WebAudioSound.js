@@ -24,13 +24,9 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @param {string} key - Asset key for the sound.
  * @param {Phaser.Types.Sound.SoundConfig} [config={}] - An optional config object containing default sound settings.
  */
-var WebAudioSound = new Class({
+var WebAudioSound = class extends BaseSound {
 
-    Extends: BaseSound,
-
-    initialize:
-
-    function WebAudioSound (manager, key, config)
+    constructor(manager, key, config)
     {
         if (config === undefined) { config = {}; }
 
@@ -232,8 +228,8 @@ var WebAudioSound = new Class({
 
         this.totalDuration = this.audioBuffer.duration;
 
-        BaseSound.call(this, manager, key, config);
-    },
+        super(manager, key, config);
+    }
 
     /**
      * Play this sound, or a marked section of it.
@@ -253,7 +249,7 @@ var WebAudioSound = new Class({
      *
      * @return {boolean} Whether the sound started playing successfully.
      */
-    play: function (markerName, config)
+    play(markerName, config)
     {
         if (!BaseSound.prototype.play.call(this, markerName, config))
         {
@@ -267,7 +263,7 @@ var WebAudioSound = new Class({
         this.emit(Events.PLAY, this);
 
         return true;
-    },
+    }
 
     /**
      * Pauses the sound.
@@ -278,7 +274,7 @@ var WebAudioSound = new Class({
      *
      * @return {boolean} Whether the sound was paused successfully.
      */
-    pause: function ()
+    pause()
     {
         if (this.manager.context.currentTime < this.startTime)
         {
@@ -297,7 +293,7 @@ var WebAudioSound = new Class({
         this.emit(Events.PAUSE, this);
 
         return true;
-    },
+    }
 
     /**
      * Resumes the sound.
@@ -308,7 +304,7 @@ var WebAudioSound = new Class({
      *
      * @return {boolean} Whether the sound was resumed successfully.
      */
-    resume: function ()
+    resume()
     {
         if (this.manager.context.currentTime < this.startTime)
         {
@@ -326,7 +322,7 @@ var WebAudioSound = new Class({
         this.emit(Events.RESUME, this);
 
         return true;
-    },
+    }
 
     /**
      * Stop playing this sound.
@@ -337,7 +333,7 @@ var WebAudioSound = new Class({
      *
      * @return {boolean} Whether the sound was stopped successfully.
      */
-    stop: function ()
+    stop()
     {
         if (!BaseSound.prototype.stop.call(this))
         {
@@ -350,7 +346,7 @@ var WebAudioSound = new Class({
         this.emit(Events.STOP, this);
 
         return true;
-    },
+    }
 
     /**
      * Used internally.
@@ -359,7 +355,7 @@ var WebAudioSound = new Class({
      * @private
      * @since 3.0.0
      */
-    createAndStartBufferSource: function ()
+    createAndStartBufferSource()
     {
         var seek = this.currentConfig.seek;
         var delay = this.currentConfig.delay;
@@ -376,7 +372,7 @@ var WebAudioSound = new Class({
         this.source.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
 
         this.resetConfig();
-    },
+    }
 
     /**
      * This method is only used internally and it creates a looping buffer source.
@@ -384,7 +380,7 @@ var WebAudioSound = new Class({
      * @method Phaser.Sound.WebAudioSound#createAndStartLoopBufferSource
      * @since 3.0.0
      */
-    createAndStartLoopBufferSource: function ()
+    createAndStartLoopBufferSource()
     {
         var when = this.getLoopTime();
         var offset = this.currentMarker ? this.currentMarker.start : 0;
@@ -394,7 +390,7 @@ var WebAudioSound = new Class({
         this.loopSource = this.createBufferSource();
         this.loopSource.playbackRate.setValueAtTime(this.totalRate, 0);
         this.loopSource.start(Math.max(0, when), Math.max(0, offset), Math.max(0, duration));
-    },
+    }
 
     /**
      * This method is only used internally and it creates a buffer source.
@@ -404,7 +400,7 @@ var WebAudioSound = new Class({
      *
      * @return {AudioBufferSourceNode}
      */
-    createBufferSource: function ()
+    createBufferSource()
     {
         var _this = this;
         var source = this.manager.context.createBufferSource();
@@ -434,7 +430,7 @@ var WebAudioSound = new Class({
         };
 
         return source;
-    },
+    }
 
     /**
      * This method is only used internally and it stops and removes a buffer source.
@@ -442,7 +438,7 @@ var WebAudioSound = new Class({
      * @method Phaser.Sound.WebAudioSound#stopAndRemoveBufferSource
      * @since 3.0.0
      */
-    stopAndRemoveBufferSource: function ()
+    stopAndRemoveBufferSource()
     {
         if (this.source)
         {
@@ -459,7 +455,7 @@ var WebAudioSound = new Class({
         this.hasEnded = false;
 
         this.stopAndRemoveLoopBufferSource();
-    },
+    }
 
     /**
      * This method is only used internally and it stops and removes a looping buffer source.
@@ -467,7 +463,7 @@ var WebAudioSound = new Class({
      * @method Phaser.Sound.WebAudioSound#stopAndRemoveLoopBufferSource
      * @since 3.0.0
      */
-    stopAndRemoveLoopBufferSource: function ()
+    stopAndRemoveLoopBufferSource()
     {
         if (this.loopSource)
         {
@@ -477,7 +473,7 @@ var WebAudioSound = new Class({
         }
 
         this.loopTime = 0;
-    },
+    }
 
     /**
      * Method used internally for applying config values to some of the sound properties.
@@ -485,7 +481,7 @@ var WebAudioSound = new Class({
      * @method Phaser.Sound.WebAudioSound#applyConfig
      * @since 3.0.0
      */
-    applyConfig: function ()
+    applyConfig()
     {
         this.rateUpdates.length = 0;
 
@@ -523,7 +519,7 @@ var WebAudioSound = new Class({
         }
 
         BaseSound.prototype.applyConfig.call(this);
-    },
+    }
 
     /**
      * Sets the x position of this Sound in Spatial Audio space.
@@ -540,28 +536,26 @@ var WebAudioSound = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    x: {
 
-        get: function ()
+    get x()
+    {
+        if (this.spatialNode)
         {
-            if (this.spatialNode)
-            {
-                return this.spatialNode.positionX;
-            }
-            else
-            {
-                return 0;
-            }
-        },
-
-        set: function (value)
-        {
-            if (this.spatialNode)
-            {
-                this.spatialNode.positionX.value = value;
-            }
+            return this.spatialNode.positionX;
         }
-    },
+        else
+        {
+            return 0;
+        }
+    }
+
+    set x(value)
+    {
+        if (this.spatialNode)
+        {
+            this.spatialNode.positionX.value = value;
+        }
+    }
 
     /**
      * Sets the y position of this Sound in Spatial Audio space.
@@ -578,28 +572,26 @@ var WebAudioSound = new Class({
      * @type {number}
      * @since 3.60.0
      */
-    y: {
 
-        get: function ()
+    get y()
+    {
+        if (this.spatialNode)
         {
-            if (this.spatialNode)
-            {
-                return this.spatialNode.positionY;
-            }
-            else
-            {
-                return 0;
-            }
-        },
-
-        set: function (value)
-        {
-            if (this.spatialNode)
-            {
-                this.spatialNode.positionY.value = value;
-            }
+            return this.spatialNode.positionY;
         }
-    },
+        else
+        {
+            return 0;
+        }
+    }
+
+    set y(value)
+    {
+        if (this.spatialNode)
+        {
+            this.spatialNode.positionY.value = value;
+        }
+    }
 
     /**
      * Update method called automatically by sound manager on every game step.
@@ -609,7 +601,7 @@ var WebAudioSound = new Class({
      * @fires Phaser.Sound.Events#LOOPED
      * @since 3.0.0
      */
-    update: function ()
+    update()
     {
         if (this.isPlaying && this.spatialSource)
         {
@@ -651,7 +643,7 @@ var WebAudioSound = new Class({
 
             this.emit(Events.LOOPED, this);
         }
-    },
+    }
 
     /**
      * Calls Phaser.Sound.BaseSound#destroy method
@@ -660,7 +652,7 @@ var WebAudioSound = new Class({
      * @method Phaser.Sound.WebAudioSound#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         if (this.pendingRemove)
         {
@@ -691,7 +683,7 @@ var WebAudioSound = new Class({
 
         this.rateUpdates.length = 0;
         this.rateUpdates = null;
-    },
+    }
 
     /**
      * Method used internally to calculate total playback rate of the sound.
@@ -699,7 +691,7 @@ var WebAudioSound = new Class({
      * @method Phaser.Sound.WebAudioSound#calculateRate
      * @since 3.0.0
      */
-    calculateRate: function ()
+    calculateRate()
     {
         BaseSound.prototype.calculateRate.call(this);
 
@@ -723,7 +715,7 @@ var WebAudioSound = new Class({
                 this.createAndStartLoopBufferSource();
             }
         }
-    },
+    }
 
     /**
      * Method used internally for calculating current playback time of a playing sound.
@@ -731,7 +723,7 @@ var WebAudioSound = new Class({
      * @method Phaser.Sound.WebAudioSound#getCurrentTime
      * @since 3.0.0
      */
-    getCurrentTime: function ()
+    getCurrentTime()
     {
         var currentTime = 0;
 
@@ -752,7 +744,7 @@ var WebAudioSound = new Class({
         }
 
         return currentTime;
-    },
+    }
 
     /**
      * Method used internally for calculating the time
@@ -761,7 +753,7 @@ var WebAudioSound = new Class({
      * @method Phaser.Sound.WebAudioSound#getLoopTime
      * @since 3.0.0
      */
-    getLoopTime: function ()
+    getLoopTime()
     {
         var lastRateUpdateCurrentTime = 0;
 
@@ -773,7 +765,7 @@ var WebAudioSound = new Class({
         var lastRateUpdate = this.rateUpdates[this.rateUpdates.length - 1];
 
         return this.playTime + lastRateUpdate.time + (this.duration - lastRateUpdateCurrentTime) / lastRateUpdate.rate;
-    },
+    }
 
     /**
      * Rate at which this Sound will be played.
@@ -786,23 +778,20 @@ var WebAudioSound = new Class({
      * @fires Phaser.Sound.Events#RATE
      * @since 3.0.0
      */
-    rate: {
 
-        get: function ()
-        {
-            return this.currentConfig.rate;
-        },
+    get rate()
+    {
+        return this.currentConfig.rate;
+    }
 
-        set: function (value)
-        {
-            this.currentConfig.rate = value;
+    set rate(value)
+    {
+        this.currentConfig.rate = value;
 
-            this.calculateRate();
+        this.calculateRate();
 
-            this.emit(Events.RATE, this, value);
-        }
-
-    },
+        this.emit(Events.RATE, this, value);
+    }
 
     /**
      * Sets the playback rate of this Sound.
@@ -818,12 +807,12 @@ var WebAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setRate: function (value)
+    setRate(value)
     {
         this.rate = value;
 
         return this;
-    },
+    }
 
     /**
      * The detune value of this Sound, given in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
@@ -835,23 +824,20 @@ var WebAudioSound = new Class({
      * @fires Phaser.Sound.Events#DETUNE
      * @since 3.0.0
      */
-    detune: {
 
-        get: function ()
-        {
-            return this.currentConfig.detune;
-        },
+    get detune()
+    {
+        return this.currentConfig.detune;
+    }
 
-        set: function (value)
-        {
-            this.currentConfig.detune = value;
+    set detune(value)
+    {
+        this.currentConfig.detune = value;
 
-            this.calculateRate();
+        this.calculateRate();
 
-            this.emit(Events.DETUNE, this, value);
-        }
-
-    },
+        this.emit(Events.DETUNE, this, value);
+    }
 
     /**
      * Sets the detune value of this Sound, given in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
@@ -865,12 +851,12 @@ var WebAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setDetune: function (value)
+    setDetune(value)
     {
         this.detune = value;
 
         return this;
-    },
+    }
 
     /**
      * Boolean indicating whether the sound is muted or not.
@@ -882,22 +868,19 @@ var WebAudioSound = new Class({
      * @fires Phaser.Sound.Events#MUTE
      * @since 3.0.0
      */
-    mute: {
 
-        get: function ()
-        {
-            return (this.muteNode.gain.value === 0);
-        },
+    get mute()
+    {
+        return (this.muteNode.gain.value === 0);
+    }
 
-        set: function (value)
-        {
-            this.currentConfig.mute = value;
-            this.muteNode.gain.setValueAtTime(value ? 0 : 1, 0);
+    set mute(value)
+    {
+        this.currentConfig.mute = value;
+        this.muteNode.gain.setValueAtTime(value ? 0 : 1, 0);
 
-            this.emit(Events.MUTE, this, value);
-        }
-
-    },
+        this.emit(Events.MUTE, this, value);
+    }
 
     /**
      * Sets the muted state of this Sound.
@@ -910,12 +893,12 @@ var WebAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setMute: function (value)
+    setMute(value)
     {
         this.mute = value;
 
         return this;
-    },
+    }
 
     /**
      * Gets or sets the volume of this sound, a value between 0 (silence) and 1 (full volume).
@@ -926,21 +909,19 @@ var WebAudioSound = new Class({
      * @fires Phaser.Sound.Events#VOLUME
      * @since 3.0.0
      */
-    volume: {
 
-        get: function ()
-        {
-            return this.volumeNode.gain.value;
-        },
+    get volume()
+    {
+        return this.volumeNode.gain.value;
+    }
 
-        set: function (value)
-        {
-            this.currentConfig.volume = value;
-            this.volumeNode.gain.setValueAtTime(value, 0);
+    set volume(value)
+    {
+        this.currentConfig.volume = value;
+        this.volumeNode.gain.setValueAtTime(value, 0);
 
-            this.emit(Events.VOLUME, this, value);
-        }
-    },
+        this.emit(Events.VOLUME, this, value);
+    }
 
     /**
      * Sets the volume of this Sound.
@@ -953,12 +934,12 @@ var WebAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setVolume: function (value)
+    setVolume(value)
     {
         this.volume = value;
 
         return this;
-    },
+    }
 
     /**
      * Property representing the position of playback for this sound, in seconds.
@@ -971,52 +952,50 @@ var WebAudioSound = new Class({
      * @fires Phaser.Sound.Events#SEEK
      * @since 3.0.0
      */
-    seek: {
 
-        get: function ()
-        {
-            if (this.isPlaying)
-            {
-                if (this.manager.context.currentTime < this.startTime)
-                {
-                    return this.startTime - this.playTime;
-                }
-
-                return this.getCurrentTime();
-            }
-            else if (this.isPaused)
-            {
-                return this.currentConfig.seek;
-            }
-            else
-            {
-                return 0;
-            }
-        },
-
-        set: function (value)
+    get seek()
+    {
+        if (this.isPlaying)
         {
             if (this.manager.context.currentTime < this.startTime)
             {
-                return;
+                return this.startTime - this.playTime;
             }
 
-            if (this.isPlaying || this.isPaused)
-            {
-                value = Math.min(Math.max(0, value), this.duration);
-
-                this.currentConfig.seek = value;
-
-                if (this.isPlaying)
-                {
-                    this.stopAndRemoveBufferSource();
-                    this.createAndStartBufferSource();
-                }
-
-                this.emit(Events.SEEK, this, value);
-            }
+            return this.getCurrentTime();
         }
-    },
+        else if (this.isPaused)
+        {
+            return this.currentConfig.seek;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    set seek(value)
+    {
+        if (this.manager.context.currentTime < this.startTime)
+        {
+            return;
+        }
+
+        if (this.isPlaying || this.isPaused)
+        {
+            value = Math.min(Math.max(0, value), this.duration);
+
+            this.currentConfig.seek = value;
+
+            if (this.isPlaying)
+            {
+                this.stopAndRemoveBufferSource();
+                this.createAndStartBufferSource();
+            }
+
+            this.emit(Events.SEEK, this, value);
+        }
+    }
 
     /**
      * Seeks to a specific point in this sound.
@@ -1029,12 +1008,12 @@ var WebAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setSeek: function (value)
+    setSeek(value)
     {
         this.seek = value;
 
         return this;
-    },
+    }
 
     /**
      * Flag indicating whether or not the sound or current sound marker will loop.
@@ -1045,30 +1024,28 @@ var WebAudioSound = new Class({
      * @fires Phaser.Sound.Events#LOOP
      * @since 3.0.0
      */
-    loop: {
 
-        get: function ()
+    get loop()
+    {
+        return this.currentConfig.loop;
+    }
+
+    set loop(value)
+    {
+        this.currentConfig.loop = value;
+
+        if (this.isPlaying)
         {
-            return this.currentConfig.loop;
-        },
+            this.stopAndRemoveLoopBufferSource();
 
-        set: function (value)
-        {
-            this.currentConfig.loop = value;
-
-            if (this.isPlaying)
+            if (value)
             {
-                this.stopAndRemoveLoopBufferSource();
-
-                if (value)
-                {
-                    this.createAndStartLoopBufferSource();
-                }
+                this.createAndStartLoopBufferSource();
             }
-
-            this.emit(Events.LOOP, this, value);
         }
-    },
+
+        this.emit(Events.LOOP, this, value);
+    }
 
     /**
      * Sets the loop state of this Sound.
@@ -1081,12 +1058,12 @@ var WebAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setLoop: function (value)
+    setLoop(value)
     {
         this.loop = value;
 
         return this;
-    },
+    }
 
     /**
      * Gets or sets the pan of this sound, a value between -1 (full left pan) and 1 (full right pan).
@@ -1099,32 +1076,30 @@ var WebAudioSound = new Class({
      * @fires Phaser.Sound.Events#PAN
      * @since 3.50.0
      */
-    pan: {
 
-        get: function ()
+    get pan()
+    {
+        if (this.pannerNode)
         {
-            if (this.pannerNode)
-            {
-                return this.pannerNode.pan.value;
-            }
-            else
-            {
-                return 0;
-            }
-        },
-
-        set: function (value)
-        {
-            this.currentConfig.pan = value;
-
-            if (this.pannerNode)
-            {
-                this.pannerNode.pan.setValueAtTime(value, this.manager.context.currentTime);
-            }
-
-            this.emit(Events.PAN, this, value);
+            return this.pannerNode.pan.value;
         }
-    },
+        else
+        {
+            return 0;
+        }
+    }
+
+    set pan(value)
+    {
+        this.currentConfig.pan = value;
+
+        if (this.pannerNode)
+        {
+            this.pannerNode.pan.setValueAtTime(value, this.manager.context.currentTime);
+        }
+
+        this.emit(Events.PAN, this, value);
+    }
 
     /**
      * Sets the pan of this sound, a value between -1 (full left pan) and 1 (full right pan).
@@ -1139,13 +1114,13 @@ var WebAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setPan: function (value)
+    setPan(value)
     {
         this.pan = value;
 
         return this;
     }
 
-});
+};
 
 module.exports = WebAudioSound;

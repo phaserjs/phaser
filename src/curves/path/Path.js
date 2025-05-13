@@ -34,11 +34,9 @@ var MATH_CONST = require('../../math/const');
  * @param {number} [x=0] - The X coordinate of the Path's starting point or a {@link Phaser.Types.Curves.JSONPath}.
  * @param {number} [y=0] - The Y coordinate of the Path's starting point.
  */
-var Path = new Class({
+var Path = class {
 
-    initialize:
-
-    function Path (x, y)
+    constructor(x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -135,7 +133,7 @@ var Path = new Class({
         {
             this.startPoint.set(x, y);
         }
-    },
+    }
 
     /**
      * Appends a Curve to the end of the Path.
@@ -149,12 +147,12 @@ var Path = new Class({
      *
      * @return {this} This Path object.
      */
-    add: function (curve)
+    add(curve)
     {
         this.curves.push(curve);
 
         return this;
-    },
+    }
 
     /**
      * Creates a circular Ellipse Curve positioned at the end of the Path.
@@ -168,12 +166,12 @@ var Path = new Class({
      *
      * @return {this} This Path object.
      */
-    circleTo: function (radius, clockwise, rotation)
+    circleTo(radius, clockwise, rotation)
     {
         if (clockwise === undefined) { clockwise = false; }
 
         return this.ellipseTo(radius, radius, 0, 360, clockwise, rotation);
-    },
+    }
 
     /**
      * Ensures that the Path is closed.
@@ -187,7 +185,7 @@ var Path = new Class({
      *
      * @return {this} This Path object.
      */
-    closePath: function ()
+    closePath()
     {
         // Add a line curve if start and end of lines are not connected
         var startPoint = this.curves[0].getPoint(0);
@@ -200,7 +198,7 @@ var Path = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Creates a cubic bezier curve starting at the previous end point and ending at p3, using p1 and p2 as control points.
@@ -217,7 +215,7 @@ var Path = new Class({
      *
      * @return {this} This Path object.
      */
-    cubicBezierTo: function (x, y, control1X, control1Y, control2X, control2Y)
+    cubicBezierTo(x, y, control1X, control1Y, control2X, control2Y)
     {
         var p0 = this.getEndPoint();
         var p1;
@@ -239,7 +237,7 @@ var Path = new Class({
         }
 
         return this.add(new CubicBezierCurve(p0, p1, p2, p3));
-    },
+    }
 
     //  Creates a quadratic bezier curve starting at the previous end point and ending at p2, using p1 as a control point
 
@@ -256,7 +254,7 @@ var Path = new Class({
      *
      * @return {this} This Path object.
      */
-    quadraticBezierTo: function (x, y, controlX, controlY)
+    quadraticBezierTo(x, y, controlX, controlY)
     {
         var p0 = this.getEndPoint();
         var p1;
@@ -275,7 +273,7 @@ var Path = new Class({
         }
 
         return this.add(new QuadraticBezierCurve(p0, p1, p2));
-    },
+    }
 
     /**
      * Draws all Curves in the Path to a Graphics Game Object.
@@ -290,7 +288,7 @@ var Path = new Class({
      *
      * @return {Phaser.GameObjects.Graphics} The Graphics object which was drawn to.
      */
-    draw: function (graphics, pointsTotal)
+    draw(graphics, pointsTotal)
     {
         for (var i = 0; i < this.curves.length; i++)
         {
@@ -305,7 +303,7 @@ var Path = new Class({
         }
 
         return graphics;
-    },
+    }
 
     /**
      * Creates an ellipse curve positioned at the previous end point, using the given parameters.
@@ -322,7 +320,7 @@ var Path = new Class({
      *
      * @return {this} This Path object.
      */
-    ellipseTo: function (xRadius, yRadius, startAngle, endAngle, clockwise, rotation)
+    ellipseTo(xRadius, yRadius, startAngle, endAngle, clockwise, rotation)
     {
         var ellipse = new EllipseCurve(0, 0, xRadius, yRadius, startAngle, endAngle, clockwise, rotation);
 
@@ -337,7 +335,7 @@ var Path = new Class({
         ellipse.y = end.y;
 
         return this.add(ellipse);
-    },
+    }
 
     /**
      * Creates a Path from a Path Configuration object.
@@ -351,7 +349,7 @@ var Path = new Class({
      *
      * @return {this} This Path object.
      */
-    fromJSON: function (data)
+    fromJSON(data)
     {
         //  data should be an object matching the Path.toJSON object structure.
 
@@ -391,7 +389,7 @@ var Path = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Returns a Rectangle with a position and size matching the bounds of this Path.
@@ -406,7 +404,7 @@ var Path = new Class({
      *
      * @return {Phaser.Geom.Rectangle} The modified `out` Rectangle, or a new Rectangle if none was provided.
      */
-    getBounds: function (out, accuracy)
+    getBounds(out, accuracy)
     {
         if (out === undefined) { out = new Rectangle(); }
         if (accuracy === undefined) { accuracy = 16; }
@@ -440,7 +438,7 @@ var Path = new Class({
         out.bottom = maxBottom;
 
         return out;
-    },
+    }
 
     /**
      * Returns an array containing the length of the Path at the end of each Curve.
@@ -452,7 +450,7 @@ var Path = new Class({
      *
      * @return {number[]} An array containing the length of the Path at the end of each one of its Curves.
      */
-    getCurveLengths: function ()
+    getCurveLengths()
     {
         // We use cache values if curves and cache array are same length
 
@@ -477,7 +475,7 @@ var Path = new Class({
         this.cacheLengths = lengths;
 
         return lengths;
-    },
+    }
 
     /**
      * Returns the Curve that forms the Path at the given normalized location (between 0 and 1).
@@ -489,7 +487,7 @@ var Path = new Class({
      *
      * @return {?Phaser.Curves.Curve} The Curve that is part of this Path at a given location, or `null` if no curve was found.
      */
-    getCurveAt: function (t)
+    getCurveAt(t)
     {
         var d = t * this.getLength();
         var curveLengths = this.getCurveLengths();
@@ -506,7 +504,7 @@ var Path = new Class({
         }
 
         return null;
-    },
+    }
 
     /**
      * Returns the ending point of the Path.
@@ -522,7 +520,7 @@ var Path = new Class({
      *
      * @return {Phaser.Math.Vector2} The modified `out` object, or a new Vector2 if none was provided.
      */
-    getEndPoint: function (out)
+    getEndPoint(out)
     {
         if (out === undefined) { out = new Vector2(); }
 
@@ -536,7 +534,7 @@ var Path = new Class({
         }
 
         return out;
-    },
+    }
 
     /**
      * Returns the total length of the Path.
@@ -548,12 +546,12 @@ var Path = new Class({
      *
      * @return {number} The total length of the Path.
      */
-    getLength: function ()
+    getLength()
     {
         var lens = this.getCurveLengths();
 
         return lens[lens.length - 1];
-    },
+    }
 
     // To get accurate point with reference to
     // entire path distance at time t,
@@ -579,7 +577,7 @@ var Path = new Class({
      *
      * @return {?Phaser.Math.Vector2} The modified `out` object, or a new `Vector2` if none was provided.
      */
-    getPoint: function (t, out)
+    getPoint(t, out)
     {
         if (out === undefined) { out = new Vector2(); }
 
@@ -605,7 +603,7 @@ var Path = new Class({
 
         // loop where sum != 0, sum > d , sum+1 <d
         return null;
-    },
+    }
 
     /**
      * Get a sequence of points on the path.
@@ -618,7 +616,7 @@ var Path = new Class({
      *
      * @return {Phaser.Math.Vector2[]} An array of Vector2 objects that containing the points along the Path.
      */
-    getPoints: function (divisions, stepRate)
+    getPoints(divisions, stepRate)
     {
         //  If divisions and stepRate are falsey values (false, null, 0, undefined, etc) then we use the default divisions value.
         if (!divisions && !stepRate)
@@ -664,7 +662,7 @@ var Path = new Class({
         }
 
         return points;
-    },
+    }
 
     /**
      * Returns a randomly chosen point anywhere on the path. This follows the same rules as `getPoint` in that it may return a point on any Curve inside this path.
@@ -680,12 +678,12 @@ var Path = new Class({
      *
      * @return {Phaser.Math.Vector2} The modified `out` object, or a new `Vector2` if none was provided.
      */
-    getRandomPoint: function (out)
+    getRandomPoint(out)
     {
         if (out === undefined) { out = new Vector2(); }
 
         return this.getPoint(Math.random(), out);
-    },
+    }
 
     /**
      * Divides this Path into a set of equally spaced points,
@@ -699,7 +697,7 @@ var Path = new Class({
      *
      * @return {Phaser.Math.Vector2[]} A list of the points this path was subdivided into.
      */
-    getSpacedPoints: function (divisions)
+    getSpacedPoints(divisions)
     {
         if (divisions === undefined) { divisions = 40; }
 
@@ -716,7 +714,7 @@ var Path = new Class({
         }
 
         return points;
-    },
+    }
 
     /**
      * Returns the starting point of the Path.
@@ -730,12 +728,12 @@ var Path = new Class({
      *
      * @return {Phaser.Math.Vector2} The modified `out` object, or a new Vector2 if none was provided.
      */
-    getStartPoint: function (out)
+    getStartPoint(out)
     {
         if (out === undefined) { out = new Vector2(); }
 
         return out.copy(this.startPoint);
-    },
+    }
 
     /**
      * Gets a unit vector tangent at a relative position on the path.
@@ -750,7 +748,7 @@ var Path = new Class({
      *
      * @return {Phaser.Math.Vector2} Vector approximating the tangent line at the point t (delta +/- 0.0001)
      */
-    getTangent: function (t, out)
+    getTangent(t, out)
     {
         if (out === undefined) { out = new Vector2(); }
 
@@ -775,7 +773,7 @@ var Path = new Class({
         }
 
         return null;
-    },
+    }
 
     /**
      * Creates a line curve from the previous end point to x/y.
@@ -788,7 +786,7 @@ var Path = new Class({
      *
      * @return {this} This Path object.
      */
-    lineTo: function (x, y)
+    lineTo(x, y)
     {
         if (x instanceof Vector2)
         {
@@ -806,7 +804,7 @@ var Path = new Class({
         var end = this.getEndPoint(this._tmpVec2A);
 
         return this.add(new LineCurve([ end.x, end.y, this._tmpVec2B.x, this._tmpVec2B.y ]));
-    },
+    }
 
     /**
      * Creates a spline curve starting at the previous end point, using the given points on the curve.
@@ -818,12 +816,12 @@ var Path = new Class({
      *
      * @return {this} This Path object.
      */
-    splineTo: function (points)
+    splineTo(points)
     {
         points.unshift(this.getEndPoint());
 
         return this.add(new SplineCurve(points));
-    },
+    }
 
     /**
      * Creates a "gap" in this path from the path's current end point to the given coordinates.
@@ -838,7 +836,7 @@ var Path = new Class({
      *
      * @return {this} This Path object.
      */
-    moveTo: function (x, y)
+    moveTo(x, y)
     {
         if (x instanceof Vector2)
         {
@@ -848,7 +846,7 @@ var Path = new Class({
         {
             return this.add(new MovePathTo(x, y));
         }
-    },
+    }
 
     /**
      * Converts this Path to a JSON object containing the path information and its constituent curves.
@@ -858,7 +856,7 @@ var Path = new Class({
      *
      * @return {Phaser.Types.Curves.JSONPath} The JSON object containing this path's data.
      */
-    toJSON: function ()
+    toJSON()
     {
         var out = [];
 
@@ -874,7 +872,7 @@ var Path = new Class({
             autoClose: this.autoClose,
             curves: out
         };
-    },
+    }
 
     /**
      * cacheLengths must be recalculated.
@@ -882,12 +880,12 @@ var Path = new Class({
      * @method Phaser.Curves.Path#updateArcLengths
      * @since 3.0.0
      */
-    updateArcLengths: function ()
+    updateArcLengths()
     {
         this.cacheLengths = [];
 
         this.getCurveLengths();
-    },
+    }
 
     /**
      * Disposes of this Path, clearing its internal references to objects so they can be garbage-collected.
@@ -895,14 +893,14 @@ var Path = new Class({
      * @method Phaser.Curves.Path#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.curves.length = 0;
         this.cacheLengths.length = 0;
         this.startPoint = undefined;
     }
 
-});
+};
 
 /**
  * Creates a new Path Object.

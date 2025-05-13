@@ -25,11 +25,9 @@ var Class = require('../utils/Class');
  * @param {number} [spacing=0] - The spacing between each image in the collection (in pixels).
  * @param {object} [properties={}] - Custom Image Collection properties.
  */
-var ImageCollection = new Class({
+var ImageCollection = class {
 
-    initialize:
-
-    function ImageCollection (name, firstgid, width, height, margin, spacing, properties)
+    constructor(name, firstgid, width, height, margin, spacing, properties)
     {
         if (width === undefined || width <= 0) { width = 32; }
         if (height === undefined || height <= 0) { height = 32; }
@@ -125,7 +123,7 @@ var ImageCollection = new Class({
          * @since 3.0.0
          */
         this.total = 0;
-    },
+    }
 
     /**
      * Returns true if and only if this image collection contains the given image index.
@@ -137,10 +135,10 @@ var ImageCollection = new Class({
      *
      * @return {boolean} True if this Image Collection contains the given index.
      */
-    containsImageIndex: function (imageIndex)
+    containsImageIndex(imageIndex)
     {
         return (imageIndex >= this.firstgid && imageIndex < (this.firstgid + this.total));
-    },
+    }
 
     /**
      * Add an image to this Image Collection.
@@ -155,7 +153,7 @@ var ImageCollection = new Class({
      *
      * @return {Phaser.Tilemaps.ImageCollection} This ImageCollection object.
      */
-    addImage: function (gid, image, width, height)
+    addImage(gid, image, width, height)
     {
         this.images.push({ gid: gid, image: image, width: width, height: height });
         this.total++;
@@ -163,6 +161,6 @@ var ImageCollection = new Class({
         return this;
     }
 
-});
+};
 
 module.exports = ImageCollection;

@@ -17,16 +17,12 @@ var PluginCache = require('../plugins/PluginCache');
  * @constructor
  * @since 3.0.0
  */
-var EventEmitter = new Class({
+var EventEmitter = class extends EE {
 
-    Extends: EE,
-
-    initialize:
-
-    function EventEmitter ()
+    constructor()
     {
-        EE.call(this);
-    },
+        super();
+    }
 
     /**
      * Removes all listeners.
@@ -34,10 +30,10 @@ var EventEmitter = new Class({
      * @method Phaser.Events.EventEmitter#shutdown
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         this.removeAllListeners();
-    },
+    }
 
     /**
      * Removes all listeners.
@@ -45,12 +41,12 @@ var EventEmitter = new Class({
      * @method Phaser.Events.EventEmitter#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.removeAllListeners();
     }
 
-});
+};
 
 /**
  * Return an array listing the events for which the emitter has registered listeners.

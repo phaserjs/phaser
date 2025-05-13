@@ -56,32 +56,31 @@ var Sprite = require('../../gameobjects/sprite/Sprite');
  * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|number)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  */
-var ArcadeSprite = new Class({
+var ArcadeSprite = class extends Sprite {
 
-    Extends: Sprite,
-
-    Mixins: [
-        Components.Acceleration,
-        Components.Angular,
-        Components.Bounce,
-        Components.Collision,
-        Components.Debug,
-        Components.Drag,
-        Components.Enable,
-        Components.Friction,
-        Components.Gravity,
-        Components.Immovable,
-        Components.Mass,
-        Components.Pushable,
-        Components.Size,
-        Components.Velocity
-    ],
-
-    initialize:
-
-    function ArcadeSprite (scene, x, y, texture, frame)
+    static
     {
-        Sprite.call(this, scene, x, y, texture, frame);
+        Class.mixin(this, [
+            Components.Acceleration,
+            Components.Angular,
+            Components.Bounce,
+            Components.Collision,
+            Components.Debug,
+            Components.Drag,
+            Components.Enable,
+            Components.Friction,
+            Components.Gravity,
+            Components.Immovable,
+            Components.Mass,
+            Components.Pushable,
+            Components.Size,
+            Components.Velocity
+        ], false);
+    }
+
+    constructor(scene, x, y, texture, frame)
+    {
+        super(scene, x, y, texture, frame);
 
         /**
          * This Game Object's Physics Body.
@@ -94,6 +93,6 @@ var ArcadeSprite = new Class({
         this.body = null;
     }
 
-});
+};
 
 module.exports = ArcadeSprite;

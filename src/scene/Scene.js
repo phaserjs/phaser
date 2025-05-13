@@ -20,11 +20,9 @@ var Systems = require('./Systems');
  *
  * @param {(string|Phaser.Types.Scenes.SettingsConfig)} [config] - The scene key or scene specific configuration settings.
  */
-var Scene = new Class({
+var Scene = class {
 
-    initialize:
-
-    function Scene (config)
+    constructor(config)
     {
         /**
          * The Scene Systems. You must never overwrite this property, or all hell will break loose.
@@ -288,7 +286,7 @@ var Scene = new Class({
          * @since 3.50.0
          */
         this.renderer;
-    },
+    }
 
     /**
      * This method should be overridden by your own Scenes.
@@ -301,10 +299,10 @@ var Scene = new Class({
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    update: function ()
+    update()
     {
     }
 
-});
+};
 
 module.exports = Scene;

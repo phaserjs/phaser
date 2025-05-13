@@ -19,12 +19,11 @@ var RenderNode = require('./RenderNode');
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var StrokePath = new Class({
-    Extends: RenderNode,
+var StrokePath = class extends RenderNode {
 
-    initialize: function StrokePath (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'StrokePath', manager);
+        super('StrokePath', manager);
 
         /**
          * The RenderNode that generates a line segment.
@@ -34,7 +33,7 @@ var StrokePath = new Class({
          * @since 4.0.0
          */
         this.drawLineNode = this.manager.getNode('DrawLine');
-    },
+    }
 
     /**
      * Render a stroke path consisting of several line segments.
@@ -54,7 +53,7 @@ var StrokePath = new Class({
      * @param {number} detail - The level of detail to use when rendering the stroke. Points which are only this far apart in screen space are combined. It is ignored if the entire path is equal to or shorter than this distance.
      * @param {boolean} lighting - Whether to apply lighting effects to the stroke.
      */
-    run: function (drawingContext, submitterNode, path, lineWidth, open, currentMatrix, tintTL, tintTR, tintBL, tintBR, detail, lighting)
+    run(drawingContext, submitterNode, path, lineWidth, open, currentMatrix, tintTL, tintTR, tintBL, tintBR, detail, lighting)
     {
         this.onRunBegin(drawingContext);
 
@@ -193,6 +192,6 @@ var StrokePath = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = StrokePath;

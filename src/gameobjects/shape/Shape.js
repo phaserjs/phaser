@@ -40,31 +40,30 @@ var Line = require('../../geom/line/Line');
  * @param {string} [type] - The internal type of the Shape.
  * @param {any} [data] - The data of the source shape geometry, if any.
  */
-var Shape = new Class({
+var Shape = class extends GameObject {
 
-    Extends: GameObject,
+    static
+    {
+        Class.mixin(this, [
+            Components.AlphaSingle,
+            Components.BlendMode,
+            Components.Depth,
+            Components.GetBounds,
+            Components.Lighting,
+            Components.Mask,
+            Components.Origin,
+            Components.RenderNodes,
+            Components.ScrollFactor,
+            Components.Transform,
+            Components.Visible
+        ], false);
+    }
 
-    Mixins: [
-        Components.AlphaSingle,
-        Components.BlendMode,
-        Components.Depth,
-        Components.GetBounds,
-        Components.Lighting,
-        Components.Mask,
-        Components.Origin,
-        Components.RenderNodes,
-        Components.ScrollFactor,
-        Components.Transform,
-        Components.Visible
-    ],
-
-    initialize:
-
-    function Shape (scene, type, data)
+    constructor(scene, type, data)
     {
         if (type === undefined) { type = 'Shape'; }
 
-        GameObject.call(this, scene, type);
+        super(scene, type);
 
         /**
          * The source Shape data. Typically a geometry object.
@@ -216,7 +215,7 @@ var Shape = new Class({
         }
 
         this.initRenderNodes(this._defaultRenderNodesMap);
-    },
+    }
 
     /**
      * The default render nodes for this Game Object.
@@ -228,12 +227,11 @@ var Shape = new Class({
      * @readonly
      * @since 4.0.0
      */
-    _defaultRenderNodesMap: {
-        get: function ()
-        {
-            return DefaultGraphicsNodes;
-        }
-    },
+
+    get _defaultRenderNodesMap()
+    {
+        return DefaultGraphicsNodes;
+    }
 
     /**
      * Sets the fill color and alpha for this Shape.
@@ -252,7 +250,7 @@ var Shape = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setFillStyle: function (color, alpha)
+    setFillStyle(color, alpha)
     {
         if (alpha === undefined) { alpha = 1; }
 
@@ -268,7 +266,7 @@ var Shape = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the stroke color and alpha for this Shape.
@@ -288,7 +286,7 @@ var Shape = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setStrokeStyle: function (lineWidth, color, alpha)
+    setStrokeStyle(lineWidth, color, alpha)
     {
         if (alpha === undefined) { alpha = 1; }
 
@@ -305,7 +303,7 @@ var Shape = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets if this Shape path is closed during rendering when stroked.
@@ -320,12 +318,12 @@ var Shape = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setClosePath: function (value)
+    setClosePath(value)
     {
         this.closePath = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the internal size of this Game Object, as used for frame or physics body creation.
@@ -347,13 +345,13 @@ var Shape = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setSize: function (width, height)
+    setSize(width, height)
     {
         this.width = width;
         this.height = height;
 
         return this;
-    },
+    }
 
     /**
      * Sets the display size of this Shape.
@@ -368,13 +366,13 @@ var Shape = new Class({
      *
      * @return {this} This Shape instance.
      */
-    setDisplaySize: function (width, height)
+    setDisplaySize(width, height)
     {
         this.displayWidth = width;
         this.displayHeight = height;
 
         return this;
-    },
+    }
 
     /**
      * Internal destroy handler, called as part of the destroy process.
@@ -383,13 +381,13 @@ var Shape = new Class({
      * @protected
      * @since 3.13.0
      */
-    preDestroy: function ()
+    preDestroy()
     {
         this.geom = null;
         this._tempLine = null;
         this.pathData = [];
         this.pathIndexes = [];
-    },
+    }
 
     /**
      * The displayed width of this Game Object.
@@ -402,19 +400,16 @@ var Shape = new Class({
      * @type {number}
      * @since 3.13.0
      */
-    displayWidth: {
 
-        get: function ()
-        {
-            return this.scaleX * this.width;
-        },
+    get displayWidth()
+    {
+        return this.scaleX * this.width;
+    }
 
-        set: function (value)
-        {
-            this.scaleX = value / this.width;
-        }
-
-    },
+    set displayWidth(value)
+    {
+        this.scaleX = value / this.width;
+    }
 
     /**
      * The displayed height of this Game Object.
@@ -427,20 +422,17 @@ var Shape = new Class({
      * @type {number}
      * @since 3.13.0
      */
-    displayHeight: {
 
-        get: function ()
-        {
-            return this.scaleY * this.height;
-        },
-
-        set: function (value)
-        {
-            this.scaleY = value / this.height;
-        }
-
+    get displayHeight()
+    {
+        return this.scaleY * this.height;
     }
 
-});
+    set displayHeight(value)
+    {
+        this.scaleY = value / this.height;
+    }
+
+};
 
 module.exports = Shape;

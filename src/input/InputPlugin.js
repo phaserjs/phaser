@@ -71,15 +71,11 @@ var TriangleContains = require('../geom/triangle/Contains');
  *
  * @param {Phaser.Scene} scene - A reference to the Scene that this Input Plugin is responsible for.
  */
-var InputPlugin = new Class({
+var InputPlugin = class extends EventEmitter {
 
-    Extends: EventEmitter,
-
-    initialize:
-
-    function InputPlugin (scene)
+    constructor(scene)
     {
-        EventEmitter.call(this);
+        super();
 
         /**
          * A reference to the Scene that this Input Plugin is responsible for.
@@ -388,7 +384,7 @@ var InputPlugin = new Class({
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
-    },
+    }
 
     /**
      * This method is called automatically, only once, when the Scene is first created.
@@ -399,7 +395,7 @@ var InputPlugin = new Class({
      * @private
      * @since 3.5.1
      */
-    boot: function ()
+    boot()
     {
         this.cameras = this.systems.cameras;
 
@@ -409,7 +405,7 @@ var InputPlugin = new Class({
 
         //  Registered input plugins listen for this
         this.pluginEvents.emit(Events.BOOT);
-    },
+    }
 
     /**
      * This method is called automatically by the Scene when it is starting up.
@@ -421,7 +417,7 @@ var InputPlugin = new Class({
      * @private
      * @since 3.5.0
      */
-    start: function ()
+    start()
     {
         var eventEmitter = this.systems.events;
 
@@ -441,7 +437,7 @@ var InputPlugin = new Class({
 
         //  Registered input plugins listen for this
         this.pluginEvents.emit(Events.START);
-    },
+    }
 
     /**
      * Game Over handler.
@@ -451,13 +447,13 @@ var InputPlugin = new Class({
      * @private
      * @since 3.16.2
      */
-    onGameOver: function (event)
+    onGameOver(event)
     {
         if (this.isActive())
         {
             this.emit(Events.GAME_OVER, event.timeStamp, event);
         }
-    },
+    }
 
     /**
      * Game Out handler.
@@ -467,13 +463,13 @@ var InputPlugin = new Class({
      * @private
      * @since 3.16.2
      */
-    onGameOut: function (event)
+    onGameOut(event)
     {
         if (this.isActive())
         {
             this.emit(Events.GAME_OUT, event.timeStamp, event);
         }
-    },
+    }
 
     /**
      * The pre-update handler is responsible for checking the pending removal and insertion lists and
@@ -484,7 +480,7 @@ var InputPlugin = new Class({
      * @fires Phaser.Input.Events#PRE_UPDATE
      * @since 3.0.0
      */
-    preUpdate: function ()
+    preUpdate()
     {
         //  Registered input plugins listen for this
         this.pluginEvents.emit(Events.PRE_UPDATE);
@@ -523,7 +519,7 @@ var InputPlugin = new Class({
 
         //  Move pendingInsertion to list (also clears pendingInsertion at the same time)
         this._list = current.concat(insertList.splice(0));
-    },
+    }
 
     /**
      * Checks to see if the Input Manager, this plugin and the Scene to which it belongs are all active and input enabled.
@@ -533,10 +529,10 @@ var InputPlugin = new Class({
      *
      * @return {boolean} `true` if the plugin and the Scene it belongs to is active.
      */
-    isActive: function ()
+    isActive()
     {
         return (this.manager && this.manager.enabled && this.enabled && this.scene.sys.canInput());
-    },
+    }
 
     /**
      * Sets a custom cursor on the parent canvas element of the game, based on the `cursor`
@@ -551,13 +547,13 @@ var InputPlugin = new Class({
      *
      * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that will set the cursor on the canvas.
      */
-    setCursor: function (interactiveObject)
+    setCursor(interactiveObject)
     {
         if (this.manager)
         {
             this.manager.setCursor(interactiveObject);
         }
-    },
+    }
 
     /**
      * Forces the Input Manager to clear the custom or hand cursor, regardless of the
@@ -566,13 +562,13 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#resetCursor
      * @since 3.85.0
      */
-    resetCursor: function ()
+    resetCursor()
     {
         if (this.manager)
         {
             this.manager.resetCursor(null, true);
         }
-    },
+    }
 
     /**
      * This is called automatically by the Input Manager.
@@ -586,7 +582,7 @@ var InputPlugin = new Class({
      *
      * @return {boolean} `true` if the plugin and the Scene it belongs to is active.
      */
-    updatePoll: function (time, delta)
+    updatePoll(time, delta)
     {
         if (!this.isActive())
         {
@@ -690,7 +686,7 @@ var InputPlugin = new Class({
         }
 
         return captured;
-    },
+    }
 
     /**
      * This method is called when a DOM Event is received by the Input Manager. It handles dispatching the events
@@ -706,7 +702,7 @@ var InputPlugin = new Class({
      *
      * @return {boolean} `true` if this Scene has captured the input events from all other Scenes, otherwise `false`.
      */
-    update: function (type, pointers)
+    update(type, pointers)
     {
         if (!this.isActive())
         {
@@ -792,7 +788,7 @@ var InputPlugin = new Class({
         this._updatedThisFrame = true;
 
         return captured;
-    },
+    }
 
     /**
      * Clears a Game Object so it no longer has an Interactive Object associated with it.
@@ -806,7 +802,7 @@ var InputPlugin = new Class({
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that had its Interactive Object removed.
      */
-    clear: function (gameObject, skipQueue)
+    clear(gameObject, skipQueue)
     {
         if (skipQueue === undefined) { skipQueue = false; }
 
@@ -842,7 +838,7 @@ var InputPlugin = new Class({
         }
 
         return gameObject;
-    },
+    }
 
     /**
      * Disables Input on a single Game Object.
@@ -858,7 +854,7 @@ var InputPlugin = new Class({
      *
      * @return {this} This Input Plugin.
      */
-    disable: function (gameObject, resetCursor)
+    disable(gameObject, resetCursor)
     {
         if (resetCursor === undefined) { resetCursor = false; }
 
@@ -898,7 +894,7 @@ var InputPlugin = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Enable a Game Object for interaction.
@@ -927,7 +923,7 @@ var InputPlugin = new Class({
      *
      * @return {this} This Input Plugin.
      */
-    enable: function (gameObject, hitArea, hitAreaCallback, dropZone)
+    enable(gameObject, hitArea, hitAreaCallback, dropZone)
     {
         if (dropZone === undefined) { dropZone = false; }
 
@@ -948,7 +944,7 @@ var InputPlugin = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Takes the given Pointer and performs a hit test against it, to see which interactive Game Objects
@@ -964,7 +960,7 @@ var InputPlugin = new Class({
      *
      * @return {Phaser.GameObjects.GameObject[]} An array of all the interactive Game Objects the Pointer was above.
      */
-    hitTestPointer: function (pointer)
+    hitTestPointer(pointer)
     {
         var cameras = this.cameras.getCamerasBelowPointer(pointer);
 
@@ -1001,7 +997,7 @@ var InputPlugin = new Class({
         pointer.camera = cameras[0];
 
         return [];
-    },
+    }
 
     /**
      * An internal method that handles the Pointer down event.
@@ -1018,7 +1014,7 @@ var InputPlugin = new Class({
      *
      * @return {number} The total number of objects interacted with.
      */
-    processDownEvents: function (pointer)
+    processDownEvents(pointer)
     {
         var total = 0;
         var currentlyOver = this._temp;
@@ -1080,7 +1076,7 @@ var InputPlugin = new Class({
         }
 
         return total;
-    },
+    }
 
     /**
      * Returns the drag state of the given Pointer for this Input Plugin.
@@ -1101,10 +1097,10 @@ var InputPlugin = new Class({
      *
      * @return {number} The drag state of the given Pointer.
      */
-    getDragState: function (pointer)
+    getDragState(pointer)
     {
         return this._dragState[pointer.id];
-    },
+    }
 
     /**
      * Sets the drag state of the given Pointer for this Input Plugin.
@@ -1124,10 +1120,10 @@ var InputPlugin = new Class({
      * @param {Phaser.Input.Pointer} pointer - The Pointer to set the drag state for.
      * @param {number} state - The drag state value. An integer between 0 and 5.
      */
-    setDragState: function (pointer, state)
+    setDragState(pointer, state)
     {
         this._dragState[pointer.id] = state;
-    },
+    }
 
     /**
      * Checks to see if a Pointer is ready to drag the objects below it, based on either a distance
@@ -1140,7 +1136,7 @@ var InputPlugin = new Class({
      * @param {Phaser.Input.Pointer} pointer - The Pointer to check the drag thresholds on.
      * @param {number} time - The current time.
      */
-    processDragThresholdEvent: function (pointer, time)
+    processDragThresholdEvent(pointer, time)
     {
         var passed = false;
         var timeThreshold = this.dragTimeThreshold;
@@ -1163,7 +1159,7 @@ var InputPlugin = new Class({
 
             return this.processDragStartList(pointer);
         }
-    },
+    }
 
     /**
      * Processes the drag list for the given pointer and dispatches the start events for each object on it.
@@ -1178,7 +1174,7 @@ var InputPlugin = new Class({
      *
      * @return {number} The number of items that DRAG_START was called on.
      */
-    processDragStartList: function (pointer)
+    processDragStartList(pointer)
     {
         //  3 = Pointer meets criteria and is freshly down, notify the draglist
         if (this.getDragState(pointer) !== 3)
@@ -1220,7 +1216,7 @@ var InputPlugin = new Class({
         this.setDragState(pointer, 4);
 
         return list.length;
-    },
+    }
 
     /**
      * Processes a 'drag down' event for the given pointer. Checks the pointer state, builds-up the drag list
@@ -1234,7 +1230,7 @@ var InputPlugin = new Class({
      *
      * @return {number} The number of items that were collected on the drag list.
      */
-    processDragDownEvent: function (pointer)
+    processDragDownEvent(pointer)
     {
         var currentlyOver = this._temp;
 
@@ -1293,7 +1289,7 @@ var InputPlugin = new Class({
 
             return 0;
         }
-    },
+    }
 
     /**
      * Processes a 'drag move' event for the given pointer.
@@ -1314,7 +1310,7 @@ var InputPlugin = new Class({
      *
      * @return {number} The number of items that were updated by this drag event.
      */
-    processDragMoveEvent: function (pointer)
+    processDragMoveEvent(pointer)
     {
         //  2 = Pointer being checked if meets drag criteria
         if (this.getDragState(pointer) === 2)
@@ -1443,7 +1439,7 @@ var InputPlugin = new Class({
         }
 
         return list.length;
-    },
+    }
 
     /**
      * Processes a 'drag down' event for the given pointer. Checks the pointer state, builds-up the drag list
@@ -1461,7 +1457,7 @@ var InputPlugin = new Class({
      *
      * @return {number} The number of items that were updated by this drag event.
      */
-    processDragUpEvent: function (pointer)
+    processDragUpEvent(pointer)
     {
         //  5 = Pointer was actively dragging but has been released, notify draglist
         var list = this._drag[pointer.id];
@@ -1517,7 +1513,7 @@ var InputPlugin = new Class({
         list.splice(0);
 
         return 0;
-    },
+    }
 
     /**
      * An internal method that handles the Pointer movement event.
@@ -1533,7 +1529,7 @@ var InputPlugin = new Class({
      *
      * @return {number} The total number of objects interacted with.
      */
-    processMoveEvents: function (pointer)
+    processMoveEvents(pointer)
     {
         var total = 0;
         var currentlyOver = this._temp;
@@ -1587,7 +1583,7 @@ var InputPlugin = new Class({
         }
 
         return total;
-    },
+    }
 
     /**
      * An internal method that handles a mouse wheel event.
@@ -1603,7 +1599,7 @@ var InputPlugin = new Class({
      *
      * @return {number} The total number of objects interacted with.
      */
-    processWheelEvent: function (pointer)
+    processWheelEvent(pointer)
     {
         var total = 0;
         var currentlyOver = this._temp;
@@ -1656,7 +1652,7 @@ var InputPlugin = new Class({
         }
 
         return total;
-    },
+    }
 
     /**
      * An internal method that handles the Pointer over events.
@@ -1673,7 +1669,7 @@ var InputPlugin = new Class({
      *
      * @return {number} The total number of objects interacted with.
      */
-    processOverEvents: function (pointer)
+    processOverEvents(pointer)
     {
         var currentlyOver = this._temp;
 
@@ -1738,7 +1734,7 @@ var InputPlugin = new Class({
         this._over[pointer.id] = justOver;
 
         return totalInteracted;
-    },
+    }
 
     /**
      * An internal method that handles the Pointer out events.
@@ -1755,7 +1751,7 @@ var InputPlugin = new Class({
      *
      * @return {number} The total number of objects interacted with.
      */
-    processOutEvents: function (pointer)
+    processOutEvents(pointer)
     {
         var previouslyOver = this._over[pointer.id];
 
@@ -1819,7 +1815,7 @@ var InputPlugin = new Class({
         }
 
         return totalInteracted;
-    },
+    }
 
     /**
      * An internal method that handles the Pointer over and out events.
@@ -1838,7 +1834,7 @@ var InputPlugin = new Class({
      *
      * @return {number} The total number of objects interacted with.
      */
-    processOverOutEvents: function (pointer)
+    processOverOutEvents(pointer)
     {
         var currentlyOver = this._temp;
 
@@ -2001,7 +1997,7 @@ var InputPlugin = new Class({
         this._over[pointer.id] = this.sortGameObjects(previouslyOver, pointer);
 
         return totalInteracted;
-    },
+    }
 
     /**
      * An internal method that handles the Pointer up events.
@@ -2018,7 +2014,7 @@ var InputPlugin = new Class({
      *
      * @return {number} The total number of objects interacted with.
      */
-    processUpEvents: function (pointer)
+    processUpEvents(pointer)
     {
         var currentlyOver = this._temp;
 
@@ -2075,7 +2071,7 @@ var InputPlugin = new Class({
         }
 
         return currentlyOver.length;
-    },
+    }
 
     /**
      * This method will force the given Game Object into the 'down' input state.
@@ -2095,10 +2091,10 @@ var InputPlugin = new Class({
      * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
      */
-    forceDownState: function (pointer, gameObject)
+    forceDownState(pointer, gameObject)
     {
         this.forceState(pointer, gameObject, Events.GAMEOBJECT_POINTER_DOWN, Events.GAMEOBJECT_DOWN, false);
-    },
+    }
 
     /**
      * This method will force the given Game Object into the 'up' input state.
@@ -2118,10 +2114,10 @@ var InputPlugin = new Class({
      * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
      */
-    forceUpState: function (pointer, gameObject)
+    forceUpState(pointer, gameObject)
     {
         this.forceState(pointer, gameObject, Events.GAMEOBJECT_POINTER_UP, Events.GAMEOBJECT_UP, false);
-    },
+    }
 
     /**
      * This method will force the given Game Object into the 'over' input state.
@@ -2141,10 +2137,10 @@ var InputPlugin = new Class({
      * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
      */
-    forceOverState: function (pointer, gameObject)
+    forceOverState(pointer, gameObject)
     {
         this.forceState(pointer, gameObject, Events.GAMEOBJECT_POINTER_OVER, Events.GAMEOBJECT_OVER, true);
-    },
+    }
 
     /**
      * This method will force the given Game Object into the 'out' input state.
@@ -2164,10 +2160,10 @@ var InputPlugin = new Class({
      * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
      */
-    forceOutState: function (pointer, gameObject)
+    forceOutState(pointer, gameObject)
     {
         this.forceState(pointer, gameObject, Events.GAMEOBJECT_POINTER_OUT, Events.GAMEOBJECT_OUT, false);
-    },
+    }
 
     /**
      * This method will force the given Game Object into the given input state.
@@ -2181,7 +2177,7 @@ var InputPlugin = new Class({
      * @param {string} inputPluginEvent - The event to emit on the Input Plugin.
      * @param {boolean} [setCursor=false] - Should the cursor be set to the Game Object's cursor?
      */
-    forceState: function (pointer, gameObject, gameObjectEvent, inputPluginEvent, setCursor)
+    forceState(pointer, gameObject, gameObjectEvent, inputPluginEvent, setCursor)
     {
         var _eventData = this._eventData;
         var _eventContainer = this._eventContainer;
@@ -2202,7 +2198,7 @@ var InputPlugin = new Class({
                 this.emit(inputPluginEvent, pointer, gameObject, _eventContainer);
             }
         }
-    },
+    }
 
     /**
      * Queues a Game Object for insertion into this Input Plugin on the next update.
@@ -2215,7 +2211,7 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    queueForInsertion: function (child)
+    queueForInsertion(child)
     {
         if (this._pendingInsertion.indexOf(child) === -1 && this._list.indexOf(child) === -1)
         {
@@ -2223,7 +2219,7 @@ var InputPlugin = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Queues a Game Object for removal from this Input Plugin on the next update.
@@ -2236,12 +2232,12 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    queueForRemoval: function (child)
+    queueForRemoval(child)
     {
         this._pendingRemoval.push(child);
 
         return this;
-    },
+    }
 
     /**
      * Sets the draggable state of the given array of Game Objects.
@@ -2258,7 +2254,7 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    setDraggable: function (gameObjects, value)
+    setDraggable(gameObjects, value)
     {
         if (value === undefined) { value = true; }
 
@@ -2286,7 +2282,7 @@ var InputPlugin = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Creates a function that can be passed to `setInteractive`, `enable` or `setHitArea` that will handle
@@ -2321,14 +2317,14 @@ var InputPlugin = new Class({
      *
      * @return {function} A Pixel Perfect Handler for use as a hitArea shape callback.
      */
-    makePixelPerfect: function (alphaTolerance)
+    makePixelPerfect(alphaTolerance)
     {
         if (alphaTolerance === undefined) { alphaTolerance = 1; }
 
         var textureManager = this.systems.textures;
 
         return CreatePixelPerfectHandler(textureManager, alphaTolerance);
-    },
+    }
 
     /**
      * Sets the hit area for the given array of Game Objects.
@@ -2354,7 +2350,7 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    setHitArea: function (gameObjects, hitArea, hitAreaCallback)
+    setHitArea(gameObjects, hitArea, hitAreaCallback)
     {
         if (hitArea === undefined)
         {
@@ -2435,7 +2431,7 @@ var InputPlugin = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Circle` shape, using
@@ -2452,14 +2448,14 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    setHitAreaCircle: function (gameObjects, x, y, radius, callback)
+    setHitAreaCircle(gameObjects, x, y, radius, callback)
     {
         if (callback === undefined) { callback = CircleContains; }
 
         var shape = new Circle(x, y, radius);
 
         return this.setHitArea(gameObjects, shape, callback);
-    },
+    }
 
     /**
      * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Ellipse` shape, using
@@ -2477,14 +2473,14 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    setHitAreaEllipse: function (gameObjects, x, y, width, height, callback)
+    setHitAreaEllipse(gameObjects, x, y, width, height, callback)
     {
         if (callback === undefined) { callback = EllipseContains; }
 
         var shape = new Ellipse(x, y, width, height);
 
         return this.setHitArea(gameObjects, shape, callback);
-    },
+    }
 
     /**
      * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Rectangle` shape, using
@@ -2498,7 +2494,7 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    setHitAreaFromTexture: function (gameObjects, callback)
+    setHitAreaFromTexture(gameObjects, callback)
     {
         if (callback === undefined) { callback = RectangleContains; }
 
@@ -2542,7 +2538,7 @@ var InputPlugin = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Rectangle` shape, using
@@ -2560,14 +2556,14 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    setHitAreaRectangle: function (gameObjects, x, y, width, height, callback)
+    setHitAreaRectangle(gameObjects, x, y, width, height, callback)
     {
         if (callback === undefined) { callback = RectangleContains; }
 
         var shape = new Rectangle(x, y, width, height);
 
         return this.setHitArea(gameObjects, shape, callback);
-    },
+    }
 
     /**
      * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Triangle` shape, using
@@ -2587,14 +2583,14 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    setHitAreaTriangle: function (gameObjects, x1, y1, x2, y2, x3, y3, callback)
+    setHitAreaTriangle(gameObjects, x1, y1, x2, y2, x3, y3, callback)
     {
         if (callback === undefined) { callback = TriangleContains; }
 
         var shape = new Triangle(x1, y1, x2, y2, x3, y3);
 
         return this.setHitArea(gameObjects, shape, callback);
-    },
+    }
 
     /**
      * Creates an Input Debug Shape for the given Game Object.
@@ -2629,7 +2625,7 @@ var InputPlugin = new Class({
      *
      * @return {this} This Input Plugin.
      */
-    enableDebug: function (gameObject, color)
+    enableDebug(gameObject, color)
     {
         if (color === undefined) { color = 0x00ff00; }
 
@@ -2734,7 +2730,7 @@ var InputPlugin = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Removes an Input Debug Shape from the given Game Object.
@@ -2748,7 +2744,7 @@ var InputPlugin = new Class({
      *
      * @return {this} This Input Plugin.
      */
-    removeDebug: function (gameObject)
+    removeDebug(gameObject)
     {
         var input = gameObject.input;
 
@@ -2763,7 +2759,7 @@ var InputPlugin = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the Pointers to always poll.
@@ -2780,10 +2776,10 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    setPollAlways: function ()
+    setPollAlways()
     {
         return this.setPollRate(0);
-    },
+    }
 
     /**
      * Sets the Pointers to only poll when they are moved or updated.
@@ -2796,10 +2792,10 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    setPollOnMove: function ()
+    setPollOnMove()
     {
         return this.setPollRate(-1);
-    },
+    }
 
     /**
      * Sets the poll rate value. This is the amount of time that should have elapsed before a pointer
@@ -2812,13 +2808,13 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    setPollRate: function (value)
+    setPollRate(value)
     {
         this.pollRate = value;
         this._pollTimer = 0;
 
         return this;
-    },
+    }
 
     /**
      * When set to `true` the global Input Manager will emulate DOM behavior by only emitting events from
@@ -2832,12 +2828,12 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    setGlobalTopOnly: function (value)
+    setGlobalTopOnly(value)
     {
         this.manager.globalTopOnly = value;
 
         return this;
-    },
+    }
 
     /**
      * When set to `true` this Input Plugin will emulate DOM behavior by only emitting events from
@@ -2852,12 +2848,12 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    setTopOnly: function (value)
+    setTopOnly(value)
     {
         this.topOnly = value;
 
         return this;
-    },
+    }
 
     /**
      * Given an array of Game Objects and a Pointer, sort the array and return it,
@@ -2871,7 +2867,7 @@ var InputPlugin = new Class({
      *
      * @return {Phaser.GameObjects.GameObject[]} The sorted array of Game Objects.
      */
-    sortGameObjects: function (gameObjects, pointer)
+    sortGameObjects(gameObjects, pointer)
     {
         if (gameObjects.length < 2 || !pointer.camera)
         {
@@ -2887,7 +2883,7 @@ var InputPlugin = new Class({
 
             return indexB - indexA;
         });
-    },
+    }
 
     /**
      * Given an array of Drop Zone Game Objects, sort the array and return it,
@@ -2900,7 +2896,7 @@ var InputPlugin = new Class({
      *
      * @return {Phaser.GameObjects.GameObject[]} The sorted array of Game Objects.
      */
-    sortDropZones: function (gameObjects)
+    sortDropZones(gameObjects)
     {
         if (gameObjects.length < 2)
         {
@@ -2910,7 +2906,7 @@ var InputPlugin = new Class({
         this.scene.sys.depthSort();
 
         return gameObjects.sort(this.sortDropZoneHandler.bind(this));
-    },
+    }
 
     /**
      * Return the child lowest down the display list (with the smallest index)
@@ -2927,7 +2923,7 @@ var InputPlugin = new Class({
      *
      * @return {number} Returns either a negative or positive integer, or zero if they match.
      */
-    sortDropZoneHandler: function (childA, childB)
+    sortDropZoneHandler(childA, childB)
     {
         if (!childA.parentContainer && !childB.parentContainer)
         {
@@ -2979,7 +2975,7 @@ var InputPlugin = new Class({
         //  Technically this shouldn't happen, but ...
         // eslint-disable-next-line no-unreachable
         return 0;
-    },
+    }
 
     /**
      * This method should be called from within an input event handler, such as `pointerdown`.
@@ -2992,12 +2988,12 @@ var InputPlugin = new Class({
      *
      * @return {this} This InputPlugin object.
      */
-    stopPropagation: function ()
+    stopPropagation()
     {
         this.manager._tempSkip = true;
 
         return this;
-    },
+    }
 
     /**
      * Adds new Pointer objects to the Input Manager.
@@ -3017,10 +3013,10 @@ var InputPlugin = new Class({
      *
      * @return {Phaser.Input.Pointer[]} An array containing all of the new Pointer objects that were created.
      */
-    addPointer: function (quantity)
+    addPointer(quantity)
     {
         return this.manager.addPointer(quantity);
-    },
+    }
 
     /**
      * Tells the Input system to set a custom cursor.
@@ -3049,12 +3045,12 @@ var InputPlugin = new Class({
      *
      * @return {this} This Input instance.
      */
-    setDefaultCursor: function (cursor)
+    setDefaultCursor(cursor)
     {
         this.manager.setDefaultCursor(cursor);
 
         return this;
-    },
+    }
 
     /**
      * The Scene that owns this plugin is transitioning in.
@@ -3063,10 +3059,10 @@ var InputPlugin = new Class({
      * @private
      * @since 3.5.0
      */
-    transitionIn: function ()
+    transitionIn()
     {
         this.enabled = this.settings.transitionAllowInput;
-    },
+    }
 
     /**
      * The Scene that owns this plugin has finished transitioning in.
@@ -3075,13 +3071,13 @@ var InputPlugin = new Class({
      * @private
      * @since 3.5.0
      */
-    transitionComplete: function ()
+    transitionComplete()
     {
         if (!this.settings.transitionAllowInput)
         {
             this.enabled = true;
         }
-    },
+    }
 
     /**
      * The Scene that owns this plugin is transitioning out.
@@ -3090,10 +3086,10 @@ var InputPlugin = new Class({
      * @private
      * @since 3.5.0
      */
-    transitionOut: function ()
+    transitionOut()
     {
         this.enabled = this.settings.transitionAllowInput;
-    },
+    }
 
     /**
      * The Scene that owns this plugin is shutting down.
@@ -3104,7 +3100,7 @@ var InputPlugin = new Class({
      * @private
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         //  Registered input plugins listen for this
         this.pluginEvents.emit(Events.SHUTDOWN);
@@ -3139,7 +3135,7 @@ var InputPlugin = new Class({
         manager.events.off(Events.GAME_OVER, this.onGameOver, this);
 
         eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * Loops through all of the Input Manager Pointer instances and calls `reset` on them.
@@ -3150,7 +3146,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#resetPointers
      * @since 3.60.0
      */
-    resetPointers: function ()
+    resetPointers()
     {
         var pointers = this.manager.pointers;
 
@@ -3158,7 +3154,7 @@ var InputPlugin = new Class({
         {
             pointers[i].reset();
         }
-    },
+    }
 
     /**
      * The Scene that owns this plugin is being destroyed.
@@ -3169,7 +3165,7 @@ var InputPlugin = new Class({
      * @private
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.shutdown();
 
@@ -3185,7 +3181,7 @@ var InputPlugin = new Class({
         this.manager = null;
         this.events = null;
         this.mouse = null;
-    },
+    }
 
     /**
      * The x coordinates of the ActivePointer based on the first camera in the camera list.
@@ -3196,14 +3192,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.0.0
      */
-    x: {
 
-        get: function ()
-        {
-            return this.manager.activePointer.x;
-        }
-
-    },
+    get x()
+    {
+        return this.manager.activePointer.x;
+    }
 
     /**
      * The y coordinates of the ActivePointer based on the first camera in the camera list.
@@ -3214,14 +3207,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.0.0
      */
-    y: {
 
-        get: function ()
-        {
-            return this.manager.activePointer.y;
-        }
-
-    },
+    get y()
+    {
+        return this.manager.activePointer.y;
+    }
 
     /**
      * Are any mouse or touch pointers currently over the game canvas?
@@ -3231,14 +3221,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.16.0
      */
-    isOver: {
 
-        get: function ()
-        {
-            return this.manager.isOver;
-        }
-
-    },
+    get isOver()
+    {
+        return this.manager.isOver;
+    }
 
     /**
      * The mouse has its own unique Pointer object, which you can reference directly if making a _desktop specific game_.
@@ -3250,14 +3237,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.10.0
      */
-    mousePointer: {
 
-        get: function ()
-        {
-            return this.manager.mousePointer;
-        }
-
-    },
+    get mousePointer()
+    {
+        return this.manager.mousePointer;
+    }
 
     /**
      * The current active input Pointer.
@@ -3267,14 +3251,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.0.0
      */
-    activePointer: {
 
-        get: function ()
-        {
-            return this.manager.activePointer;
-        }
-
-    },
+    get activePointer()
+    {
+        return this.manager.activePointer;
+    }
 
     /**
      * A touch-based Pointer object.
@@ -3285,14 +3266,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.10.0
      */
-    pointer1: {
 
-        get: function ()
-        {
-            return this.manager.pointers[1];
-        }
-
-    },
+    get pointer1()
+    {
+        return this.manager.pointers[1];
+    }
 
     /**
      * A touch-based Pointer object.
@@ -3303,14 +3281,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.10.0
      */
-    pointer2: {
 
-        get: function ()
-        {
-            return this.manager.pointers[2];
-        }
-
-    },
+    get pointer2()
+    {
+        return this.manager.pointers[2];
+    }
 
     /**
      * A touch-based Pointer object.
@@ -3321,14 +3296,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.10.0
      */
-    pointer3: {
 
-        get: function ()
-        {
-            return this.manager.pointers[3];
-        }
-
-    },
+    get pointer3()
+    {
+        return this.manager.pointers[3];
+    }
 
     /**
      * A touch-based Pointer object.
@@ -3339,14 +3311,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.10.0
      */
-    pointer4: {
 
-        get: function ()
-        {
-            return this.manager.pointers[4];
-        }
-
-    },
+    get pointer4()
+    {
+        return this.manager.pointers[4];
+    }
 
     /**
      * A touch-based Pointer object.
@@ -3357,14 +3326,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.10.0
      */
-    pointer5: {
 
-        get: function ()
-        {
-            return this.manager.pointers[5];
-        }
-
-    },
+    get pointer5()
+    {
+        return this.manager.pointers[5];
+    }
 
     /**
      * A touch-based Pointer object.
@@ -3375,14 +3341,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.10.0
      */
-    pointer6: {
 
-        get: function ()
-        {
-            return this.manager.pointers[6];
-        }
-
-    },
+    get pointer6()
+    {
+        return this.manager.pointers[6];
+    }
 
     /**
      * A touch-based Pointer object.
@@ -3393,14 +3356,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.10.0
      */
-    pointer7: {
 
-        get: function ()
-        {
-            return this.manager.pointers[7];
-        }
-
-    },
+    get pointer7()
+    {
+        return this.manager.pointers[7];
+    }
 
     /**
      * A touch-based Pointer object.
@@ -3411,14 +3371,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.10.0
      */
-    pointer8: {
 
-        get: function ()
-        {
-            return this.manager.pointers[8];
-        }
-
-    },
+    get pointer8()
+    {
+        return this.manager.pointers[8];
+    }
 
     /**
      * A touch-based Pointer object.
@@ -3429,14 +3386,11 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.10.0
      */
-    pointer9: {
 
-        get: function ()
-        {
-            return this.manager.pointers[9];
-        }
-
-    },
+    get pointer9()
+    {
+        return this.manager.pointers[9];
+    }
 
     /**
      * A touch-based Pointer object.
@@ -3447,16 +3401,13 @@ var InputPlugin = new Class({
      * @readonly
      * @since 3.10.0
      */
-    pointer10: {
 
-        get: function ()
-        {
-            return this.manager.pointers[10];
-        }
-
+    get pointer10()
+    {
+        return this.manager.pointers[10];
     }
 
-});
+};
 
 PluginCache.register('InputPlugin', InputPlugin, 'input');
 

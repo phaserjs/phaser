@@ -26,12 +26,41 @@ var BatchHandler = require('./BatchHandler');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this handler.
  */
-var BatchHandlerTriFlat = new Class({
-    Extends: BatchHandler,
+var BatchHandlerTriFlat = class extends BatchHandler {
 
-    initialize: function BatchHandlerTriFlat (manager, config)
+    constructor(manager, config)
     {
-        BatchHandler.call(this, manager, this.defaultConfig, config);
+        this.defaultConfig = {
+            name: 'BatchHandlerTriFlat',
+            verticesPerInstance: 3,
+            indicesPerInstance: 3,
+            shaderName: 'FLAT',
+            vertexSource: ShaderSourceVS,
+            fragmentSource: ShaderSourceFS,
+            shaderAdditions: [
+                MakeDefineLights(true),
+                MakeFlatNormal(true),
+                MakeApplyLighting(true)
+            ],
+            indexBufferDynamic: true,
+            vertexBufferLayout: {
+                usage: 'DYNAMIC_DRAW',
+                layout: [
+                    {
+                        name: 'inPosition',
+                        size: 2
+                    },
+                    {
+                        name: 'inTint',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    }
+                ]
+            }
+        };
+
+        super(manager, this.defaultConfig, config);
 
         /**
          * An empty array. This is an internal space filler.
@@ -96,37 +125,7 @@ var BatchHandlerTriFlat = new Class({
          * @since 4.0.0
          */
         this._renderOptionsChanged = false;
-    },
-
-    defaultConfig: {
-        name: 'BatchHandlerTriFlat',
-        verticesPerInstance: 3,
-        indicesPerInstance: 3,
-        shaderName: 'FLAT',
-        vertexSource: ShaderSourceVS,
-        fragmentSource: ShaderSourceFS,
-        shaderAdditions: [
-            MakeDefineLights(true),
-            MakeFlatNormal(true),
-            MakeApplyLighting(true)
-        ],
-        indexBufferDynamic: true,
-        vertexBufferLayout: {
-            usage: 'DYNAMIC_DRAW',
-            layout: [
-                {
-                    name: 'inPosition',
-                    size: 2
-                },
-                {
-                    name: 'inTint',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                }
-            ]
-        }
-    },
+    }
 
     /**
      * Generate element indices for the instance vertices.
@@ -138,10 +137,10 @@ var BatchHandlerTriFlat = new Class({
      * @param {number} instances - The number of instances to define.
      * @return {ArrayBuffer} The index buffer data.
      */
-    _generateElementIndices: function (instances)
+    _generateElementIndices(instances)
     {
         return new ArrayBuffer(instances * 3 * 2);
-    },
+    }
 
     /**
      * Update the uniforms for the current shader program.
@@ -152,7 +151,7 @@ var BatchHandlerTriFlat = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    setupUniforms: function (drawingContext)
+    setupUniforms(drawingContext)
     {
         var programManager = this.programManager;
 
@@ -179,9 +178,9 @@ var BatchHandlerTriFlat = new Class({
                 [ drawingContext.width, drawingContext.height ]
             );
         }
-    },
+    }
 
-    updateRenderOptions: function (lighting)
+    updateRenderOptions(lighting)
     {
         var newRenderOptions = this.nextRenderOptions;
         var oldRenderOptions = this.renderOptions;
@@ -194,9 +193,9 @@ var BatchHandlerTriFlat = new Class({
         }
 
         this._renderOptionsChanged = changed;
-    },
+    }
 
-    updateShaderConfig: function ()
+    updateShaderConfig()
     {
         var programManager = this.programManager;
         var renderOptions = this.renderOptions;
@@ -223,7 +222,7 @@ var BatchHandlerTriFlat = new Class({
                 }
             }
         }
-    },
+    }
 
     /**
      * Draw then empty the current batch.
@@ -235,7 +234,7 @@ var BatchHandlerTriFlat = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    run: function (drawingContext)
+    run(drawingContext)
     {
         if (this.instanceCount === 0) { return; }
 
@@ -286,7 +285,7 @@ var BatchHandlerTriFlat = new Class({
         this.vertexCount = 0;
 
         this.onRunEnd(drawingContext);
-    },
+    }
 
     /**
      * Add data to the batch.
@@ -302,7 +301,7 @@ var BatchHandlerTriFlat = new Class({
      * @param {number[]} colors - The color data. Each vertex has a color as a Uint32 value.
      * @param {boolean} [lighting=false] - Should this batch use lighting?
      */
-    batch: function (currentContext, indexes, vertices, colors, lighting)
+    batch(currentContext, indexes, vertices, colors, lighting)
     {
         if (this.instanceCount === 0)
         {
@@ -397,6 +396,6 @@ var BatchHandlerTriFlat = new Class({
             }
         }
     }
-});
+};
 
 module.exports = BatchHandlerTriFlat;

@@ -30,13 +30,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.html`, i.e. if `key` was "alien" then the URL will be "alien.html".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var HTMLFile = new Class({
+var HTMLFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function HTMLFile (loader, key, url, xhrSettings)
+    constructor(loader, key, url, xhrSettings)
     {
         var extension = 'html';
 
@@ -60,8 +56,8 @@ var HTMLFile = new Class({
             xhrSettings: xhrSettings
         };
 
-        File.call(this, loader, fileConfig);
-    },
+        super(loader, fileConfig);
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -70,7 +66,7 @@ var HTMLFile = new Class({
      * @method Phaser.Loader.FileTypes.HTMLFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -79,7 +75,7 @@ var HTMLFile = new Class({
         this.onProcessComplete();
     }
 
-});
+};
 
 /**
  * Adds an HTML file, or array of HTML files, to the current load queue.

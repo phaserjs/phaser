@@ -42,24 +42,23 @@ var Shape = require('../Shape');
  * @param {number} [fillColor] - The color the ellipse will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the ellipse will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  */
-var Ellipse = new Class({
+var Ellipse = class extends Shape {
 
-    Extends: Shape,
+    static
+    {
+        Class.mixin(this, [
+            EllipseRender
+        ], false);
+    }
 
-    Mixins: [
-        EllipseRender
-    ],
-
-    initialize:
-
-    function Ellipse (scene, x, y, width, height, fillColor, fillAlpha)
+    constructor(scene, x, y, width, height, fillColor, fillAlpha)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = 128; }
         if (height === undefined) { height = 128; }
 
-        Shape.call(this, scene, 'Ellipse', new GeomEllipse(width / 2, height / 2, width, height));
+        super(scene, 'Ellipse', new GeomEllipse(width / 2, height / 2, width, height));
 
         /**
          * Private internal value.
@@ -84,7 +83,7 @@ var Ellipse = new Class({
 
         this.updateDisplayOrigin();
         this.updateData();
-    },
+    }
 
     /**
      * The smoothness of the ellipse. The number of points used when rendering it.
@@ -95,21 +94,18 @@ var Ellipse = new Class({
      * @default 64
      * @since 3.13.0
      */
-    smoothness: {
 
-        get: function ()
-        {
-            return this._smoothness;
-        },
+    get smoothness()
+    {
+        return this._smoothness;
+    }
 
-        set: function (value)
-        {
-            this._smoothness = value;
+    set smoothness(value)
+    {
+        this._smoothness = value;
 
-            this.updateData();
-        }
-
-    },
+        this.updateData();
+    }
 
     /**
      * Sets the size of the ellipse by changing the underlying geometry data, rather than scaling the object.
@@ -123,7 +119,7 @@ var Ellipse = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setSize: function (width, height)
+    setSize(width, height)
     {
         this.width = width;
         this.height = height;
@@ -133,7 +129,7 @@ var Ellipse = new Class({
         this.updateDisplayOrigin();
 
         return this.updateData();
-    },
+    }
 
     /**
      * Sets the smoothness of the ellipse. The number of points used when rendering it.
@@ -147,12 +143,12 @@ var Ellipse = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setSmoothness: function (value)
+    setSmoothness(value)
     {
         this._smoothness = value;
 
         return this.updateData();
-    },
+    }
 
     /**
      * Internal method that updates the data and path values.
@@ -163,7 +159,7 @@ var Ellipse = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    updateData: function ()
+    updateData()
     {
         var path = [];
         var points = this.geom.getPoints(this._smoothness);
@@ -181,6 +177,6 @@ var Ellipse = new Class({
         return this;
     }
 
-});
+};
 
 module.exports = Ellipse;

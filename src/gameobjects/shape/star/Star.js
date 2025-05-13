@@ -41,17 +41,16 @@ var Shape = require('../Shape');
  * @param {number} [fillColor] - The color the star will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the star will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  */
-var Star = new Class({
+var Star = class extends Shape {
 
-    Extends: Shape,
+    static
+    {
+        Class.mixin(this, [
+            StarRender
+        ], false);
+    }
 
-    Mixins: [
-        StarRender
-    ],
-
-    initialize:
-
-    function Star (scene, x, y, points, innerRadius, outerRadius, fillColor, fillAlpha)
+    constructor(scene, x, y, points, innerRadius, outerRadius, fillColor, fillAlpha)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -59,7 +58,7 @@ var Star = new Class({
         if (innerRadius === undefined) { innerRadius = 32; }
         if (outerRadius === undefined) { outerRadius = 64; }
 
-        Shape.call(this, scene, 'Star', null);
+        super(scene, 'Star', null);
 
         /**
          * Private internal value.
@@ -104,7 +103,7 @@ var Star = new Class({
 
         this.updateDisplayOrigin();
         this.updateData();
-    },
+    }
 
     /**
      * Sets the number of points that make up the Star shape.
@@ -117,12 +116,12 @@ var Star = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setPoints: function (value)
+    setPoints(value)
     {
         this._points = value;
 
         return this.updateData();
-    },
+    }
 
     /**
      * Sets the inner radius of the Star shape.
@@ -135,12 +134,12 @@ var Star = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setInnerRadius: function (value)
+    setInnerRadius(value)
     {
         this._innerRadius = value;
 
         return this.updateData();
-    },
+    }
 
     /**
      * Sets the outer radius of the Star shape.
@@ -153,12 +152,12 @@ var Star = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setOuterRadius: function (value)
+    setOuterRadius(value)
     {
         this._outerRadius = value;
 
         return this.updateData();
-    },
+    }
 
     /**
      * The number of points that make up the Star shape.
@@ -168,21 +167,18 @@ var Star = new Class({
      * @default 5
      * @since 3.13.0
      */
-    points: {
 
-        get: function ()
-        {
-            return this._points;
-        },
+    get points()
+    {
+        return this._points;
+    }
 
-        set: function (value)
-        {
-            this._points = value;
+    set points(value)
+    {
+        this._points = value;
 
-            this.updateData();
-        }
-
-    },
+        this.updateData();
+    }
 
     /**
      * The inner radius of the Star shape.
@@ -192,21 +188,18 @@ var Star = new Class({
      * @default 32
      * @since 3.13.0
      */
-    innerRadius: {
 
-        get: function ()
-        {
-            return this._innerRadius;
-        },
+    get innerRadius()
+    {
+        return this._innerRadius;
+    }
 
-        set: function (value)
-        {
-            this._innerRadius = value;
+    set innerRadius(value)
+    {
+        this._innerRadius = value;
 
-            this.updateData();
-        }
-
-    },
+        this.updateData();
+    }
 
     /**
      * The outer radius of the Star shape.
@@ -216,21 +209,18 @@ var Star = new Class({
      * @default 64
      * @since 3.13.0
      */
-    outerRadius: {
 
-        get: function ()
-        {
-            return this._outerRadius;
-        },
+    get outerRadius()
+    {
+        return this._outerRadius;
+    }
 
-        set: function (value)
-        {
-            this._outerRadius = value;
+    set outerRadius(value)
+    {
+        this._outerRadius = value;
 
-            this.updateData();
-        }
-
-    },
+        this.updateData();
+    }
 
     /**
      * Internal method that updates the data and path values.
@@ -241,7 +231,7 @@ var Star = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    updateData: function ()
+    updateData()
     {
         var path = [];
 
@@ -277,6 +267,6 @@ var Star = new Class({
         return this;
     }
 
-});
+};
 
 module.exports = Star;

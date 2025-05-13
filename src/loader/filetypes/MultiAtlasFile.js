@@ -34,13 +34,9 @@ var MultiFile = require('../MultiFile');
  * @param {Phaser.Types.Loader.XHRSettingsObject} [atlasXhrSettings] - Extra XHR Settings specifically for the atlas json file.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - Extra XHR Settings specifically for the texture files.
  */
-var MultiAtlasFile = new Class({
+var MultiAtlasFile = class extends MultiFile {
 
-    Extends: MultiFile,
-
-    initialize:
-
-    function MultiAtlasFile (loader, key, atlasURL, path, baseURL, atlasXhrSettings, textureXhrSettings)
+    constructor(loader, key, atlasURL, path, baseURL, atlasXhrSettings, textureXhrSettings)
     {
         if (IsPlainObject(key))
         {
@@ -65,12 +61,12 @@ var MultiAtlasFile = new Class({
 
         var data = new JSONFile(loader, key, atlasURL, atlasXhrSettings);
 
-        MultiFile.call(this, loader, 'multiatlas', key, [ data ]);
+        super(loader, 'multiatlas', key, [ data ]);
 
         this.config.path = path;
         this.config.baseURL = baseURL;
         this.config.textureXhrSettings = textureXhrSettings;
-    },
+    }
 
     /**
      * Called by each File when it finishes loading.
@@ -80,7 +76,7 @@ var MultiAtlasFile = new Class({
      *
      * @param {Phaser.Loader.File} file - The File that has completed processing.
      */
-    onFileComplete: function (file)
+    onFileComplete(file)
     {
         var index = this.files.indexOf(file);
 
@@ -143,7 +139,7 @@ var MultiAtlasFile = new Class({
                 loader.setPrefix(currentPrefix);
             }
         }
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -151,7 +147,7 @@ var MultiAtlasFile = new Class({
      * @method Phaser.Loader.FileTypes.MultiAtlasFile#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         if (this.isReadyToProcess())
         {
@@ -207,7 +203,7 @@ var MultiAtlasFile = new Class({
         }
     }
 
-});
+};
 
 /**
  * Adds a Multi Texture Atlas, or array of multi atlases, to the current load queue.

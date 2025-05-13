@@ -33,13 +33,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {object} [descriptors] - An optional object containing font descriptors for the Font Face. See https://developer.mozilla.org/en-US/docs/Web/API/FontFace/FontFace#descriptors for more details.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var FontFile = new Class({
+var FontFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function FontFile (loader, key, url, format, descriptors, xhrSettings)
+    constructor(loader, key, url, format, descriptors, xhrSettings)
     {
         var extension = 'ttf';
 
@@ -69,7 +65,7 @@ var FontFile = new Class({
             xhrSettings: xhrSettings
         };
 
-        File.call(this, loader, fileConfig);
+        super(loader, fileConfig);
 
         this.data = {
             format: format,
@@ -77,7 +73,7 @@ var FontFile = new Class({
         };
 
         this.state = CONST.FILE_POPULATED;
-    },
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -86,7 +82,7 @@ var FontFile = new Class({
      * @method Phaser.Loader.FileTypes.FontFile#onProcess
      * @since 3.87.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -122,7 +118,7 @@ var FontFile = new Class({
         });
     }
 
-});
+};
 
 /**
  * Adds a Font file, or array of Font files, to the current load queue.

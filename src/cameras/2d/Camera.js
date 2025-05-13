@@ -50,15 +50,11 @@ var Vector2 = require('../../math/Vector2');
  * @param {number} width - The width of the Camera, in pixels.
  * @param {number} height - The height of the Camera, in pixels.
  */
-var Camera = new Class({
+var Camera = class extends BaseCamera {
 
-    Extends: BaseCamera,
-
-    initialize:
-
-    function Camera (x, y, width, height)
+    constructor(x, y, width, height)
     {
-        BaseCamera.call(this, x, y, width, height);
+        super(x, y, width, height);
 
         /**
          * The filters for this camera.
@@ -210,7 +206,7 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this._follow = null;
-    },
+    }
 
     /**
      * Sets the Camera dead zone.
@@ -236,7 +232,7 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setDeadzone: function (width, height)
+    setDeadzone(width, height)
     {
         if (width === undefined)
         {
@@ -272,7 +268,7 @@ var Camera = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Fades the Camera in from the given color over the duration specified.
@@ -292,10 +288,10 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    fadeIn: function (duration, red, green, blue, callback, context)
+    fadeIn(duration, red, green, blue, callback, context)
     {
         return this.fadeEffect.start(false, duration, red, green, blue, true, callback, context);
-    },
+    }
 
     /**
      * Fades the Camera out to the given color over the duration specified.
@@ -316,10 +312,10 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    fadeOut: function (duration, red, green, blue, callback, context)
+    fadeOut(duration, red, green, blue, callback, context)
     {
         return this.fadeEffect.start(true, duration, red, green, blue, true, callback, context);
-    },
+    }
 
     /**
      * Fades the Camera from the given color to transparent over the duration specified.
@@ -340,10 +336,10 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    fadeFrom: function (duration, red, green, blue, force, callback, context)
+    fadeFrom(duration, red, green, blue, force, callback, context)
     {
         return this.fadeEffect.start(false, duration, red, green, blue, force, callback, context);
-    },
+    }
 
     /**
      * Fades the Camera from transparent to the given color over the duration specified.
@@ -364,10 +360,10 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    fade: function (duration, red, green, blue, force, callback, context)
+    fade(duration, red, green, blue, force, callback, context)
     {
         return this.fadeEffect.start(true, duration, red, green, blue, force, callback, context);
-    },
+    }
 
     /**
      * Flashes the Camera by setting it to the given color immediately and then fading it away again quickly over the duration specified.
@@ -388,10 +384,10 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    flash: function (duration, red, green, blue, force, callback, context)
+    flash(duration, red, green, blue, force, callback, context)
     {
         return this.flashEffect.start(duration, red, green, blue, force, callback, context);
-    },
+    }
 
     /**
      * Shakes the Camera by the given intensity over the duration specified.
@@ -410,10 +406,10 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    shake: function (duration, intensity, force, callback, context)
+    shake(duration, intensity, force, callback, context)
     {
         return this.shakeEffect.start(duration, intensity, force, callback, context);
-    },
+    }
 
     /**
      * This effect will scroll the Camera so that the center of its viewport finishes at the given destination,
@@ -436,10 +432,10 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    pan: function (x, y, duration, ease, force, callback, context)
+    pan(x, y, duration, ease, force, callback, context)
     {
         return this.panEffect.start(x, y, duration, ease, force, callback, context);
-    },
+    }
 
     /**
      * Rotate the Camera to the given angle over the duration and with the ease specified.
@@ -459,10 +455,10 @@ var Camera = new Class({
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
-    rotateTo: function (angle, shortestPath, duration, ease, force, callback, context)
+    rotateTo(angle, shortestPath, duration, ease, force, callback, context)
     {
         return this.rotateToEffect.start(angle, shortestPath, duration, ease, force, callback, context);
-    },
+    }
 
     /**
      * This effect will zoom the Camera to the given scale, over the duration and with the ease specified.
@@ -483,10 +479,10 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    zoomTo: function (zoom, duration, ease, force, callback, context)
+    zoomTo(zoom, duration, ease, force, callback, context)
     {
         return this.zoomEffect.start(zoom, duration, ease, force, callback, context);
-    },
+    }
 
     /**
      * Internal preRender step.
@@ -495,7 +491,7 @@ var Camera = new Class({
      * @protected
      * @since 3.0.0
      */
-    preRender: function ()
+    preRender()
     {
         this.renderList.length = 0;
 
@@ -604,7 +600,7 @@ var Camera = new Class({
         {
             this.emit(Events.FOLLOW_UPDATE, this, follow);
         }
-    },
+    }
 
     /**
      * Returns the view matrix of the camera. This is used internally.
@@ -618,7 +614,7 @@ var Camera = new Class({
      * @param {boolean} [forceComposite=false] - If `true`, the view matrix will always be `matrix`. This is typically used when rendering to a framebuffer, so the external matrix is irrelevant.
      * @returns {Phaser.GameObjects.Components.TransformMatrix} The view matrix of the camera.
      */
-    getViewMatrix: function (forceComposite)
+    getViewMatrix(forceComposite)
     {
         if (
             forceComposite || this.forceComposite ||
@@ -632,7 +628,7 @@ var Camera = new Class({
         {
             return this.matrixCombined;
         }
-    },
+    }
 
     /**
      * Sets the linear interpolation value to use when following a target.
@@ -652,7 +648,7 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setLerp: function (x, y)
+    setLerp(x, y)
     {
         if (x === undefined) { x = 1; }
         if (y === undefined) { y = x; }
@@ -660,7 +656,7 @@ var Camera = new Class({
         this.lerp.set(x, y);
 
         return this;
-    },
+    }
 
     /**
      * Sets the horizontal and vertical offset of the camera from its follow target.
@@ -674,7 +670,7 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    setFollowOffset: function (x, y)
+    setFollowOffset(x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -682,7 +678,7 @@ var Camera = new Class({
         this.followOffset.set(x, y);
 
         return this;
-    },
+    }
 
     /**
      * Sets the Camera to follow a Game Object.
@@ -710,7 +706,7 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    startFollow: function (target, roundPixels, lerpX, lerpY, offsetX, offsetY)
+    startFollow(target, roundPixels, lerpX, lerpY, offsetX, offsetY)
     {
         if (roundPixels === undefined) { roundPixels = false; }
         if (lerpX === undefined) { lerpX = 1; }
@@ -747,7 +743,7 @@ var Camera = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Stops a Camera from following a Game Object, if previously set via `Camera.startFollow`.
@@ -757,12 +753,12 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    stopFollow: function ()
+    stopFollow()
     {
         this._follow = null;
 
         return this;
-    },
+    }
 
     /**
      * Resets any active FX, such as a fade, flash or shake. Useful to call after a fade in order to
@@ -773,7 +769,7 @@ var Camera = new Class({
      *
      * @return {this} This Camera instance.
      */
-    resetFX: function ()
+    resetFX()
     {
         this.rotateToEffect.reset();
         this.panEffect.reset();
@@ -782,7 +778,7 @@ var Camera = new Class({
         this.fadeEffect.reset();
 
         return this;
-    },
+    }
 
     /**
      * Internal method called automatically by the Camera Manager.
@@ -794,7 +790,7 @@ var Camera = new Class({
      * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    update: function (time, delta)
+    update(time, delta)
     {
         if (this.visible)
         {
@@ -805,7 +801,7 @@ var Camera = new Class({
             this.flashEffect.update(time, delta);
             this.fadeEffect.update(time, delta);
         }
-    },
+    }
 
     /**
      * Destroys this Camera instance. You rarely need to call this directly.
@@ -817,7 +813,7 @@ var Camera = new Class({
      * @fires Phaser.Cameras.Scene2D.Events#DESTROY
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.resetFX();
 
@@ -831,6 +827,6 @@ var Camera = new Class({
         this.deadzone = null;
     }
 
-});
+};
 
 module.exports = Camera;

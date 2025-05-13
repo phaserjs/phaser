@@ -40,10 +40,9 @@ var Controller = require('./Controller');
  * @param {number} [color=0xffffff] - The color of the blur, as a hex value.
  * @param {number} [steps=4] - The number of steps to run the blur effect for. This value should always be an integer.
  */
-var Blur = new Class({
-    Extends: Controller,
+var Blur = class extends Controller {
 
-    initialize: function Blur (camera, quality, x, y, strength, color, steps)
+    constructor(camera, quality, x, y, strength, color, steps)
     {
         if (quality === undefined) { quality = 0; }
         if (x === undefined) { x = 2; }
@@ -51,7 +50,7 @@ var Blur = new Class({
         if (strength === undefined) { strength = 1; }
         if (steps === undefined) { steps = 4; }
 
-        Controller.call(this, camera, 'FilterBlur');
+        super(camera, 'FilterBlur');
 
         /**
          * The quality of the blur effect.
@@ -138,7 +137,7 @@ var Blur = new Class({
          * @since 4.0.0
          */
         this.steps = steps;
-    },
+    }
 
     /**
      * The color of the blur as a number value.
@@ -147,27 +146,24 @@ var Blur = new Class({
      * @type {number}
      * @since 4.0.0
      */
-    color: {
 
-        get: function ()
-        {
-            var color = this.glcolor;
+    get color()
+    {
+        var color = this.glcolor;
 
-            return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
-        },
+        return (((color[0] * 255) << 16) + ((color[1] * 255) << 8) + (color[2] * 255 | 0));
+    }
 
-        set: function (value)
-        {
-            var color = this.glcolor;
+    set color(value)
+    {
+        var color = this.glcolor;
 
-            color[0] = ((value >> 16) & 0xFF) / 255;
-            color[1] = ((value >> 8) & 0xFF) / 255;
-            color[2] = (value & 0xFF) / 255;
-        }
+        color[0] = ((value >> 16) & 0xFF) / 255;
+        color[1] = ((value >> 8) & 0xFF) / 255;
+        color[2] = (value & 0xFF) / 255;
+    }
 
-    },
-
-    getPadding: function ()
+    getPadding()
     {
         var override = this.paddingOverride;
         if (override)
@@ -188,6 +184,6 @@ var Blur = new Class({
 
         return this.currentPadding;
     }
-});
+};
 
 module.exports = Blur;

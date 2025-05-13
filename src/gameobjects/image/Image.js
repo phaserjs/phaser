@@ -47,34 +47,33 @@ var ImageRender = require('./ImageRender');
  * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|number)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  */
-var Image = new Class({
+var Image = class extends GameObject {
 
-    Extends: GameObject,
-
-    Mixins: [
-        Components.Alpha,
-        Components.BlendMode,
-        Components.Depth,
-        Components.Flip,
-        Components.GetBounds,
-        Components.Lighting,
-        Components.Mask,
-        Components.Origin,
-        Components.RenderNodes,
-        Components.ScrollFactor,
-        Components.Size,
-        Components.TextureCrop,
-        Components.Tint,
-        Components.Transform,
-        Components.Visible,
-        ImageRender
-    ],
-
-    initialize:
-
-    function Image (scene, x, y, texture, frame)
+    static
     {
-        GameObject.call(this, scene, 'Image');
+        Class.mixin(this, [
+            Components.Alpha,
+            Components.BlendMode,
+            Components.Depth,
+            Components.Flip,
+            Components.GetBounds,
+            Components.Lighting,
+            Components.Mask,
+            Components.Origin,
+            Components.RenderNodes,
+            Components.ScrollFactor,
+            Components.Size,
+            Components.TextureCrop,
+            Components.Tint,
+            Components.Transform,
+            Components.Visible,
+            ImageRender
+        ], false);
+    }
+
+    constructor(scene, x, y, texture, frame)
+    {
+        super(scene, 'Image');
 
         /**
          * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
@@ -91,7 +90,7 @@ var Image = new Class({
         this.setSizeToFrame();
         this.setOriginFromFrame();
         this.initRenderNodes(this._defaultRenderNodesMap);
-    },
+    }
 
     /**
      * The default render nodes for this Game Object.
@@ -103,13 +102,12 @@ var Image = new Class({
      * @readonly
      * @since 4.0.0
      */
-    _defaultRenderNodesMap: {
-        get: function ()
-        {
-            return DefaultImageNodes;
-        }
+
+    get _defaultRenderNodesMap()
+    {
+        return DefaultImageNodes;
     }
 
-});
+};
 
 module.exports = Image;

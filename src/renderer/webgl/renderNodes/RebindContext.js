@@ -24,12 +24,11 @@ var RenderNode = require('./RenderNode');
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var RebindContext = new Class({
-    Extends: RenderNode,
+var RebindContext = class extends RenderNode {
 
-    initialize: function RebindContext (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'RebindContext', manager);
+        super('RebindContext', manager);
 
         /**
          * The WebGL state to set when this node is run.
@@ -52,9 +51,9 @@ var RebindContext = new Class({
             },
             vao: null
         };
-    },
+    }
 
-    run: function (displayContext)
+    run(displayContext)
     {
         this.onRunBegin(displayContext);
 
@@ -76,6 +75,6 @@ var RebindContext = new Class({
 
         this.onRunEnd(displayContext);
     }
-});
+};
 
 module.exports = RebindContext;

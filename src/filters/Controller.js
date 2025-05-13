@@ -24,8 +24,8 @@ var Rectangle = require('../geom/rectangle/Rectangle');
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that owns this filter.
  * @param {string} renderNode - The ID of the RenderNode that this filter uses.
  */
-var Controller = new Class({
-    initialize: function Controller (camera, renderNode)
+var Controller = class {
+    constructor(camera, renderNode)
     {
         /**
          * Toggle this boolean to enable or disable this filter,
@@ -108,7 +108,7 @@ var Controller = new Class({
          * @default false
          */
         this.ignoreDestroy = false;
-    },
+    }
 
     /**
      * Returns the padding required for this filter,
@@ -124,10 +124,10 @@ var Controller = new Class({
      * @since 4.0.0
      * @returns {Phaser.Geom.Rectangle} The padding required by this filter.
      */
-    getPadding: function ()
+    getPadding()
     {
         return this.paddingOverride || this.currentPadding;
-    },
+    }
 
     /**
      * Sets the padding override.
@@ -142,7 +142,7 @@ var Controller = new Class({
      * @param {number} [right=0] - The right padding.
      * @param {number} [bottom=0] - The bottom padding.
      */
-    setPaddingOverride: function (left, top, right, bottom)
+    setPaddingOverride(left, top, right, bottom)
     {
         if (left === null)
         {
@@ -158,7 +158,7 @@ var Controller = new Class({
         this.paddingOverride = new Rectangle(left, top, right - left, bottom - top);
 
         return this;
-    },
+    }
 
     /**
      * Sets the active state of this filter.
@@ -170,12 +170,12 @@ var Controller = new Class({
      * @param {boolean} value - `true` to enable this filter, or `false` to disable it.
      * @returns {this} This filter instance.
      */
-    setActive: function (value)
+    setActive(value)
     {
         this.active = value;
 
         return this;
-    },
+    }
 
     /**
      * Destroys this Controller and nulls any references it holds.
@@ -183,12 +183,12 @@ var Controller = new Class({
      * @method Phaser.Filters.Controller#destroy
      * @since 4.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.active = false;
         this.renderNode = null;
         this.camera = null;
     }
-});
+};
 
 module.exports = Controller;

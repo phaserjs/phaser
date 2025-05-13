@@ -9,22 +9,6 @@ var BaseSound = require('../BaseSound');
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
 var Extend = require('../../utils/object/Extend');
-var NOOP = require('../../utils/NOOP');
-
-var returnFalse = function ()
-{
-    return false;
-};
-
-var returnNull = function ()
-{
-    return null;
-};
-
-var returnThis = function ()
-{
-    return this;
-};
 
 /**
  * @classdesc
@@ -45,17 +29,13 @@ var returnThis = function ()
  * @param {string} key - Asset key for the sound.
  * @param {Phaser.Types.Sound.SoundConfig} [config={}] - An optional config object containing default sound settings.
  */
-var NoAudioSound = new Class({
+var NoAudioSound = class extends EventEmitter {
 
-    Extends: EventEmitter,
-
-    initialize:
-
-    function NoAudioSound (manager, key, config)
+    constructor(manager, key, config)
     {
         if (config === void 0) { config = {}; }
 
-        EventEmitter.call(this);
+        super();
 
         /**
          * Local reference to the sound manager.
@@ -278,7 +258,7 @@ var NoAudioSound = new Class({
          * @since 3.0.0
          */
         this.pendingRemove = false;
-    },
+    }
 
     /**
      * @method Phaser.Sound.NoAudioSound#addMarker
@@ -288,7 +268,10 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    addMarker: returnFalse,
+    addMarker()
+    {
+        return false;
+    }
 
     /**
      * @method Phaser.Sound.NoAudioSound#updateMarker
@@ -298,7 +281,10 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    updateMarker: returnFalse,
+    updateMarker()
+    {
+        return false;
+    }
 
     /**
      * @method Phaser.Sound.NoAudioSound#removeMarker
@@ -308,7 +294,10 @@ var NoAudioSound = new Class({
      *
      * @return {null} null
      */
-    removeMarker: returnNull,
+    removeMarker()
+    {
+        return null;
+    }
 
     /**
      * @method Phaser.Sound.NoAudioSound#play
@@ -319,7 +308,10 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    play: returnFalse,
+    play()
+    {
+        return false;
+    }
 
     /**
      * @method Phaser.Sound.NoAudioSound#pause
@@ -327,7 +319,10 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    pause: returnFalse,
+    pause()
+    {
+        return false;
+    }
 
     /**
      * Resumes the sound.
@@ -337,7 +332,10 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    resume: returnFalse,
+    resume()
+    {
+        return false;
+    }
 
     /**
      * Stop playing this sound.
@@ -347,7 +345,10 @@ var NoAudioSound = new Class({
      *
      * @return {boolean} false
      */
-    stop: returnFalse,
+    stop()
+    {
+        return false;
+    }
 
     /**
      * Sets the muted state of this Sound.
@@ -359,7 +360,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setMute: returnThis,
+    setMute()
+    {
+        return this;
+    }
 
     /**
      * Sets the volume of this Sound.
@@ -371,7 +375,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setVolume: returnThis,
+    setVolume()
+    {
+        return this;
+    }
 
     /**
      * Sets the playback rate of this Sound.
@@ -386,7 +393,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setRate: returnThis,
+    setRate()
+    {
+        return this;
+    }
 
     /**
      * Sets the detune value of this Sound, given in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
@@ -399,7 +409,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setDetune: returnThis,
+    setDetune()
+    {
+        return this;
+    }
 
     /**
      * Seeks to a specific point in this sound.
@@ -411,7 +424,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setSeek: returnThis,
+    setSeek()
+    {
+        return this;
+    }
 
     /**
      * Sets the loop state of this Sound.
@@ -423,7 +439,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setLoop: returnThis,
+    setLoop()
+    {
+        return this;
+    }
 
     /**
      * Sets the pan of this sound, a value between -1 (full left pan) and 1 (full right pan).
@@ -437,7 +456,10 @@ var NoAudioSound = new Class({
      *
      * @return {this} This Sound instance.
      */
-    setPan: returnThis,
+    setPan()
+    {
+        return this;
+    }
 
     /**
      * Method used internally for applying config values to some of the sound properties.
@@ -445,7 +467,10 @@ var NoAudioSound = new Class({
      * @method Phaser.Sound.NoAudioSound#applyConfig
      * @since 3.0.0
      */
-    applyConfig: returnNull,
+    applyConfig()
+    {
+        return null;
+    }
 
     /**
      * Method used internally for resetting values of some of the config properties.
@@ -453,7 +478,10 @@ var NoAudioSound = new Class({
      * @method Phaser.Sound.NoAudioSound#resetConfig
      * @since 3.0.0
      */
-    resetConfig: returnNull,
+    resetConfig()
+    {
+        return null;
+    }
 
     /**
      * Update method called automatically by sound manager on every game step.
@@ -465,7 +493,9 @@ var NoAudioSound = new Class({
      * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      * @param {number} delta - The delta time elapsed since the last frame.
      */
-    update: NOOP,
+    update()
+    {
+    }
 
     /**
      * Method used internally to calculate total playback rate of the sound.
@@ -473,7 +503,10 @@ var NoAudioSound = new Class({
      * @method Phaser.Sound.NoAudioSound#calculateRate
      * @since 3.0.0
      */
-    calculateRate: returnNull,
+    calculateRate()
+    {
+        return null;
+    }
 
     /**
      * Destroys this sound and all associated events and marks it for removal from the sound manager.
@@ -482,11 +515,11 @@ var NoAudioSound = new Class({
      * @fires Phaser.Sound.Events#DESTROY
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         BaseSound.prototype.destroy.call(this);
     }
 
-});
+};
 
 module.exports = NoAudioSound;

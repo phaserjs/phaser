@@ -30,13 +30,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var SceneFile = new Class({
+var SceneFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function SceneFile (loader, key, url, xhrSettings)
+    constructor(loader, key, url, xhrSettings)
     {
         var extension = 'js';
 
@@ -59,8 +55,8 @@ var SceneFile = new Class({
             xhrSettings: xhrSettings
         };
 
-        File.call(this, loader, fileConfig);
-    },
+        super(loader, fileConfig);
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -69,14 +65,14 @@ var SceneFile = new Class({
      * @method Phaser.Loader.FileTypes.SceneFile#onProcess
      * @since 3.16.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
         this.data = this.xhrLoader.responseText;
 
         this.onProcessComplete();
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -84,7 +80,7 @@ var SceneFile = new Class({
      * @method Phaser.Loader.FileTypes.SceneFile#addToCache
      * @since 3.16.0
      */
-    addToCache: function ()
+    addToCache()
     {
         var code = this.data.concat('(function(){\n' + 'return new ' + this.key + '();\n' + '}).call(this);');
 
@@ -96,7 +92,7 @@ var SceneFile = new Class({
         this.complete = true;
     }
 
-});
+};
 
 /**
  * Adds an external Scene file, or array of Scene files, to the current load queue.

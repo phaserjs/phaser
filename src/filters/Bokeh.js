@@ -45,11 +45,9 @@ var Controller = require('./Controller');
  * @param {number} [blurY=1] - If Tilt Shift, the amount of vertical blur.
  * @param {number} [strength=1] - If Tilt Shift, the strength of the blur.
  * */
-var Bokeh = new Class({
+var Bokeh = class extends Controller {
 
-    Extends: Controller,
-
-    initialize: function Bokeh (camera, radius, amount, contrast, isTiltShift, blurX, blurY, strength)
+    constructor(camera, radius, amount, contrast, isTiltShift, blurX, blurY, strength)
     {
         if (radius === undefined) { radius = 0.5; }
         if (amount === undefined) { amount = 1; }
@@ -59,7 +57,7 @@ var Bokeh = new Class({
         if (blurY === undefined) { blurY = 1; }
         if (strength === undefined) { strength = 1; }
 
-        Controller.call(this, camera, 'FilterBokeh');
+        super(camera, 'FilterBokeh');
 
         /**
          * The radius of the bokeh effect.
@@ -139,9 +137,9 @@ var Bokeh = new Class({
          * @since 4.0.0
          */
         this.strength = strength;
-    },
+    }
 
-    getPadding: function ()
+    getPadding()
     {
         var override = this.paddingOverride;
         if (override)
@@ -167,6 +165,6 @@ var Bokeh = new Class({
 
         return this.currentPadding;
     }
-});
+};
 
 module.exports = Bokeh;

@@ -75,56 +75,55 @@ var ExternRender = require('./ExternRender');
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  */
-var Extern = new Class({
+var Extern = class extends GameObject {
 
-    Extends: GameObject,
-
-    Mixins: [
-        Components.Alpha,
-        Components.BlendMode,
-        Components.Depth,
-        Components.Flip,
-        Components.Origin,
-        Components.ScrollFactor,
-        Components.Size,
-        Components.Texture,
-        Components.Tint,
-        Components.Transform,
-        Components.Visible,
-        ExternRender
-    ],
-
-    initialize:
-
-    function Extern (scene)
+    static
     {
-        GameObject.call(this, scene, 'Extern');
-    },
+        Class.mixin(this, [
+            Components.Alpha,
+            Components.BlendMode,
+            Components.Depth,
+            Components.Flip,
+            Components.Origin,
+            Components.ScrollFactor,
+            Components.Size,
+            Components.Texture,
+            Components.Tint,
+            Components.Transform,
+            Components.Visible,
+            ExternRender
+        ], false);
+    }
+
+    constructor(scene)
+    {
+        super(scene, 'Extern');
+    }
 
     //  Overrides Game Object method
-    addedToScene: function ()
+    addedToScene()
     {
         this.scene.sys.updateList.add(this);
-    },
+    }
 
     //  Overrides Game Object method
-    removedFromScene: function ()
+    removedFromScene()
     {
         this.scene.sys.updateList.remove(this);
-    },
+    }
 
-    preUpdate: function ()
+    preUpdate()
     {
         //  override this!
         //  Arguments: time, delta
-    },
+    }
 
-    render: function ()
+    render()
     {
         //  override this!
         //  Arguments: renderer, drawingContext, calcMatrix, displayList, displayListIndex
     }
 
-});
+};
 
 module.exports = Extern;

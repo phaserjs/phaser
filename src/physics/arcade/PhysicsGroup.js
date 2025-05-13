@@ -43,17 +43,16 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {(Phaser.GameObjects.GameObject[]|Phaser.Types.Physics.Arcade.PhysicsGroupConfig|Phaser.Types.GameObjects.Group.GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
  * @param {Phaser.Types.Physics.Arcade.PhysicsGroupConfig|Phaser.Types.GameObjects.Group.GroupCreateConfig} [config] - Settings for this group.
  */
-var PhysicsGroup = new Class({
+var PhysicsGroup = class extends Group {
 
-    Extends: Group,
+    static
+    {
+        Class.mixin(this, [
+            CollisionComponent
+        ], false);
+    }
 
-    Mixins: [
-        CollisionComponent
-    ],
-
-    initialize:
-
-    function PhysicsGroup (world, scene, children, config)
+    constructor(world, scene, children, config)
     {
         if (!children && !config)
         {
@@ -192,7 +191,7 @@ var PhysicsGroup = new Class({
             setImmovable: GetFastValue(config, 'immovable', false)
         };
 
-        Group.call(this, scene, children, config);
+        super(scene, children, config);
 
         /**
          * A textual representation of this Game Object.
@@ -204,7 +203,7 @@ var PhysicsGroup = new Class({
          * @since 3.21.0
          */
         this.type = 'PhysicsGroup';
-    },
+    }
 
     /**
      * Enables a Game Object's Body and assigns `defaults`. Called when a Group member is added or created.
@@ -214,7 +213,7 @@ var PhysicsGroup = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object being added.
      */
-    createCallbackHandler: function (child)
+    createCallbackHandler(child)
     {
         if (!child.body)
         {
@@ -227,7 +226,7 @@ var PhysicsGroup = new Class({
         {
             body[key](this.defaults[key]);
         }
-    },
+    }
 
     /**
      * Disables a Game Object's Body. Called when a Group member is removed.
@@ -237,13 +236,13 @@ var PhysicsGroup = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object being removed.
      */
-    removeCallbackHandler: function (child)
+    removeCallbackHandler(child)
     {
         if (child.body)
         {
             this.world.disableBody(child);
         }
-    },
+    }
 
     /**
      * Sets the velocity of each Group member.
@@ -257,7 +256,7 @@ var PhysicsGroup = new Class({
      *
      * @return {Phaser.Physics.Arcade.Group} This Physics Group object.
      */
-    setVelocity: function (x, y, step)
+    setVelocity(x, y, step)
     {
         if (step === undefined) { step = 0; }
 
@@ -269,7 +268,7 @@ var PhysicsGroup = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the horizontal velocity of each Group member.
@@ -282,7 +281,7 @@ var PhysicsGroup = new Class({
      *
      * @return {Phaser.Physics.Arcade.Group} This Physics Group object.
      */
-    setVelocityX: function (value, step)
+    setVelocityX(value, step)
     {
         if (step === undefined) { step = 0; }
 
@@ -294,7 +293,7 @@ var PhysicsGroup = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the vertical velocity of each Group member.
@@ -307,7 +306,7 @@ var PhysicsGroup = new Class({
      *
      * @return {Phaser.Physics.Arcade.Group} This Physics Group object.
      */
-    setVelocityY: function (value, step)
+    setVelocityY(value, step)
     {
         if (step === undefined) { step = 0; }
 
@@ -321,6 +320,6 @@ var PhysicsGroup = new Class({
         return this;
     }
 
-});
+};
 
 module.exports = PhysicsGroup;

@@ -18,13 +18,12 @@ var RenderNode = require('./RenderNode');
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var DrawLine = new Class({
-    Extends: RenderNode,
+var DrawLine = class extends RenderNode {
 
-    initialize: function DrawLine (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'DrawLine', manager);
-    },
+        super('DrawLine', manager);
+    }
 
     /**
      * Get the transformed vertices of a line segment as a quad.
@@ -42,7 +41,7 @@ var DrawLine = new Class({
      * @param {number} bLineWidth - The width of the line at the end.
      * @param {number[]} vertices - The list to which the vertices are assigned.
      */
-    run: function (drawingContext, currentMatrix, ax, ay, bx, by, aLineWidth, bLineWidth, vertices)
+    run(drawingContext, currentMatrix, ax, ay, bx, by, aLineWidth, bLineWidth, vertices)
     {
         this.onRunBegin(drawingContext);
 
@@ -94,6 +93,6 @@ var DrawLine = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = DrawLine;

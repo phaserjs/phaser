@@ -100,26 +100,25 @@ var Vector4 = require('../../math/Vector4');
  * @param {(string|any)} [style] - If a string, will be set directly as the elements `style` property value. If a plain object, will be iterated and the values transferred. In both cases the values replacing whatever CSS styles may have been previously set.
  * @param {string} [innerText] - If given, will be set directly as the elements `innerText` property value, replacing whatever was there before.
  */
-var DOMElement = new Class({
+var DOMElement = class extends GameObject {
 
-    Extends: GameObject,
-
-    Mixins: [
-        Components.AlphaSingle,
-        Components.BlendMode,
-        Components.Depth,
-        Components.Origin,
-        Components.ScrollFactor,
-        Components.Transform,
-        Components.Visible,
-        DOMElementRender
-    ],
-
-    initialize:
-
-    function DOMElement (scene, x, y, element, style, innerText)
+    static
     {
-        GameObject.call(this, scene, 'DOMElement');
+        Class.mixin(this, [
+            Components.AlphaSingle,
+            Components.BlendMode,
+            Components.Depth,
+            Components.Origin,
+            Components.ScrollFactor,
+            Components.Transform,
+            Components.Visible,
+            DOMElementRender
+        ], false);
+    }
+
+    constructor(scene, x, y, element, style, innerText)
+    {
+        super(scene, 'DOMElement');
 
         /**
          * A reference to the parent DOM Container that the Game instance created when it started.
@@ -315,7 +314,7 @@ var DOMElement = new Class({
         scene.sys.events.on(SCENE_EVENTS.SLEEP, this.handleSceneEvent, this);
         scene.sys.events.on(SCENE_EVENTS.WAKE, this.handleSceneEvent, this);
         scene.sys.events.on(SCENE_EVENTS.PRE_RENDER, this.preRender, this);
-    },
+    }
 
     /**
      * Handles a Scene Sleep and Wake event.
@@ -326,7 +325,7 @@ var DOMElement = new Class({
      *
      * @param {Phaser.Scenes.Systems} sys - The Scene Systems.
      */
-    handleSceneEvent: function (sys)
+    handleSceneEvent(sys)
     {
         var node = this.node;
         var style = node.style;
@@ -335,7 +334,7 @@ var DOMElement = new Class({
         {
             style.display = (sys.settings.visible) ? 'block' : 'none';
         }
-    },
+    }
 
     /**
      * Sets the horizontal and vertical skew values of this DOM Element.
@@ -350,7 +349,7 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    setSkew: function (x, y)
+    setSkew(x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = x; }
@@ -359,7 +358,7 @@ var DOMElement = new Class({
         this.skewY = y;
 
         return this;
-    },
+    }
 
     /**
      * Sets the perspective CSS property of the _parent DOM Container_. This determines the distance between the z=0
@@ -378,12 +377,12 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    setPerspective: function (value)
+    setPerspective(value)
     {
         this.parent.style.perspective = value + 'px';
 
         return this;
-    },
+    }
 
     /**
      * The perspective CSS property value of the _parent DOM Container_. This determines the distance between the z=0
@@ -399,19 +398,16 @@ var DOMElement = new Class({
      * @type {number}
      * @since 3.17.0
      */
-    perspective: {
 
-        get: function ()
-        {
-            return parseFloat(this.parent.style.perspective);
-        },
+    get perspective()
+    {
+        return parseFloat(this.parent.style.perspective);
+    }
 
-        set: function (value)
-        {
-            this.parent.style.perspective = value + 'px';
-        }
-
-    },
+    set perspective(value)
+    {
+        this.parent.style.perspective = value + 'px';
+    }
 
     /**
      * Adds one or more native DOM event listeners onto the underlying Element of this Game Object.
@@ -434,7 +430,7 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    addListener: function (events)
+    addListener(events)
     {
         if (this.node)
         {
@@ -447,7 +443,7 @@ var DOMElement = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Removes one or more native DOM event listeners from the underlying Element of this Game Object.
@@ -459,7 +455,7 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    removeListener: function (events)
+    removeListener(events)
     {
         if (this.node)
         {
@@ -472,7 +468,7 @@ var DOMElement = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Internal event proxy to dispatch native DOM Events via this Game Object.
@@ -483,10 +479,10 @@ var DOMElement = new Class({
      *
      * @param {any} event - The native DOM event.
      */
-    dispatchNativeEvent: function (event)
+    dispatchNativeEvent(event)
     {
         this.emit(event.type, event);
-    },
+    }
 
     /**
      * Creates a native DOM Element, adds it to the parent DOM Container and then binds it to this Game Object,
@@ -530,10 +526,10 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    createElement: function (tagName, style, innerText)
+    createElement(tagName, style, innerText)
     {
         return this.setElement(document.createElement(tagName), style, innerText);
-    },
+    }
 
     /**
      * Binds a new DOM Element to this Game Object. If this Game Object already has an Element it is removed from the DOM
@@ -586,7 +582,7 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    setElement: function (element, style, innerText)
+    setElement(element, style, innerText)
     {
         //  Already got an element? Remove it first
         this.removeElement();
@@ -648,7 +644,7 @@ var DOMElement = new Class({
         }
 
         return this.updateSize();
-    },
+    }
 
     /**
      * Takes a block of html from the HTML Cache, that has previously been preloaded into the game, and then
@@ -688,7 +684,7 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    createFromCache: function (key, tagName)
+    createFromCache(key, tagName)
     {
         var html = this.cache.get(key);
 
@@ -698,7 +694,7 @@ var DOMElement = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Takes a string of html and then creates a DOM Element from it. The HTML is set as the `innerHTML`
@@ -731,7 +727,7 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    createFromHTML: function (html, tagName)
+    createFromHTML(html, tagName)
     {
         if (tagName === undefined) { tagName = 'div'; }
 
@@ -755,7 +751,7 @@ var DOMElement = new Class({
         element.innerHTML = html;
 
         return this.updateSize();
-    },
+    }
 
     /**
      * Removes the current DOM Element bound to this Game Object from the DOM entirely and resets the
@@ -766,7 +762,7 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    removeElement: function ()
+    removeElement()
     {
         if (this.node)
         {
@@ -776,7 +772,7 @@ var DOMElement = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Internal method that sets the `displayWidth` and `displayHeight` properties, and the `clientWidth` 
@@ -789,7 +785,7 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    updateSize: function ()
+    updateSize()
     {
         var node = this.node;
 
@@ -800,7 +796,7 @@ var DOMElement = new Class({
         this.displayHeight = this.height * this.scaleY;
 
         return this;
-    },
+    }
 
     /**
      * Gets all children from this DOM Elements node, using `querySelectorAll('*')` and then iterates through
@@ -815,7 +811,7 @@ var DOMElement = new Class({
      *
      * @return {?Element} The first matching child DOM Element, or `null` if not found.
      */
-    getChildByProperty: function (property, value)
+    getChildByProperty(property, value)
     {
         if (this.node)
         {
@@ -831,7 +827,7 @@ var DOMElement = new Class({
         }
 
         return null;
-    },
+    }
 
     /**
      * Gets all children from this DOM Elements node, using `querySelectorAll('*')` and then iterates through
@@ -846,10 +842,10 @@ var DOMElement = new Class({
      *
      * @return {?Element} The first matching child DOM Element, or `null` if not found.
      */
-    getChildByID: function (id)
+    getChildByID(id)
     {
         return this.getChildByProperty('id', id);
-    },
+    }
 
     /**
      * Gets all children from this DOM Elements node, using `querySelectorAll('*')` and then iterates through
@@ -864,10 +860,10 @@ var DOMElement = new Class({
      *
      * @return {?Element} The first matching child DOM Element, or `null` if not found.
      */
-    getChildByName: function (name)
+    getChildByName(name)
     {
         return this.getChildByProperty('name', name);
-    },
+    }
 
     /**
      * Sets the `className` property of the DOM Element node and updates the internal sizes.
@@ -879,7 +875,7 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    setClassName: function (className)
+    setClassName(className)
     {
         if (this.node)
         {
@@ -889,7 +885,7 @@ var DOMElement = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the `innerText` property of the DOM Element node and updates the internal sizes.
@@ -903,7 +899,7 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    setText: function (text)
+    setText(text)
     {
         if (this.node)
         {
@@ -913,7 +909,7 @@ var DOMElement = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the `innerHTML` property of the DOM Element node and updates the internal sizes.
@@ -925,7 +921,7 @@ var DOMElement = new Class({
      *
      * @return {this} This DOM Element instance.
      */
-    setHTML: function (html)
+    setHTML(html)
     {
         if (this.node)
         {
@@ -935,7 +931,7 @@ var DOMElement = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Runs internal update tasks.
@@ -944,7 +940,7 @@ var DOMElement = new Class({
      * @private
      * @since 3.60.0
      */
-    preRender: function ()
+    preRender()
     {
         var parent = this.parentContainer;
         var node = this.node;
@@ -953,7 +949,7 @@ var DOMElement = new Class({
         {
             node.style.display = 'none';
         }
-    },
+    }
 
     /**
      * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
@@ -965,10 +961,10 @@ var DOMElement = new Class({
      *
      * @return {boolean} `true` if the Game Object should be rendered, otherwise `false`.
      */
-    willRender: function ()
+    willRender()
     {
         return true;
-    },
+    }
 
     /**
      * Handles the pre-destroy step for the DOM Element, which removes the underlying node from the DOM.
@@ -977,7 +973,7 @@ var DOMElement = new Class({
      * @private
      * @since 3.17.0
      */
-    preDestroy: function ()
+    preDestroy()
     {
         this.removeElement();
 
@@ -986,6 +982,6 @@ var DOMElement = new Class({
         this.scene.sys.events.off(SCENE_EVENTS.PRE_RENDER, this.preRender, this);
     }
 
-});
+};
 
 module.exports = DOMElement;

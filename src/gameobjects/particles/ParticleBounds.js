@@ -38,20 +38,16 @@ var Rectangle = require('../../geom/rectangle/Rectangle');
  * @param {boolean} [collideTop=true] - Whether particles interact with the top edge of the bounds.
  * @param {boolean} [collideBottom=true] - Whether particles interact with the bottom edge of the bounds.
  */
-var ParticleBounds = new Class({
+var ParticleBounds = class extends ParticleProcessor {
 
-    Extends: ParticleProcessor,
-
-    initialize:
-
-    function ParticleBounds (x, y, width, height, collideLeft, collideRight, collideTop, collideBottom)
+    constructor(x, y, width, height, collideLeft, collideRight, collideTop, collideBottom)
     {
         if (collideLeft === undefined) { collideLeft = true; }
         if (collideRight === undefined) { collideRight = true; }
         if (collideTop === undefined) { collideTop = true; }
         if (collideBottom === undefined) { collideBottom = true; }
 
-        ParticleProcessor.call(this, x, y, true);
+        super(x, y, true);
 
         /**
          * A rectangular boundary constraining particle movement. Use the Emitter properties `collideLeft`,
@@ -104,7 +100,7 @@ var ParticleBounds = new Class({
          * @since 3.60.0
          */
         this.collideBottom = collideBottom;
-    },
+    }
 
     /**
      * Takes a Particle and updates it against the bounds.
@@ -114,7 +110,7 @@ var ParticleBounds = new Class({
      *
      * @param {Phaser.GameObjects.Particles.Particle} particle - The Particle to update.
      */
-    update: function (particle)
+    update(particle)
     {
         var bounds = this.bounds;
         var bounce = -particle.bounce;
@@ -143,6 +139,6 @@ var ParticleBounds = new Class({
         }
     }
 
-});
+};
 
 module.exports = ParticleBounds;

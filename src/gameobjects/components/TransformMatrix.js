@@ -32,11 +32,9 @@ var Vector2 = require('../../math/Vector2');
  * @param {number} [tx=0] - The Translate X value.
  * @param {number} [ty=0] - The Translate Y value.
  */
-var TransformMatrix = new Class({
+var TransformMatrix = class {
 
-    initialize:
-
-    function TransformMatrix (a, b, c, d, tx, ty)
+    constructor(a, b, c, d, tx, ty)
     {
         if (a === undefined) { a = 1; }
         if (b === undefined) { b = 0; }
@@ -77,7 +75,7 @@ var TransformMatrix = new Class({
          * @since 3.60.0
          */
         this.quad = new Float32Array(8);
-    },
+    }
 
     /**
      * The Scale X value.
@@ -86,19 +84,16 @@ var TransformMatrix = new Class({
      * @type {number}
      * @since 3.4.0
      */
-    a: {
 
-        get: function ()
-        {
-            return this.matrix[0];
-        },
+    get a()
+    {
+        return this.matrix[0];
+    }
 
-        set: function (value)
-        {
-            this.matrix[0] = value;
-        }
-
-    },
+    set a(value)
+    {
+        this.matrix[0] = value;
+    }
 
     /**
      * The Skew Y value.
@@ -107,19 +102,16 @@ var TransformMatrix = new Class({
      * @type {number}
      * @since 3.4.0
      */
-    b: {
 
-        get: function ()
-        {
-            return this.matrix[1];
-        },
+    get b()
+    {
+        return this.matrix[1];
+    }
 
-        set: function (value)
-        {
-            this.matrix[1] = value;
-        }
-
-    },
+    set b(value)
+    {
+        this.matrix[1] = value;
+    }
 
     /**
      * The Skew X value.
@@ -128,19 +120,16 @@ var TransformMatrix = new Class({
      * @type {number}
      * @since 3.4.0
      */
-    c: {
 
-        get: function ()
-        {
-            return this.matrix[2];
-        },
+    get c()
+    {
+        return this.matrix[2];
+    }
 
-        set: function (value)
-        {
-            this.matrix[2] = value;
-        }
-
-    },
+    set c(value)
+    {
+        this.matrix[2] = value;
+    }
 
     /**
      * The Scale Y value.
@@ -149,19 +138,16 @@ var TransformMatrix = new Class({
      * @type {number}
      * @since 3.4.0
      */
-    d: {
 
-        get: function ()
-        {
-            return this.matrix[3];
-        },
+    get d()
+    {
+        return this.matrix[3];
+    }
 
-        set: function (value)
-        {
-            this.matrix[3] = value;
-        }
-
-    },
+    set d(value)
+    {
+        this.matrix[3] = value;
+    }
 
     /**
      * The Translate X value.
@@ -170,19 +156,16 @@ var TransformMatrix = new Class({
      * @type {number}
      * @since 3.11.0
      */
-    e: {
 
-        get: function ()
-        {
-            return this.matrix[4];
-        },
+    get e()
+    {
+        return this.matrix[4];
+    }
 
-        set: function (value)
-        {
-            this.matrix[4] = value;
-        }
-
-    },
+    set e(value)
+    {
+        this.matrix[4] = value;
+    }
 
     /**
      * The Translate Y value.
@@ -191,19 +174,16 @@ var TransformMatrix = new Class({
      * @type {number}
      * @since 3.11.0
      */
-    f: {
 
-        get: function ()
-        {
-            return this.matrix[5];
-        },
+    get f()
+    {
+        return this.matrix[5];
+    }
 
-        set: function (value)
-        {
-            this.matrix[5] = value;
-        }
-
-    },
+    set f(value)
+    {
+        this.matrix[5] = value;
+    }
 
     /**
      * The Translate X value.
@@ -212,19 +192,16 @@ var TransformMatrix = new Class({
      * @type {number}
      * @since 3.4.0
      */
-    tx: {
 
-        get: function ()
-        {
-            return this.matrix[4];
-        },
+    get tx()
+    {
+        return this.matrix[4];
+    }
 
-        set: function (value)
-        {
-            this.matrix[4] = value;
-        }
-
-    },
+    set tx(value)
+    {
+        this.matrix[4] = value;
+    }
 
     /**
      * The Translate Y value.
@@ -233,19 +210,16 @@ var TransformMatrix = new Class({
      * @type {number}
      * @since 3.4.0
      */
-    ty: {
 
-        get: function ()
-        {
-            return this.matrix[5];
-        },
+    get ty()
+    {
+        return this.matrix[5];
+    }
 
-        set: function (value)
-        {
-            this.matrix[5] = value;
-        }
-
-    },
+    set ty(value)
+    {
+        this.matrix[5] = value;
+    }
 
     /**
      * The rotation of the Matrix. Value is in radians.
@@ -255,14 +229,11 @@ var TransformMatrix = new Class({
      * @readonly
      * @since 3.4.0
      */
-    rotation: {
 
-        get: function ()
-        {
-            return Math.acos(this.a / this.scaleX) * ((Math.atan(-this.c / this.a) < 0) ? -1 : 1);
-        }
-
-    },
+    get rotation()
+    {
+        return Math.acos(this.a / this.scaleX) * ((Math.atan(-this.c / this.a) < 0) ? -1 : 1);
+    }
 
     /**
      * The rotation of the Matrix, normalized to be within the Phaser right-handed
@@ -273,36 +244,33 @@ var TransformMatrix = new Class({
      * @readonly
      * @since 3.19.0
      */
-    rotationNormalized: {
 
-        get: function ()
+    get rotationNormalized()
+    {
+        var matrix = this.matrix;
+
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
+
+        if (a || b)
         {
-            var matrix = this.matrix;
+            // var r = Math.sqrt(a * a + b * b);
 
-            var a = matrix[0];
-            var b = matrix[1];
-            var c = matrix[2];
-            var d = matrix[3];
-
-            if (a || b)
-            {
-                // var r = Math.sqrt(a * a + b * b);
-
-                return (b > 0) ? Math.acos(a / this.scaleX) : -Math.acos(a / this.scaleX);
-            }
-            else if (c || d)
-            {
-                // var s = Math.sqrt(c * c + d * d);
-
-                return MATH_CONST.PI_OVER_2 - ((d > 0) ? Math.acos(-c / this.scaleY) : -Math.acos(c / this.scaleY));
-            }
-            else
-            {
-                return 0;
-            }
+            return (b > 0) ? Math.acos(a / this.scaleX) : -Math.acos(a / this.scaleX);
         }
+        else if (c || d)
+        {
+            // var s = Math.sqrt(c * c + d * d);
 
-    },
+            return MATH_CONST.PI_OVER_2 - ((d > 0) ? Math.acos(-c / this.scaleY) : -Math.acos(c / this.scaleY));
+        }
+        else
+        {
+            return 0;
+        }
+    }
 
     /**
      * The decomposed horizontal scale of the Matrix. This value is always positive.
@@ -312,14 +280,11 @@ var TransformMatrix = new Class({
      * @readonly
      * @since 3.4.0
      */
-    scaleX: {
 
-        get: function ()
-        {
-            return Math.sqrt((this.a * this.a) + (this.b * this.b));
-        }
-
-    },
+    get scaleX()
+    {
+        return Math.sqrt((this.a * this.a) + (this.b * this.b));
+    }
 
     /**
      * The decomposed vertical scale of the Matrix. This value is always positive.
@@ -329,14 +294,11 @@ var TransformMatrix = new Class({
      * @readonly
      * @since 3.4.0
      */
-    scaleY: {
 
-        get: function ()
-        {
-            return Math.sqrt((this.c * this.c) + (this.d * this.d));
-        }
-
-    },
+    get scaleY()
+    {
+        return Math.sqrt((this.c * this.c) + (this.d * this.d));
+    }
 
     /**
      * Reset the Matrix to an identity matrix.
@@ -346,7 +308,7 @@ var TransformMatrix = new Class({
      *
      * @return {this} This TransformMatrix.
      */
-    loadIdentity: function ()
+    loadIdentity()
     {
         var matrix = this.matrix;
 
@@ -358,7 +320,7 @@ var TransformMatrix = new Class({
         matrix[5] = 0;
 
         return this;
-    },
+    }
 
     /**
      * Translate the Matrix.
@@ -371,7 +333,7 @@ var TransformMatrix = new Class({
      *
      * @return {this} This TransformMatrix.
      */
-    translate: function (x, y)
+    translate(x, y)
     {
         var matrix = this.matrix;
 
@@ -379,7 +341,7 @@ var TransformMatrix = new Class({
         matrix[5] = matrix[1] * x + matrix[3] * y + matrix[5];
 
         return this;
-    },
+    }
 
     /**
      * Scale the Matrix.
@@ -392,7 +354,7 @@ var TransformMatrix = new Class({
      *
      * @return {this} This TransformMatrix.
      */
-    scale: function (x, y)
+    scale(x, y)
     {
         var matrix = this.matrix;
 
@@ -402,7 +364,7 @@ var TransformMatrix = new Class({
         matrix[3] *= y;
 
         return this;
-    },
+    }
 
     /**
      * Rotate the Matrix.
@@ -414,7 +376,7 @@ var TransformMatrix = new Class({
      *
      * @return {this} This TransformMatrix.
      */
-    rotate: function (angle)
+    rotate(angle)
     {
         var sin = Math.sin(angle);
         var cos = Math.cos(angle);
@@ -432,7 +394,7 @@ var TransformMatrix = new Class({
         matrix[3] = b * -sin + d * cos;
 
         return this;
-    },
+    }
 
     /**
      * Multiply this Matrix by the given Matrix.
@@ -449,7 +411,7 @@ var TransformMatrix = new Class({
      *
      * @return {(this|Phaser.GameObjects.Components.TransformMatrix)} Either this TransformMatrix, or the `out` Matrix, if given in the arguments.
      */
-    multiply: function (rhs, out)
+    multiply(rhs, out)
     {
         var matrix = this.matrix;
         var source = rhs.matrix;
@@ -478,7 +440,7 @@ var TransformMatrix = new Class({
         destinationMatrix[5] = (sourceE * localB) + (sourceF * localD) + localF;
 
         return destinationMatrix;
-    },
+    }
 
     /**
      * Multiply this Matrix by the matrix given, including the offset.
@@ -495,7 +457,7 @@ var TransformMatrix = new Class({
      *
      * @return {this} This TransformMatrix.
      */
-    multiplyWithOffset: function (src, offsetX, offsetY)
+    multiplyWithOffset(src, offsetX, offsetY)
     {
         var matrix = this.matrix;
         var otherMatrix = src.matrix;
@@ -525,7 +487,7 @@ var TransformMatrix = new Class({
         matrix[5] = tx1 * b0 + ty1 * d0 + psf;
 
         return this;
-    },
+    }
 
     /**
      * Transform the Matrix.
@@ -542,7 +504,7 @@ var TransformMatrix = new Class({
      *
      * @return {this} This TransformMatrix.
      */
-    transform: function (a, b, c, d, tx, ty)
+    transform(a, b, c, d, tx, ty)
     {
         var matrix = this.matrix;
 
@@ -561,7 +523,7 @@ var TransformMatrix = new Class({
         matrix[5] = tx * b0 + ty * d0 + ty0;
 
         return this;
-    },
+    }
 
     /**
      * Transform a point in to the local space of this Matrix.
@@ -575,7 +537,7 @@ var TransformMatrix = new Class({
      *
      * @return {Phaser.Types.Math.Vector2Like} The Point containing the transformed coordinates.
      */
-    transformPoint: function (x, y, point)
+    transformPoint(x, y, point)
     {
         if (point === undefined) { point = { x: 0, y: 0 }; }
 
@@ -592,7 +554,7 @@ var TransformMatrix = new Class({
         point.y = x * b + y * d + ty;
 
         return point;
-    },
+    }
 
     /**
      * Invert the Matrix.
@@ -602,7 +564,7 @@ var TransformMatrix = new Class({
      *
      * @return {this} This TransformMatrix.
      */
-    invert: function ()
+    invert()
     {
         var matrix = this.matrix;
 
@@ -623,7 +585,7 @@ var TransformMatrix = new Class({
         matrix[5] = -(a * ty - b * tx) / n;
 
         return this;
-    },
+    }
 
     /**
      * Set the values of this Matrix to copy those of the matrix given.
@@ -635,7 +597,7 @@ var TransformMatrix = new Class({
      *
      * @return {this} This TransformMatrix.
      */
-    copyFrom: function (src)
+    copyFrom(src)
     {
         var matrix = this.matrix;
 
@@ -647,7 +609,7 @@ var TransformMatrix = new Class({
         matrix[5] = src.f;
 
         return this;
-    },
+    }
 
     /**
      * Set the values of this Matrix to copy those of the array given.
@@ -660,7 +622,7 @@ var TransformMatrix = new Class({
      *
      * @return {this} This TransformMatrix.
      */
-    copyFromArray: function (src)
+    copyFromArray(src)
     {
         var matrix = this.matrix;
 
@@ -672,7 +634,7 @@ var TransformMatrix = new Class({
         matrix[5] = src[5];
 
         return this;
-    },
+    }
 
     /**
      * Set the values of this Matrix to copy those of the matrix given,
@@ -691,7 +653,7 @@ var TransformMatrix = new Class({
      *
      * @returns {this} This TransformMatrix.
      */
-    copyWithScrollFactorFrom: function (src, scrollX, scrollY, scrollFactorX, scrollFactorY)
+    copyWithScrollFactorFrom(src, scrollX, scrollY, scrollFactorX, scrollFactorY)
     {
         var matrix = this.matrix;
 
@@ -707,7 +669,7 @@ var TransformMatrix = new Class({
         matrix[5] = src.b * sx + src.d * sy + src.f;
         
         return this;
-    },
+    }
 
     /**
      * Copy the values from this Matrix to the given Canvas Rendering Context.
@@ -720,14 +682,14 @@ var TransformMatrix = new Class({
      *
      * @return {CanvasRenderingContext2D} The Canvas Rendering Context.
      */
-    copyToContext: function (ctx)
+    copyToContext(ctx)
     {
         var matrix = this.matrix;
 
         ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
 
         return ctx;
-    },
+    }
 
     /**
      * Copy the values from this Matrix to the given Canvas Rendering Context.
@@ -740,13 +702,13 @@ var TransformMatrix = new Class({
      *
      * @return {CanvasRenderingContext2D} The Canvas Rendering Context.
      */
-    setToContext: function (ctx)
+    setToContext(ctx)
     {
         // using old way for old browser compatibility #6965
         ctx.setTransform(this.a, this.b, this.c, this.d, this.e, this.f);
 
         return ctx;
-    },
+    }
 
     /**
      * Copy the values in this Matrix to the array given.
@@ -760,7 +722,7 @@ var TransformMatrix = new Class({
      *
      * @return {array} An array where elements 0 to 5 contain the values from this matrix.
      */
-    copyToArray: function (out)
+    copyToArray(out)
     {
         var matrix = this.matrix;
 
@@ -779,7 +741,7 @@ var TransformMatrix = new Class({
         }
 
         return out;
-    },
+    }
 
     /**
      * Set the values of this Matrix.
@@ -796,7 +758,7 @@ var TransformMatrix = new Class({
      *
      * @return {this} This TransformMatrix.
      */
-    setTransform: function (a, b, c, d, tx, ty)
+    setTransform(a, b, c, d, tx, ty)
     {
         var matrix = this.matrix;
 
@@ -808,7 +770,7 @@ var TransformMatrix = new Class({
         matrix[5] = ty;
 
         return this;
-    },
+    }
 
     /**
      * Decompose this Matrix into its translation, scale and rotation values using QR decomposition.
@@ -822,7 +784,7 @@ var TransformMatrix = new Class({
      *
      * @return {Phaser.Types.GameObjects.DecomposeMatrixResults} The decomposed Matrix.
      */
-    decomposeMatrix: function ()
+    decomposeMatrix()
     {
         var decomposedMatrix = this.decomposedMatrix;
 
@@ -867,7 +829,7 @@ var TransformMatrix = new Class({
         }
 
         return decomposedMatrix;
-    },
+    }
 
     /**
      * Apply the identity, translate, rotate and scale operations on the Matrix.
@@ -883,7 +845,7 @@ var TransformMatrix = new Class({
      *
      * @return {this} This TransformMatrix.
      */
-    applyITRS: function (x, y, rotation, scaleX, scaleY)
+    applyITRS(x, y, rotation, scaleX, scaleY)
     {
         var matrix = this.matrix;
 
@@ -901,7 +863,7 @@ var TransformMatrix = new Class({
         matrix[3] = radianCos * scaleY;
 
         return this;
-    },
+    }
 
     /**
      * Takes the `x` and `y` values and returns a new position in the `output` vector that is the inverse of
@@ -918,7 +880,7 @@ var TransformMatrix = new Class({
      *
      * @return {Phaser.Math.Vector2} The coordinates, inverse-transformed through this matrix.
      */
-    applyInverse: function (x, y, output)
+    applyInverse(x, y, output)
     {
         if (output === undefined) { output = new Vector2(); }
 
@@ -937,7 +899,7 @@ var TransformMatrix = new Class({
         output.y = (a * id * y) + (-b * id * x) + (((-ty * a) + (tx * b)) * id);
 
         return output;
-    },
+    }
 
     /**
      * Performs the 8 calculations required to create the vertices of
@@ -957,7 +919,7 @@ var TransformMatrix = new Class({
      *
      * @return {Float32Array} The quad Float32Array.
      */
-    setQuad: function (x, y, xw, yh, quad)
+    setQuad(x, y, xw, yh, quad)
     {
         if (quad === undefined) { quad = this.quad; }
 
@@ -983,7 +945,7 @@ var TransformMatrix = new Class({
         quad[7] = xw * b + y * d + f;
 
         return quad;
-    },
+    }
 
     /**
      * Returns the X component of this matrix multiplied by the given values.
@@ -997,10 +959,10 @@ var TransformMatrix = new Class({
      *
      * @return {number} The calculated x value.
      */
-    getX: function (x, y)
+    getX(x, y)
     {
         return x * this.a + y * this.c + this.e;
-    },
+    }
 
     /**
      * Returns the Y component of this matrix multiplied by the given values.
@@ -1014,10 +976,10 @@ var TransformMatrix = new Class({
      *
      * @return {number} The calculated y value.
      */
-    getY: function (x, y)
+    getY(x, y)
     {
         return x * this.b + y * this.d + this.f;
-    },
+    }
 
     /**
      * Returns the X component of this matrix multiplied by the given values.
@@ -1033,7 +995,7 @@ var TransformMatrix = new Class({
      *
      * @return {number} The calculated x value.
      */
-    getXRound: function (x, y, round)
+    getXRound(x, y, round)
     {
         var v = this.getX(x, y);
 
@@ -1043,7 +1005,7 @@ var TransformMatrix = new Class({
         }
 
         return v;
-    },
+    }
 
     /**
      * Returns the Y component of this matrix multiplied by the given values.
@@ -1059,7 +1021,7 @@ var TransformMatrix = new Class({
      *
      * @return {number} The calculated y value.
      */
-    getYRound: function (x, y, round)
+    getYRound(x, y, round)
     {
         var v = this.getY(x, y);
 
@@ -1069,7 +1031,7 @@ var TransformMatrix = new Class({
         }
 
         return v;
-    },
+    }
 
     /**
      * Returns a string that can be used in a CSS Transform call as a `matrix` property.
@@ -1079,12 +1041,12 @@ var TransformMatrix = new Class({
      *
      * @return {string} A string containing the CSS Transform matrix values.
      */
-    getCSSMatrix: function ()
+    getCSSMatrix()
     {
         var m = this.matrix;
 
         return 'matrix(' + m[0] + ',' + m[1] + ',' + m[2] + ',' + m[3] + ',' + m[4] + ',' + m[5] + ')';
-    },
+    }
 
     /**
      * Destroys this Transform Matrix.
@@ -1092,13 +1054,13 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#destroy
      * @since 3.4.0
      */
-    destroy: function ()
+    destroy()
     {
         this.matrix = null;
         this.quad = null;
         this.decomposedMatrix = null;
     }
 
-});
+};
 
 module.exports = TransformMatrix;

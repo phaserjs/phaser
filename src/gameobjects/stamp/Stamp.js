@@ -47,26 +47,27 @@ var StampRender = require('./StampRender');
  * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|number)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  */
-var Stamp = new Class({
-    Extends: Image,
+var Stamp = class extends Image {
 
-    Mixins: [
-        StampRender
-    ],
-
-    initialize: function Stamp (scene, x, y, texture, frame)
+    static
     {
-        Image.call(this, scene, x, y, texture, frame);
+        Class.mixin(this, [
+            StampRender
+        ], false);
+    }
+
+    constructor(scene, x, y, texture, frame)
+    {
+        super(scene, x, y, texture, frame);
 
         this.type = 'Stamp';
-    },
-
-    _defaultRenderNodesMap: {
-        get: function ()
-        {
-            return DefaultStampNodes;
-        }
     }
-});
+
+
+    get _defaultRenderNodesMap()
+    {
+        return DefaultStampNodes;
+    }
+};
 
 module.exports = Stamp;

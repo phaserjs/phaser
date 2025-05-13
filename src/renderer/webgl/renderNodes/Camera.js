@@ -26,12 +26,11 @@ function getAlphaTint (alpha)
  * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var Camera = new Class({
-    Extends: RenderNode,
+var Camera = class extends RenderNode {
 
-    initialize: function Camera (manager)
+    constructor(manager)
     {
-        RenderNode.call(this, 'Camera', manager);
+        super('Camera', manager);
 
         /**
          * The RenderNode that handles batching quads.
@@ -74,7 +73,7 @@ var Camera = new Class({
          * @since 4.0.0
          */
         this._parentTransformMatrix = new TransformMatrix();
-    },
+    }
 
     /**
      * Renders the children through this camera.
@@ -88,7 +87,7 @@ var Camera = new Class({
      * @param {boolean} [forceFramebuffer=false] - Should the camera always draw to a new framebuffer? This will also be activated if the camera has filters enabled.
      * @param {number} [renderStep=0] - Which step of the rendering process is this? This is the index of the currently running function in a list of functions.
      */
-    run: function (
+    run(
         drawingContext,
         children,
         camera,
@@ -415,6 +414,6 @@ var Camera = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = Camera;

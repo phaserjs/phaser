@@ -29,21 +29,16 @@ var LoaderEvents = require('../events');
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
  */
-var AnimationJSONFile = new Class({
-
-    Extends: JSONFile,
-
-    initialize:
+var AnimationJSONFile = class extends JSONFile {
 
     //  url can either be a string, in which case it is treated like a proper url, or an object, in which case it is treated as a ready-made JS Object
     //  dataKey allows you to pluck a specific object out of the JSON and put just that into the cache, rather than the whole thing
-
-    function AnimationJSONFile (loader, key, url, xhrSettings, dataKey)
+    constructor(loader, key, url, xhrSettings, dataKey)
     {
-        JSONFile.call(this, loader, key, url, xhrSettings, dataKey);
+        super(loader, key, url, xhrSettings, dataKey);
 
         this.type = 'animationJSON';
-    },
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -52,14 +47,14 @@ var AnimationJSONFile = new Class({
      * @method Phaser.Loader.FileTypes.AnimationJSONFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         //  We need to hook into this event:
         this.loader.once(LoaderEvents.POST_PROCESS, this.onLoadComplete, this);
 
         //  But the rest is the same as a normal JSON file
         JSONFile.prototype.onProcess.call(this);
-    },
+    }
 
     /**
      * Called at the end of the load process, after the Loader has finished all files in its queue.
@@ -67,12 +62,12 @@ var AnimationJSONFile = new Class({
      * @method Phaser.Loader.FileTypes.AnimationJSONFile#onLoadComplete
      * @since 3.7.0
      */
-    onLoadComplete: function ()
+    onLoadComplete()
     {
         this.loader.systems.anims.fromJSON(this.data);
     }
 
-});
+};
 
 /**
  * Adds an Animation JSON Data file, or array of Animation JSON files, to the current load queue.

@@ -25,12 +25,11 @@ var ShaderSourceFS = require('../shaders/ShaderQuad-frag');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.GameObjects.Shader.ShaderQuadConfig} config - The configuration object for this RenderNode.
  */
-var ShaderQuad = new Class({
-    Extends: RenderNode,
+var ShaderQuad = class extends RenderNode {
 
-    initialize: function ShaderQuad (manager, config)
+    constructor(manager, config)
     {
-        RenderNode.call(this, 'ShaderQuad', manager);
+        super('ShaderQuad', manager);
 
         var renderer = manager.renderer;
 
@@ -132,7 +131,7 @@ var ShaderQuad = new Class({
             frame: { realWidth: 1, realHeight: 1 },
             uvSource: { x: 0, y: 0 }
         };
-    },
+    }
 
     /**
      * Completes the configuration for this RenderNode.
@@ -144,7 +143,7 @@ var ShaderQuad = new Class({
      * @param {object} config - The configuration object for this RenderNode.
      * @return {object} The completed configuration object.
      */
-    _completeConfig: function (config)
+    _completeConfig(config)
     {
         var gl = this.renderer.gl;
 
@@ -209,9 +208,9 @@ var ShaderQuad = new Class({
                 ]
             }
         };
-    },
+    }
 
-    run: function (drawingContext, gameObject, parentMatrix)
+    run(drawingContext, gameObject, parentMatrix)
     {
         var manager = this.manager;
         var renderer = this.renderer;
@@ -324,9 +323,9 @@ var ShaderQuad = new Class({
         }
 
         this.onRunEnd(drawingContext);
-    },
+    }
 
-    setupTextures: function (gameObject)
+    setupTextures(gameObject)
     {
         var textures = gameObject.textures;
         var glTextures = [];
@@ -339,7 +338,7 @@ var ShaderQuad = new Class({
         }
 
         return glTextures;
-    },
+    }
 
     /**
      * Updates the shader configuration for the current render pass.
@@ -354,10 +353,10 @@ var ShaderQuad = new Class({
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
      * @param {Phaser.Renderer.WebGL.RenderNodes.ShaderQuad} renderNode - The RenderNode being rendered.
      */
-    updateShaderConfig: function (drawingContext, gameObject, renderNode)
+    updateShaderConfig(drawingContext, gameObject, renderNode)
     {
         // NOOP.
     }
-});
+};
 
 module.exports = ShaderQuad;

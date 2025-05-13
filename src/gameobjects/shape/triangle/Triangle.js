@@ -40,17 +40,16 @@ var TriangleRender = require('./TriangleRender');
  * @param {number} [fillColor] - The color the triangle will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the triangle will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  */
-var Triangle = new Class({
+var Triangle = class extends Shape {
 
-    Extends: Shape,
+    static
+    {
+        Class.mixin(this, [
+            TriangleRender
+        ], false);
+    }
 
-    Mixins: [
-        TriangleRender
-    ],
-
-    initialize:
-
-    function Triangle (scene, x, y, x1, y1, x2, y2, x3, y3, fillColor, fillAlpha)
+    constructor(scene, x, y, x1, y1, x2, y2, x3, y3, fillColor, fillAlpha)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -61,7 +60,7 @@ var Triangle = new Class({
         if (x3 === undefined) { x3 = 128; }
         if (y3 === undefined) { y3 = 128; }
 
-        Shape.call(this, scene, 'Triangle', new GeomTriangle(x1, y1, x2, y2, x3, y3));
+        super(scene, 'Triangle', new GeomTriangle(x1, y1, x2, y2, x3, y3));
 
         var width = this.geom.right - this.geom.left;
         var height = this.geom.bottom - this.geom.top;
@@ -76,7 +75,7 @@ var Triangle = new Class({
 
         this.updateDisplayOrigin();
         this.updateData();
-    },
+    }
 
     /**
      * Sets the data for the lines that make up this Triangle shape.
@@ -93,12 +92,12 @@ var Triangle = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setTo: function (x1, y1, x2, y2, x3, y3)
+    setTo(x1, y1, x2, y2, x3, y3)
     {
         this.geom.setTo(x1, y1, x2, y2, x3, y3);
 
         return this.updateData();
-    },
+    }
 
     /**
      * Internal method that updates the data and path values.
@@ -109,7 +108,7 @@ var Triangle = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    updateData: function ()
+    updateData()
     {
         var path = [];
         var tri = this.geom;
@@ -132,6 +131,6 @@ var Triangle = new Class({
         return this;
     }
 
-});
+};
 
 module.exports = Triangle;

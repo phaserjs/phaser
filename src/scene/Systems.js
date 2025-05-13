@@ -29,11 +29,9 @@ var Settings = require('./Settings');
  * @param {Phaser.Scene} scene - The Scene that owns this Systems instance.
  * @param {(string|Phaser.Types.Scenes.SettingsConfig)} config - Scene specific configuration settings.
  */
-var Systems = new Class({
+var Systems = class {
 
-    initialize:
-
-    function Systems (scene, config)
+    constructor(scene, config)
     {
         /**
          * A reference to the Scene that these Systems belong to.
@@ -290,7 +288,7 @@ var Systems = new Class({
          * @since 3.10.0
          */
         this.sceneUpdate = NOOP;
-    },
+    }
 
     /**
      * This method is called only once by the Scene Manager when the Scene is instantiated.
@@ -304,7 +302,7 @@ var Systems = new Class({
      *
      * @param {Phaser.Game} game - A reference to the Phaser Game instance.
      */
-    init: function (game)
+    init(game)
     {
         this.settings.status = CONST.INIT;
 
@@ -326,7 +324,7 @@ var Systems = new Class({
         this.events.emit(Events.BOOT, this);
 
         this.settings.isBooted = true;
-    },
+    }
 
     /**
      * A single game step. Called automatically by the Scene Manager as a result of a Request Animation
@@ -341,7 +339,7 @@ var Systems = new Class({
      * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
      * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
      */
-    step: function (time, delta)
+    step(time, delta)
     {
         var events = this.events;
 
@@ -352,7 +350,7 @@ var Systems = new Class({
         this.sceneUpdate.call(this.scene, time, delta);
 
         events.emit(Events.POST_UPDATE, time, delta);
-    },
+    }
 
     /**
      * Called automatically by the Scene Manager.
@@ -365,7 +363,7 @@ var Systems = new Class({
      *
      * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The renderer that invoked the render call.
      */
-    render: function (renderer)
+    render(renderer)
     {
         var displayList = this.displayList;
 
@@ -376,7 +374,7 @@ var Systems = new Class({
         this.cameras.render(renderer, displayList);
 
         this.events.emit(Events.RENDER, renderer);
-    },
+    }
 
     /**
      * Force a sort of the display list on the next render.
@@ -384,10 +382,10 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#queueDepthSort
      * @since 3.0.0
      */
-    queueDepthSort: function ()
+    queueDepthSort()
     {
         this.displayList.queueDepthSort();
-    },
+    }
 
     /**
      * Immediately sorts the display list if the flag is set.
@@ -395,10 +393,10 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#depthSort
      * @since 3.0.0
      */
-    depthSort: function ()
+    depthSort()
     {
         this.displayList.depthSort();
-    },
+    }
 
     /**
      * Pause this Scene.
@@ -413,7 +411,7 @@ var Systems = new Class({
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    pause: function (data)
+    pause(data)
     {
         var settings = this.settings;
         var status = this.getStatus();
@@ -432,7 +430,7 @@ var Systems = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Resume this Scene from a paused state.
@@ -445,7 +443,7 @@ var Systems = new Class({
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    resume: function (data)
+    resume(data)
     {
         var events = this.events;
         var settings = this.settings;
@@ -460,7 +458,7 @@ var Systems = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Send this Scene to sleep.
@@ -478,7 +476,7 @@ var Systems = new Class({
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    sleep: function (data)
+    sleep(data)
     {
         var settings = this.settings;
         var status = this.getStatus();
@@ -498,7 +496,7 @@ var Systems = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Wake-up this Scene if it was previously asleep.
@@ -511,7 +509,7 @@ var Systems = new Class({
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    wake: function (data)
+    wake(data)
     {
         var events = this.events;
         var settings = this.settings;
@@ -529,7 +527,7 @@ var Systems = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Returns any data that was sent to this Scene by another Scene.
@@ -542,10 +540,10 @@ var Systems = new Class({
      *
      * @return {any} The Scene Data.
      */
-    getData: function ()
+    getData()
     {
         return this.settings.data;
-    },
+    }
 
     /**
      * Returns the current status of this Scene.
@@ -555,10 +553,10 @@ var Systems = new Class({
      *
      * @return {number} The status of this Scene. One of the `Phaser.Scene` constants.
      */
-    getStatus: function ()
+    getStatus()
     {
         return this.settings.status;
-    },
+    }
 
     /**
      * Can this Scene receive Input events?
@@ -568,12 +566,12 @@ var Systems = new Class({
      *
      * @return {boolean} `true` if this Scene can receive Input events.
      */
-    canInput: function ()
+    canInput()
     {
         var status = this.settings.status;
 
         return (status > CONST.PENDING && status <= CONST.RUNNING);
-    },
+    }
 
     /**
      * Is this Scene sleeping?
@@ -583,10 +581,10 @@ var Systems = new Class({
      *
      * @return {boolean} `true` if this Scene is asleep, otherwise `false`.
      */
-    isSleeping: function ()
+    isSleeping()
     {
         return (this.settings.status === CONST.SLEEPING);
-    },
+    }
 
     /**
      * Is this Scene running?
@@ -596,10 +594,10 @@ var Systems = new Class({
      *
      * @return {boolean} `true` if this Scene is running, otherwise `false`.
      */
-    isActive: function ()
+    isActive()
     {
         return (this.settings.status === CONST.RUNNING);
-    },
+    }
 
     /**
      * Is this Scene paused?
@@ -609,10 +607,10 @@ var Systems = new Class({
      *
      * @return {boolean} `true` if this Scene is paused, otherwise `false`.
      */
-    isPaused: function ()
+    isPaused()
     {
         return (this.settings.status === CONST.PAUSED);
-    },
+    }
 
     /**
      * Is this Scene currently transitioning out to, or in from another Scene?
@@ -622,10 +620,10 @@ var Systems = new Class({
      *
      * @return {boolean} `true` if this Scene is currently transitioning, otherwise `false`.
      */
-    isTransitioning: function ()
+    isTransitioning()
     {
         return (this.settings.isTransition || this.scenePlugin._target !== null);
-    },
+    }
 
     /**
      * Is this Scene currently transitioning out from itself to another Scene?
@@ -635,10 +633,10 @@ var Systems = new Class({
      *
      * @return {boolean} `true` if this Scene is in transition to another Scene, otherwise `false`.
      */
-    isTransitionOut: function ()
+    isTransitionOut()
     {
         return (this.scenePlugin._target !== null && this.scenePlugin._duration > 0);
-    },
+    }
 
     /**
      * Is this Scene currently transitioning in from another Scene?
@@ -648,10 +646,10 @@ var Systems = new Class({
      *
      * @return {boolean} `true` if this Scene is transitioning in from another Scene, otherwise `false`.
      */
-    isTransitionIn: function ()
+    isTransitionIn()
     {
         return (this.settings.isTransition);
-    },
+    }
 
     /**
      * Is this Scene visible and rendering?
@@ -661,10 +659,10 @@ var Systems = new Class({
      *
      * @return {boolean} `true` if this Scene is visible, otherwise `false`.
      */
-    isVisible: function ()
+    isVisible()
     {
         return this.settings.visible;
-    },
+    }
 
     /**
      * Sets the visible state of this Scene.
@@ -677,12 +675,12 @@ var Systems = new Class({
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    setVisible: function (value)
+    setVisible(value)
     {
         this.settings.visible = value;
 
         return this;
-    },
+    }
 
     /**
      * Set the active state of this Scene.
@@ -697,7 +695,7 @@ var Systems = new Class({
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    setActive: function (value, data)
+    setActive(value, data)
     {
         if (value)
         {
@@ -707,7 +705,7 @@ var Systems = new Class({
         {
             return this.pause(data);
         }
-    },
+    }
 
     /**
      * Start this Scene running and rendering.
@@ -720,7 +718,7 @@ var Systems = new Class({
      *
      * @param {object} data - Optional data object that may have been passed to this Scene from another.
      */
-    start: function (data)
+    start(data)
     {
         var events = this.events;
         var settings = this.settings;
@@ -740,7 +738,7 @@ var Systems = new Class({
 
         //  For user-land code to listen out for
         events.emit(Events.READY, this, data);
-    },
+    }
 
     /**
      * Shutdown this Scene and send a shutdown event to all of its systems.
@@ -755,7 +753,7 @@ var Systems = new Class({
      *
      * @param {object} [data] - A data object that will be passed in the 'shutdown' event.
      */
-    shutdown: function (data)
+    shutdown(data)
     {
         var events = this.events;
         var settings = this.settings;
@@ -771,7 +769,7 @@ var Systems = new Class({
         settings.visible = false;
 
         events.emit(Events.SHUTDOWN, this, data);
-    },
+    }
 
     /**
      * Destroy this Scene and send a destroy event to all of its systems.
@@ -783,7 +781,7 @@ var Systems = new Class({
      * @fires Phaser.Scenes.Events#DESTROY
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         var events = this.events;
         var settings = this.settings;
@@ -805,6 +803,6 @@ var Systems = new Class({
         }
     }
 
-});
+};
 
 module.exports = Systems;

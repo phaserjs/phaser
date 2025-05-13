@@ -25,11 +25,9 @@ var Class = require('../../../utils/Class');
  * @param {GLenum} bufferType - The type of the buffer being created.
  * @param {GLenum} bufferUsage - The usage of the buffer being created. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW.
  */
-var WebGLBufferWrapper = new Class({
+var WebGLBufferWrapper = class {
 
-    initialize:
-
-    function WebGLBufferWrapper (renderer, dataBuffer, bufferType, bufferUsage)
+    constructor(renderer, dataBuffer, bufferType, bufferUsage)
     {
         /**
          * The WebGLRenderer instance that owns this wrapper.
@@ -134,7 +132,7 @@ var WebGLBufferWrapper = new Class({
         this.createViews();
 
         this.createResource();
-    },
+    }
 
     /**
      * Creates a WebGLBuffer for this WebGLBufferWrapper.
@@ -145,7 +143,7 @@ var WebGLBufferWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#createResource
      * @since 3.80.0
      */
-    createResource: function ()
+    createResource()
     {
         var gl = this.renderer.gl;
 
@@ -157,7 +155,7 @@ var WebGLBufferWrapper = new Class({
         this.bind();
         gl.bufferData(bufferType, this.dataBuffer, this.bufferUsage);
         this.bind(true);
-    },
+    }
 
     /**
      * Binds this WebGLBufferWrapper to the current WebGLRenderingContext.
@@ -167,7 +165,7 @@ var WebGLBufferWrapper = new Class({
      * @since 4.0.0
      * @param {boolean} [unbind=false] - Whether to unbind the buffer instead.
      */
-    bind: function (unbind)
+    bind(unbind)
     {
         var gl = this.renderer.gl;
         var bufferType = this.bufferType;
@@ -185,7 +183,7 @@ var WebGLBufferWrapper = new Class({
                 bindings: { elementArrayBuffer: buffer }
             });
         }
-    },
+    }
 
     /**
      * Updates the data in this WebGLBufferWrapper.
@@ -197,7 +195,7 @@ var WebGLBufferWrapper = new Class({
      * @param {number} [bytes] - The number of bytes to update in the buffer. If not specified, the entire buffer will be updated.
      * @param {number} [offset=0] - The offset into the buffer to start updating data at.
      */
-    update: function (bytes, offset)
+    update(bytes, offset)
     {
         var gl = this.renderer.gl;
 
@@ -224,7 +222,7 @@ var WebGLBufferWrapper = new Class({
                 this.viewU8.subarray(offset, offset + bytes)
             );
         }
-    },
+    }
 
     /**
      * Resizes the dataBuffer of this WebGLBufferWrapper.
@@ -236,7 +234,7 @@ var WebGLBufferWrapper = new Class({
      * @since 4.0.0
      * @param {number} bytes - The new size of the buffer in bytes.
      */
-    resize: function (bytes)
+    resize(bytes)
     {
         var gl = this.renderer.gl;
 
@@ -246,7 +244,7 @@ var WebGLBufferWrapper = new Class({
 
         this.bind();
         gl.bufferData(this.bufferType, this.dataBuffer, this.bufferUsage);
-    },
+    }
 
     /**
      * Creates the views into the dataBuffer.
@@ -256,7 +254,7 @@ var WebGLBufferWrapper = new Class({
      * @since 4.0.0
      * @private
      */
-    createViews: function ()
+    createViews()
     {
         var dataBuffer = this.dataBuffer;
 
@@ -279,7 +277,7 @@ var WebGLBufferWrapper = new Class({
         {
             this.viewU32 = new Uint32Array(dataBuffer);
         }
-    },
+    }
 
     /**
      * Remove this WebGLBufferWrapper from the GL context.
@@ -287,7 +285,7 @@ var WebGLBufferWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#destroy
      * @since 3.80.0
      */
-    destroy: function ()
+    destroy()
     {
         this.renderer.gl.deleteBuffer(this.webGLBuffer);
         this.webGLBuffer = null;
@@ -298,6 +296,6 @@ var WebGLBufferWrapper = new Class({
         this.viewU32 = null;
         this.renderer = null;
     }
-});
+};
 
 module.exports = WebGLBufferWrapper;

@@ -36,11 +36,9 @@ var IsSizePowerOfTwo = require('../../../math/pow2/IsSizePowerOfTwo');
  * @param {boolean} [forceSize=false] - If `true` it will use the width and height passed to this method, regardless of the pixels dimension.
  * @param {boolean} [flipY=true] - Sets the `UNPACK_FLIP_Y_WEBGL` flag the WebGL Texture uses during upload.
  */
-var WebGLTextureWrapper = new Class({
+var WebGLTextureWrapper = class {
 
-    initialize:
-
-    function WebGLTextureWrapper (renderer, mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY)
+    constructor(renderer, mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma, forceSize, flipY)
     {
         if (flipY === undefined) { flipY = true; }
 
@@ -213,7 +211,7 @@ var WebGLTextureWrapper = new Class({
         this.batchUnit = -1;
 
         this.createResource();
-    },
+    }
 
     /**
      * Creates a WebGLTexture from the given parameters.
@@ -224,7 +222,7 @@ var WebGLTextureWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#createResource
      * @since 3.80.0
      */
-    createResource: function ()
+    createResource()
     {
         var gl = this.renderer.gl;
 
@@ -252,7 +250,7 @@ var WebGLTextureWrapper = new Class({
         this.webGLTexture = texture;
 
         this._processTexture();
-    },
+    }
 
     /**
      * Resizes the WebGLTexture to the new dimensions.
@@ -263,7 +261,7 @@ var WebGLTextureWrapper = new Class({
      * @param {number} width - The new width of the WebGLTexture.
      * @param {number} height - The new height of the WebGLTexture.
      */
-    resize: function (width, height)
+    resize(width, height)
     {
         if (this.width === width && this.height === height)
         {
@@ -274,7 +272,7 @@ var WebGLTextureWrapper = new Class({
         this.height = height;
 
         this._processTexture();
-    },
+    }
 
     /**
      * Updates the WebGLTexture from an updated source.
@@ -297,7 +295,7 @@ var WebGLTextureWrapper = new Class({
      * @param {number} magFilter - The new magnification filter for the WebGLTexture.
      * @param {number} format - The new format for the WebGLTexture.
      */
-    update: function (source, width, height, flipY, wrapS, wrapT, minFilter, magFilter, format)
+    update(source, width, height, flipY, wrapS, wrapT, minFilter, magFilter, format)
     {
         if (width === 0 || height === 0)
         {
@@ -316,7 +314,7 @@ var WebGLTextureWrapper = new Class({
         this.format = format;
 
         this._processTexture();
-    },
+    }
 
     /**
      * Set all parameters of this WebGLTexture per the stored values.
@@ -326,7 +324,7 @@ var WebGLTextureWrapper = new Class({
      * @since 4.0.0
      * @ignore
      */
-    _processTexture: function ()
+    _processTexture()
     {
         var gl = this.renderer.gl;
 
@@ -392,7 +390,7 @@ var WebGLTextureWrapper = new Class({
         {
             gl.generateMipmap(gl.TEXTURE_2D);
         }
-    },
+    }
 
     /**
      * The `__SPECTOR_Metadata` property of the `WebGLTexture`,
@@ -402,22 +400,20 @@ var WebGLTextureWrapper = new Class({
      * @type {object}
      * @since 3.80.0
      */
-    spectorMetadata: {
 
-        get: function ()
-        {
-            return this.__SPECTOR_Metadata;
-        },
+    get spectorMetadata()
+    {
+        return this.__SPECTOR_Metadata;
+    }
 
-        set: function (value)
-        {
-            // eslint-disable-next-line camelcase
-            this.__SPECTOR_Metadata = value;
+    set spectorMetadata(value)
+    {
+        // eslint-disable-next-line camelcase
+        this.__SPECTOR_Metadata = value;
 
-            // eslint-disable-next-line camelcase
-            this.webGLTexture.__SPECTOR_Metadata = value;
-        }
-    },
+        // eslint-disable-next-line camelcase
+        this.webGLTexture.__SPECTOR_Metadata = value;
+    }
 
     /**
      * Deletes the WebGLTexture from the GPU, if it has not been already.
@@ -425,7 +421,7 @@ var WebGLTextureWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper#destroy
      * @since 3.80.0
      */
-    destroy: function ()
+    destroy()
     {
         if (this.webGLTexture === null)
         {
@@ -442,6 +438,6 @@ var WebGLTextureWrapper = new Class({
         this.webGLTexture = null;
         this.renderer = null;
     }
-});
+};
 
 module.exports = WebGLTextureWrapper;

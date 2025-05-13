@@ -122,25 +122,27 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * @param {Phaser.Textures.Texture} texture - The texture that will be used to render the SpriteGPULayer. This must be sourced from a single image; a multi atlas will not work.
  * @param {number} size - The maximum number of quads that this SpriteGPULayer will hold. This can be increased later if necessary.
  */
-var SpriteGPULayer = new Class({
-    Extends: GameObject,
+var SpriteGPULayer = class extends GameObject {
 
-    Mixins: [
-        Components.Alpha,
-        Components.BlendMode,
-        Components.Depth,
-        Components.ElapseTimer,
-        Components.Lighting,
-        Components.Mask,
-        Components.RenderNodes,
-        Components.TextureCrop,
-        Components.Visible,
-        SpriteGPULayerRender
-    ],
-
-    initialize: function SpriteGPULayer (scene, texture, size)
+    static
     {
-        GameObject.call(this, scene, 'SpriteGPULayer');
+        Class.mixin(this, [
+            Components.Alpha,
+            Components.BlendMode,
+            Components.Depth,
+            Components.ElapseTimer,
+            Components.Lighting,
+            Components.Mask,
+            Components.RenderNodes,
+            Components.TextureCrop,
+            Components.Visible,
+            SpriteGPULayerRender
+        ], false);
+    }
+
+    constructor(scene, texture, size)
+    {
+        super(scene, 'SpriteGPULayer');
 
         /**
          * The number of quad members in the SpriteGPULayer.
@@ -409,24 +411,24 @@ var SpriteGPULayer = new Class({
          * @since 4.0.0
          */
         this.nextMemberU32 = new Uint32Array(this.nextMember);
-    },
+    }
 
     //  Overrides Game Object method
-    addedToScene: function ()
+    addedToScene()
     {
         this.scene.sys.updateList.add(this);
-    },
+    }
 
     //  Overrides Game Object method
-    removedFromScene: function ()
+    removedFromScene()
     {
         this.scene.sys.updateList.remove(this);
-    },
+    }
 
-    preUpdate: function (time, delta)
+    preUpdate(time, delta)
     {
         this.updateTimer(time, delta);
-    },
+    }
 
     /**
      * Get the number of bytes used to define a member.
@@ -436,10 +438,10 @@ var SpriteGPULayer = new Class({
      * @method Phaser.GameObjects.SpriteGPULayer#getDataByteSize
      * @returns {number} The number of bytes used for each member.
      */
-    getDataByteSize: function ()
+    getDataByteSize()
     {
         return this.submitterNode.instanceBufferLayout.layout.stride;
-    },
+    }
 
     /**
      * Return a list of features to enable in the shader program.
@@ -449,7 +451,7 @@ var SpriteGPULayer = new Class({
      * @since 4.0.0
      * @return {string[]} An array of features to enable in the shader program.
      */
-    getShaderFeatures: function ()
+    getShaderFeatures()
     {
         var features = [];
 
@@ -465,7 +467,7 @@ var SpriteGPULayer = new Class({
         }
 
         return features;
-    },
+    }
 
     /**
      * Set the animations available to the SpriteGPULayer.
@@ -487,7 +489,7 @@ var SpriteGPULayer = new Class({
      * @param {Phaser.Animations.Animation[]|Phaser.Types.GameObjects.SpriteGPULayer.SetAnimation[]} animations - An array of animations to set.
      * @returns {this} This SpriteGPULayer object.
      */
-    setAnimations: function (animations)
+    setAnimations(animations)
     {
         var animLen = animations.length;
 
@@ -527,7 +529,7 @@ var SpriteGPULayer = new Class({
         this.generateFrameDataTexture();
 
         return this;
-    },
+    }
 
     /**
      * Generate `frameDataTexture` for the SpriteGPULayer.
@@ -536,7 +538,7 @@ var SpriteGPULayer = new Class({
      * @method Phaser.GameObjects.SpriteGPULayer#generateFrameDataTexture
      * @since 4.0.0
      */
-    generateFrameDataTexture: function ()
+    generateFrameDataTexture()
     {
         // Get the frame data.
         var texture = this.texture;
@@ -629,7 +631,7 @@ var SpriteGPULayer = new Class({
             this.frameDataTexture.destroy();
         }
         this.frameDataTexture = this.scene.renderer.createUint8ArrayTexture(u8, width, height, false, false);
-    },
+    }
 
     /**
      * Resizes the SpriteGPULayer buffer to a new size.
@@ -644,7 +646,7 @@ var SpriteGPULayer = new Class({
      * @param {boolean} [clear=false] - Whether to clear the buffer.
      * @returns {this} This SpriteGPULayer object.
      */
-    resize: function (count, clear)
+    resize(count, clear)
     {
         var layout = this.submitterNode.instanceBufferLayout;
         var buffer = layout.buffer;
@@ -671,7 +673,7 @@ var SpriteGPULayer = new Class({
         this.setAllSegmentsNeedUpdate();
 
         return this;
-    },
+    }
 
     /**
      * Sets a segment of the buffer to require an update.
@@ -680,7 +682,7 @@ var SpriteGPULayer = new Class({
      * @since 4.0.0
      * @param {number} index - The index at which an update occurred, which requires the segment to be updated.
      */
-    setSegmentNeedsUpdate: function (index)
+    setSegmentNeedsUpdate(index)
     {
         if (
             index < 0 ||
@@ -692,7 +694,7 @@ var SpriteGPULayer = new Class({
         }
         var segment = Math.floor(index / this.bufferUpdateSegmentSize);
         this.bufferUpdateSegments |= (1 << segment);
-    },
+    }
 
     /**
      * Sets all segments of the buffer to require an update.
@@ -700,10 +702,10 @@ var SpriteGPULayer = new Class({
      * @method Phaser.GameObjects.SpriteGPULayer#setAllSegmentsNeedUpdate
      * @since 4.0.0
      */
-    setAllSegmentsNeedUpdate: function ()
+    setAllSegmentsNeedUpdate()
     {
         this.bufferUpdateSegments = this.MAX_BUFFER_UPDATE_SEGMENTS_FULL;
-    },
+    }
 
     /**
      * Clears all segments of the buffer that require an update.
@@ -711,10 +713,10 @@ var SpriteGPULayer = new Class({
      * @method Phaser.GameObjects.SpriteGPULayer#clearAllSegmentsNeedUpdate
      * @since 4.0.0
      */
-    clearAllSegmentsNeedUpdate: function ()
+    clearAllSegmentsNeedUpdate()
     {
         this.bufferUpdateSegments = 0;
-    },
+    }
 
     /**
      * Adds data to the SpriteGPULayer buffer.
@@ -737,7 +739,7 @@ var SpriteGPULayer = new Class({
      * @param {Float32Array} member - The raw data to add to the buffer.
      * @returns {this} This SpriteGPULayer object.
      */
-    addData: function (member)
+    addData(member)
     {
         if (this.memberCount >= this.size)
         {
@@ -754,7 +756,7 @@ var SpriteGPULayer = new Class({
         this.memberCount++;
 
         return this;
-    },
+    }
 
     /**
      * Adds a member to the SpriteGPULayer.
@@ -767,7 +769,7 @@ var SpriteGPULayer = new Class({
      * @param {Partial<Phaser.Types.GameObjects.SpriteGPULayer.Member>} [member] - The member to add to the SpriteGPULayer.
      * @returns {this} This SpriteGPULayer object.
      */
-    addMember: function (member)
+    addMember(member)
     {
         if (this.memberCount >= this.size)
         {
@@ -935,7 +937,7 @@ var SpriteGPULayer = new Class({
         this.addData(this.nextMemberF32);
 
         return this;
-    },
+    }
 
     /**
      * Edits a member of the SpriteGPULayer.
@@ -948,7 +950,7 @@ var SpriteGPULayer = new Class({
      * @param {Partial<Phaser.Types.GameObjects.SpriteGPULayer.Member>} member - The new member data.
      * @returns {this} This SpriteGPULayer object.
      */
-    editMember: function (index, member)
+    editMember(index, member)
     {
         if (index < 0 || index >= this.memberCount)
         {
@@ -961,7 +963,7 @@ var SpriteGPULayer = new Class({
         this.memberCount = currentMemberCount;
 
         return this;
-    },
+    }
 
     /**
      * Update a member of the SpriteGPULayer with raw data.
@@ -984,7 +986,7 @@ var SpriteGPULayer = new Class({
      * @param {Uint32Array} member - The new member data.
      * @param {number[]} [mask] - The mask to apply to the member data. A value of 1 will update the member data, a value of 0 will keep the existing member data.
      */
-    patchMember: function (index, member, mask)
+    patchMember(index, member, mask)
     {
         if (index < 0 || index >= this.memberCount)
         {
@@ -1015,7 +1017,7 @@ var SpriteGPULayer = new Class({
         }
 
         this.setSegmentNeedsUpdate(index);
-    },
+    }
 
     /**
      * Returns a member of the SpriteGPULayer.
@@ -1037,7 +1039,7 @@ var SpriteGPULayer = new Class({
      * @param {number} index - The index of the member to get.
      * @returns {?Phaser.Types.GameObjects.SpriteGPULayer.Member} The member data, or null if the index is out of bounds.
      */
-    getMember: function (index)
+    getMember(index)
     {
         if (index < 0 || index >= this.memberCount)
         {
@@ -1123,7 +1125,7 @@ var SpriteGPULayer = new Class({
         member.scrollFactorY = f32[offset++];
 
         return member;
-    },
+    }
 
     /**
      * Returns the raw data of a member of the SpriteGPULayer.
@@ -1186,7 +1188,7 @@ var SpriteGPULayer = new Class({
      * @param {Uint32Array} [out] - An optional array to copy the data to. If not provided, `this.nextMember` will be populated, and `nextMemberU32` will be returned.
      * @returns {?Uint32Array} The member data, or null if the index is out of bounds.
      */
-    getMemberData: function (index, out)
+    getMemberData(index, out)
     {
         if (index < 0 || index >= this.memberCount)
         {
@@ -1209,7 +1211,7 @@ var SpriteGPULayer = new Class({
         out.set(viewU32.subarray(byteOffset / bytesPerElement, byteOffset / bytesPerElement + stride / bytesPerElement));
 
         return out;
-    },
+    }
 
     /**
      * Removes a member or a number of members from the SpriteGPULayer.
@@ -1224,7 +1226,7 @@ var SpriteGPULayer = new Class({
      * @param {number} [count=1] - The number of members to remove, default 1.
      * @returns {this} This SpriteGPULayer object.
      */
-    removeMembers: function (index, count)
+    removeMembers(index, count)
     {
         if (index < 0 || index >= this.memberCount)
         {
@@ -1256,7 +1258,7 @@ var SpriteGPULayer = new Class({
         this.memberCount -= count;
 
         return this;
-    },
+    }
 
     /**
      * Inserts members into the SpriteGPULayer.
@@ -1270,7 +1272,7 @@ var SpriteGPULayer = new Class({
      * @param {Phaser.Types.GameObjects.SpriteGPULayer.Member|Phaser.Types.GameObjects.SpriteGPULayer.Member[]} members - The members to insert.
      * @returns {this} This SpriteGPULayer object.
      */
-    insertMembers: function (index, members)
+    insertMembers(index, members)
     {
         if (index < 0 || index > this.memberCount)
         {
@@ -1317,7 +1319,7 @@ var SpriteGPULayer = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Inserts raw data into the SpriteGPULayer.
@@ -1346,7 +1348,7 @@ var SpriteGPULayer = new Class({
      * @param {Uint32Array} data - The members to insert.
      * @returns {this} This SpriteGPULayer object.
      */
-    insertMembersData: function (index, data)
+    insertMembersData(index, data)
     {
         if (index < 0 || index > this.memberCount)
         {
@@ -1383,7 +1385,7 @@ var SpriteGPULayer = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the values of an animation for a member of this SpriteGPULayer.
@@ -1396,7 +1398,7 @@ var SpriteGPULayer = new Class({
      * @param {number} index - The offset in `nextMember` to write to.
      * @param {number} [defaultValue=0] - A default value to use if `value` is undefined.
      */
-    _setAnimatedValue: function (value, index, defaultValue)
+    _setAnimatedValue(value, index, defaultValue)
     {
         var f32 = this.nextMemberF32;
 
@@ -1498,7 +1500,7 @@ var SpriteGPULayer = new Class({
             f32[index++] = duration;
             f32[index] = delay;
         }
-    },
+    }
 
     /**
      * Return the values of an animation for a member of this SpriteGPULayer
@@ -1510,7 +1512,7 @@ var SpriteGPULayer = new Class({
      * @param {number} index - The index where the animation begins in the buffer.
      * @returns {number|Phaser.Types.GameObjects.SpriteGPULayer.MemberAnimation} The animation values.
      */
-    _getAnimatedValue: function (index)
+    _getAnimatedValue(index)
     {
         var f32 = this.submitterNode.instanceBufferLayout.buffer.viewF32;
 
@@ -1569,7 +1571,7 @@ var SpriteGPULayer = new Class({
             delay: delay,
             yoyo: yoyo
         };
-    },
+    }
 
     /**
      * Set the enabled state of an animation.
@@ -1591,12 +1593,12 @@ var SpriteGPULayer = new Class({
      * @param {boolean} enabled - Whether to enable or disable the animation.
      * @returns {this} This SpriteGPULayer object
      */
-    setAnimationEnabled: function (name, enabled)
+    setAnimationEnabled(name, enabled)
     {
         this._animationsEnabled[name] = !!enabled;
 
         return this;
-    },
+    }
 
     /**
      * Internal destroy handler, called as part of the destroy process.
@@ -1605,12 +1607,12 @@ var SpriteGPULayer = new Class({
      * @protected
      * @since 4.0.0
      */
-    preDestroy: function ()
+    preDestroy()
     {
         this.frameDataTexture.destroy();
 
         // TODO: Destroy the Submitter RenderNode.
     }
-});
+};
 
 module.exports = SpriteGPULayer;

@@ -39,17 +39,16 @@ var Shape = require('../Shape');
  * @param {number} [fillLeft=0x999999] - The fill color of the left face of the iso box.
  * @param {number} [fillRight=0xcccccc] - The fill color of the right face of the iso box.
  */
-var IsoBox = new Class({
+var IsoBox = class extends Shape {
 
-    Extends: Shape,
+    static
+    {
+        Class.mixin(this, [
+            IsoBoxRender
+        ], false);
+    }
 
-    Mixins: [
-        IsoBoxRender
-    ],
-
-    initialize:
-
-    function IsoBox (scene, x, y, size, height, fillTop, fillLeft, fillRight)
+    constructor(scene, x, y, size, height, fillTop, fillLeft, fillRight)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -59,7 +58,7 @@ var IsoBox = new Class({
         if (fillLeft === undefined) { fillLeft = 0x999999; }
         if (fillRight === undefined) { fillRight = 0xcccccc; }
 
-        Shape.call(this, scene, 'IsoBox', null);
+        super(scene, 'IsoBox', null);
 
         /**
          * The projection level of the iso box. Change this to change the 'angle' at which you are looking at the box.
@@ -134,7 +133,7 @@ var IsoBox = new Class({
         this.setSize(size, height);
 
         this.updateDisplayOrigin();
-    },
+    }
 
     /**
      * Sets the projection level of the iso box. Change this to change the 'angle' at which you are looking at the box.
@@ -147,12 +146,12 @@ var IsoBox = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setProjection: function (value)
+    setProjection(value)
     {
         this.projection = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets which faces of the iso box will be rendered.
@@ -167,7 +166,7 @@ var IsoBox = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setFaces: function (showTop, showLeft, showRight)
+    setFaces(showTop, showLeft, showRight)
     {
         if (showTop === undefined) { showTop = true; }
         if (showLeft === undefined) { showLeft = true; }
@@ -178,7 +177,7 @@ var IsoBox = new Class({
         this.showRight = showRight;
 
         return this;
-    },
+    }
 
     /**
      * Sets the fill colors for each face of the iso box.
@@ -193,7 +192,7 @@ var IsoBox = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setFillStyle: function (fillTop, fillLeft, fillRight)
+    setFillStyle(fillTop, fillLeft, fillRight)
     {
         this.fillTop = fillTop;
         this.fillLeft = fillLeft;
@@ -204,6 +203,6 @@ var IsoBox = new Class({
         return this;
     }
 
-});
+};
 
 module.exports = IsoBox;

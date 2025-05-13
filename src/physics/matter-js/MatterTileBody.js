@@ -46,26 +46,25 @@ var Vertices = require('./lib/geometry/Vertices');
  * @param {Phaser.Tilemaps.Tile} tile - The target tile that should have a Matter body.
  * @param {Phaser.Types.Physics.Matter.MatterTileOptions} [options] - Options to be used when creating the Matter body.
  */
-var MatterTileBody = new Class({
+var MatterTileBody = class extends EventEmitter {
 
-    Extends: EventEmitter,
-
-    Mixins: [
-        Components.Bounce,
-        Components.Collision,
-        Components.Friction,
-        Components.Gravity,
-        Components.Mass,
-        Components.Sensor,
-        Components.Sleep,
-        Components.Static
-    ],
-
-    initialize:
-
-    function MatterTileBody (world, tile, options)
+    static
     {
-        EventEmitter.call(this);
+        Class.mixin(this, [
+            Components.Bounce,
+            Components.Collision,
+            Components.Friction,
+            Components.Gravity,
+            Components.Mass,
+            Components.Sensor,
+            Components.Sleep,
+            Components.Static
+        ], false);
+    }
+
+    constructor(world, tile, options)
+    {
+        super();
 
         /**
          * The tile object the body is associated with.
@@ -127,7 +126,7 @@ var MatterTileBody = new Class({
 
             Body.scale(body, scaleX, scaleY, rotationPoint);
         }
-    },
+    }
 
     /**
      * Sets the current body to a rectangle that matches the bounds of the tile.
@@ -139,7 +138,7 @@ var MatterTileBody = new Class({
      *
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
-    setFromTileRectangle: function (options)
+    setFromTileRectangle(options)
     {
         if (options === undefined) { options = {}; }
         if (!HasValue(options, 'isStatic')) { options.isStatic = true; }
@@ -153,7 +152,7 @@ var MatterTileBody = new Class({
         this.setBody(body, options.addToWorld);
 
         return this;
-    },
+    }
 
     /**
      * Sets the current body from the collision group associated with the Tile. This is typically
@@ -173,7 +172,7 @@ var MatterTileBody = new Class({
      *
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
-    setFromTileCollision: function (options)
+    setFromTileCollision(options)
     {
         if (options === undefined) { options = {}; }
         if (!HasValue(options, 'isStatic')) { options.isStatic = true; }
@@ -253,7 +252,7 @@ var MatterTileBody = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the current body to the given body. This will remove the previous body, if one already
@@ -267,7 +266,7 @@ var MatterTileBody = new Class({
      *
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
-    setBody: function (body, addToWorld)
+    setBody(body, addToWorld)
     {
         if (addToWorld === undefined) { addToWorld = true; }
 
@@ -285,7 +284,7 @@ var MatterTileBody = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Removes the current body from the TileBody and from the Matter world
@@ -295,7 +294,7 @@ var MatterTileBody = new Class({
      *
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
-    removeBody: function ()
+    removeBody()
     {
         if (this.body)
         {
@@ -305,7 +304,7 @@ var MatterTileBody = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Removes the current body from the tile and the world.
@@ -315,13 +314,13 @@ var MatterTileBody = new Class({
      *
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */
-    destroy: function ()
+    destroy()
     {
         this.removeBody();
         this.tile.physics.matterBody = undefined;
         this.removeAllListeners();
     }
 
-});
+};
 
 module.exports = MatterTileBody;

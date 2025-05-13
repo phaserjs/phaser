@@ -47,11 +47,9 @@ var errors = {
  * @param {boolean} [addStencilBuffer=false] - Whether to add a stencil buffer to the framebuffer. If the canvas is used as the color attachment, this will be ignored.
  * @param {boolean} [addDepthBuffer=false] - Whether to add a depth buffer to the framebuffer. If depth and stencil are both provided, they will be combined into a single depth-stencil buffer. If the canvas is used as the color attachment, this will be ignored.
  */
-var WebGLFramebufferWrapper = new Class({
+var WebGLFramebufferWrapper = class {
 
-    initialize:
-
-    function WebGLFramebufferWrapper (renderer, colorAttachments, addStencilBuffer, addDepthBuffer)
+    constructor(renderer, colorAttachments, addStencilBuffer, addDepthBuffer)
     {
         var gl = renderer.gl;
 
@@ -187,7 +185,7 @@ var WebGLFramebufferWrapper = new Class({
         }
 
         this.createResource();
-    },
+    }
 
     /**
      * Creates a WebGLFramebuffer from the given parameters.
@@ -198,7 +196,7 @@ var WebGLFramebufferWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#createResource
      * @since 3.80.0
      */
-    createResource: function ()
+    createResource()
     {
         if (this.useCanvas) { return; }
 
@@ -271,7 +269,7 @@ var WebGLFramebufferWrapper = new Class({
                 attachment.renderbuffer = renderbuffer;
             }
         }
-    },
+    }
 
     /**
      * Resizes the attachments of this WebGLFramebufferWrapper.
@@ -281,7 +279,7 @@ var WebGLFramebufferWrapper = new Class({
      * @param {number} width - The new width of the framebuffer.
      * @param {number} height - The new height of the framebuffer.
      */
-    resize: function (width, height)
+    resize(width, height)
     {
         if (this.useCanvas)
         {
@@ -294,7 +292,7 @@ var WebGLFramebufferWrapper = new Class({
         this.renderTexture.resize(width, height);
 
         this.createResource();
-    },
+    }
 
     /**
      * Destroys this WebGLFramebufferWrapper.
@@ -302,7 +300,7 @@ var WebGLFramebufferWrapper = new Class({
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLFramebufferWrapper#destroy
      * @since 3.80.0
      */
-    destroy: function ()
+    destroy()
     {
         if (this.renderer === null)
         {
@@ -348,6 +346,6 @@ var WebGLFramebufferWrapper = new Class({
         this.webGLFramebuffer = null;
         this.renderer = null;
     }
-});
+};
 
 module.exports = WebGLFramebufferWrapper;

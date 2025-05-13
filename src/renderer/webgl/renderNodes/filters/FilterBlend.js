@@ -23,10 +23,9 @@ var ShaderSourceFS = require('../../shaders/FilterBlend-frag.js');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterBlend = new Class({
-    Extends: BaseFilterShader,
+var FilterBlend = class extends BaseFilterShader {
 
-    initialize: function FilterBlend (manager)
+    constructor(manager)
     {
         /**
          * A map from blend mode integers to their string names.
@@ -56,10 +55,10 @@ var FilterBlend = new Class({
             }
         ];
 
-        BaseFilterShader.call(this, 'FilterBlend', manager, null, ShaderSourceFS, additions);
-    },
+        super('FilterBlend', manager, null, ShaderSourceFS, additions);
+    }
 
-    updateShaderConfig: function (controller, drawingContext)
+    updateShaderConfig(controller, drawingContext)
     {
         var blendMode = controller.blendMode;
         if (blendMode === BlendModes.SKIP_CHECK)
@@ -71,15 +70,15 @@ var FilterBlend = new Class({
         var blendModeAddition = this.programManager.getAdditionsByTag('blendmode')[0];
         blendModeAddition.name = name;
         blendModeAddition.additions.fragmentHeader = '#define BLEND ' + name;
-    },
+    }
 
-    setupTextures: function (controller, textures, drawingContext)
+    setupTextures(controller, textures, drawingContext)
     {
         // Blend texture.
         textures[1] = controller.glTexture;
-    },
+    }
 
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         var programManager = this.programManager;
 
@@ -87,6 +86,6 @@ var FilterBlend = new Class({
         programManager.setUniform('amount', controller.amount);
         programManager.setUniform('color', controller.color);
     }
-});
+};
 
 module.exports = FilterBlend;

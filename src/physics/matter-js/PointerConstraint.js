@@ -36,11 +36,9 @@ var Vertices = require('./lib/geometry/Vertices');
  * @param {Phaser.Physics.Matter.World} world - A reference to the Matter World instance to which this Constraint belongs.
  * @param {object} [options] - A Constraint configuration object.
  */
-var PointerConstraint = new Class({
+var PointerConstraint = class {
 
-    initialize:
-
-    function PointerConstraint (scene, world, options)
+    constructor(scene, world, options)
     {
         if (options === undefined) { options = {}; }
 
@@ -152,7 +150,7 @@ var PointerConstraint = new Class({
 
         scene.sys.input.on(InputEvents.POINTER_DOWN, this.onDown, this);
         scene.sys.input.on(InputEvents.POINTER_UP, this.onUp, this);
-    },
+    }
 
     /**
      * A Pointer has been pressed down onto the Scene.
@@ -166,14 +164,14 @@ var PointerConstraint = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - A reference to the Pointer that was pressed.
      */
-    onDown: function (pointer)
+    onDown(pointer)
     {
         if (!this.pointer)
         {
             this.pointer = pointer;
             this.camera = pointer.camera;
         }
-    },
+    }
 
     /**
      * A Pointer has been released from the Scene. If it was the one this constraint was using, it's cleared.
@@ -183,13 +181,13 @@ var PointerConstraint = new Class({
      *
      * @param {Phaser.Input.Pointer} pointer - A reference to the Pointer that was pressed.
      */
-    onUp: function (pointer)
+    onUp(pointer)
     {
         if (pointer === this.pointer)
         {
             this.pointer = null;
         }
-    },
+    }
 
     /**
      * Scans all active bodies in the current Matter World to see if any of them
@@ -202,7 +200,7 @@ var PointerConstraint = new Class({
      *
      * @return {boolean} `true` if a body was found and set, otherwise `false`.
      */
-    getBody: function (pointer)
+    getBody(pointer)
     {
         var pos = this.position;
         var constraint = this.constraint;
@@ -229,7 +227,7 @@ var PointerConstraint = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Scans the current body to determine if a part of it was clicked on.
@@ -244,7 +242,7 @@ var PointerConstraint = new Class({
      *
      * @return {boolean} `true` if a part of the body was hit, otherwise `false`.
      */
-    hitTestBody: function (body, position)
+    hitTestBody(body, position)
     {
         var constraint = this.constraint;
         var partsLength = body.parts.length;
@@ -273,7 +271,7 @@ var PointerConstraint = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Internal update handler. Called in the Matter BEFORE_UPDATE step.
@@ -282,7 +280,7 @@ var PointerConstraint = new Class({
      * @fires Phaser.Physics.Matter.Events#DRAG
      * @since 3.0.0
      */
-    update: function ()
+    update()
     {
         var pointer = this.pointer;
         var body = this.body;
@@ -325,7 +323,7 @@ var PointerConstraint = new Class({
 
             this.world.emit(Events.DRAG, body, this);
         }
-    },
+    }
 
     /**
      * Stops the Pointer Constraint from dragging the body any further.
@@ -338,7 +336,7 @@ var PointerConstraint = new Class({
      * @fires Phaser.Physics.Matter.Events#DRAG_END
      * @since 3.16.2
      */
-    stopDrag: function ()
+    stopDrag()
     {
         var body = this.body;
         var constraint = this.constraint;
@@ -354,7 +352,7 @@ var PointerConstraint = new Class({
         {
             this.world.emit(Events.DRAG_END, body, this);
         }
-    },
+    }
 
     /**
      * Destroys this Pointer Constraint instance and all of its references.
@@ -362,7 +360,7 @@ var PointerConstraint = new Class({
      * @method Phaser.Physics.Matter.PointerConstraint#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.world.removeConstraint(this.constraint);
 
@@ -377,6 +375,6 @@ var PointerConstraint = new Class({
         this.scene.sys.input.off(InputEvents.POINTER_UP, this.onUp, this);
     }
 
-});
+};
 
 module.exports = PointerConstraint;

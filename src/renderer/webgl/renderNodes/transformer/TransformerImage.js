@@ -21,14 +21,18 @@ var RenderNode = require('../RenderNode');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {object} [config] - The configuration object for this RenderNode.
  */
-var TransformerImage = new Class({
-    Extends: RenderNode,
+var TransformerImage = class extends RenderNode {
 
-    initialize: function TransformerImage (manager, config)
+    constructor(manager, config)
     {
+        this.defaultConfig = {
+            name: 'TransformerImage',
+            role: 'Transformer'
+        };
+
         config = Merge(config || {}, this.defaultConfig);
 
-        RenderNode.call(this, config.name, manager);
+        super(config.name, manager);
 
         /**
          * The matrix used to store the final quad data for rendering.
@@ -67,12 +71,7 @@ var TransformerImage = new Class({
          * @private
          */
         this._calcMatrix = new TransformMatrix();
-    },
-
-    defaultConfig: {
-        name: 'TransformerImage',
-        role: 'Transformer'
-    },
+    }
 
     /**
      * Stores the transform data for rendering.
@@ -85,7 +84,7 @@ var TransformerImage = new Class({
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested.
      * @param {object} [element] - The specific element within the game object. This is used for objects that consist of multiple quads. It is unused here.
      */
-    run: function (drawingContext, gameObject, texturerNode, parentMatrix, element)
+    run(drawingContext, gameObject, texturerNode, parentMatrix, element)
     {
         this.onRunBegin(drawingContext);
 
@@ -163,6 +162,6 @@ var TransformerImage = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = TransformerImage;

@@ -32,10 +32,8 @@ var Class = require('../../utils/Class');
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer that owns this context.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.DrawingContextOptions} [options] - The options for this context.
  */
-var DrawingContext = new Class({
-    initialize:
-
-    function DrawingContext (renderer, options)
+var DrawingContext = class {
+    constructor(renderer, options)
     {
         if (options === undefined) { options = {}; }
 
@@ -215,7 +213,7 @@ var DrawingContext = new Class({
                 options.height || renderer.height
             );
         }
-    },
+    }
 
     /**
      * Resize the DrawingContext.
@@ -227,7 +225,7 @@ var DrawingContext = new Class({
      * @param {number} width - The new width of the framebuffer.
      * @param {number} height - The new height of the framebuffer.
      */
-    resize: function (width, height)
+    resize(width, height)
     {
         width = Math.round(width);
         height = Math.round(height);
@@ -269,7 +267,7 @@ var DrawingContext = new Class({
 
         this.state.scissor.box = [ 0, 0, width, height ];
         this.state.viewport = [ 0, 0, width, height ];
-    },
+    }
 
     /**
      * Copy the state of another DrawingContext.
@@ -278,7 +276,7 @@ var DrawingContext = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} source - The DrawingContext to copy from.
      */
-    copy: function (source)
+    copy(source)
     {
         var state = source.state;
         var blend = state.blend;
@@ -311,7 +309,7 @@ var DrawingContext = new Class({
             },
             viewport: state.viewport.slice()
         };
-    },
+    }
 
     /**
      * Create a clone of the DrawingContext. This is intended to be mutated
@@ -326,7 +324,7 @@ var DrawingContext = new Class({
      * @param {boolean} [preserveAutoClear=false] - Whether to preserve the autoClear setting.
      * @return {Phaser.Renderer.WebGL.DrawingContext} The cloned DrawingContext.
      */
-    getClone: function (preserveAutoClear)
+    getClone(preserveAutoClear)
     {
         var context = new DrawingContext(this.renderer, { copyFrom: this });
 
@@ -336,7 +334,7 @@ var DrawingContext = new Class({
         }
 
         return context;
-    },
+    }
 
     /**
      * Set the buffers to clear when the DrawingContext comes into use.
@@ -347,7 +345,7 @@ var DrawingContext = new Class({
      * @param {boolean} depth - Whether to clear the depth buffer.
      * @param {boolean} stencil - Whether to clear the stencil buffer.
      */
-    setAutoClear: function (color, depth, stencil)
+    setAutoClear(color, depth, stencil)
     {
         var autoClear = 0;
         var gl = this.renderer.gl;
@@ -355,7 +353,7 @@ var DrawingContext = new Class({
         if (depth) { autoClear |= gl.DEPTH_BUFFER_BIT; }
         if (stencil) { autoClear |= gl.STENCIL_BUFFER_BIT; }
         this.autoClear = autoClear;
-    },
+    }
 
     /**
      * Set the blend mode for the DrawingContext.
@@ -365,7 +363,7 @@ var DrawingContext = new Class({
      * @param {number} blendMode - The blend mode to set.
      * @param {number[]} [blendColor] - The blend color to set. This is an array of 4 values: red, green, blue, alpha.
      */
-    setBlendMode: function (blendMode, blendColor)
+    setBlendMode(blendMode, blendColor)
     {
         if (blendMode === this.blendMode) { return; }
 
@@ -386,7 +384,7 @@ var DrawingContext = new Class({
         }
 
         this.blendMode = blendMode;
-    },
+    }
 
     /**
      * Set the camera for the DrawingContext.
@@ -395,10 +393,10 @@ var DrawingContext = new Class({
      * @since 4.0.0
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to set.
      */
-    setCamera: function (camera)
+    setCamera(camera)
     {
         this.camera = camera;
-    },
+    }
 
     /**
      * Set the clear color for the DrawingContext.
@@ -411,7 +409,7 @@ var DrawingContext = new Class({
      * @param {number} b - The blue component of the color to clear with.
      * @param {number} a - The alpha component of the color to clear with.
      */
-    setClearColor: function (r, g, b, a)
+    setClearColor(r, g, b, a)
     {
         var colorClearValue = this.state.colorClearValue;
         if (
@@ -422,7 +420,7 @@ var DrawingContext = new Class({
         ) { return; }
 
         this.state.colorClearValue = [ r, g, b, a ];
-    },
+    }
 
     /**
      * Set the scissor box for the DrawingContext.
@@ -434,13 +432,13 @@ var DrawingContext = new Class({
      * @param {number} width - The width of the scissor box.
      * @param {number} height - The height of the scissor box.
      */
-    setScissorBox: function (x, y, width, height)
+    setScissorBox(x, y, width, height)
     {
         // Convert Y coordinate to WebGL space.
         y = this.height - y - height;
 
         this.state.scissor.box = [ x, y, width, height ];
-    },
+    }
 
     /**
      * Enable or disable the scissor box for the DrawingContext.
@@ -449,10 +447,10 @@ var DrawingContext = new Class({
      * @since 4.0.0
      * @param {boolean} enable - Whether to enable the scissor box.
      */
-    setScissorEnable: function (enable)
+    setScissorEnable(enable)
     {
         this.state.scissor.enable = enable;
-    },
+    }
 
     /**
      * Begin using the DrawingContext.
@@ -461,7 +459,7 @@ var DrawingContext = new Class({
      * @method Phaser.Renderer.WebGL.DrawingContext#use
      * @since 4.0.0
      */
-    use: function ()
+    use()
     {
         this.renderer.renderNodes.finishBatch();
 
@@ -469,7 +467,7 @@ var DrawingContext = new Class({
         {
             this.clear();
         }
-    },
+    }
 
     /**
      * End using the DrawingContext. This marks the context as not in use,
@@ -482,7 +480,7 @@ var DrawingContext = new Class({
      * @method Phaser.Renderer.WebGL.DrawingContext#release
      * @since 4.0.0
      */
-    release: function ()
+    release()
     {
         if (this.pool && this._locks.length === 0)
         {
@@ -491,7 +489,7 @@ var DrawingContext = new Class({
         }
 
         this.renderer.renderNodes.finishBatch();
-    },
+    }
 
     /**
      * Lock the DrawingContext to be in use.
@@ -504,14 +502,14 @@ var DrawingContext = new Class({
      * @since 4.0.0
      * @param {any} key - The key to lock the DrawingContext with.
      */
-    lock: function (key)
+    lock(key)
     {
         if (this._locks.indexOf(key) !== -1)
         {
             return;
         }
         this._locks.push(key);
-    },
+    }
 
     /**
      * Unlock the DrawingContext.
@@ -522,7 +520,7 @@ var DrawingContext = new Class({
      * @param {any} key - The key to unlock the DrawingContext with. This must be the same key used to lock it.
      * @param {boolean} [release] - Whether to release the DrawingContext immediately. This will only happen if there are no other locks on it.
      */
-    unlock: function (key, release)
+    unlock(key, release)
     {
         var index = this._locks.indexOf(key);
         if (index !== -1)
@@ -534,7 +532,7 @@ var DrawingContext = new Class({
         {
             this.release();
         }
-    },
+    }
 
     /**
      * Check whether the DrawingContext is locked.
@@ -543,10 +541,10 @@ var DrawingContext = new Class({
      * @since 4.0.0
      * @return {boolean} Whether the DrawingContext is locked.
      */
-    isLocked: function ()
+    isLocked()
     {
         return this._locks.length > 0;
-    },
+    }
 
     /**
      * Begin drawing with the DrawingContext.
@@ -557,10 +555,10 @@ var DrawingContext = new Class({
      * @method Phaser.Renderer.WebGL.DrawingContext#beginDraw
      * @since 4.0.0
      */
-    beginDraw: function ()
+    beginDraw()
     {
         this.renderer.glWrapper.update(this.state);
-    },
+    }
 
     /**
      * Clear the framebuffer. This will bind the framebuffer.
@@ -568,7 +566,7 @@ var DrawingContext = new Class({
      * @method Phaser.Renderer.WebGL.DrawingContext#clear
      * @since 4.0.0
      */
-    clear: function (bits)
+    clear(bits)
     {
         this.beginDraw();
 
@@ -580,7 +578,7 @@ var DrawingContext = new Class({
         this.renderer.renderNodes.finishBatch();
 
         this.renderer.gl.clear(bits);
-    },
+    }
 
     /**
      * Destroys the DrawingContext and its resources.
@@ -588,7 +586,7 @@ var DrawingContext = new Class({
      * @method Phaser.Renderer.WebGL.DrawingContext#destroy
      * @since 4.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.renderer.deleteTexture(this.texture);
         this.renderer.deleteFramebuffer(this.state.bindings.framebuffer);
@@ -599,6 +597,6 @@ var DrawingContext = new Class({
         this.framebuffer = null;
         this.texture = null;
     }
-});
+};
 
 module.exports = DrawingContext;

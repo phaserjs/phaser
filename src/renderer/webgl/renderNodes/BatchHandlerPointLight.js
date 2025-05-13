@@ -21,13 +21,53 @@ var BatchHandler = require('./BatchHandler');
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this handler.
  */
-var BatchHandlerPointLight = new Class({
+var BatchHandlerPointLight = class extends BatchHandler {
 
-    Extends: BatchHandler,
-
-    initialize: function (manager, config)
+    constructor(manager, config)
     {
-        BatchHandler.call(this, manager, this.defaultConfig, config);
+        /**
+         * The default configuration for this handler.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerPointLight#defaultConfig
+         * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
+         * @since 4.0.0
+         * @readonly
+         */
+        this.defaultConfig = {
+            name: 'BatchHandlerPointLight',
+            verticesPerInstance: 4,
+            indicesPerInstance: 6,
+            shaderName: 'POINTLIGHT',
+            vertexSource: ShaderSourceVS,
+            fragmentSource: ShaderSourceFS,
+            vertexBufferLayout: {
+                usage: 'DYNAMIC_DRAW',
+                layout: [
+                    {
+                        name: 'inPosition',
+                        size: 2
+                    },
+                    {
+                        name: 'inLightPosition',
+                        size: 2
+                    },
+                    {
+                        name: 'inLightRadius',
+                        size: 1
+                    },
+                    {
+                        name: 'inLightAttenuation',
+                        size: 1
+                    },
+                    {
+                        name: 'inLightColor',
+                        size: 4
+                    }
+                ]
+            }
+        };
+
+        super(manager, this.defaultConfig, config);
 
         /**
          * An empty texture array used internally.
@@ -40,49 +80,7 @@ var BatchHandlerPointLight = new Class({
          * @readonly
          */
         this._emptyTextures = [];
-    },
-
-    /**
-     * The default configuration for this handler.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerPointLight#defaultConfig
-     * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
-     * @since 4.0.0
-     * @readonly
-     */
-    defaultConfig: {
-        name: 'BatchHandlerPointLight',
-        verticesPerInstance: 4,
-        indicesPerInstance: 6,
-        shaderName: 'POINTLIGHT',
-        vertexSource: ShaderSourceVS,
-        fragmentSource: ShaderSourceFS,
-        vertexBufferLayout: {
-            usage: 'DYNAMIC_DRAW',
-            layout: [
-                {
-                    name: 'inPosition',
-                    size: 2
-                },
-                {
-                    name: 'inLightPosition',
-                    size: 2
-                },
-                {
-                    name: 'inLightRadius',
-                    size: 1
-                },
-                {
-                    name: 'inLightAttenuation',
-                    size: 1
-                },
-                {
-                    name: 'inLightColor',
-                    size: 4
-                }
-            ]
-        }
-    },
+    }
 
     /**
      * Generate element indices for the instance vertices.
@@ -100,7 +98,7 @@ var BatchHandlerPointLight = new Class({
      * @param {number} instances - The number of instances to define.
      * @return {ArrayBuffer} The index buffer data.
      */
-    _generateElementIndices: function (instances)
+    _generateElementIndices(instances)
     {
         var buffer = new ArrayBuffer(instances * 6 * 2);
         var indices = new Uint16Array(buffer);
@@ -116,7 +114,7 @@ var BatchHandlerPointLight = new Class({
             indices[offset++] = index + 3;
         }
         return buffer;
-    },
+    }
 
     /**
      * Update the uniforms for the current shader program.
@@ -127,7 +125,7 @@ var BatchHandlerPointLight = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    setupUniforms: function (drawingContext)
+    setupUniforms(drawingContext)
     {
         var programManager = this.programManager;
         var width = drawingContext.width;
@@ -148,7 +146,7 @@ var BatchHandlerPointLight = new Class({
             'uProjectionMatrix',
             drawingContext.renderer.projectionMatrix.val
         );
-    },
+    }
 
     /**
      * Draw then empty the current batch.
@@ -160,7 +158,7 @@ var BatchHandlerPointLight = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    run: function (drawingContext)
+    run(drawingContext)
     {
         var instanceCount = this.instanceCount;
 
@@ -199,7 +197,7 @@ var BatchHandlerPointLight = new Class({
         this.instanceCount = 0;
 
         this.onRunEnd(drawingContext);
-    },
+    }
 
     /**
      * Add a light to the batch.
@@ -217,7 +215,7 @@ var BatchHandlerPointLight = new Class({
      * @param {number} xBR - The bottom-right x-coordinate of the light.
      * @param {number} yBR - The bottom-right y-coordinate of the light.
      */
-    batch: function (drawingContext, light, xTL, yTL, xBL, yBL, xTR, yTR, xBR, yBR, lightX, lightY)
+    batch(drawingContext, light, xTL, yTL, xBL, yBL, xTR, yTR, xBR, yBR, lightX, lightY)
     {
         if (this.instanceCount === 0)
         {
@@ -299,6 +297,6 @@ var BatchHandlerPointLight = new Class({
             // Now the batch is empty.
         }
     }
-});
+};
 
 module.exports = BatchHandlerPointLight;

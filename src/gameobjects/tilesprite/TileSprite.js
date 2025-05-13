@@ -69,39 +69,38 @@ var _FLAG = 8; // 1000
  * @param {string} textureKey - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager. Cannot be a DynamicTexture.
  * @param {(string|number)} [frameKey] - An optional frame from the Texture this Game Object is rendering with.
  */
-var TileSprite = new Class({
+var TileSprite = class extends GameObject {
 
-    Extends: GameObject,
+    static
+    {
+        Class.mixin(this, [
+            Components.Alpha,
+            Components.BlendMode,
+            Components.ComputedSize,
+            Components.Crop,
+            Components.Depth,
+            Components.Flip,
+            Components.GetBounds,
+            Components.Lighting,
+            Components.Mask,
+            Components.Origin,
+            Components.RenderNodes,
+            Components.ScrollFactor,
+            Components.TextureCrop,
+            Components.Tint,
+            Components.Transform,
+            Components.Visible,
+            TileSpriteRender
+        ], false);
+    }
 
-    Mixins: [
-        Components.Alpha,
-        Components.BlendMode,
-        Components.ComputedSize,
-        Components.Crop,
-        Components.Depth,
-        Components.Flip,
-        Components.GetBounds,
-        Components.Lighting,
-        Components.Mask,
-        Components.Origin,
-        Components.RenderNodes,
-        Components.ScrollFactor,
-        Components.TextureCrop,
-        Components.Tint,
-        Components.Transform,
-        Components.Visible,
-        TileSpriteRender
-    ],
-
-    initialize:
-
-    function TileSprite (scene, x, y, width, height, textureKey, frameKey)
+    constructor(scene, x, y, width, height, textureKey, frameKey)
     {
         var renderer = scene.sys.renderer;
 
         var isCanvas = renderer && !renderer.gl;
 
-        GameObject.call(this, scene, 'TileSprite');
+        super(scene, 'TileSprite');
 
         var displayTexture = scene.sys.textures.get(textureKey);
         var displayFrame = displayTexture.get(frameKey);
@@ -270,7 +269,7 @@ var TileSprite = new Class({
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
         this.initRenderNodes(this._defaultRenderNodesMap);
-    },
+    }
 
     /**
      * The default render nodes for this Game Object.
@@ -282,24 +281,23 @@ var TileSprite = new Class({
      * @readonly
      * @since 4.0.0
      */
-    _defaultRenderNodesMap: {
-        get: function ()
-        {
-            return DefaultTileSpriteNodes;
-        }
-    },
+
+    get _defaultRenderNodesMap()
+    {
+        return DefaultTileSpriteNodes;
+    }
 
     //  Overrides Game Object method
-    addedToScene: function ()
+    addedToScene()
     {
         this.scene.sys.updateList.add(this);
-    },
+    }
 
     //  Overrides Game Object method
-    removedFromScene: function ()
+    removedFromScene()
     {
         this.scene.sys.updateList.remove(this);
-    },
+    }
 
     /**
      * Update this TileSprite's animations.
@@ -311,10 +309,10 @@ var TileSprite = new Class({
      * @param {number} time - The current timestamp.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    preUpdate: function (time, delta)
+    preUpdate(time, delta)
     {
         this.anims.update(time, delta);
-    },
+    }
 
     /**
      * Sets the frame this Game Object will use to render with.
@@ -330,7 +328,7 @@ var TileSprite = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setFrame: function (frame)
+    setFrame(frame)
     {
         var newFrame = this.texture.get(frame);
 
@@ -348,7 +346,7 @@ var TileSprite = new Class({
         this.dirty = true;
 
         return this;
-    },
+    }
 
     /**
      * No-op method for compatibility with Animation.
@@ -357,10 +355,10 @@ var TileSprite = new Class({
      * @since 4.0.0
      * @return {this} This Tile Sprite instance.
      */
-    setSizeToFrame: function ()
+    setSizeToFrame()
     {
         return this;
-    },
+    }
 
     /**
      * Sets {@link Phaser.GameObjects.TileSprite#tilePositionX} and {@link Phaser.GameObjects.TileSprite#tilePositionY}.
@@ -373,7 +371,7 @@ var TileSprite = new Class({
      *
      * @return {this} This Tile Sprite instance.
      */
-    setTilePosition: function (x, y)
+    setTilePosition(x, y)
     {
         if (x !== undefined)
         {
@@ -386,7 +384,7 @@ var TileSprite = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets {@link Phaser.GameObjects.TileSprite#tileRotation}.
@@ -396,14 +394,14 @@ var TileSprite = new Class({
      *
      * @param {number} [radians=0] - The rotation of the tiling texture, in radians.
      */
-    setTileRotation: function (radians)
+    setTileRotation(radians)
     {
         if (radians === undefined) { radians = 0; }
 
         this.tileRotation = radians;
 
         return this;
-    },
+    }
 
     /**
      * Sets {@link Phaser.GameObjects.TileSprite#tileScaleX} and {@link Phaser.GameObjects.TileSprite#tileScaleY}.
@@ -416,7 +414,7 @@ var TileSprite = new Class({
      *
      * @return {this} This Tile Sprite instance.
      */
-    setTileScale: function (x, y)
+    setTileScale(x, y)
     {
         if (x === undefined) { x = this.tileScaleX; }
         if (y === undefined) { y = x; }
@@ -425,7 +423,7 @@ var TileSprite = new Class({
         this.tileScaleY = y;
 
         return this;
-    },
+    }
 
     /**
      * Render the tile texture if it is dirty, or if the frame has changed.
@@ -437,7 +435,7 @@ var TileSprite = new Class({
      * @private
      * @since 3.0.0
      */
-    updateTileTexture: function ()
+    updateTileTexture()
     {
         if (!this.renderer || this.renderer.gl)
         {
@@ -470,7 +468,7 @@ var TileSprite = new Class({
         this.fillPattern = ctx.createPattern(canvas, 'repeat');
 
         this.currentFrame = frame;
-    },
+    }
 
     /**
      * Draw the fill pattern to the internal canvas.
@@ -482,7 +480,7 @@ var TileSprite = new Class({
      * @private
      * @since 3.12.0
      */
-    updateCanvas: function ()
+    updateCanvas()
     {
         var canvas = this.canvas;
         var width = this.width;
@@ -551,7 +549,7 @@ var TileSprite = new Class({
         ctx.restore();
 
         this.dirty = false;
-    },
+    }
 
     /**
      * Internal destroy handler, called as part of the destroy process.
@@ -560,7 +558,7 @@ var TileSprite = new Class({
      * @protected
      * @since 3.9.0
      */
-    preDestroy: function ()
+    preDestroy()
     {
         if (this.canvas)
         {
@@ -583,7 +581,7 @@ var TileSprite = new Class({
         this.anims.destroy();
 
         this.anims = undefined;
-    },
+    }
 
     /**
      * The horizontal scroll position of the Tile Sprite.
@@ -593,20 +591,17 @@ var TileSprite = new Class({
      * @default 0
      * @since 3.0.0
      */
-    tilePositionX: {
 
-        get: function ()
-        {
-            return this._tilePosition.x;
-        },
+    get tilePositionX()
+    {
+        return this._tilePosition.x;
+    }
 
-        set: function (value)
-        {
-            this._tilePosition.x = value;
-            this.dirty = true;
-        }
-
-    },
+    set tilePositionX(value)
+    {
+        this._tilePosition.x = value;
+        this.dirty = true;
+    }
 
     /**
      * The vertical scroll position of the Tile Sprite.
@@ -616,20 +611,17 @@ var TileSprite = new Class({
      * @default 0
      * @since 3.0.0
      */
-    tilePositionY: {
 
-        get: function ()
-        {
-            return this._tilePosition.y;
-        },
+    get tilePositionY()
+    {
+        return this._tilePosition.y;
+    }
 
-        set: function (value)
-        {
-            this._tilePosition.y = value;
-            this.dirty = true;
-        }
-
-    },
+    set tilePositionY(value)
+    {
+        this._tilePosition.y = value;
+        this.dirty = true;
+    }
 
     /**
      * The rotation of the Tile Sprite texture, in radians.
@@ -639,18 +631,17 @@ var TileSprite = new Class({
      * @default 0
      * @since 4.0.0
      */
-    tileRotation: {
-        get: function ()
-        {
-            return this._tileRotation;
-        },
 
-        set: function (radians)
-        {
-            this._tileRotation = radians;
-            this.dirty = true;
-        }
-    },
+    get tileRotation()
+    {
+        return this._tileRotation;
+    }
+
+    set tileRotation(radians)
+    {
+        this._tileRotation = radians;
+        this.dirty = true;
+    }
 
     /**
      * The horizontal scale of the Tile Sprite texture.
@@ -660,20 +651,17 @@ var TileSprite = new Class({
      * @default 1
      * @since 3.11.0
      */
-    tileScaleX: {
 
-        get: function ()
-        {
-            return this._tileScale.x;
-        },
+    get tileScaleX()
+    {
+        return this._tileScale.x;
+    }
 
-        set: function (value)
-        {
-            this._tileScale.x = value;
-            this.dirty = true;
-        }
-
-    },
+    set tileScaleX(value)
+    {
+        this._tileScale.x = value;
+        this.dirty = true;
+    }
 
     /**
      * The vertical scale of the Tile Sprite texture.
@@ -683,21 +671,18 @@ var TileSprite = new Class({
      * @default 1
      * @since 3.11.0
      */
-    tileScaleY: {
 
-        get: function ()
-        {
-            return this._tileScale.y;
-        },
-
-        set: function (value)
-        {
-            this._tileScale.y = value;
-            this.dirty = true;
-        }
-
+    get tileScaleY()
+    {
+        return this._tileScale.y;
     }
 
-});
+    set tileScaleY(value)
+    {
+        this._tileScale.y = value;
+        this.dirty = true;
+    }
+
+};
 
 module.exports = TileSprite;

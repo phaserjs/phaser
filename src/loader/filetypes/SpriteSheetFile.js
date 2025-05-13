@@ -29,18 +29,14 @@ var ImageFile = require('./ImageFile');
  * @param {Phaser.Types.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var SpriteSheetFile = new Class({
+var SpriteSheetFile = class extends ImageFile {
 
-    Extends: ImageFile,
-
-    initialize:
-
-    function SpriteSheetFile (loader, key, url, frameConfig, xhrSettings)
+    constructor(loader, key, url, frameConfig, xhrSettings)
     {
-        ImageFile.call(this, loader, key, url, xhrSettings, frameConfig);
+        super(loader, key, url, xhrSettings, frameConfig);
 
         this.type = 'spritesheet';
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -48,7 +44,7 @@ var SpriteSheetFile = new Class({
      * @method Phaser.Loader.FileTypes.SpriteSheetFile#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         //  Check if we have a linked normal map
         var linkFile = this.linkFile;
@@ -82,7 +78,7 @@ var SpriteSheetFile = new Class({
         }
     }
 
-});
+};
 
 /**
  * Adds a Sprite Sheet Image, or array of Sprite Sheet Images, to the current load queue.

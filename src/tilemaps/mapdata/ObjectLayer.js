@@ -23,11 +23,9 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  *
  * @param {Phaser.Types.Tilemaps.ObjectLayerConfig} [config] - The data for the layer from the Tiled JSON object.
  */
-var ObjectLayer = new Class({
+var ObjectLayer = class {
 
-    initialize:
-
-    function ObjectLayer (config)
+    constructor(config)
     {
         if (config === undefined) { config = {}; }
 
@@ -126,6 +124,6 @@ var ObjectLayer = new Class({
         }
     }
 
-});
+};
 
 module.exports = ObjectLayer;

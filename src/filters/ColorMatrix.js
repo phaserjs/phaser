@@ -39,12 +39,11 @@ var DisplayColorMatrix = require('../display/ColorMatrix');
  * @since 4.0.0
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that owns this filter.
  */
-var ColorMatrix = new Class({
-    Extends: Controller,
+var ColorMatrix = class extends Controller {
 
-    initialize: function ColorMatrix (camera)
+    constructor(camera)
     {
-        Controller.call(this, camera, 'FilterColorMatrix');
+        super(camera, 'FilterColorMatrix');
 
         /**
          * The color matrix for this effect.
@@ -55,14 +54,14 @@ var ColorMatrix = new Class({
          * @since 4.0.0
          */
         this.colorMatrix = new DisplayColorMatrix();
-    },
+    }
 
-    destroy: function ()
+    destroy()
     {
         this.colorMatrix = null;
 
         Controller.prototype.destroy.call(this);
     }
-});
+};
 
 module.exports = ColorMatrix;

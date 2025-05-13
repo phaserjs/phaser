@@ -32,13 +32,9 @@ var GetURL = require('../GetURL');
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {Phaser.Types.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. Only provided for, and used by, Sprite Sheets.
  */
-var ImageFile = new Class({
+var ImageFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function ImageFile (loader, key, url, xhrSettings, frameConfig)
+    constructor(loader, key, url, xhrSettings, frameConfig)
     {
         var extension = 'png';
         var normalMapURL;
@@ -72,7 +68,7 @@ var ImageFile = new Class({
             config: frameConfig
         };
 
-        File.call(this, loader, fileConfig);
+        super(loader, fileConfig);
 
         //  Do we have a normal map to load as well?
         if (normalMapURL)
@@ -93,7 +89,7 @@ var ImageFile = new Class({
             this.load = this.loadImage;
             this.onProcess = this.onProcessImage;
         }
-    },
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -102,7 +98,7 @@ var ImageFile = new Class({
      * @method Phaser.Loader.FileTypes.ImageFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -127,7 +123,7 @@ var ImageFile = new Class({
         };
 
         File.createObjectURL(this.data, this.xhrLoader.response, 'image/png');
-    },
+    }
 
     /**
      * Handles image load processing.
@@ -136,7 +132,7 @@ var ImageFile = new Class({
      * @private
      * @since 3.60.0
      */
-    onProcessImage: function ()
+    onProcessImage()
     {
         var result = this.state;
 
@@ -150,7 +146,7 @@ var ImageFile = new Class({
         {
             this.onProcessError();
         }
-    },
+    }
 
     /**
      * Loads the image using either XHR or an Image tag.
@@ -159,7 +155,7 @@ var ImageFile = new Class({
      * @private
      * @since 3.60.0
      */
-    loadImage: function ()
+    loadImage()
     {
         this.state = CONST.FILE_LOADING;
 
@@ -184,7 +180,7 @@ var ImageFile = new Class({
         };
 
         this.data.src = this.src;
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -192,7 +188,7 @@ var ImageFile = new Class({
      * @method Phaser.Loader.FileTypes.ImageFile#addToCache
      * @since 3.7.0
      */
-    addToCache: function ()
+    addToCache()
     {
         //  Check if we have a linked normal map
         var linkFile = this.linkFile;
@@ -229,7 +225,7 @@ var ImageFile = new Class({
         }
     }
 
-});
+};
 
 /**
  * Adds an Image, or array of Images, to the current load queue.

@@ -24,15 +24,11 @@ var SceneEvents = require('../scene/events');
  * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Plugin Manager.
  * @param {string} pluginKey - The key under which this plugin has been installed into the Scene Systems.
  */
-var ScenePlugin = new Class({
+var ScenePlugin = class extends BasePlugin {
 
-    Extends: BasePlugin,
-
-    initialize:
-
-    function ScenePlugin (scene, pluginManager, pluginKey)
+    constructor(scene, pluginManager, pluginKey)
     {
-        BasePlugin.call(this, pluginManager);
+        super(pluginManager);
 
         /**
          * A reference to the Scene that has installed this plugin.
@@ -74,7 +70,7 @@ var ScenePlugin = new Class({
         this.pluginKey = pluginKey;
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
-    },
+    }
 
     /**
      * This method is called when the Scene boots. It is only ever called once.
@@ -111,9 +107,9 @@ var ScenePlugin = new Class({
      * @method Phaser.Plugins.ScenePlugin#boot
      * @since 3.8.0
      */
-    boot: function ()
+    boot()
     {
-    },
+    }
 
     /**
      * Game instance has been destroyed.
@@ -123,7 +119,7 @@ var ScenePlugin = new Class({
      * @method Phaser.Plugins.ScenePlugin#destroy
      * @since 3.8.0
      */
-    destroy: function ()
+    destroy()
     {
         this.pluginManager = null;
         this.game = null;
@@ -131,6 +127,6 @@ var ScenePlugin = new Class({
         this.systems = null;
     }
 
-});
+};
 
 module.exports = ScenePlugin;

@@ -30,13 +30,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var CSSFile = new Class({
+var CSSFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function CSSFile (loader, key, url, xhrSettings)
+    constructor(loader, key, url, xhrSettings)
     {
         var extension = 'css';
 
@@ -60,8 +56,8 @@ var CSSFile = new Class({
             xhrSettings: xhrSettings
         };
 
-        File.call(this, loader, fileConfig);
-    },
+        super(loader, fileConfig);
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -70,7 +66,7 @@ var CSSFile = new Class({
      * @method Phaser.Loader.FileTypes.CSSFile#onProcess
      * @since 3.17.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -83,7 +79,7 @@ var CSSFile = new Class({
         this.onProcessComplete();
     }
 
-});
+};
 
 /**
  * Adds a CSS file, or array of CSS files, to the current load queue.

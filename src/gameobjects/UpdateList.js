@@ -25,15 +25,11 @@ var SceneEvents = require('../scene/events');
  *
  * @param {Phaser.Scene} scene - The Scene that the Update List belongs to.
  */
-var UpdateList = new Class({
+var UpdateList = class extends ProcessQueue {
 
-    Extends: ProcessQueue,
-
-    initialize:
-
-    function UpdateList (scene)
+    constructor(scene)
     {
-        ProcessQueue.call(this);
+        super();
 
         //  No duplicates in this list
         this.checkQueue = true;
@@ -98,7 +94,7 @@ var UpdateList = new Class({
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
-    },
+    }
 
     /**
      * This method is called automatically, only once, when the Scene is first created.
@@ -108,10 +104,10 @@ var UpdateList = new Class({
      * @private
      * @since 3.5.1
      */
-    boot: function ()
+    boot()
     {
         this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
-    },
+    }
 
     /**
      * This method is called automatically by the Scene when it is starting up.
@@ -122,14 +118,14 @@ var UpdateList = new Class({
      * @private
      * @since 3.5.0
      */
-    start: function ()
+    start()
     {
         var eventEmitter = this.systems.events;
 
         eventEmitter.on(SceneEvents.PRE_UPDATE, this.update, this);
         eventEmitter.on(SceneEvents.UPDATE, this.sceneUpdate, this);
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * The update step.
@@ -142,7 +138,7 @@ var UpdateList = new Class({
      * @param {number} time - The current timestamp.
      * @param {number} delta - The delta time elapsed since the last frame.
      */
-    sceneUpdate: function (time, delta)
+    sceneUpdate(time, delta)
     {
         var list = this._active;
         var length = list.length;
@@ -156,7 +152,7 @@ var UpdateList = new Class({
                 gameObject.preUpdate.call(gameObject, time, delta);
             }
         }
-    },
+    }
 
     /**
      * The Scene that owns this plugin is shutting down.
@@ -166,7 +162,7 @@ var UpdateList = new Class({
      * @method Phaser.GameObjects.UpdateList#shutdown
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         var i = this._active.length;
 
@@ -202,7 +198,7 @@ var UpdateList = new Class({
         eventEmitter.off(SceneEvents.PRE_UPDATE, this.update, this);
         eventEmitter.off(SceneEvents.UPDATE, this.sceneUpdate, this);
         eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * The Scene that owns this plugin is being destroyed.
@@ -212,7 +208,7 @@ var UpdateList = new Class({
      * @method Phaser.GameObjects.UpdateList#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.shutdown();
 
@@ -291,7 +287,7 @@ var UpdateList = new Class({
      * @readonly
      * @since 3.20.0
      */
-});
+};
 
 PluginCache.register('UpdateList', UpdateList, 'updateList');
 

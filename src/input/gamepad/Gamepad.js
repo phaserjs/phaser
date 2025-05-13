@@ -25,15 +25,11 @@ var Vector2 = require('../../math/Vector2');
  * @param {Phaser.Input.Gamepad.GamepadPlugin} manager - A reference to the Gamepad Plugin.
  * @param {Phaser.Types.Input.Gamepad.Pad} pad - The Gamepad object, as extracted from GamepadEvent.
  */
-var Gamepad = new Class({
+var Gamepad = class extends EventEmitter {
 
-    Extends: EventEmitter,
-
-    initialize:
-
-    function Gamepad (manager, pad)
+    constructor(manager, pad)
     {
-        EventEmitter.call(this);
+        super();
 
         /**
          * A reference to the Gamepad Plugin.
@@ -323,7 +319,7 @@ var Gamepad = new Class({
          * @since 3.50.0
          */
         this._created = performance.now();
-    },
+    }
 
     /**
      * Gets the total number of axis this Gamepad claims to support.
@@ -333,10 +329,10 @@ var Gamepad = new Class({
      *
      * @return {number} The total number of axes this Gamepad claims to support.
      */
-    getAxisTotal: function ()
+    getAxisTotal()
     {
         return this.axes.length;
-    },
+    }
 
     /**
      * Gets the value of an axis based on the given index.
@@ -350,10 +346,10 @@ var Gamepad = new Class({
      *
      * @return {number} The value of the axis, between 0 and 1.
      */
-    getAxisValue: function (index)
+    getAxisValue(index)
     {
         return this.axes[index].getValue();
-    },
+    }
 
     /**
      * Sets the threshold value of all axis on this Gamepad.
@@ -364,13 +360,13 @@ var Gamepad = new Class({
      *
      * @param {number} value - A value between 0 and 1.
      */
-    setAxisThreshold: function (value)
+    setAxisThreshold(value)
     {
         for (var i = 0; i < this.axes.length; i++)
         {
             this.axes[i].threshold = value;
         }
-    },
+    }
 
     /**
      * Gets the total number of buttons this Gamepad claims to have.
@@ -380,10 +376,10 @@ var Gamepad = new Class({
      *
      * @return {number} The total number of buttons this Gamepad claims to have.
      */
-    getButtonTotal: function ()
+    getButtonTotal()
     {
         return this.buttons.length;
-    },
+    }
 
     /**
      * Gets the value of a button based on the given index.
@@ -399,10 +395,10 @@ var Gamepad = new Class({
      *
      * @return {number} The value of the button, between 0 and 1.
      */
-    getButtonValue: function (index)
+    getButtonValue(index)
     {
         return this.buttons[index].value;
-    },
+    }
 
     /**
      * Returns if the button is pressed down or not.
@@ -415,10 +411,10 @@ var Gamepad = new Class({
      *
      * @return {boolean} `true` if the button is considered as being pressed down, otherwise `false`.
      */
-    isButtonDown: function (index)
+    isButtonDown(index)
     {
         return this.buttons[index].pressed;
-    },
+    }
 
     /**
      * Internal update handler for this Gamepad.
@@ -428,7 +424,7 @@ var Gamepad = new Class({
      * @private
      * @since 3.0.0
      */
-    update: function (pad)
+    update(pad)
     {
         if (pad.timestamp < this._created)
         {
@@ -470,7 +466,7 @@ var Gamepad = new Class({
                 this.rightStick.set(localAxes[2].getValue(), localAxes[3].getValue());
             }
         }
-    },
+    }
 
     /**
      * Destroys this Gamepad instance, its buttons and axes, and releases external references it holds.
@@ -478,7 +474,7 @@ var Gamepad = new Class({
      * @method Phaser.Input.Gamepad.Gamepad#destroy
      * @since 3.10.0
      */
-    destroy: function ()
+    destroy()
     {
         this.removeAllListeners();
 
@@ -499,7 +495,7 @@ var Gamepad = new Class({
 
         this.buttons = [];
         this.axes = [];
-    },
+    }
 
     /**
      * Is this Gamepad currently connected or not?
@@ -509,14 +505,11 @@ var Gamepad = new Class({
      * @default true
      * @since 3.0.0
      */
-    connected: {
 
-        get: function ()
-        {
-            return this.pad.connected;
-        }
-
-    },
+    get connected()
+    {
+        return this.pad.connected;
+    }
 
     /**
      * A timestamp containing the most recent time this Gamepad was updated.
@@ -525,14 +518,11 @@ var Gamepad = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    timestamp: {
 
-        get: function ()
-        {
-            return this.pad.timestamp;
-        }
-
-    },
+    get timestamp()
+    {
+        return this.pad.timestamp;
+    }
 
     /**
      * Is the Gamepad's Left button being pressed?
@@ -543,14 +533,11 @@ var Gamepad = new Class({
      * @type {boolean}
      * @since 3.10.0
      */
-    left: {
 
-        get: function ()
-        {
-            return this._LCLeft.pressed;
-        }
-
-    },
+    get left()
+    {
+        return this._LCLeft.pressed;
+    }
 
     /**
      * Is the Gamepad's Right button being pressed?
@@ -561,14 +548,11 @@ var Gamepad = new Class({
      * @type {boolean}
      * @since 3.10.0
      */
-    right: {
 
-        get: function ()
-        {
-            return this._LCRight.pressed;
-        }
-
-    },
+    get right()
+    {
+        return this._LCRight.pressed;
+    }
 
     /**
      * Is the Gamepad's Up button being pressed?
@@ -579,14 +563,11 @@ var Gamepad = new Class({
      * @type {boolean}
      * @since 3.10.0
      */
-    up: {
 
-        get: function ()
-        {
-            return this._LCTop.pressed;
-        }
-
-    },
+    get up()
+    {
+        return this._LCTop.pressed;
+    }
 
     /**
      * Is the Gamepad's Down button being pressed?
@@ -597,14 +578,11 @@ var Gamepad = new Class({
      * @type {boolean}
      * @since 3.10.0
      */
-    down: {
 
-        get: function ()
-        {
-            return this._LCBottom.pressed;
-        }
-
-    },
+    get down()
+    {
+        return this._LCBottom.pressed;
+    }
 
     /**
      * Is the Gamepad's bottom button in the right button cluster being pressed?
@@ -616,14 +594,11 @@ var Gamepad = new Class({
      * @type {boolean}
      * @since 3.10.0
      */
-    A: {
 
-        get: function ()
-        {
-            return this._RCBottom.pressed;
-        }
-
-    },
+    get A()
+    {
+        return this._RCBottom.pressed;
+    }
 
     /**
      * Is the Gamepad's top button in the right button cluster being pressed?
@@ -635,14 +610,11 @@ var Gamepad = new Class({
      * @type {boolean}
      * @since 3.10.0
      */
-    Y: {
 
-        get: function ()
-        {
-            return this._RCTop.pressed;
-        }
-
-    },
+    get Y()
+    {
+        return this._RCTop.pressed;
+    }
 
     /**
      * Is the Gamepad's left button in the right button cluster being pressed?
@@ -654,14 +626,11 @@ var Gamepad = new Class({
      * @type {boolean}
      * @since 3.10.0
      */
-    X: {
 
-        get: function ()
-        {
-            return this._RCLeft.pressed;
-        }
-
-    },
+    get X()
+    {
+        return this._RCLeft.pressed;
+    }
 
     /**
      * Is the Gamepad's right button in the right button cluster being pressed?
@@ -673,14 +642,11 @@ var Gamepad = new Class({
      * @type {boolean}
      * @since 3.10.0
      */
-    B: {
 
-        get: function ()
-        {
-            return this._RCRight.pressed;
-        }
-
-    },
+    get B()
+    {
+        return this._RCRight.pressed;
+    }
 
     /**
      * Returns the value of the Gamepad's top left shoulder button.
@@ -693,14 +659,11 @@ var Gamepad = new Class({
      * @type {number}
      * @since 3.10.0
      */
-    L1: {
 
-        get: function ()
-        {
-            return this._FBLeftTop.value;
-        }
-
-    },
+    get L1()
+    {
+        return this._FBLeftTop.value;
+    }
 
     /**
      * Returns the value of the Gamepad's bottom left shoulder button.
@@ -713,14 +676,11 @@ var Gamepad = new Class({
      * @type {number}
      * @since 3.10.0
      */
-    L2: {
 
-        get: function ()
-        {
-            return this._FBLeftBottom.value;
-        }
-
-    },
+    get L2()
+    {
+        return this._FBLeftBottom.value;
+    }
 
     /**
      * Returns the value of the Gamepad's top right shoulder button.
@@ -733,14 +693,11 @@ var Gamepad = new Class({
      * @type {number}
      * @since 3.10.0
      */
-    R1: {
 
-        get: function ()
-        {
-            return this._FBRightTop.value;
-        }
-
-    },
+    get R1()
+    {
+        return this._FBRightTop.value;
+    }
 
     /**
      * Returns the value of the Gamepad's bottom right shoulder button.
@@ -753,15 +710,12 @@ var Gamepad = new Class({
      * @type {number}
      * @since 3.10.0
      */
-    R2: {
 
-        get: function ()
-        {
-            return this._FBRightBottom.value;
-        }
-
+    get R2()
+    {
+        return this._FBRightBottom.value;
     }
 
-});
+};
 
 module.exports = Gamepad;

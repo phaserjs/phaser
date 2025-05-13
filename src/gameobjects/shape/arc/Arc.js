@@ -46,17 +46,16 @@ var Shape = require('../Shape');
  * @param {number} [fillColor] - The color the arc will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the arc will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  */
-var Arc = new Class({
+var Arc = class extends Shape {
 
-    Extends: Shape,
+    static
+    {
+        Class.mixin(this, [
+            ArcRender
+        ], false);
+    }
 
-    Mixins: [
-        ArcRender
-    ],
-
-    initialize:
-
-    function Arc (scene, x, y, radius, startAngle, endAngle, anticlockwise, fillColor, fillAlpha)
+    constructor(scene, x, y, radius, startAngle, endAngle, anticlockwise, fillColor, fillAlpha)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -65,7 +64,7 @@ var Arc = new Class({
         if (endAngle === undefined) { endAngle = 360; }
         if (anticlockwise === undefined) { anticlockwise = false; }
 
-        Shape.call(this, scene, 'Arc', new GeomCircle(0, 0, radius));
+        super(scene, 'Arc', new GeomCircle(0, 0, radius));
 
         /**
          * Private internal value. Holds the start angle in degrees.
@@ -120,7 +119,7 @@ var Arc = new Class({
 
         this.updateDisplayOrigin();
         this.updateData();
-    },
+    }
 
     /**
      * The number of iterations used when drawing the arc.
@@ -132,21 +131,18 @@ var Arc = new Class({
      * @default 0.01
      * @since 3.13.0
      */
-    iterations: {
 
-        get: function ()
-        {
-            return this._iterations;
-        },
+    get iterations()
+    {
+        return this._iterations;
+    }
 
-        set: function (value)
-        {
-            this._iterations = value;
+    set iterations(value)
+    {
+        this._iterations = value;
 
-            this.updateData();
-        }
-
-    },
+        this.updateData();
+    }
 
     /**
      * The radius of the arc.
@@ -155,24 +151,21 @@ var Arc = new Class({
      * @type {number}
      * @since 3.13.0
      */
-    radius: {
 
-        get: function ()
-        {
-            return this.geom.radius;
-        },
+    get radius()
+    {
+        return this.geom.radius;
+    }
 
-        set: function (value)
-        {
-            this.geom.radius = value;
+    set radius(value)
+    {
+        this.geom.radius = value;
 
-            var diameter = value * 2;
-            this.setSize(diameter, diameter);
-            this.updateDisplayOrigin();
-            this.updateData();
-        }
-
-    },
+        var diameter = value * 2;
+        this.setSize(diameter, diameter);
+        this.updateDisplayOrigin();
+        this.updateData();
+    }
 
     /**
      * The start angle of the arc, in degrees.
@@ -181,21 +174,18 @@ var Arc = new Class({
      * @type {number}
      * @since 3.13.0
      */
-    startAngle: {
 
-        get: function ()
-        {
-            return this._startAngle;
-        },
+    get startAngle()
+    {
+        return this._startAngle;
+    }
 
-        set: function (value)
-        {
-            this._startAngle = value;
+    set startAngle(value)
+    {
+        this._startAngle = value;
 
-            this.updateData();
-        }
-
-    },
+        this.updateData();
+    }
 
     /**
      * The end angle of the arc, in degrees.
@@ -204,21 +194,18 @@ var Arc = new Class({
      * @type {number}
      * @since 3.13.0
      */
-    endAngle: {
 
-        get: function ()
-        {
-            return this._endAngle;
-        },
+    get endAngle()
+    {
+        return this._endAngle;
+    }
 
-        set: function (value)
-        {
-            this._endAngle = value;
+    set endAngle(value)
+    {
+        this._endAngle = value;
 
-            this.updateData();
-        }
-
-    },
+        this.updateData();
+    }
 
     /**
      * The winding order of the start and end angles.
@@ -227,21 +214,18 @@ var Arc = new Class({
      * @type {boolean}
      * @since 3.13.0
      */
-    anticlockwise: {
 
-        get: function ()
-        {
-            return this._anticlockwise;
-        },
+    get anticlockwise()
+    {
+        return this._anticlockwise;
+    }
 
-        set: function (value)
-        {
-            this._anticlockwise = value;
+    set anticlockwise(value)
+    {
+        this._anticlockwise = value;
 
-            this.updateData();
-        }
-
-    },
+        this.updateData();
+    }
 
     /**
      * Sets the radius of the arc.
@@ -254,12 +238,12 @@ var Arc = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setRadius: function (value)
+    setRadius(value)
     {
         this.radius = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the number of iterations used when drawing the arc.
@@ -274,14 +258,14 @@ var Arc = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setIterations: function (value)
+    setIterations(value)
     {
         if (value === undefined) { value = 0.01; }
 
         this.iterations = value;
 
         return this;
-    },
+    }
 
     /**
      * Sets the starting angle of the arc, in degrees.
@@ -294,7 +278,7 @@ var Arc = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setStartAngle: function (angle, anticlockwise)
+    setStartAngle(angle, anticlockwise)
     {
         this._startAngle = angle;
 
@@ -304,7 +288,7 @@ var Arc = new Class({
         }
 
         return this.updateData();
-    },
+    }
 
     /**
      * Sets the ending angle of the arc, in degrees.
@@ -317,7 +301,7 @@ var Arc = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setEndAngle: function (angle, anticlockwise)
+    setEndAngle(angle, anticlockwise)
     {
         this._endAngle = angle;
 
@@ -327,7 +311,7 @@ var Arc = new Class({
         }
 
         return this.updateData();
-    },
+    }
 
     /**
      * Internal method that updates the data and path values.
@@ -338,7 +322,7 @@ var Arc = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    updateData: function ()
+    updateData()
     {
         var step = this._iterations;
         var iteration = step;
@@ -398,6 +382,6 @@ var Arc = new Class({
         return this;
     }
 
-});
+};
 
 module.exports = Arc;

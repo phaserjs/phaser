@@ -36,11 +36,9 @@ var Class = require('../../utils/Class');
  * @param {Phaser.Scene} scene - This parameter is not used.
  * @param {Phaser.GameObjects.Graphics} graphicsGeometry - The Graphics Game Object to use for the Geometry Mask. Doesn't have to be in the Display List.
  */
-var GeometryMask = new Class({
+var GeometryMask = class {
 
-    initialize:
-
-    function GeometryMask (scene, graphicsGeometry)
+    constructor(scene, graphicsGeometry)
     {
         /**
          * The Graphics object which describes the Geometry Mask.
@@ -50,7 +48,7 @@ var GeometryMask = new Class({
          * @since 3.0.0
          */
         this.geometryMask = graphicsGeometry;
-    },
+    }
 
     /**
      * Sets a new Graphics object for the Geometry Mask.
@@ -62,12 +60,12 @@ var GeometryMask = new Class({
      *
      * @return {this} This Geometry Mask
      */
-    setShape: function (graphicsGeometry)
+    setShape(graphicsGeometry)
     {
         this.geometryMask = graphicsGeometry;
 
         return this;
-    },
+    }
 
     /**
      * Sets the clipping path of a 2D canvas context to the Geometry Mask's underlying Graphics object.
@@ -79,7 +77,7 @@ var GeometryMask = new Class({
      * @param {Phaser.GameObjects.GameObject} mask - The Game Object being rendered.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the Game Object is being rendered through.
      */
-    preRenderCanvas: function (renderer, mask, camera)
+    preRenderCanvas(renderer, mask, camera)
     {
         var geometryMask = this.geometryMask;
 
@@ -88,7 +86,7 @@ var GeometryMask = new Class({
         geometryMask.renderCanvas(renderer, geometryMask, camera, null, null, true);
 
         renderer.currentContext.clip();
-    },
+    }
 
     /**
      * Restore the canvas context's previous clipping path, thus turning off the mask for it.
@@ -98,10 +96,10 @@ var GeometryMask = new Class({
      *
      * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - The Canvas Renderer instance being restored.
      */
-    postRenderCanvas: function (renderer)
+    postRenderCanvas(renderer)
     {
         renderer.currentContext.restore();
-    },
+    }
 
     /**
      * Destroys this GeometryMask and nulls any references it holds.
@@ -112,11 +110,11 @@ var GeometryMask = new Class({
      * @method Phaser.Display.Masks.GeometryMask#destroy
      * @since 3.7.0
      */
-    destroy: function ()
+    destroy()
     {
         this.geometryMask = null;
     }
 
-});
+};
 
 module.exports = GeometryMask;

@@ -32,14 +32,13 @@ var Controller = require('./Controller');
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that owns this filter.
  * @param {number} [amount=1] - The amount of distortion applied to the barrel effect. A value of 1 is no distortion. Typically keep this within +- 1.
  */
-var Barrel = new Class({
-    Extends: Controller,
+var Barrel = class extends Controller {
 
-    initialize: function Barrel (camera, amount)
+    constructor(camera, amount)
     {
         if (amount === undefined) { amount = 1; }
 
-        Controller.call(this, camera, 'FilterBarrel');
+        super(camera, 'FilterBarrel');
 
         /**
          * The amount of distortion applied to the barrel effect.
@@ -52,6 +51,6 @@ var Barrel = new Class({
          */
         this.amount = amount;
     }
-});
+};
 
 module.exports = Barrel;

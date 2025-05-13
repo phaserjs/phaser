@@ -30,13 +30,9 @@ var ScriptFile = require('./ScriptFile');
  * @param {string[]} [url] - An array of absolute or relative URLs to load the script files from. They are processed in the order given in the array.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object for the script files. Used in replacement of the Loaders default XHR Settings.
  */
-var MultiScriptFile = new Class({
+var MultiScriptFile = class extends MultiFile {
 
-    Extends: MultiFile,
-
-    initialize:
-
-    function MultiScriptFile (loader, key, url, xhrSettings)
+    constructor(loader, key, url, xhrSettings)
     {
         var extension = 'js';
         var files = [];
@@ -74,8 +70,8 @@ var MultiScriptFile = new Class({
             files.push(scriptFile);
         }
 
-        MultiFile.call(this, loader, 'scripts', key, files);
-    },
+        super(loader, 'scripts', key, files);
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -83,7 +79,7 @@ var MultiScriptFile = new Class({
      * @method Phaser.Loader.FileTypes.MultiScriptFile#addToCache
      * @since 3.17.0
      */
-    addToCache: function ()
+    addToCache()
     {
         if (this.isReadyToProcess())
         {
@@ -104,7 +100,7 @@ var MultiScriptFile = new Class({
         }
     }
 
-});
+};
 
 /**
  * Adds an array of Script files to the current load queue.

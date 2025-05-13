@@ -34,11 +34,9 @@ var Wrap = require('../../math/Wrap');
  * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType} defaultValue - The default value of the property.
  * @param {boolean} [emitOnly=false] - Whether the property can only be modified when a Particle is emitted.
  */
-var EmitterOp = new Class({
+var EmitterOp = class {
 
-    initialize:
-
-    function EmitterOp (key, defaultValue, emitOnly)
+    constructor(key, defaultValue, emitOnly)
     {
         if (emitOnly === undefined) { emitOnly = false; }
 
@@ -242,7 +240,7 @@ var EmitterOp = new Class({
          * @since 3.60.0
          */
         this._onUpdate;
-    },
+    }
 
     /**
      * Load the property from a Particle Emitter configuration object.
@@ -255,7 +253,7 @@ var EmitterOp = new Class({
      * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig} [config] - Settings for the Particle Emitter that owns this property.
      * @param {string} [newKey] - The new key to use for this property, if any.
      */
-    loadConfig: function (config, newKey)
+    loadConfig(config, newKey)
     {
         if (config === undefined)
         {
@@ -282,7 +280,7 @@ var EmitterOp = new Class({
             //  Reset it back again
             this.onUpdate = this.defaultUpdate;
         }
-    },
+    }
 
     /**
      * Build a JSON representation of this Particle Emitter property.
@@ -292,10 +290,10 @@ var EmitterOp = new Class({
      *
      * @return {object} A JSON representation of this Particle Emitter property.
      */
-    toJSON: function ()
+    toJSON()
     {
         return JSON.stringify(this.propertyValue);
-    },
+    }
 
     /**
      * Change the current value of the property and update its callback methods.
@@ -307,7 +305,7 @@ var EmitterOp = new Class({
      *
      * @return {this} This Emitter Op object.
      */
-    onChange: function (value)
+    onChange(value)
     {
         var current;
 
@@ -355,7 +353,7 @@ var EmitterOp = new Class({
         this.current = current;
 
         return this;
-    },
+    }
 
     /**
      * Checks the type of `EmitterOp.propertyValue` to determine which
@@ -366,7 +364,7 @@ var EmitterOp = new Class({
      *
      * @return {number} A number between 0 and 9 which should be passed to `setMethods`.
      */
-    getMethod: function ()
+    getMethod()
     {
         var value = this.propertyValue;
 
@@ -431,7 +429,7 @@ var EmitterOp = new Class({
         }
 
         return 0;
-    },
+    }
 
     /**
      * Update the {@link Phaser.GameObjects.Particles.EmitterOp#onEmit} and
@@ -444,7 +442,7 @@ var EmitterOp = new Class({
      *
      * @return {this} This Emitter Op object.
      */
-    setMethods: function ()
+    setMethods()
     {
         var value = this.propertyValue;
         var current = value;
@@ -543,7 +541,7 @@ var EmitterOp = new Class({
         this.current = current;
 
         return this;
-    },
+    }
 
     /**
      * Check whether an object has the given property.
@@ -556,10 +554,10 @@ var EmitterOp = new Class({
      *
      * @return {boolean} `true` if the property exists in the object, `false` otherwise.
      */
-    has: function (object, key)
+    has(object, key)
     {
         return object.hasOwnProperty(key);
-    },
+    }
 
     /**
      * Check whether an object has both of the given properties.
@@ -573,10 +571,10 @@ var EmitterOp = new Class({
      *
      * @return {boolean} `true` if both properties exist in the object, `false` otherwise.
      */
-    hasBoth: function (object, key1, key2)
+    hasBoth(object, key1, key2)
     {
         return object.hasOwnProperty(key1) && object.hasOwnProperty(key2);
-    },
+    }
 
     /**
      * Check whether an object has at least one of the given properties.
@@ -590,10 +588,10 @@ var EmitterOp = new Class({
      *
      * @return {boolean} `true` if at least one of the properties exists in the object, `false` if neither exist.
      */
-    hasEither: function (object, key1, key2)
+    hasEither(object, key1, key2)
     {
         return object.hasOwnProperty(key1) || object.hasOwnProperty(key2);
-    },
+    }
 
     /**
      * The returned value sets what the property will be at the START of the particles life, on emit.
@@ -603,10 +601,10 @@ var EmitterOp = new Class({
      *
      * @return {number} The new value of the property.
      */
-    defaultEmit: function ()
+    defaultEmit()
     {
         return this.defaultValue;
-    },
+    }
 
     /**
      * The returned value updates the property for the duration of the particles life.
@@ -621,10 +619,10 @@ var EmitterOp = new Class({
      *
      * @return {number} The new value of the property.
      */
-    defaultUpdate: function (particle, key, t, value)
+    defaultUpdate(particle, key, t, value)
     {
         return value;
-    },
+    }
 
     /**
      * The returned value sets what the property will be at the START of the particles life, on emit.
@@ -640,14 +638,14 @@ var EmitterOp = new Class({
      *
      * @return {number} The new value of the property.
      */
-    proxyEmit: function (particle, key, value)
+    proxyEmit(particle, key, value)
     {
         var result = this._onEmit(particle, key, value);
 
         this.current = result;
 
         return result;
-    },
+    }
 
     /**
      * The returned value updates the property for the duration of the particles life.
@@ -664,14 +662,14 @@ var EmitterOp = new Class({
      *
      * @return {number} The new value of the property.
      */
-    proxyUpdate: function (particle, key, t, value)
+    proxyUpdate(particle, key, t, value)
     {
         var result = this._onUpdate(particle, key, t, value);
 
         this.current = result;
 
         return result;
-    },
+    }
 
     /**
      * An `onEmit` callback that returns the current value of the property.
@@ -681,10 +679,10 @@ var EmitterOp = new Class({
      *
      * @return {number} The current value of the property.
      */
-    staticValueEmit: function ()
+    staticValueEmit()
     {
         return this.current;
-    },
+    }
 
     /**
      * An `onUpdate` callback that returns the current value of the property.
@@ -694,10 +692,10 @@ var EmitterOp = new Class({
      *
      * @return {number} The current value of the property.
      */
-    staticValueUpdate: function ()
+    staticValueUpdate()
     {
         return this.current;
-    },
+    }
 
     /**
      * An `onEmit` callback that returns a random value from the current value array.
@@ -707,14 +705,14 @@ var EmitterOp = new Class({
      *
      * @return {number} The new value of the property.
      */
-    randomStaticValueEmit: function ()
+    randomStaticValueEmit()
     {
         var randomIndex = Math.floor(Math.random() * this.propertyValue.length);
 
         this.current = this.propertyValue[randomIndex];
 
         return this.current;
-    },
+    }
 
     /**
      * An `onEmit` callback that returns a value between the {@link Phaser.GameObjects.Particles.EmitterOp#start} and
@@ -728,7 +726,7 @@ var EmitterOp = new Class({
      *
      * @return {number} The new value of the property.
      */
-    randomRangedValueEmit: function (particle, key)
+    randomRangedValueEmit(particle, key)
     {
         var value = FloatBetween(this.start, this.end);
 
@@ -741,7 +739,7 @@ var EmitterOp = new Class({
         this.current = value;
 
         return value;
-    },
+    }
 
     /**
      * An `onEmit` callback that returns a value between the {@link Phaser.GameObjects.Particles.EmitterOp#start} and
@@ -755,7 +753,7 @@ var EmitterOp = new Class({
      *
      * @return {number} The new value of the property.
      */
-    randomRangedIntEmit: function (particle, key)
+    randomRangedIntEmit(particle, key)
     {
         var value = Between(this.start, this.end);
 
@@ -768,7 +766,7 @@ var EmitterOp = new Class({
         this.current = value;
 
         return value;
-    },
+    }
 
     /**
      * An `onEmit` callback that returns a stepped value between the
@@ -780,7 +778,7 @@ var EmitterOp = new Class({
      *
      * @return {number} The new value of the property.
      */
-    steppedEmit: function ()
+    steppedEmit()
     {
         var current = this.counter;
 
@@ -831,7 +829,7 @@ var EmitterOp = new Class({
         this.current = current;
 
         return current;
-    },
+    }
 
     /**
      * An `onEmit` callback for an eased property.
@@ -846,7 +844,7 @@ var EmitterOp = new Class({
      *
      * @return {number} {@link Phaser.GameObjects.Particles.EmitterOp#start}, as the new value of the property.
      */
-    easedValueEmit: function (particle, key)
+    easedValueEmit(particle, key)
     {
         if (particle && particle.data[key])
         {
@@ -859,7 +857,7 @@ var EmitterOp = new Class({
         this.current = this.start;
 
         return this.start;
-    },
+    }
 
     /**
      * An `onUpdate` callback that returns an eased value between the
@@ -875,7 +873,7 @@ var EmitterOp = new Class({
      *
      * @return {number} The new value of the property.
      */
-    easeValueUpdate: function (particle, key, t)
+    easeValueUpdate(particle, key, t)
     {
         var data = particle.data[key];
 
@@ -894,7 +892,7 @@ var EmitterOp = new Class({
         this.current = current;
 
         return current;
-    },
+    }
 
     /**
      * Destroys this EmitterOp instance and all of its references.
@@ -905,7 +903,7 @@ var EmitterOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterOp#destroy
      * @since 3.60.0
      */
-    destroy: function ()
+    destroy()
     {
         this.propertyValue = null;
         this.defaultValue = null;
@@ -914,6 +912,6 @@ var EmitterOp = new Class({
         this._onEmit = null;
         this._onUpdate = null;
     }
-});
+};
 
 module.exports = EmitterOp;

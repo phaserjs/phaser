@@ -18,11 +18,9 @@ var Vector2 = require('../../../math/Vector2');
  *
  * @param {Phaser.Types.GameObjects.Particles.RandomZoneSource} source - An object instance with a `getRandomPoint(point)` method.
  */
-var RandomZone = new Class({
+var RandomZone = class {
 
-    initialize:
-
-    function RandomZone (source)
+    constructor(source)
     {
         /**
          * An object instance with a `getRandomPoint(point)` method.
@@ -60,7 +58,7 @@ var RandomZone = new Class({
          * @since 3.60.0
          */
         this.total = -1;
-    },
+    }
 
     /**
      * Get the next point in the Zone and set its coordinates on the given Particle.
@@ -70,7 +68,7 @@ var RandomZone = new Class({
      *
      * @param {Phaser.GameObjects.Particles.Particle} particle - The Particle.
      */
-    getPoint: function (particle)
+    getPoint(particle)
     {
         var vec = this._tempVec;
 
@@ -80,6 +78,6 @@ var RandomZone = new Class({
         particle.y = vec.y;
     }
 
-});
+};
 
 module.exports = RandomZone;

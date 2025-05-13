@@ -39,11 +39,9 @@ var GetValue = require('../../utils/object/GetValue');
  *
  * @param {Phaser.Types.Cameras.Controls.SmoothedKeyControlConfig} config - The Smoothed Key Control configuration object.
  */
-var SmoothedKeyControl = new Class({
+var SmoothedKeyControl = class {
 
-    initialize:
-
-    function SmoothedKeyControl (config)
+    constructor(config)
     {
         /**
          * The Camera that this Control will update.
@@ -285,7 +283,7 @@ var SmoothedKeyControl = new Class({
          * @since 3.0.0
          */
         this.active = (this.camera !== null);
-    },
+    }
 
     /**
      * Starts the Key Control running, providing it has been linked to a camera.
@@ -295,12 +293,12 @@ var SmoothedKeyControl = new Class({
      *
      * @return {this} This Key Control instance.
      */
-    start: function ()
+    start()
     {
         this.active = (this.camera !== null);
 
         return this;
-    },
+    }
 
     /**
      * Stops this Key Control from running. Call `start` to start it again.
@@ -310,12 +308,12 @@ var SmoothedKeyControl = new Class({
      *
      * @return {this} This Key Control instance.
      */
-    stop: function ()
+    stop()
     {
         this.active = false;
 
         return this;
-    },
+    }
 
     /**
      * Binds this Key Control to a camera.
@@ -327,12 +325,12 @@ var SmoothedKeyControl = new Class({
      *
      * @return {this} This Key Control instance.
      */
-    setCamera: function (camera)
+    setCamera(camera)
     {
         this.camera = camera;
 
         return this;
-    },
+    }
 
     /**
      * Applies the results of pressing the control keys to the Camera.
@@ -344,7 +342,7 @@ var SmoothedKeyControl = new Class({
      *
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    update: function (delta)
+    update(delta)
     {
         if (!this.active)
         {
@@ -475,7 +473,7 @@ var SmoothedKeyControl = new Class({
                 cam.zoom = this.maxZoom;
             }
         }
-    },
+    }
 
     /**
      * Destroys this Key Control.
@@ -483,7 +481,7 @@ var SmoothedKeyControl = new Class({
      * @method Phaser.Cameras.Controls.SmoothedKeyControl#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.camera = null;
 
@@ -496,6 +494,6 @@ var SmoothedKeyControl = new Class({
         this.zoomOut = null;
     }
 
-});
+};
 
 module.exports = SmoothedKeyControl;

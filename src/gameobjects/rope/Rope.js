@@ -58,34 +58,33 @@ var Vector2 = require('../../math/Vector2');
  * @param {number[]} [colors] - An optional array containing the color data for this Rope. You should provide one color value per pair of vertices.
  * @param {number[]} [alphas] - An optional array containing the alpha data for this Rope. You should provide one alpha value per pair of vertices.
  */
-var Rope = new Class({
+var Rope = class extends GameObject {
 
-    Extends: GameObject,
+    static
+    {
+        Class.mixin(this, [
+            Components.AlphaSingle,
+            Components.BlendMode,
+            Components.Depth,
+            Components.Flip,
+            Components.Mask,
+            Components.RenderNodes,
+            Components.Size,
+            Components.Texture,
+            Components.Transform,
+            Components.Visible,
+            Components.ScrollFactor,
+            RopeRender
+        ], false);
+    }
 
-    Mixins: [
-        Components.AlphaSingle,
-        Components.BlendMode,
-        Components.Depth,
-        Components.Flip,
-        Components.Mask,
-        Components.RenderNodes,
-        Components.Size,
-        Components.Texture,
-        Components.Transform,
-        Components.Visible,
-        Components.ScrollFactor,
-        RopeRender
-    ],
-
-    initialize:
-
-    function Rope (scene, x, y, texture, frame, points, horizontal, colors, alphas)
+    constructor(scene, x, y, texture, frame, points, horizontal, colors, alphas)
     {
         if (texture === undefined) { texture = '__DEFAULT'; }
         if (points === undefined) { points = 2; }
         if (horizontal === undefined) { horizontal = true; }
 
-        GameObject.call(this, scene, 'Rope');
+        super(scene, 'Rope');
 
         /**
          * The Animation State of this Rope.
@@ -288,7 +287,7 @@ var Rope = new Class({
         this.setPoints(points, colors, alphas);
 
         this.updateVertices();
-    },
+    }
 
     /**
      * The default render nodes for this Game Object.
@@ -300,24 +299,23 @@ var Rope = new Class({
      * @readonly
      * @since 4.0.0
      */
-    _defaultRenderNodesMap: {
-        get: function ()
-        {
-            return DefaultRopeNodes;
-        }
-    },
+
+    get _defaultRenderNodesMap()
+    {
+        return DefaultRopeNodes;
+    }
 
     //  Overrides Game Object method
-    addedToScene: function ()
+    addedToScene()
     {
         this.scene.sys.updateList.add(this);
-    },
+    }
 
     //  Overrides Game Object method
-    removedFromScene: function ()
+    removedFromScene()
     {
         this.scene.sys.updateList.remove(this);
-    },
+    }
 
     /**
      * The Rope update loop.
@@ -329,7 +327,7 @@ var Rope = new Class({
      * @param {number} time - The current timestamp.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    preUpdate: function (time, delta)
+    preUpdate(time, delta)
     {
         var prevFrame = this.anims.currentFrame;
 
@@ -340,7 +338,7 @@ var Rope = new Class({
             this.updateUVs();
             this.updateVertices();
         }
-    },
+    }
 
     /**
      * Start playing the given animation.
@@ -354,12 +352,12 @@ var Rope = new Class({
      *
      * @return {this} This Game Object.
      */
-    play: function (key, ignoreIfPlaying, startFrame)
+    play(key, ignoreIfPlaying, startFrame)
     {
         this.anims.play(key, ignoreIfPlaying, startFrame);
 
         return this;
-    },
+    }
 
     /**
      * Flags this Rope as being dirty. A dirty rope will recalculate all of its vertices data
@@ -371,12 +369,12 @@ var Rope = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setDirty: function ()
+    setDirty()
     {
         this.dirty = true;
 
         return this;
-    },
+    }
 
     /**
      * Sets the alignment of the points in this Rope to be horizontal, in a strip format.
@@ -393,7 +391,7 @@ var Rope = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setHorizontal: function (points, colors, alphas)
+    setHorizontal(points, colors, alphas)
     {
         if (points === undefined) { points = this.points.length; }
 
@@ -405,7 +403,7 @@ var Rope = new Class({
         this.horizontal = true;
 
         return this.setPoints(points, colors, alphas);
-    },
+    }
 
     /**
      * Sets the alignment of the points in this Rope to be vertical, in a column format.
@@ -422,7 +420,7 @@ var Rope = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setVertical: function (points, colors, alphas)
+    setVertical(points, colors, alphas)
     {
         if (points === undefined) { points = this.points.length; }
 
@@ -434,7 +432,7 @@ var Rope = new Class({
         this.horizontal = false;
 
         return this.setPoints(points, colors, alphas);
-    },
+    }
 
     /**
      * Sets the tint fill mode.
@@ -456,14 +454,14 @@ var Rope = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setTintFill: function (value)
+    setTintFill(value)
     {
         if (value === undefined) { value = false; }
 
         this.tintFill = value;
 
         return this;
-    },
+    }
 
     /**
      * Set the alpha values used by the Rope during rendering.
@@ -491,7 +489,7 @@ var Rope = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setAlphas: function (alphas, bottomAlpha)
+    setAlphas(alphas, bottomAlpha)
     {
         var total = this.points.length;
 
@@ -562,7 +560,7 @@ var Rope = new Class({
 
         return this;
 
-    },
+    }
 
     /**
      * Set the color values used by the Rope during rendering.
@@ -588,7 +586,7 @@ var Rope = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setColors: function (colors)
+    setColors(colors)
     {
         var total = this.points.length;
 
@@ -647,7 +645,7 @@ var Rope = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the points used by this Rope.
@@ -690,7 +688,7 @@ var Rope = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setPoints: function (points, colors, alphas)
+    setPoints(points, colors, alphas)
     {
         if (points === undefined) { points = 2; }
 
@@ -769,7 +767,7 @@ var Rope = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Updates all of the UVs based on the Rope.points and `flipX` and `flipY` settings.
@@ -779,7 +777,7 @@ var Rope = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    updateUVs: function ()
+    updateUVs()
     {
         var currentUVs = this.uv;
         var total = this.points.length;
@@ -857,7 +855,7 @@ var Rope = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Resizes all of the internal arrays: `vertices`, `uv`, `colors` and `alphas` to the new
@@ -870,7 +868,7 @@ var Rope = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    resizeArrays: function (newSize)
+    resizeArrays(newSize)
     {
         var colors = this.colors;
         var alphas = this.alphas;
@@ -894,7 +892,7 @@ var Rope = new Class({
         this.dirty = true;
 
         return this;
-    },
+    }
 
     /**
      * Updates the vertices based on the Rope points.
@@ -908,7 +906,7 @@ var Rope = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    updateVertices: function ()
+    updateVertices()
     {
         var perp = this._perp;
         var points = this.points;
@@ -962,7 +960,7 @@ var Rope = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * This method enables rendering of the Rope vertices to the given Graphics instance.
@@ -996,7 +994,7 @@ var Rope = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setDebug: function (graphic, callback)
+    setDebug(graphic, callback)
     {
         this.debugGraphic = graphic;
 
@@ -1014,7 +1012,7 @@ var Rope = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * The built-in Rope vertices debug rendering method.
@@ -1028,7 +1026,7 @@ var Rope = new Class({
      * @param {number} meshLength - The number of vertices in the mesh.
      * @param {number[]} verts - An array of translated vertex coordinates.
      */
-    renderDebugVerts: function (src, meshLength, verts)
+    renderDebugVerts(src, meshLength, verts)
     {
         var graphic = src.debugGraphic;
 
@@ -1056,7 +1054,7 @@ var Rope = new Class({
             px1 = x1;
             py1 = y1;
         }
-    },
+    }
 
     /**
      * Handles the pre-destroy step for the Rope, which removes the Animation component and typed arrays.
@@ -1065,7 +1063,7 @@ var Rope = new Class({
      * @private
      * @since 3.23.0
      */
-    preDestroy: function ()
+    preDestroy()
     {
         this.anims.destroy();
 
@@ -1079,7 +1077,7 @@ var Rope = new Class({
 
         this.debugCallback = null;
         this.debugGraphic = null;
-    },
+    }
 
     /**
      * The horizontally flipped state of the Game Object.
@@ -1093,21 +1091,18 @@ var Rope = new Class({
      * @default false
      * @since 3.23.0
      */
-    flipX: {
 
-        get: function ()
-        {
-            return this._flipX;
-        },
+    get flipX()
+    {
+        return this._flipX;
+    }
 
-        set: function (value)
-        {
-            this._flipX = value;
+    set flipX(value)
+    {
+        this._flipX = value;
 
-            return this.updateUVs();
-        }
-
-    },
+        return this.updateUVs();
+    }
 
     /**
      * The vertically flipped state of the Game Object.
@@ -1121,22 +1116,19 @@ var Rope = new Class({
      * @default false
      * @since 3.23.0
      */
-    flipY: {
 
-        get: function ()
-        {
-            return this._flipY;
-        },
-
-        set: function (value)
-        {
-            this._flipY = value;
-
-            return this.updateUVs();
-        }
-
+    get flipY()
+    {
+        return this._flipY;
     }
 
-});
+    set flipY(value)
+    {
+        this._flipY = value;
+
+        return this.updateUVs();
+    }
+
+};
 
 module.exports = Rope;

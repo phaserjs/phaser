@@ -44,12 +44,11 @@ var Controller = require('./Controller');
  * @param {number|number[]} [edge2=0.5] - The second edge of the threshold. This may be an array of the RGBA channels, or a single number to apply to all 4 channels.
  * @param {boolean|boolean[]} [invert=false] - Whether each channel is inverted. This may be an array of the RGBA channels, or a single boolean to apply to all 4 channels.
  */
-var Threshold = new Class({
-    Extends: Controller,
+var Threshold = class extends Controller {
 
-    initialize: function Threshold (camera, edge1, edge2, invert)
+    constructor(camera, edge1, edge2, invert)
     {
-        Controller.call(this, camera, 'FilterThreshold');
+        super(camera, 'FilterThreshold');
 
         /**
          * The first edge of the threshold.
@@ -86,7 +85,7 @@ var Threshold = new Class({
 
         this.setEdge(edge1, edge2);
         this.setInvert(invert);
-    },
+    }
 
     /**
      * Set the edges of the threshold.
@@ -101,7 +100,7 @@ var Threshold = new Class({
      * @param {number|number[]} [edge2=0.5] - The second edge of the threshold. This may be an array of the RGBA channels, or a single number to apply to all 4 channels.
      * @return {Phaser.Filters.Threshold} This Threshold instance.
      */
-    setEdge: function (edge1, edge2)
+    setEdge(edge1, edge2)
     {
         if (edge1 === undefined)
         {
@@ -142,7 +141,7 @@ var Threshold = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Set the invert state of the threshold.
@@ -153,7 +152,7 @@ var Threshold = new Class({
      * @param {boolean|boolean[]} [invert=false] - Whether each channel is inverted. This may be an array of the RGBA channels, or a single boolean to apply to all 4 channels.
      * @return {Phaser.Filters.Threshold} This Threshold instance.
      */
-    setInvert: function (invert)
+    setInvert(invert)
     {
         if (invert === undefined)
         {
@@ -171,6 +170,6 @@ var Threshold = new Class({
 
         return this;
     }
-});
+};
 
 module.exports = Threshold;

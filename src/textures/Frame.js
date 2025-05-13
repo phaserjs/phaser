@@ -25,11 +25,9 @@ var Extend = require('../utils/object/Extend');
  * @param {number} width - The width of this Frame.
  * @param {number} height - The height of this Frame.
  */
-var Frame = new Class({
+var Frame = class {
 
-    initialize:
-
-    function Frame (texture, name, sourceIndex, x, y, width, height)
+    constructor(texture, name, sourceIndex, x, y, width, height)
     {
         /**
          * The Texture this Frame is a part of.
@@ -334,7 +332,7 @@ var Frame = new Class({
         };
 
         this.setSize(width, height, x, y);
-    },
+    }
 
     /**
      * Sets the x and y position within the source image to cut from.
@@ -347,7 +345,7 @@ var Frame = new Class({
      *
      * @return {this} This Frame object.
      */
-    setCutPosition: function (x, y)
+    setCutPosition(x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -356,7 +354,7 @@ var Frame = new Class({
         this.cutY = y;
 
         return this.updateUVs();
-    },
+    }
 
     /**
      * Sets the width, and height of the area in the source image to cut.
@@ -369,13 +367,13 @@ var Frame = new Class({
      *
      * @return {this} This Frame object.
      */
-    setCutSize: function (width, height)
+    setCutSize(width, height)
     {
         this.cutWidth = width;
         this.cutHeight = height;
 
         return this.updateUVs();
-    },
+    }
 
     /**
      * Sets the width, height, x and y of this Frame.
@@ -393,7 +391,7 @@ var Frame = new Class({
      *
      * @return {this} This Frame object.
      */
-    setSize: function (width, height, x, y)
+    setSize(width, height, x, y)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -436,7 +434,7 @@ var Frame = new Class({
         drawImage.height = height;
 
         return this.updateUVs();
-    },
+    }
 
     /**
      * If the frame was trimmed when added to the Texture Atlas, this records the trim and source data.
@@ -453,7 +451,7 @@ var Frame = new Class({
      *
      * @return {this} This Frame object.
      */
-    setTrim: function (actualWidth, actualHeight, destX, destY, destWidth, destHeight)
+    setTrim(actualWidth, actualHeight, destX, destY, destWidth, destHeight)
     {
         var data = this.data;
         var ss = data.spriteSourceSize;
@@ -486,7 +484,7 @@ var Frame = new Class({
         this.centerY = Math.floor(destHeight / 2);
 
         return this.updateUVs();
-    },
+    }
 
     /**
      * Sets the scale9 center rectangle values.
@@ -505,7 +503,7 @@ var Frame = new Class({
      *
      * @return {this} This Frame object.
      */
-    setScale9: function (x, y, width, height)
+    setScale9(x, y, width, height)
     {
         var data = this.data;
 
@@ -518,7 +516,7 @@ var Frame = new Class({
         data.scale9Borders.h = height;
 
         return this;
-    },
+    }
 
     /**
      * Takes a crop data object and, based on the rectangular region given, calculates the
@@ -542,7 +540,7 @@ var Frame = new Class({
      *
      * @return {object} The updated crop data object.
      */
-    setCropUVs: function (crop, x, y, width, height, flipX, flipY)
+    setCropUVs(crop, x, y, width, height, flipX, flipY)
     {
         //  Clamp the input values
 
@@ -661,7 +659,7 @@ var Frame = new Class({
         crop.flipY = flipY;
 
         return crop;
-    },
+    }
 
     /**
      * Takes a crop data object and recalculates the UVs based on the dimensions inside the crop object.
@@ -676,10 +674,10 @@ var Frame = new Class({
      *
      * @return {object} The updated crop data object.
      */
-    updateCropUVs: function (crop, flipX, flipY)
+    updateCropUVs(crop, flipX, flipY)
     {
         return this.setCropUVs(crop, crop.x, crop.y, crop.width, crop.height, flipX, flipY);
-    },
+    }
 
     /**
      * Directly sets the canvas and WebGL UV data for this frame.
@@ -699,7 +697,7 @@ var Frame = new Class({
      *
      * @return {this} This Frame object.
      */
-    setUVs: function (width, height, u0, v0, u1, v1)
+    setUVs(width, height, u0, v0, u1, v1)
     {
         //  Canvas data
 
@@ -717,7 +715,7 @@ var Frame = new Class({
         this.v1 = v1;
 
         return this;
-    },
+    }
 
     /**
      * Updates the internal WebGL UV cache and the drawImage cache.
@@ -727,7 +725,7 @@ var Frame = new Class({
      *
      * @return {this} This Frame object.
      */
-    updateUVs: function ()
+    updateUVs()
     {
         var cx = this.cutX;
         var cy = this.cutY;
@@ -753,7 +751,7 @@ var Frame = new Class({
         this.v1 = 1 - (cy + ch) / th;
 
         return this;
-    },
+    }
 
     /**
      * Updates the internal WebGL UV cache.
@@ -763,7 +761,7 @@ var Frame = new Class({
      *
      * @return {this} This Frame object.
      */
-    updateUVsInverted: function ()
+    updateUVsInverted()
     {
         var tw = this.source.width;
         var th = this.source.height;
@@ -775,7 +773,7 @@ var Frame = new Class({
         this.v1 = 1 - (this.cutY + this.cutWidth) / th;
 
         return this;
-    },
+    }
 
     /**
      * Clones this Frame into a new Frame object.
@@ -785,7 +783,7 @@ var Frame = new Class({
      *
      * @return {Phaser.Textures.Frame} A clone of this Frame.
      */
-    clone: function ()
+    clone()
     {
         var clone = new Frame(this.texture, this.name, this.sourceIndex);
 
@@ -813,7 +811,7 @@ var Frame = new Class({
         clone.updateUVs();
 
         return clone;
-    },
+    }
 
     /**
      * Destroys this Frame by nulling its reference to the parent Texture and and data objects.
@@ -821,13 +819,13 @@ var Frame = new Class({
      * @method Phaser.Textures.Frame#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.texture = null;
         this.source = null;
         this.customData = null;
         this.data = null;
-    },
+    }
 
     /**
      * A reference to the Texture Source WebGL Texture that this Frame is using.
@@ -837,13 +835,11 @@ var Frame = new Class({
      * @readonly
      * @since 3.11.0
      */
-    glTexture: {
 
-        get: function ()
-        {
-            return this.source.glTexture;
-        }
-    },
+    get glTexture()
+    {
+        return this.source.glTexture;
+    }
 
     /**
      * The width of the Frame in its un-trimmed, un-padded state, as prepared in the art package,
@@ -854,14 +850,11 @@ var Frame = new Class({
      * @readonly
      * @since 3.0.0
      */
-    realWidth: {
 
-        get: function ()
-        {
-            return this.data.sourceSize.w;
-        }
-
-    },
+    get realWidth()
+    {
+        return this.data.sourceSize.w;
+    }
 
     /**
      * The height of the Frame in its un-trimmed, un-padded state, as prepared in the art package,
@@ -872,14 +865,11 @@ var Frame = new Class({
      * @readonly
      * @since 3.0.0
      */
-    realHeight: {
 
-        get: function ()
-        {
-            return this.data.sourceSize.h;
-        }
-
-    },
+    get realHeight()
+    {
+        return this.data.sourceSize.h;
+    }
 
     /**
      * The radius of the Frame (derived from sqrt(w * w + h * h) / 2)
@@ -889,14 +879,11 @@ var Frame = new Class({
      * @readonly
      * @since 3.0.0
      */
-    radius: {
 
-        get: function ()
-        {
-            return this.data.radius;
-        }
-
-    },
+    get radius()
+    {
+        return this.data.radius;
+    }
 
     /**
      * Is the Frame trimmed or not?
@@ -906,14 +893,11 @@ var Frame = new Class({
      * @readonly
      * @since 3.0.0
      */
-    trimmed: {
 
-        get: function ()
-        {
-            return this.data.trim;
-        }
-
-    },
+    get trimmed()
+    {
+        return this.data.trim;
+    }
 
     /**
      * Does the Frame have scale9 border data?
@@ -923,14 +907,11 @@ var Frame = new Class({
      * @readonly
      * @since 3.70.0
      */
-    scale9: {
 
-        get: function ()
-        {
-            return this.data.scale9;
-        }
-
-    },
+    get scale9()
+    {
+        return this.data.scale9;
+    }
 
     /**
      * If the Frame has scale9 border data, is it 3-slice or 9-slice data?
@@ -940,14 +921,11 @@ var Frame = new Class({
      * @readonly
      * @since 3.70.0
      */
-    is3Slice: {
 
-        get: function ()
-        {
-            return this.data.is3Slice;
-        }
-
-    },
+    get is3Slice()
+    {
+        return this.data.is3Slice;
+    }
 
     /**
      * The Canvas drawImage data object.
@@ -957,15 +935,12 @@ var Frame = new Class({
      * @readonly
      * @since 3.0.0
      */
-    canvasData: {
 
-        get: function ()
-        {
-            return this.data.drawImage;
-        }
-
+    get canvasData()
+    {
+        return this.data.drawImage;
     }
 
-});
+};
 
 module.exports = Frame;

@@ -31,11 +31,9 @@ var GEOM_CONST = require('../const');
  * - An array of paired numbers that represent point coordinates: `[x1,y1, x2,y2, ...]`
  * - An array of arrays with two elements representing x/y coordinates: `[[x1, y1], [x2, y2], ...]`
  */
-var Polygon = new Class({
+var Polygon = class {
 
-    initialize:
-
-    function Polygon (points)
+    constructor(points)
     {
         /**
          * The geometry constant type of this object: `GEOM_CONST.POLYGON`.
@@ -71,7 +69,7 @@ var Polygon = new Class({
         {
             this.setTo(points);
         }
-    },
+    }
 
     /**
      * Check to see if the Polygon contains the given x / y coordinates.
@@ -84,10 +82,10 @@ var Polygon = new Class({
      *
      * @return {boolean} `true` if the coordinates are within the polygon, otherwise `false`.
      */
-    contains: function (x, y)
+    contains(x, y)
     {
         return Contains(this, x, y);
-    },
+    }
 
     /**
      * Sets this Polygon to the given points.
@@ -109,7 +107,7 @@ var Polygon = new Class({
      *
      * @return {this} This Polygon object.
      */
-    setTo: function (points)
+    setTo(points)
     {
         this.area = 0;
         this.points = [];
@@ -155,7 +153,7 @@ var Polygon = new Class({
         this.calculateArea();
 
         return this;
-    },
+    }
 
     /**
      * Calculates the area of the Polygon. This is available in the property Polygon.area
@@ -165,7 +163,7 @@ var Polygon = new Class({
      *
      * @return {number} The area of the polygon.
      */
-    calculateArea: function ()
+    calculateArea()
     {
         if (this.points.length < 3)
         {
@@ -194,7 +192,7 @@ var Polygon = new Class({
         this.area = -sum * 0.5;
 
         return this.area;
-    },
+    }
 
     /**
      * Returns an array of Vector2 objects containing the coordinates of the points around the perimeter of the Polygon,
@@ -211,11 +209,11 @@ var Polygon = new Class({
      *
      * @return {Phaser.Math.Vector2[]} An array of Vector2 objects pertaining to the points around the perimeter of the Polygon.
      */
-    getPoints: function (quantity, step, output)
+    getPoints(quantity, step, output)
     {
         return GetPoints(this, quantity, step, output);
     }
 
-});
+};
 
 module.exports = Polygon;

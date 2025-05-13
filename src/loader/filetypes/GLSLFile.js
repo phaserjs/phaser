@@ -31,13 +31,9 @@ var Shader = require('../../display/shader/BaseShader');
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.glsl`, i.e. if `key` was "alien" then the URL will be "alien.glsl".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var GLSLFile = new Class({
+var GLSLFile = class extends File {
 
-    Extends: File,
-
-    initialize:
-
-    function GLSLFile (loader, key, url, xhrSettings)
+    constructor(loader, key, url, xhrSettings)
     {
         var extension = 'glsl';
 
@@ -61,8 +57,8 @@ var GLSLFile = new Class({
             xhrSettings: xhrSettings
         };
 
-        File.call(this, loader, fileConfig);
-    },
+        super(loader, fileConfig);
+    }
 
     /**
      * Called automatically by Loader.nextFile.
@@ -71,14 +67,14 @@ var GLSLFile = new Class({
      * @method Phaser.Loader.FileTypes.GLSLFile#onProcess
      * @since 3.7.0
      */
-    onProcess: function ()
+    onProcess()
     {
         this.state = CONST.FILE_PROCESSING;
 
         this.data = this.xhrLoader.responseText;
 
         this.onProcessComplete();
-    },
+    }
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
@@ -86,11 +82,11 @@ var GLSLFile = new Class({
      * @method Phaser.Loader.FileTypes.GLSLFile#addToCache
      * @since 3.17.0
      */
-    addToCache: function ()
+    addToCache()
     {
         this.cache.add(this.key, new Shader(this.key, this.data));
     }
-});
+};
 
 /**
  * Adds a GLSL file, or array of GLSL files, to the current load queue.

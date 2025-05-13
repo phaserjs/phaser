@@ -24,15 +24,14 @@ var ShaderSourceFS = require('../../shaders/FilterBlurLow-frag.js');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  */
-var FilterBlurLow = new Class({
-    Extends: BaseFilterShader,
+var FilterBlurLow = class extends BaseFilterShader {
 
-    initialize: function FilterBlurLow (manager)
+    constructor(manager)
     {
-        BaseFilterShader.call(this, 'FilterBlurLow', manager, null, ShaderSourceFS);
-    },
+        super('FilterBlurLow', manager, null, ShaderSourceFS);
+    }
 
-    setupUniforms: function (controller, drawingContext)
+    setupUniforms(controller, drawingContext)
     {
         var programManager = this.programManager;
 
@@ -41,6 +40,6 @@ var FilterBlurLow = new Class({
         programManager.setUniform('color', controller.color);
         programManager.setUniform('offset', [ controller.x, controller.y ]);
     }
-});
+};
 
 module.exports = FilterBlurLow;

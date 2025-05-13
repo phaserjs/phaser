@@ -46,18 +46,129 @@ var ShaderSourceVS = require('../../shaders/SpriteGPULayer-vert');
  * @param {string} [config.vertexSource] - The vertex shader source.
  * @param {string} [config.fragmentSource] - The fragment shader source.
  */
-var SubmitterSpriteGPULayer = new Class({
-    Extends: RenderNode,
+var SubmitterSpriteGPULayer = class extends RenderNode {
 
-    initialize: function SubmitterSpriteGPULayer (manager, config, gameObject)
+    constructor(manager, config, gameObject)
     {
+        /**
+         * Default configuration of this RenderNode.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterSpriteGPULayer#defaultConfig
+         * @type {object}
+         * @since 4.0.0
+         * @readonly
+         * @property {string} name - The name of this RenderNode.
+         * @property {string} vertexSource - The vertex shader source.
+         * @property {string} fragmentSource - The fragment shader source.
+         */
+        this.defaultConfig = {
+            name: 'SubmitterSpriteGPULayer',
+            count: 0,
+            shaderName: 'SpriteGPULayer',
+            vertexSource: ShaderSourceVS,
+            fragmentSource: ShaderSourceFS,
+            shaderAdditions: [
+                MakeGetTexCoordOut(),
+                MakeGetTexRes(),
+                MakeSmoothPixelArt(true),
+                MakeDefineTexCount(1),
+                MakeGetTexture(),
+                MakeApplyTint(),
+                MakeDefineLights(true),
+                MakeOutInverseRotation(true),
+                MakeGetNormalFromMap(true),
+                MakeApplyLighting(true)
+            ],
+            instanceBufferLayout: {
+                usage: 'STATIC_DRAW',
+                instanceDivisor: 1,
+                layout: [
+                    {
+                        name: 'inPositionX',
+                        size: 4
+                    },
+                    {
+                        name: 'inPositionY',
+                        size: 4
+                    },
+                    {
+                        name: 'inRotation',
+                        size: 4
+                    },
+                    {
+                        name: 'inScaleX',
+                        size: 4
+                    },
+                    {
+                        name: 'inScaleY',
+                        size: 4
+                    },
+                    {
+                        name: 'inAlpha',
+                        size: 4
+                    },
+                    {
+                        name: 'inFrame',
+                        size: 4
+                    },
+                    {
+                        name: 'inTintBlend',
+                        size: 4
+                    },
+                    {
+                        name: 'inTintBL',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    },
+                    {
+                        name: 'inTintTL',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    },
+                    {
+                        name: 'inTintBR',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    },
+                    {
+                        name: 'inTintTR',
+                        size: 4,
+                        type: 'UNSIGNED_BYTE',
+                        normalized: true
+                    },
+                    {
+                        name: 'inOriginAndTintFillAndCreationTime',
+                        size: 4
+                    },
+                    {
+                        name: 'inScrollFactor',
+                        size: 2
+                    }
+                ]
+            },
+            vertexBufferLayout: {
+                usage: 'STATIC_DRAW',
+                count: 4,
+                layout: [
+                    {
+                        // The vertex index, 0-3.
+                        name: 'inVertex',
+                        type: 'UNSIGNED_BYTE'
+                    }
+                ]
+            }
+        };
+
         var renderer = manager.renderer;
 
         var finalConfig = Merge(config || {}, this.defaultConfig);
         var name = finalConfig.name;
         this._completeLayout(finalConfig);
 
-        RenderNode.call(this, name, manager);
+        super(name, manager);
 
         /**
          * The completed configuration object for this RenderNode.
@@ -172,119 +283,7 @@ var SubmitterSpriteGPULayer = new Class({
          * @private
          */
         this._lightVector = new Vector2();
-    },
-
-    /**
-     * Default configuration of this RenderNode.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterSpriteGPULayer#defaultConfig
-     * @type {object}
-     * @since 4.0.0
-     * @readonly
-     * @property {string} name - The name of this RenderNode.
-     * @property {string} vertexSource - The vertex shader source.
-     * @property {string} fragmentSource - The fragment shader source.
-     */
-    defaultConfig: {
-        name: 'SubmitterSpriteGPULayer',
-        count: 0,
-        shaderName: 'SpriteGPULayer',
-        vertexSource: ShaderSourceVS,
-        fragmentSource: ShaderSourceFS,
-        shaderAdditions: [
-            MakeGetTexCoordOut(),
-            MakeGetTexRes(),
-            MakeSmoothPixelArt(true),
-            MakeDefineTexCount(1),
-            MakeGetTexture(),
-            MakeApplyTint(),
-            MakeDefineLights(true),
-            MakeOutInverseRotation(true),
-            MakeGetNormalFromMap(true),
-            MakeApplyLighting(true)
-        ],
-        instanceBufferLayout: {
-            usage: 'STATIC_DRAW',
-            instanceDivisor: 1,
-            layout: [
-                {
-                    name: 'inPositionX',
-                    size: 4
-                },
-                {
-                    name: 'inPositionY',
-                    size: 4
-                },
-                {
-                    name: 'inRotation',
-                    size: 4
-                },
-                {
-                    name: 'inScaleX',
-                    size: 4
-                },
-                {
-                    name: 'inScaleY',
-                    size: 4
-                },
-                {
-                    name: 'inAlpha',
-                    size: 4
-                },
-                {
-                    name: 'inFrame',
-                    size: 4
-                },
-                {
-                    name: 'inTintBlend',
-                    size: 4
-                },
-                {
-                    name: 'inTintBL',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                },
-                {
-                    name: 'inTintTL',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                },
-                {
-                    name: 'inTintBR',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                },
-                {
-                    name: 'inTintTR',
-                    size: 4,
-                    type: 'UNSIGNED_BYTE',
-                    normalized: true
-                },
-                {
-                    name: 'inOriginAndTintFillAndCreationTime',
-                    size: 4
-                },
-                {
-                    name: 'inScrollFactor',
-                    size: 2
-                }
-            ]
-        },
-        vertexBufferLayout: {
-            usage: 'STATIC_DRAW',
-            count: 4,
-            layout: [
-                {
-                    // The vertex index, 0-3.
-                    name: 'inVertex',
-                    type: 'UNSIGNED_BYTE'
-                }
-            ]
-        }
-    },
+    }
 
     /**
      * Fill out the configuration object with default values where needed.
@@ -293,7 +292,7 @@ var SubmitterSpriteGPULayer = new Class({
      * @since 4.0.0
      * @param {object} config - The configuration object to complete.
      */
-    _completeLayout: function (config)
+    _completeLayout(config)
     {
         // Set up vertex buffer layout.
         var layoutSource = config.vertexBufferLayout;
@@ -370,9 +369,9 @@ var SubmitterSpriteGPULayer = new Class({
                 });
             }
         }
-    },
+    }
 
-    setupUniforms: function (drawingContext)
+    setupUniforms(drawingContext)
     {
         var camera = drawingContext.camera;
         var programManager = this.programManager;
@@ -458,9 +457,9 @@ var SubmitterSpriteGPULayer = new Class({
             layer.selfShadow.diffuseFlatThreshold,
             layer.selfShadow.penumbra
         );
-    },
+    }
 
-    updateRenderOptions: function ()
+    updateRenderOptions()
     {
         var programManager = this.programManager;
 
@@ -505,7 +504,7 @@ var SubmitterSpriteGPULayer = new Class({
         {
             programManager.addFeature('SELFSHADOW');
         }
-    },
+    }
 
     /**
      * Render a SpriteGPULayer object.
@@ -514,7 +513,7 @@ var SubmitterSpriteGPULayer = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    run: function (drawingContext)
+    run(drawingContext)
     {
         var i;
         var layer = this.gameObject;
@@ -623,6 +622,6 @@ var SubmitterSpriteGPULayer = new Class({
 
         this.onRunEnd(drawingContext);
     }
-});
+};
 
 module.exports = SubmitterSpriteGPULayer;

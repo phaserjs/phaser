@@ -30,11 +30,9 @@ var Events = require('./events');
  * @param {object} parent - The object that this DataManager belongs to.
  * @param {Phaser.Events.EventEmitter} [eventEmitter] - The DataManager's event emitter.
  */
-var DataManager = new Class({
+var DataManager = class {
 
-    initialize:
-
-    function DataManager (parent, eventEmitter)
+    constructor(parent, eventEmitter)
     {
         /**
          * The object that this DataManager belongs to.
@@ -111,7 +109,7 @@ var DataManager = new Class({
         {
             this.events.once(Events.DESTROY, this.destroy, this);
         }
-    },
+    }
 
     /**
      * Retrieves the value for the given key, or undefined if it doesn't exist.
@@ -143,7 +141,7 @@ var DataManager = new Class({
      *
      * @return {*} The value belonging to the given key, or an array of values, the order of which will match the input array.
      */
-    get: function (key)
+    get(key)
     {
         var list = this.list;
 
@@ -162,7 +160,7 @@ var DataManager = new Class({
         {
             return list[key];
         }
-    },
+    }
 
     /**
      * Retrieves all data values in a new object.
@@ -172,7 +170,7 @@ var DataManager = new Class({
      *
      * @return {Object.<string, *>} All data values.
      */
-    getAll: function ()
+    getAll()
     {
         var results = {};
 
@@ -185,7 +183,7 @@ var DataManager = new Class({
         }
 
         return results;
-    },
+    }
 
     /**
      * Queries the DataManager for the values of keys matching the given regular expression.
@@ -197,7 +195,7 @@ var DataManager = new Class({
      *
      * @return {Object.<string, *>} The values of the keys matching the search string.
      */
-    query: function (search)
+    query(search)
     {
         var results = {};
 
@@ -210,7 +208,7 @@ var DataManager = new Class({
         }
 
         return results;
-    },
+    }
 
     /**
      * Sets a value for the given key. If the key doesn't already exist in the Data Manager then it is created.
@@ -260,7 +258,7 @@ var DataManager = new Class({
      *
      * @return {this} This Data Manager instance.
      */
-    set: function (key, data)
+    set(key, data)
     {
         if (this._frozen)
         {
@@ -280,7 +278,7 @@ var DataManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Increase a value for the given key. If the key doesn't already exist in the Data Manager then it is increased from 0.
@@ -298,7 +296,7 @@ var DataManager = new Class({
      *
      * @return {this} This Data Manager instance.
      */
-    inc: function (key, amount)
+    inc(key, amount)
     {
         if (this._frozen)
         {
@@ -320,7 +318,7 @@ var DataManager = new Class({
         this.set(key, (value + amount));
 
         return this;
-    },
+    }
 
     /**
      * Toggle a boolean value for the given key. If the key doesn't already exist in the Data Manager then it is toggled from false.
@@ -337,7 +335,7 @@ var DataManager = new Class({
      *
      * @return {this} This Data Manager instance.
      */
-    toggle: function (key)
+    toggle(key)
     {
         if (this._frozen)
         {
@@ -347,7 +345,7 @@ var DataManager = new Class({
         this.set(key, !this.get(key));
 
         return this;
-    },
+    }
 
     /**
      * Internal value setter, called automatically by the `set` method.
@@ -364,7 +362,7 @@ var DataManager = new Class({
      *
      * @return {this} This Data Manager instance.
      */
-    setValue: function (key, data)
+    setValue(key, data)
     {
         if (this._frozen)
         {
@@ -414,7 +412,7 @@ var DataManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Passes all data entries to the given callback.
@@ -428,7 +426,7 @@ var DataManager = new Class({
      *
      * @return {this} This Data Manager instance.
      */
-    each: function (callback, context)
+    each(callback, context)
     {
         var args = [ this.parent, null, undefined ];
 
@@ -446,7 +444,7 @@ var DataManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Merge the given object of key value pairs into this DataManager.
@@ -465,7 +463,7 @@ var DataManager = new Class({
      *
      * @return {this} This Data Manager instance.
      */
-    merge: function (data, overwrite)
+    merge(data, overwrite)
     {
         if (overwrite === undefined) { overwrite = true; }
 
@@ -479,7 +477,7 @@ var DataManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Remove the value for the given key.
@@ -501,7 +499,7 @@ var DataManager = new Class({
      *
      * @return {this} This Data Manager instance.
      */
-    remove: function (key)
+    remove(key)
     {
         if (this._frozen)
         {
@@ -521,7 +519,7 @@ var DataManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Internal value remover, called automatically by the `remove` method.
@@ -535,7 +533,7 @@ var DataManager = new Class({
      *
      * @return {this} This Data Manager instance.
      */
-    removeValue: function (key)
+    removeValue(key)
     {
         if (this.has(key))
         {
@@ -548,7 +546,7 @@ var DataManager = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Retrieves the data associated with the given 'key', deletes it from this Data Manager, then returns it.
@@ -561,7 +559,7 @@ var DataManager = new Class({
      *
      * @return {*} The value of the given key.
      */
-    pop: function (key)
+    pop(key)
     {
         var data = undefined;
 
@@ -576,7 +574,7 @@ var DataManager = new Class({
         }
 
         return data;
-    },
+    }
 
     /**
      * Determines whether the given key is set in this Data Manager.
@@ -591,10 +589,10 @@ var DataManager = new Class({
      *
      * @return {boolean} Returns `true` if the key exists, otherwise `false`.
      */
-    has: function (key)
+    has(key)
     {
         return this.list.hasOwnProperty(key);
-    },
+    }
 
     /**
      * Freeze or unfreeze this Data Manager. A frozen Data Manager will block all attempts
@@ -607,12 +605,12 @@ var DataManager = new Class({
      *
      * @return {this} This Data Manager instance.
      */
-    setFreeze: function (value)
+    setFreeze(value)
     {
         this._frozen = value;
 
         return this;
-    },
+    }
 
     /**
      * Delete all data in this Data Manager and unfreeze it.
@@ -622,7 +620,7 @@ var DataManager = new Class({
      *
      * @return {this} This Data Manager instance.
      */
-    reset: function ()
+    reset()
     {
         for (var key in this.list)
         {
@@ -633,7 +631,7 @@ var DataManager = new Class({
         this._frozen = false;
 
         return this;
-    },
+    }
 
     /**
      * Destroy this data manager.
@@ -641,7 +639,7 @@ var DataManager = new Class({
      * @method Phaser.Data.DataManager#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.reset();
 
@@ -650,7 +648,7 @@ var DataManager = new Class({
         this.events.off(Events.REMOVE_DATA);
 
         this.parent = null;
-    },
+    }
 
     /**
      * Gets or sets the frozen state of this Data Manager.
@@ -660,19 +658,16 @@ var DataManager = new Class({
      * @type {boolean}
      * @since 3.0.0
      */
-    freeze: {
 
-        get: function ()
-        {
-            return this._frozen;
-        },
+    get freeze()
+    {
+        return this._frozen;
+    }
 
-        set: function (value)
-        {
-            this._frozen = (value) ? true : false;
-        }
-
-    },
+    set freeze(value)
+    {
+        this._frozen = (value) ? true : false;
+    }
 
     /**
      * Return the total number of entries in this Data Manager.
@@ -681,25 +676,22 @@ var DataManager = new Class({
      * @type {number}
      * @since 3.0.0
      */
-    count: {
 
-        get: function ()
+    get count()
+    {
+        var i = 0;
+
+        for (var key in this.list)
         {
-            var i = 0;
-
-            for (var key in this.list)
+            if (this.list[key] !== undefined)
             {
-                if (this.list[key] !== undefined)
-                {
-                    i++;
-                }
+                i++;
             }
-
-            return i;
         }
 
+        return i;
     }
 
-});
+};
 
 module.exports = DataManager;

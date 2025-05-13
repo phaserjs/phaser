@@ -36,11 +36,9 @@ var SortByDigits = require('../utils/array/SortByDigits');
  * @param {string} key - The unique identifying string for this animation.
  * @param {Phaser.Types.Animations.Animation} config - The Animation configuration.
  */
-var Animation = new Class({
+var Animation = class {
 
-    initialize:
-
-    function Animation (manager, key, config)
+    constructor(manager, key, config)
     {
         /**
          * A reference to the global Animation Manager.
@@ -224,7 +222,7 @@ var Animation = new Class({
             this.manager.on(Events.PAUSE_ALL, this.pause, this);
             this.manager.on(Events.RESUME_ALL, this.resume, this);
         }
-    },
+    }
 
     /**
      * Gets the total number of frames in this animation.
@@ -234,10 +232,10 @@ var Animation = new Class({
      *
      * @return {number} The total number of frames in this animation.
      */
-    getTotalFrames: function ()
+    getTotalFrames()
     {
         return this.frames.length;
-    },
+    }
 
     /**
      * Calculates the duration, frame rate and msPerFrame values.
@@ -250,7 +248,7 @@ var Animation = new Class({
      * @param {?number} [duration] - The duration to calculate the frame rate from. Pass `null` if you wish to set the `frameRate` instead.
      * @param {?number} [frameRate] - The frame rate to calculate the duration from.
      */
-    calculateDuration: function (target, totalFrames, duration, frameRate)
+    calculateDuration(target, totalFrames, duration, frameRate)
     {
         if (duration === null && frameRate === null)
         {
@@ -276,7 +274,7 @@ var Animation = new Class({
         }
 
         target.msPerFrame = 1000 / target.frameRate;
-    },
+    }
 
     /**
      * Add frames to the end of the animation.
@@ -288,10 +286,10 @@ var Animation = new Class({
      *
      * @return {this} This Animation object.
      */
-    addFrame: function (config)
+    addFrame(config)
     {
         return this.addFrameAt(this.frames.length, config);
-    },
+    }
 
     /**
      * Add frame/s into the animation.
@@ -304,7 +302,7 @@ var Animation = new Class({
      *
      * @return {this} This Animation object.
      */
-    addFrameAt: function (index, config)
+    addFrameAt(index, config)
     {
         var newFrames = this.getFrames(this.manager.textureManager, config);
 
@@ -330,7 +328,7 @@ var Animation = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Check if the given frame index is valid.
@@ -342,10 +340,10 @@ var Animation = new Class({
      *
      * @return {boolean} `true` if the index is valid, otherwise `false`.
      */
-    checkFrame: function (index)
+    checkFrame(index)
     {
         return (index >= 0 && index < this.frames.length);
-    },
+    }
 
     /**
      * Called internally when this Animation first starts to play.
@@ -357,13 +355,13 @@ var Animation = new Class({
      *
      * @param {Phaser.Animations.AnimationState} state - The Animation State belonging to the Game Object invoking this call.
      */
-    getFirstTick: function (state)
+    getFirstTick(state)
     {
         //  When is the first update due?
         state.accumulator = 0;
         
         state.nextTick = state.frameRate === state.currentAnim.frameRate ? state.currentFrame.duration || state.msPerFrame : state.msPerFrame;
-    },
+    }
 
     /**
      * Returns the AnimationFrame at the provided index
@@ -375,10 +373,10 @@ var Animation = new Class({
      *
      * @return {Phaser.Animations.AnimationFrame} The frame at the index provided from the animation sequence
      */
-    getFrameAt: function (index)
+    getFrameAt(index)
     {
         return this.frames[index];
-    },
+    }
 
     /**
      * Creates AnimationFrame instances based on the given frame data.
@@ -392,7 +390,7 @@ var Animation = new Class({
      *
      * @return {Phaser.Animations.AnimationFrame[]} An array of newly created AnimationFrame instances.
      */
-    getFrames: function (textureManager, frames, defaultTextureKey, sortFrames)
+    getFrames(textureManager, frames, defaultTextureKey, sortFrames)
     {
         if (sortFrames === undefined) { sortFrames = true; }
 
@@ -501,7 +499,7 @@ var Animation = new Class({
         }
 
         return out;
-    },
+    }
 
     /**
      * Called internally. Sets the accumulator and nextTick values of the current Animation.
@@ -511,12 +509,12 @@ var Animation = new Class({
      *
      * @param {Phaser.Animations.AnimationState} state - The Animation State belonging to the Game Object invoking this call.
      */
-    getNextTick: function (state)
+    getNextTick(state)
     {
         state.accumulator -= state.nextTick;
 
         state.nextTick = state.frameRate === state.currentAnim.frameRate ? state.currentFrame.duration || state.msPerFrame : state.msPerFrame;
-    },
+    }
 
     /**
      * Returns the frame closest to the given progress value between 0 and 1.
@@ -528,12 +526,12 @@ var Animation = new Class({
      *
      * @return {Phaser.Animations.AnimationFrame} The frame closest to the given progress value.
      */
-    getFrameByProgress: function (value)
+    getFrameByProgress(value)
     {
         value = Clamp(value, 0, 1);
 
         return FindClosestInSorted(value, this.frames, 'progress');
-    },
+    }
 
     /**
      * Advance the animation frame.
@@ -543,7 +541,7 @@ var Animation = new Class({
      *
      * @param {Phaser.Animations.AnimationState} state - The Animation State to advance.
      */
-    nextFrame: function (state)
+    nextFrame(state)
     {
         var frame = state.currentFrame;
 
@@ -578,7 +576,7 @@ var Animation = new Class({
         {
             this.updateAndGetNextTick(state, frame.nextFrame);
         }
-    },
+    }
 
     /**
      * Handle the yoyo functionality in nextFrame and previousFrame methods.
@@ -590,7 +588,7 @@ var Animation = new Class({
      * @param {Phaser.Animations.AnimationState} state - The Animation State to advance.
      * @param {boolean} isReverse - Is animation in reverse mode? (Default: false)
      */
-    handleYoyoFrame: function (state, isReverse)
+    handleYoyoFrame(state, isReverse)
     {
         if (!isReverse) { isReverse = false; }
 
@@ -618,7 +616,7 @@ var Animation = new Class({
         var frame = (isReverse) ? state.currentFrame.nextFrame : state.currentFrame.prevFrame;
 
         this.updateAndGetNextTick(state, frame);
-    },
+    }
 
     /**
      * Returns the animation last frame.
@@ -628,10 +626,10 @@ var Animation = new Class({
      *
      * @return {Phaser.Animations.AnimationFrame} The last Animation Frame.
      */
-    getLastFrame: function ()
+    getLastFrame()
     {
         return this.frames[this.frames.length - 1];
-    },
+    }
 
     /**
      * Called internally when the Animation is playing backwards.
@@ -642,7 +640,7 @@ var Animation = new Class({
      *
      * @param {Phaser.Animations.AnimationState} state - The Animation State belonging to the Game Object invoking this call.
      */
-    previousFrame: function (state)
+    previousFrame(state)
     {
         var frame = state.currentFrame;
 
@@ -676,7 +674,7 @@ var Animation = new Class({
         {
             this.updateAndGetNextTick(state, frame.prevFrame);
         }
-    },
+    }
 
     /**
      * Update Frame and Wait next tick.
@@ -688,12 +686,12 @@ var Animation = new Class({
      * @param {Phaser.Animations.AnimationState} state - The Animation State.
      * @param {Phaser.Animations.AnimationFrame} frame - An Animation frame.
      */
-    updateAndGetNextTick: function (state, frame)
+    updateAndGetNextTick(state, frame)
     {
         state.setCurrentFrame(frame);
 
         this.getNextTick(state);
-    },
+    }
 
     /**
      * Removes the given AnimationFrame from this Animation instance.
@@ -706,7 +704,7 @@ var Animation = new Class({
      *
      * @return {this} This Animation object.
      */
-    removeFrame: function (frame)
+    removeFrame(frame)
     {
         var index = this.frames.indexOf(frame);
 
@@ -716,7 +714,7 @@ var Animation = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Removes a frame from the AnimationFrame array at the provided index
@@ -729,14 +727,14 @@ var Animation = new Class({
      *
      * @return {this} This Animation object.
      */
-    removeFrameAt: function (index)
+    removeFrameAt(index)
     {
         this.frames.splice(index, 1);
 
         this.updateFrameSequence();
 
         return this;
-    },
+    }
 
     /**
      * Called internally during playback. Forces the animation to repeat, providing there are enough counts left
@@ -750,7 +748,7 @@ var Animation = new Class({
      *
      * @param {Phaser.Animations.AnimationState} state - The Animation State belonging to the Game Object invoking this call.
      */
-    repeatAnimation: function (state)
+    repeatAnimation(state)
     {
         if (state._pendingStop === 2)
         {
@@ -790,7 +788,7 @@ var Animation = new Class({
                 state.handleRepeat();
             }
         }
-    },
+    }
 
     /**
      * Converts the animation data to JSON.
@@ -800,7 +798,7 @@ var Animation = new Class({
      *
      * @return {Phaser.Types.Animations.JSONAnimation} The resulting JSONAnimation formatted object.
      */
-    toJSON: function ()
+    toJSON()
     {
         var output = {
             key: this.key,
@@ -825,7 +823,7 @@ var Animation = new Class({
         });
 
         return output;
-    },
+    }
 
     /**
      * Called internally whenever frames are added to, or removed from, this Animation.
@@ -835,7 +833,7 @@ var Animation = new Class({
      *
      * @return {this} This Animation object.
      */
-    updateFrameSequence: function ()
+    updateFrameSequence()
     {
         var len = this.frames.length;
         var slice = 1 / (len - 1);
@@ -882,7 +880,7 @@ var Animation = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Pauses playback of this Animation. The paused state is set immediately.
@@ -892,12 +890,12 @@ var Animation = new Class({
      *
      * @return {this} This Animation object.
      */
-    pause: function ()
+    pause()
     {
         this.paused = true;
 
         return this;
-    },
+    }
 
     /**
      * Resumes playback of this Animation. The paused state is reset immediately.
@@ -907,12 +905,12 @@ var Animation = new Class({
      *
      * @return {this} This Animation object.
      */
-    resume: function ()
+    resume()
     {
         this.paused = false;
 
         return this;
-    },
+    }
 
     /**
      * Destroys this Animation instance. It will remove all event listeners,
@@ -922,7 +920,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#destroy
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         if (this.manager.off)
         {
@@ -942,6 +940,6 @@ var Animation = new Class({
         this.manager = null;
     }
 
-});
+};
 
 module.exports = Animation;

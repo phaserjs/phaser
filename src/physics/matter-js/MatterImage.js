@@ -59,28 +59,27 @@ var Vector2 = require('../../math/Vector2');
  * @param {(string|number)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [options] - An optional Body configuration object that is used to set initial Body properties on creation.
  */
-var MatterImage = new Class({
+var MatterImage = class extends Image {
 
-    Extends: Image,
+    static
+    {
+        Class.mixin(this, [
+            Components.Bounce,
+            Components.Collision,
+            Components.Force,
+            Components.Friction,
+            Components.Gravity,
+            Components.Mass,
+            Components.Sensor,
+            Components.SetBody,
+            Components.Sleep,
+            Components.Static,
+            Components.Transform,
+            Components.Velocity
+        ], false);
+    }
 
-    Mixins: [
-        Components.Bounce,
-        Components.Collision,
-        Components.Force,
-        Components.Friction,
-        Components.Gravity,
-        Components.Mass,
-        Components.Sensor,
-        Components.SetBody,
-        Components.Sleep,
-        Components.Static,
-        Components.Transform,
-        Components.Velocity
-    ],
-
-    initialize:
-
-    function MatterImage (world, x, y, texture, frame, options)
+    constructor(world, x, y, texture, frame, options)
     {
         GameObject.call(this, world.scene, 'Image');
 
@@ -132,6 +131,6 @@ var MatterImage = new Class({
         this.setPosition(x, y);
     }
 
-});
+};
 
 module.exports = MatterImage;

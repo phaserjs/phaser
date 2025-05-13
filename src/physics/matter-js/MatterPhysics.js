@@ -92,11 +92,9 @@ Common.setDecomp(require('./poly-decomp'));
  *
  * @param {Phaser.Scene} scene - The Phaser Scene that owns this Matter Physics instance.
  */
-var MatterPhysics = new Class({
+var MatterPhysics = class {
 
-    initialize:
-
-    function MatterPhysics (scene)
+    constructor(scene)
     {
         /**
          * The Phaser Scene that owns this Matter Physics instance
@@ -393,7 +391,7 @@ var MatterPhysics = new Class({
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
-    },
+    }
 
     /**
      * This method is called automatically, only once, when the Scene is first created.
@@ -403,14 +401,14 @@ var MatterPhysics = new Class({
      * @private
      * @since 3.5.1
      */
-    boot: function ()
+    boot()
     {
         this.world = new World(this.scene, this.config);
         this.add = new Factory(this.world);
         this.bodyBounds = new BodyBounds();
 
         this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
-    },
+    }
 
     /**
      * This method is called automatically by the Scene when it is starting up.
@@ -421,7 +419,7 @@ var MatterPhysics = new Class({
      * @private
      * @since 3.5.0
      */
-    start: function ()
+    start()
     {
         if (!this.world)
         {
@@ -434,7 +432,7 @@ var MatterPhysics = new Class({
         eventEmitter.on(SceneEvents.UPDATE, this.world.update, this.world);
         eventEmitter.on(SceneEvents.POST_UPDATE, this.world.postUpdate, this.world);
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
-    },
+    }
 
     /**
      * This internal method is called when this class starts and retrieves the final Matter World Config.
@@ -444,7 +442,7 @@ var MatterPhysics = new Class({
      *
      * @return {Phaser.Types.Physics.Matter.MatterWorldConfig} The Matter World Config.
      */
-    getConfig: function ()
+    getConfig()
     {
         var gameConfig = this.systems.game.config.physics;
         var sceneConfig = this.systems.settings.physics;
@@ -455,7 +453,7 @@ var MatterPhysics = new Class({
         );
 
         return config;
-    },
+    }
 
     /**
      * Pauses the Matter World instance and sets `enabled` to `false`.
@@ -468,10 +466,10 @@ var MatterPhysics = new Class({
      *
      * @return {Phaser.Physics.Matter.World} The Matter World object.
      */
-    pause: function ()
+    pause()
     {
         return this.world.pause();
-    },
+    }
 
     /**
      * Resumes this Matter World instance from a paused state and sets `enabled` to `true`.
@@ -481,10 +479,10 @@ var MatterPhysics = new Class({
      *
      * @return {Phaser.Physics.Matter.World} The Matter World object.
      */
-    resume: function ()
+    resume()
     {
         return this.world.resume();
-    },
+    }
 
     /**
      * Sets the Matter Engine to run at fixed timestep of 60Hz and enables `autoUpdate`.
@@ -495,13 +493,13 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    set60Hz: function ()
+    set60Hz()
     {
         this.world.getDelta = this.world.update60Hz;
         this.world.autoUpdate = true;
 
         return this;
-    },
+    }
 
     /**
      * Sets the Matter Engine to run at fixed timestep of 30Hz and enables `autoUpdate`.
@@ -512,13 +510,13 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    set30Hz: function ()
+    set30Hz()
     {
         this.world.getDelta = this.world.update30Hz;
         this.world.autoUpdate = true;
 
         return this;
-    },
+    }
 
     /**
      * Manually advances the physics simulation by one iteration.
@@ -547,10 +545,10 @@ var MatterPhysics = new Class({
      * @param {number} [delta=16.666] - The delta value.
      * @param {number} [correction=1] - Optional delta correction value.
      */
-    step: function (delta, correction)
+    step(delta, correction)
     {
         this.world.step(delta, correction);
-    },
+    }
 
     /**
      * Checks if the vertices of the given body, or an array of bodies, contains the given point, or not.
@@ -572,7 +570,7 @@ var MatterPhysics = new Class({
      *
      * @return {boolean} `true` if the point is within one of the bodies given, otherwise `false`.
      */
-    containsPoint: function (body, x, y)
+    containsPoint(body, x, y)
     {
         body = this.getMatterBodies(body);
 
@@ -581,7 +579,7 @@ var MatterPhysics = new Class({
         var result = Query.point(body, position);
 
         return (result.length > 0) ? true : false;
-    },
+    }
 
     /**
      * Checks the given coordinates to see if any vertices of the given bodies contain it.
@@ -601,7 +599,7 @@ var MatterPhysics = new Class({
      *
      * @return {Phaser.Types.Physics.Matter.MatterBody[]} An array of bodies which contain the given point.
      */
-    intersectPoint: function (x, y, bodies)
+    intersectPoint(x, y, bodies)
     {
         bodies = this.getMatterBodies(bodies);
 
@@ -620,7 +618,7 @@ var MatterPhysics = new Class({
         });
 
         return output;
-    },
+    }
 
     /**
      * Checks the given rectangular area to see if any vertices of the given bodies intersect with it.
@@ -641,7 +639,7 @@ var MatterPhysics = new Class({
      *
      * @return {Phaser.Types.Physics.Matter.MatterBody[]} An array of bodies that intersect with the given area.
      */
-    intersectRect: function (x, y, width, height, outside, bodies)
+    intersectRect(x, y, width, height, outside, bodies)
     {
         if (outside === undefined) { outside = false; }
 
@@ -665,7 +663,7 @@ var MatterPhysics = new Class({
         });
 
         return output;
-    },
+    }
 
     /**
      * Checks the given ray segment to see if any vertices of the given bodies intersect with it.
@@ -686,7 +684,7 @@ var MatterPhysics = new Class({
      *
      * @return {Phaser.Types.Physics.Matter.MatterBody[]} An array of bodies whos vertices intersect with the ray segment.
      */
-    intersectRay: function (x1, y1, x2, y2, rayWidth, bodies)
+    intersectRay(x1, y1, x2, y2, rayWidth, bodies)
     {
         if (rayWidth === undefined) { rayWidth = 1; }
 
@@ -701,7 +699,7 @@ var MatterPhysics = new Class({
         }
 
         return result;
-    },
+    }
 
     /**
      * Checks the given Matter Body to see if it intersects with any of the given bodies.
@@ -716,7 +714,7 @@ var MatterPhysics = new Class({
      *
      * @return {Phaser.Types.Physics.Matter.MatterBody[]} An array of bodies whos vertices intersect with target body.
      */
-    intersectBody: function (body, bodies)
+    intersectBody(body, bodies)
     {
         bodies = this.getMatterBodies(bodies);
 
@@ -738,7 +736,7 @@ var MatterPhysics = new Class({
         }
 
         return result;
-    },
+    }
 
     /**
      * Checks to see if the target body, or an array of target bodies, intersects with any of the given bodies.
@@ -769,7 +767,7 @@ var MatterPhysics = new Class({
      *
      * @return {boolean} `true` if the target body intersects with _any_ of the bodies given, otherwise `false`.
      */
-    overlap: function (target, bodies, overlapCallback, processCallback, callbackContext)
+    overlap(target, bodies, overlapCallback, processCallback, callbackContext)
     {
         if (overlapCallback === undefined) { overlapCallback = null; }
         if (processCallback === undefined) { processCallback = null; }
@@ -814,7 +812,7 @@ var MatterPhysics = new Class({
         }
 
         return match;
-    },
+    }
 
     /**
      * Sets the collision filter category of all given Matter Bodies to the given value.
@@ -832,7 +830,7 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    setCollisionCategory: function (bodies, value)
+    setCollisionCategory(bodies, value)
     {
         bodies = this.getMatterBodies(bodies);
 
@@ -842,7 +840,7 @@ var MatterPhysics = new Class({
         });
 
         return this;
-    },
+    }
 
     /**
      * Sets the collision filter group of all given Matter Bodies to the given value.
@@ -861,7 +859,7 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    setCollisionGroup: function (bodies, value)
+    setCollisionGroup(bodies, value)
     {
         bodies = this.getMatterBodies(bodies);
 
@@ -871,7 +869,7 @@ var MatterPhysics = new Class({
         });
 
         return this;
-    },
+    }
 
     /**
      * Sets the collision filter mask of all given Matter Bodies to the given value.
@@ -888,7 +886,7 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    setCollidesWith: function (bodies, categories)
+    setCollidesWith(bodies, categories)
     {
         bodies = this.getMatterBodies(bodies);
 
@@ -912,7 +910,7 @@ var MatterPhysics = new Class({
         });
 
         return this;
-    },
+    }
 
     /**
      * Takes an array and returns a new array made from all of the Matter Bodies found in the original array.
@@ -929,7 +927,7 @@ var MatterPhysics = new Class({
      *
      * @return {MatterJS.BodyType[]} An array of native Matter Body objects.
      */
-    getMatterBodies: function (bodies)
+    getMatterBodies(bodies)
     {
         if (!bodies)
         {
@@ -951,7 +949,7 @@ var MatterPhysics = new Class({
         }
 
         return output;
-    },
+    }
 
     /**
      * Sets both the horizontal and vertical linear velocity of the physics bodies.
@@ -965,7 +963,7 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    setVelocity: function (bodies, x, y)
+    setVelocity(bodies, x, y)
     {
         bodies = this.getMatterBodies(bodies);
 
@@ -980,7 +978,7 @@ var MatterPhysics = new Class({
         });
 
         return this;
-    },
+    }
 
     /**
      * Sets just the horizontal linear velocity of the physics bodies.
@@ -994,7 +992,7 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    setVelocityX: function (bodies, x)
+    setVelocityX(bodies, x)
     {
         bodies = this.getMatterBodies(bodies);
 
@@ -1009,7 +1007,7 @@ var MatterPhysics = new Class({
         });
 
         return this;
-    },
+    }
 
     /**
      * Sets just the vertical linear velocity of the physics bodies.
@@ -1023,7 +1021,7 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    setVelocityY: function (bodies, y)
+    setVelocityY(bodies, y)
     {
         bodies = this.getMatterBodies(bodies);
 
@@ -1038,7 +1036,7 @@ var MatterPhysics = new Class({
         });
 
         return this;
-    },
+    }
 
     /**
      * Sets the angular velocity of the bodies instantly.
@@ -1052,7 +1050,7 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    setAngularVelocity: function (bodies, value)
+    setAngularVelocity(bodies, value)
     {
         bodies = this.getMatterBodies(bodies);
 
@@ -1062,7 +1060,7 @@ var MatterPhysics = new Class({
         });
 
         return this;
-    },
+    }
 
     /**
      * Applies a force to a body, at the bodies current position, including resulting torque.
@@ -1075,7 +1073,7 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    applyForce: function (bodies, force)
+    applyForce(bodies, force)
     {
         bodies = this.getMatterBodies(bodies);
 
@@ -1090,7 +1088,7 @@ var MatterPhysics = new Class({
         });
 
         return this;
-    },
+    }
 
     /**
      * Applies a force to a body, from the given world position, including resulting torque.
@@ -1108,7 +1106,7 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    applyForceFromPosition: function (bodies, position, speed, angle)
+    applyForceFromPosition(bodies, position, speed, angle)
     {
         bodies = this.getMatterBodies(bodies);
 
@@ -1128,7 +1126,7 @@ var MatterPhysics = new Class({
         });
 
         return this;
-    },
+    }
 
     /**
      * Apply a force to a body based on the given angle and speed.
@@ -1145,7 +1143,7 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    applyForceFromAngle: function (bodies, speed, angle)
+    applyForceFromAngle(bodies, speed, angle)
     {
         bodies = this.getMatterBodies(bodies);
 
@@ -1165,7 +1163,7 @@ var MatterPhysics = new Class({
         });
 
         return this;
-    },
+    }
 
     /**
      * Returns the length of the given constraint, which is the distance between the two points.
@@ -1177,7 +1175,7 @@ var MatterPhysics = new Class({
      *
      * @return {number} The length of the constraint.
      */
-    getConstraintLength: function (constraint)
+    getConstraintLength(constraint)
     {
         var aX = constraint.pointA.x;
         var aY = constraint.pointA.y;
@@ -1197,7 +1195,7 @@ var MatterPhysics = new Class({
         }
 
         return DistanceBetween(aX, aY, bX, bY);
-    },
+    }
 
     /**
      * Aligns a Body, or Matter Game Object, against the given coordinates.
@@ -1230,7 +1228,7 @@ var MatterPhysics = new Class({
      *
      * @return {this} This Matter Physics instance.
      */
-    alignBody: function (body, x, y, align)
+    alignBody(body, x, y, align)
     {
         body = (body.hasOwnProperty('body')) ? body.body : body;
 
@@ -1285,7 +1283,7 @@ var MatterPhysics = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * The Scene that owns this plugin is shutting down.
@@ -1295,7 +1293,7 @@ var MatterPhysics = new Class({
      * @private
      * @since 3.0.0
      */
-    shutdown: function ()
+    shutdown()
     {
         var eventEmitter = this.systems.events;
 
@@ -1319,7 +1317,7 @@ var MatterPhysics = new Class({
 
         this.add = null;
         this.world = null;
-    },
+    }
 
     /**
      * The Scene that owns this plugin is being destroyed.
@@ -1329,7 +1327,7 @@ var MatterPhysics = new Class({
      * @private
      * @since 3.0.0
      */
-    destroy: function ()
+    destroy()
     {
         this.shutdown();
 
@@ -1339,7 +1337,7 @@ var MatterPhysics = new Class({
         this.systems = null;
     }
 
-});
+};
 
 PluginCache.register('MatterPhysics', MatterPhysics, 'matterPhysics');
 

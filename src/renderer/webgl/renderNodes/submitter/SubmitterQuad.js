@@ -31,14 +31,25 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.SubmitterQuadConfig} [config] - The configuration object for this RenderNode.
  */
-var SubmitterQuad = new Class({
-    Extends: RenderNode,
+var SubmitterQuad = class extends RenderNode {
 
-    initialize: function SubmitterQuad (manager, config)
+    constructor(manager, config)
     {
+        /**
+         * The default configuration for this RenderNode.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad#defaultConfig
+         * @type {Phaser.Types.Renderer.WebGL.RenderNodes.SubmitterQuadConfig}
+         */
+        this.defaultConfig = {
+            name: 'SubmitterQuad',
+            role: 'Submitter',
+            batchHandler: 'BatchHandler'
+        };
+
         config = Merge(config || {}, this.defaultConfig);
 
-        RenderNode.call(this, config.name, manager);
+        super(config.name, manager);
 
         /**
          * The key of the RenderNode used to render data.
@@ -81,19 +92,7 @@ var SubmitterQuad = new Class({
                 diffuseFlatThreshold: 0
             }
         };
-    },
-
-    /**
-     * The default configuration for this RenderNode.
-     *
-     * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad#defaultConfig
-     * @type {Phaser.Types.Renderer.WebGL.RenderNodes.SubmitterQuadConfig}
-     */
-    defaultConfig: {
-        name: 'SubmitterQuad',
-        role: 'Submitter',
-        batchHandler: 'BatchHandler'
-    },
+    }
 
     /**
      * Submit data for rendering.
@@ -110,7 +109,7 @@ var SubmitterQuad = new Class({
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [normalMap] - The normal map texture to use for lighting. If omitted, the normal map texture of the GameObject will be used, or the default normal map texture of the renderer.
      * @param {number} [normalMapRotation] - The rotation of the normal map texture. If omitted, the rotation of the GameObject will be used.
      */
-    run: function (
+    run(
         drawingContext,
         gameObject,
         parentMatrix,
@@ -195,9 +194,9 @@ var SubmitterQuad = new Class({
         );
 
         this.onRunEnd(drawingContext);
-    },
+    }
 
-    setRenderOptions: function (gameObject, normalMap, normalMapRotation)
+    setRenderOptions(gameObject, normalMap, normalMapRotation)
     {
         var renderOptions = this._renderOptions;
         var baseTexture, sourceIndex;
@@ -288,6 +287,6 @@ var SubmitterQuad = new Class({
         }
         renderOptions.smoothPixelArt = smoothPixelArt;
     }
-});
+};
 
 module.exports = SubmitterQuad;
