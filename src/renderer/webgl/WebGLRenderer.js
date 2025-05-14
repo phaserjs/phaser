@@ -932,6 +932,46 @@ var WebGLRenderer = new Class({
 
             this.standardDerivativesExtension = (exts.indexOf(stdDerivativesString) > -1) ? gl.getExtension(stdDerivativesString) : null;
         }
+
+        // Make WebGL2 core features which were extensions available on the WebGL1 context.
+        // This allows us to use a WebGL2 context.
+        if (gl instanceof WebGLRenderingContext)
+        {
+            // Incorporate instanced arrays.
+            if (this.instancedArraysExtension)
+            {
+                gl.vertexAttribDivisor = this.instancedArraysExtension.vertexAttribDivisorANGLE.bind(this.instancedArraysExtension);
+                gl.drawArraysInstanced = this.instancedArraysExtension.drawArraysInstancedANGLE.bind(this.instancedArraysExtension);
+                gl.drawElementsInstanced = this.instancedArraysExtension.drawElementsInstancedANGLE.bind(this.instancedArraysExtension);
+            }
+            else
+            {
+                throw new Error('ANGLE_instanced_arrays extension not supported. Required for rendering.');
+            }
+
+            // Incorporate vertex array objects.
+            if (this.vaoExtension)
+            {
+                gl.createVertexArray = this.vaoExtension.createVertexArrayOES.bind(this.vaoExtension);
+                gl.bindVertexArray = this.vaoExtension.bindVertexArrayOES.bind(this.vaoExtension);
+                gl.deleteVertexArray = this.vaoExtension.deleteVertexArrayOES.bind(this.vaoExtension);
+                gl.isVertexArray = this.vaoExtension.isVertexArrayOES.bind(this.vaoExtension);
+            }
+            else
+            {
+                throw new Error('OES_vertex_array_object extension not supported. Required for rendering.');
+            }
+
+            // Incorporate standard derivatives.
+            if (this.standardDerivativesExtension)
+            {
+                gl.FRAGMENT_SHADER_DERIVATIVE_HINT = this.standardDerivativesExtension.FRAGMENT_SHADER_DERIVATIVE_HINT_OES;
+            }
+            else if (game.config.smoothPixelArt)
+            {
+                throw new Error('OES_standard_derivatives extension not supported. Cannot use smoothPixelArt.');
+            }
+        }
     },
 
     /**
@@ -2110,7 +2150,7 @@ var WebGLRenderer = new Class({
 
         this.glTextureUnits.bindUnits(textures);
 
-        this.instancedArraysExtension.drawArraysInstancedANGLE(topology || gl.TRIANGLE_STRIP, first, count, instanceCount);
+        gl.drawArraysInstanced(topology || gl.TRIANGLE_STRIP, first, count, instanceCount);
     },
 
     /**

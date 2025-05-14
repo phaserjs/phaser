@@ -934,15 +934,15 @@ var WebGLGlobalWrapper = new Class({
         }
         if (different || force)
         {
-            var extVAO = this.renderer.vaoExtension;
+            var gl = this.renderer.gl;
 
             if (vao)
             {
-                extVAO.bindVertexArrayOES(vao.vertexArrayObject);
+                gl.bindVertexArray(vao.vertexArrayObject);
             }
             else
             {
-                extVAO.bindVertexArrayOES(null);
+                gl.bindVertexArray(null);
             }
         }
     },
