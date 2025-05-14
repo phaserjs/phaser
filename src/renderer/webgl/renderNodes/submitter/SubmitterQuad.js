@@ -60,8 +60,7 @@ var SubmitterQuad = new Class({
         this._renderOptions = {
             multiTexturing: true,
             lighting: null,
-            smoothPixelArt: null,
-            roundPixels: false
+            smoothPixelArt: null
         };
 
         /**
@@ -163,8 +162,6 @@ var SubmitterQuad = new Class({
         var v1 = uvSource.v1;
 
         this.setRenderOptions(gameObject, normalMap, normalMapRotation);
-
-        this._renderOptions.roundPixels = !!transformerNode.onlyTranslate && drawingContext.camera.roundPixels;
 
         (
             gameObject.customRenderNodes[this.batchHandler] ||

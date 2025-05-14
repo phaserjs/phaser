@@ -255,15 +255,9 @@ var SubmitterTilemapGPULayer = new Class({
      */
     setupUniforms: function (drawingContext, tilemapLayer)
     {
-        var camera = drawingContext.camera;
         var programManager = this.programManager;
 
         // Standard uniforms.
-
-        programManager.setUniform(
-            'uRoundPixels',
-            camera.roundPixels
-        );
 
         programManager.setUniform(
             'uResolution',

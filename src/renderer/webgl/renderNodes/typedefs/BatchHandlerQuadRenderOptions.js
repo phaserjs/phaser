@@ -35,7 +35,6 @@
  * @property {boolean} [multiTexturing] - Whether to use multi-texturing.
  * @property {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerQuadRenderOptionsLighting} [lighting] - How to treat lighting. If this object is defined, lighting will be activated, and multi-texturing disabled.
  * @property {boolean} [smoothPixelArt] - Whether to use the smooth pixel art algorithm.
- * @property {boolean} [roundPixels] - Whether to round the vertex coordinates of the quad during rendering.
  * @param {boolean} [clampFrame] - Whether to clamp the texture frame. This prevents bleeding due to linear filtering. It is mostly useful for tiles.
  * @param {boolean} [wrapFrame] - Whether to wrap the texture frame. This is necessary for TileSprites.
  */

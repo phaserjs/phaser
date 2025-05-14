@@ -12,7 +12,6 @@ module.exports = [
     '#define MAX_ANIM_FRAMES 0',
     '#pragma phaserTemplate(fragmentDefine)',
     'uniform vec2 uResolution;',
-    'uniform int uRoundPixels;',
     'uniform sampler2D uMainSampler;',
     'uniform sampler2D uLayerSampler;',
     'uniform vec2 uMainResolution;',

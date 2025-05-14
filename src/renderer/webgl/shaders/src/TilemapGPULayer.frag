@@ -17,7 +17,6 @@ precision mediump float;
 #pragma phaserTemplate(fragmentDefine)
 
 uniform vec2 uResolution;
-uniform int uRoundPixels;
 uniform sampler2D uMainSampler;
 uniform sampler2D uLayerSampler;
 uniform vec2 uMainResolution;
