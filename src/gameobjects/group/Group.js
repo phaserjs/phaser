@@ -124,6 +124,8 @@ var Group = new Class({
         /**
          * The class to create new group members from.
          *
+         * The constructor arguments must match `(scene, x, y, texture, frame)`.
+         *
          * @name Phaser.GameObjects.Group#classType
          * @type {function}
          * @since 3.0.0
