@@ -6,12 +6,21 @@
 
 var GetTexture = require('../GetTexture-glsl');
 
-var MakeGetTexture = function (disable)
+var MakeGetTexture = function (maxTextures, disable)
 {
+    if (maxTextures === undefined) { maxTextures = 1; }
+
+    var texIdProcess = '';
+    for (var i = 1; i < maxTextures; i++)
+    {
+        texIdProcess += 'ELSE_TEX_CASE(' + i + ')\n';
+    }
+    var header = GetTexture.replace('#pragma phaserTemplate(texIdProcess)', texIdProcess);
+
     return {
-        name: 'GetTexture',
+        name: 'GetTexture' + maxTextures,
         additions: {
-            fragmentHeader: GetTexture,
+            fragmentHeader: header,
             fragmentProcess: 'vec4 fragColor = getTexture(texCoord);'
         },
         tags: [ 'TEXTURE' ],
