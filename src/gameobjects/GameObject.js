@@ -182,6 +182,35 @@ var GameObject = new Class({
         this.cameraFilter = 0;
 
         /**
+         * The current vertex rounding mode of this Game Object.
+         * This is used by the WebGL Renderer to determine how to round the vertex positions.
+         * It can have several values:
+         *
+         * - `off` - No rounding is applied.
+         * - `safe` - Rounding is applied if the object is 'safe'.
+         * - `safeAuto` - Rounding is applied if the object is 'safe' and the camera has `roundPixels` enabled.
+         * - `full` - Rounding is always applied.
+         * - `fullAuto` - Rounding is always applied if the camera has `roundPixels` enabled.
+         *
+         * A 'safe' object is one that is not rotated or scaled
+         * by any transform matrix while rendering.
+         * The effective transform is a simple translation.
+         * In such cases, rounding will affect all vertices the same way.
+         *
+         * Using full rounding can cause vertices to wobble, because they might
+         * not be aligned to the pixel grid.
+         * Full rounding gives a janky look like PS1 games.
+         *
+         * You can use other values if you want to create your own custom rounding modes.
+         *
+         * @name Phaser.GameObjects.GameObject#vertexRoundMode
+         * @type {string}
+         * @default 'safeAuto'
+         * @since 4.0.0
+         */
+        this.vertexRoundMode = 'safeAuto';
+
+        /**
          * If this Game Object is enabled for input then this property will contain an InteractiveObject instance.
          * Not usually set directly. Instead call `GameObject.setInteractive()`.
          *
@@ -645,6 +674,59 @@ var GameObject = new Class({
         var listWillRender = (this.displayList && this.displayList.active) ? this.displayList.willRender(camera) : true;
 
         return !(!listWillRender || GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
+    },
+
+    /**
+     * Checks if this Game Object should round its vertices,
+     * based on the given Camera and the `vertexRoundMode` of this Game Object.
+     * This is used by the WebGL Renderer to determine how to round the vertex positions.
+     *
+     * You can override this method in your own custom Game Object classes to provide
+     * custom logic for vertex rounding.
+     *
+     * @method Phaser.GameObjects.GameObject#willRoundVertices
+     * @since 4.0.0
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to check against this Game Object.
+     * @param {boolean} onlyTranslated - If true, the object is only translated, not scaled or rotated.
+     * @return {boolean} True if the Game Object should be rounded, otherwise false.
+     */
+    willRoundVertices: function (camera, onlyTranslated)
+    {
+        switch (this.vertexRoundMode)
+        {
+            case 'safe':
+                return onlyTranslated;
+            
+            case 'safeAuto':
+                return onlyTranslated && camera.roundPixels;
+
+            case 'full':
+                return true;
+
+            case 'fullAuto':
+                return camera.roundPixels;
+
+            case 'off':
+            default:
+                return false;
+        }
+    },
+
+    /**
+     * Sets the vertex round mode of this Game Object.
+     * This is used by the WebGL Renderer to determine how to round the vertex positions.
+     * @see {@link Phaser.GameObjects.GameObject#vertexRoundMode} for more details.
+     *
+     * @method Phaser.GameObjects.GameObject#setVertexRoundMode
+     * @since 4.0.0
+     * @param {string} mode - The vertex round mode to set. Can be 'off', 'safe', 'safeAuto', 'full' or 'fullAuto'.
+     * @returns {this} This GameObject.
+     */
+    setVertexRoundMode: function (mode)
+    {
+        this.vertexRoundMode = mode;
+
+        return this;
     },
 
     /**

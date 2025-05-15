@@ -111,10 +111,6 @@ var TransformerTile = new Class({
         // Multiply by the Sprite matrix
         calcMatrix.multiply(spriteMatrix);
 
-        // Determine whether the matrix does not rotate, scale, or skew.
-        var cmm = calcMatrix.matrix;
-        this.onlyTranslate = cmm[0] === 1 && cmm[1] === 0 && cmm[2] === 0 && cmm[3] === 1;
-
         calcMatrix.setQuad(
             x,
             y,
@@ -122,6 +118,25 @@ var TransformerTile = new Class({
             y + height,
             this.quad
         );
+
+        // Determine whether the matrix does not rotate, scale, or skew.
+        // Keyword: #OnlyTranslate
+        var cmm = calcMatrix.matrix;
+        var onlyTranslate = cmm[0] === 1 && cmm[1] === 0 && cmm[2] === 0 && cmm[3] === 1;
+
+        // Handle vertex rounding.
+        if (gameObject.willRoundVertices(camera, onlyTranslate))
+        {
+            var quad = this.quad;
+            quad[0] = Math.round(quad[0]);
+            quad[1] = Math.round(quad[1]);
+            quad[2] = Math.round(quad[2]);
+            quad[3] = Math.round(quad[3]);
+            quad[4] = Math.round(quad[4]);
+            quad[5] = Math.round(quad[5]);
+            quad[6] = Math.round(quad[6]);
+            quad[7] = Math.round(quad[7]);
+        }
 
         this.onRunEnd(drawingContext);
     }
