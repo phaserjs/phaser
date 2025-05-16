@@ -298,9 +298,14 @@ var GamepadPlugin = new Class({
 
         this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update);
 
-        for (var i = 0; i < this.gamepads.length; i++)
+        var gamepads = this.gamepads;
+
+        for (var i = 0; i < gamepads.length; i++)
         {
-            this.gamepads[i].removeAllListeners();
+            if (gamepads[i])
+            {
+                gamepads[i].removeAllListeners();
+            }
         }
     },
 
@@ -312,9 +317,14 @@ var GamepadPlugin = new Class({
      */
     disconnectAll: function ()
     {
-        for (var i = 0; i < this.gamepads.length; i++)
+        var gamepads = this.gamepads;
+
+        for (var i = 0; i < gamepads.length; i++)
         {
-            this.gamepads[i].pad.connected = false;
+            if (gamepads[i])
+            {
+                gamepads[i].pad.connected = false;
+            }
         }
     },
 
