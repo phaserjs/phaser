@@ -13,6 +13,7 @@ var Filters = {
 
     Barrel: require('./Barrel'),
     Blend: require('./Blend'),
+    Blocky: require('./Blocky'),
     Blur: require('./Blur'),
     Bokeh: require('./Bokeh'),
     ColorMatrix: require('./ColorMatrix'),

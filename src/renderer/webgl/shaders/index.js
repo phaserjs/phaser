@@ -19,6 +19,7 @@ module.exports = {
     DefineTexCoordFrameClamp: require('./DefineTexCoordFrameClamp-glsl.js'),
     FilterBarrelFrag: require('./FilterBarrel-frag.js'),
     FilterBlendFrag: require('./FilterBlend-frag.js'),
+    FilterBlockyFrag: require('./FilterBlocky-frag.js'),
     FilterBlurHighFrag: require('./FilterBlurHigh-frag.js'),
     FilterBlurLowFrag: require('./FilterBlurLow-frag.js'),
     FilterBlurMedFrag: require('./FilterBlurMed-frag.js'),

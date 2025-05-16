@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var Barrel = require('../../filters/Barrel');
 var Blend = require('../../filters/Blend');
+var Blocky = require('../../filters/Blocky');
 var Blur = require('../../filters/Blur');
 var Bokeh = require('../../filters/Bokeh');
 var ColorMatrix = require('../../filters/ColorMatrix');
@@ -30,8 +31,9 @@ var Threshold = require('../../filters/Threshold');
  * Filters include the following:
  *
  * * Barrel Distortion
- * * Blur
  * * Blend
+ * * Blocky
+ * * Blur
  * * Bokeh / Tilt Shift
  * * Color Matrix
  * * Displacement
@@ -240,6 +242,34 @@ var FilterList = new Class({
             amount,
             color
         ));
+    },
+
+    /**
+     * Adds a Blocky effect.
+     *
+     * This filter controller manages a blocky effect.
+     *
+     * The blocky effect works by taking the central pixel of a block of pixels
+     * and using it to fill the entire block, creating a pixelated effect.
+     *
+     * It reduces the resolution of an image,
+     * creating a pixelated or blocky appearance.
+     * This is often used for stylistic purposes, such as pixel art.
+     * One technique is to render the game at a higher resolution,
+     * scaled up by a factor of N,
+     * and then apply the blocky effect at size N.
+     * This creates large, visible pixels, suitable for further stylization.
+     * The effect can also be used to obscure certain elements within the game,
+     * such as during a transition or to censor specific content.
+     *
+     * @method Phaser.GameObjects.Components.FilterList#addBlocky
+     * @since 4.0.0
+     * @param {Phaser.Types.Filters.BlockyConfig} [config] - The configuration object for the Blocky effect.
+     * @return {Phaser.Filters.Blocky} The new Blocky filter controller.
+     */
+    addBlocky: function (config)
+    {
+        return this.add(new Blocky(this.camera, config));
     },
 
     /**
