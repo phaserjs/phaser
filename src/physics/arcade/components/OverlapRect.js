@@ -46,7 +46,7 @@ var OverlapRect = function (world, x, y, width, height, includeDynamic, includeS
     }
     else if (includeDynamic)
     {
-        var bodies = world.bodies;
+        var bodies = Array.from(world.bodies);
 
         var fakeBody =
         {
@@ -63,14 +63,15 @@ var OverlapRect = function (world, x, y, width, height, includeDynamic, includeS
 
         var intersects = world.intersects;
 
-        bodies.iterate(function (target)
+        for (var i = 0; i < bodies.length; i++)
         {
+            var target = bodies[i];
+
             if (intersects(target, fakeBody))
             {
                 dynamicBodies.push(target);
             }
-
-        });
+        }
     }
 
     return staticBodies.concat(dynamicBodies);
