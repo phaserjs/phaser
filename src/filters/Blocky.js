@@ -26,6 +26,11 @@ var Controller = require('./Controller');
  * The effect can also be used to obscure certain elements within the game,
  * such as during a transition or to censor specific content.
  *
+ * Blocky works best on games with no anti-aliasing,
+ * so it can read unfiltered pixel colors from the original image.
+ * It preserves the colors of the original art, instead of blending them
+ * like the Pixelate filter.
+ *
  * A Blocky effect is added to a Camera via the FilterList component:
  *
  * ```js

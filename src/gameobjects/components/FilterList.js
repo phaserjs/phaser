@@ -262,6 +262,11 @@ var FilterList = new Class({
      * The effect can also be used to obscure certain elements within the game,
      * such as during a transition or to censor specific content.
      *
+     * Blocky works best on games with no anti-aliasing,
+     * so it can read unfiltered pixel colors from the original image.
+     * It preserves the colors of the original art, instead of blending them
+     * like the Pixelate filter.
+     *
      * @method Phaser.GameObjects.Components.FilterList#addBlocky
      * @since 4.0.0
      * @param {Phaser.Types.Filters.BlockyConfig} [config] - The configuration object for the Blocky effect.
