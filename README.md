@@ -16,9 +16,9 @@ Interested in learning more? Click the image below to watch our intro video.
 
 [![YouTube](http://i.ytimg.com/vi/jHTRu4iNTcA/maxresdefault.jpg)](https://www.youtube.com/watch?v=jHTRu4iNTcA)
 
-## v4 Release Candidate 2
+## v4 Release Candidate 3
 
-You are looking at Release Candidate 2 of Phaser v4. There are large internal differences between Phaser v3 and v4, although the public API has remained mostly, but not entirely, the same.
+You are looking at Release Candidate 3 of Phaser v4. There are large internal differences between Phaser v3 and v4, although the public API has remained mostly, but not entirely, the same.
 
 Please only use this release if you wish to help beta test Phaser v4.
 
