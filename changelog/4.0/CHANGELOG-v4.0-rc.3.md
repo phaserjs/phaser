@@ -29,6 +29,7 @@ Updates since RC2:
 - `WebGLSnapshot` and snapshot functions based on it now return the correct pixel, instead of the one above it (or nothing if they're at the top of the image).
 - `ArcadePhysics#closest()` and `#furthest()` are properly defined (thanks @samme).
 - `GamepadPlugin.stopListeners` and `GamepadPlugin.disconnectAll` now have guards around them so they won't try to invoke functions on potentially undefined gamepads (thanks @cryonautlex)
+- Arcade Physics OverlapCirc() and OverlapRect() error when useTree is false. Fix #7112 (thanks @samme)
 
 ## Documentation / TypeScript Enhancements
 
@@ -37,3 +38,4 @@ Thanks to the following people:
 @ospira 
 @samme
 @OuttaBounds
+@raaaahman
