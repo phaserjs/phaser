@@ -28,3 +28,11 @@ Updates since RC2:
 
 - `WebGLSnapshot` and snapshot functions based on it now return the correct pixel, instead of the one above it (or nothing if they're at the top of the image).
 - `ArcadePhysics#closest()` and `#furthest()` are properly defined (thanks, Samme!).
+
+## Documentation / TypeScript Enhancements
+
+Thanks to the following people:
+
+@ospira 
+@samme
+@OuttaBounds
