@@ -40,10 +40,10 @@ var Controller = require('./Controller');
  * ```
  *
  * @class Blocky
+ * @extends Phaser.Filters.Controller
  * @memberof Phaser.Filters
  * @constructor
  * @since 4.0.0
- * @extends Phaser.Filters.Controller
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that owns this filter.
  * @param {Phaser.Types.Filters.BlockyConfig} [config] - The configuration object for the Blocky effect.
  */
