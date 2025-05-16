@@ -946,7 +946,6 @@ var World = new Class({
         this._elapsed += delta;
 
         //  Update all active bodies
-        var body;
         var bodies = this.bodies;
 
         //  Will a step happen this frame?
@@ -1972,8 +1971,8 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#canCollide
      * @since 3.70.0
      *
-     * @param {Phaser.Types.Physics.Arcade.ArcadeCollider} body1 - The first body to check.
-     * @param {Phaser.Types.Physics.Arcade.ArcadeCollider} body2 - The second body to check.
+     * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} body1 - The first body to check.
+     * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} body2 - The second body to check.
      *
      * @return {boolean} True if the two bodies will collide, otherwise false.
      */
