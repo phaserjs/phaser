@@ -939,7 +939,6 @@ var World = new Class({
             return;
         }
 
-        var i;
         var fixedDelta = this._frameTime;
         var msPerFrame = this._frameTimeMS * this.timeScale;
 
@@ -982,7 +981,7 @@ var World = new Class({
             //  Process any colliders
             var colliders = this.colliders.update();
 
-            for (i = 0; i < colliders.length; i++)
+            for (var i = 0; i < colliders.length; i++)
             {
                 var collider = colliders[i];
 
@@ -1613,7 +1612,7 @@ var World = new Class({
 
                 body1.updateCenter();
             }
-            
+
             if (!body2Immovable || body2.pushable || deadlock)
             {
                 body2.x += overlapX;
@@ -2392,7 +2391,7 @@ var World = new Class({
         }
 
         var children = group1.getChildren();
-        
+
         for (var i = 0; i < children.length; i++)
         {
             this.collideSpriteVsGroup(children[i], group2, collideCallback, processCallback, callbackContext, overlapOnly);
