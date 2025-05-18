@@ -445,6 +445,9 @@ export class Parser {
         let obj = dom.create.function(doclet.name, null, returnType);
         this.setParams(doclet, obj);
 
+        if (doclet.returns?.length)
+            obj.jsDocComment += `\n@returns ${doclet.returns[0].description}`
+
         this.processGeneric(doclet, obj, obj.parameters);
 
         this.processFlags(doclet, obj);
