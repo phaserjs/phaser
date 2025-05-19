@@ -80,7 +80,7 @@ var SubmitterTilemapGPULayer = new Class({
         this.vertexBufferLayout = new WebGLVertexBufferLayoutWrapper(
             renderer,
             finalConfig.vertexBufferLayout,
-            finalConfig.createOwnVertexBuffer ? null : renderer.genericVertexBuffer
+            null
         );
 
         /**
@@ -513,9 +513,8 @@ var SubmitterTilemapGPULayer = new Class({
         vertexF32[offset32++] = 1;
 
         // Update vertex buffer.
-        // Because we are probably using a generic vertex buffer
-        // which is larger than the current batch, we need to update
-        // the buffer with the correct size.
+        // Because we frequently aren't filling the entire buffer,
+        // we need to update the buffer with the correct size.
         vertexBuffer.update(stride * 4);
 
         // Assemble textures.

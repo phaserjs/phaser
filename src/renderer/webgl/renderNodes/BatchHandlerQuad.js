@@ -554,9 +554,8 @@ var BatchHandlerQuad = new Class({
         var vertexBuffer = this.vertexBufferLayout.buffer;
 
         // Update vertex buffers.
-        // Because we are probably using a generic vertex buffer
-        // which is larger than the current batch, we need to update
-        // the buffer with the correct size.
+        // Because we frequently aren't filling the entire buffer,
+        // we need to update the buffer with the correct size.
         vertexBuffer.update(this.instanceCount * this.bytesPerInstance);
 
         var subBatches = this.batchEntries.length;

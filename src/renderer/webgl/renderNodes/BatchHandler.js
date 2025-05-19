@@ -158,7 +158,7 @@ var BatchHandler = new Class({
         this.vertexBufferLayout = new WebGLVertexBufferLayoutWrapper(
             renderer,
             partialLayout,
-            config.createOwnVertexBuffer ? null : renderer.genericVertexBuffer
+            null
         );
 
         /**

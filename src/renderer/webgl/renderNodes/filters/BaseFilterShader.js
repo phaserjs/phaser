@@ -115,7 +115,7 @@ var BaseFilterShader = new Class({
         this.vertexBufferLayout = new WebGLVertexBufferLayoutWrapper(
             renderer,
             config.vertexBufferLayout,
-            renderer.genericVertexBuffer
+            null
         );
 
         /**
@@ -244,9 +244,8 @@ var BaseFilterShader = new Class({
         vertexF32[offset32++] = remapCoord(1, yTL, yTR);
 
         // Update vertex buffer.
-        // Because we are probably using a generic vertex buffer
-        // which is larger than the current batch, we need to update
-        // the buffer with the correct size.
+        // Because we frequently aren't filling the entire buffer,
+        // we need to update the buffer with the correct size.
         vertexBuffer.update(stride * 4);
 
 

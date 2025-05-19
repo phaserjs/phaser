@@ -72,7 +72,7 @@ var ShaderQuad = new Class({
         this.vertexBufferLayout = new WebGLVertexBufferLayoutWrapper(
             renderer,
             config.vertexBufferLayout,
-            renderer.genericVertexBuffer
+            null
         );
 
         /**

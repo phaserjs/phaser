@@ -314,26 +314,6 @@ var WebGLRenderer = new Class({
         this.glVAOWrappers = [];
 
         /**
-         * A generic vertex buffer. This should be used by any process
-         * which doesn't need persistent vertex data.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#genericVertexBuffer
-         * @type {Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper}
-         * @since 4.0.0
-         */
-        this.genericVertexBuffer = null;
-
-        /**
-         * Data for a generic vertex buffer. This is used to update the
-         * `genericVertexBuffer`.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#genericVertexData
-         * @type {ArrayBuffer}
-         * @since 4.0.0
-         */
-        this.genericVertexData = null;
-
-        /**
          * A generic quad index buffer. This is a READ-ONLY buffer.
          * It describes the four corners of a quad,
          * a structure which is used in several places in the renderer.
@@ -832,22 +812,6 @@ var WebGLRenderer = new Class({
         this.height = height;
 
         this.isBooted = true;
-
-        // Provision the generic vertex buffer.
-        // The size is determined by the maximum number of vertices we want
-        // to handle.
-        // This is usually determined by the maximum amount of data we can index
-        // with a 16-bit unsigned integer.
-        // There are 65536 indices possible with 16 bits.
-        // We actually use a number of indices equal to the batch size
-        // multiplied by 4 (each batch item is a quad with 4 vertices),
-        // although this number is 65536 (16384 * 4) by default.
-        // Each index represents a vertex with 16 possible attributes.
-        // Each attribute has a maximum size of 4 floats.
-        // Each float is 4 bytes.
-        var genericVertexBytes = game.config.batchSize * 4 * 16 * 4 * 4;
-        this.genericVertexData = new ArrayBuffer(genericVertexBytes);
-        this.genericVertexBuffer = this.createVertexBuffer(this.genericVertexData, gl.DYNAMIC_DRAW);
 
         // Provision the generic quad index buffer.
         // Ensure that there is no VAO bound, because the following index buffer

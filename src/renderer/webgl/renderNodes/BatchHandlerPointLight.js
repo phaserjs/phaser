@@ -180,9 +180,8 @@ var BatchHandlerPointLight = new Class({
             programManager.applyUniforms(program);
 
             // Update vertex buffers.
-            // Because we are probably using a generic vertex buffer
-            // which is larger than the current batch, we need to update
-            // the buffer with the correct size.
+            // Because we frequently aren't filling the entire buffer,
+            // we need to update the buffer with the correct size.
             this.vertexBufferLayout.buffer.update(this.instanceCount * this.bytesPerInstance);
 
             this.manager.renderer.drawElements(
