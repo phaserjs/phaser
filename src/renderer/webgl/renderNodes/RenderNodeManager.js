@@ -13,6 +13,7 @@ var BaseFilterShader = require('./filters/BaseFilterShader');
 
 var BatchHandlerPointLight = require('./BatchHandlerPointLight');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
+var BatchHandlerQuadSingle = require('./BatchHandlerQuadSingle');
 var BatchHandlerStrip = require('./BatchHandlerStrip');
 var BatchHandlerTileSprite = require('./BatchHandlerTileSprite');
 var BatchHandlerTriFlat = require('./BatchHandlerTriFlat');
@@ -146,6 +147,7 @@ var RenderNodeManager = new Class({
 
             BatchHandlerPointLight: BatchHandlerPointLight,
             BatchHandlerQuad: BatchHandlerQuad,
+            BatchHandlerQuadSingle: BatchHandlerQuadSingle,
             BatchHandlerStrip: BatchHandlerStrip,
             BatchHandlerTileSprite: BatchHandlerTileSprite,
             BatchHandlerTriFlat: BatchHandlerTriFlat,

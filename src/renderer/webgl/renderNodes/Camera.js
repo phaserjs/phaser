@@ -38,11 +38,11 @@ var Camera = new Class({
          * This is used when a camera is rendering to a framebuffer,
          * and the framebuffer needs to be drawn to the parent context.
          *
-         * @name Phaser.Renderer.WebGL.RenderNodes.Camera#batchHandlerQuadNode
+         * @name Phaser.Renderer.WebGL.RenderNodes.Camera#batchHandlerQuadSingleNode
          * @type {Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad}
          * @since 4.0.0
          */
-        this.batchHandlerQuadNode = manager.getNode('BatchHandlerQuad');
+        this.batchHandlerQuadSingleNode = manager.getNode('BatchHandlerQuadSingle');
 
         /**
          * The RenderNode that handles filling the camera with a
@@ -281,7 +281,7 @@ var Camera = new Class({
 
                 tint = drawExternalFilters ? 0xffffffff : getAlphaTint(alpha);
 
-                this.batchHandlerQuadNode.batch(
+                this.batchHandlerQuadSingleNode.batch(
                     currentContext,
 
                     // Texture.
@@ -372,7 +372,7 @@ var Camera = new Class({
                     var x2 = currentContext.width + padding.right;
                     var y2 = currentContext.height + padding.bottom;
 
-                    this.batchHandlerQuadNode.batch(
+                    this.batchHandlerQuadSingleNode.batch(
                         baseContext,
 
                         // Texture.
