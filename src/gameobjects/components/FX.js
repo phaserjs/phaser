@@ -289,7 +289,7 @@ var FX = new Class({
      * @generic {Phaser.FX.Controller} T
      * @genericUse {T} - [fx]
      *
-     * @param {Phaser.FX.Controller} fx - The FX Controller to remove from this FX Component.
+     * @param {Phaser.FX.Controller|Phaser.Display.ColorMatrix} fx - The FX Controller to remove from this FX Component.
      *
      * @return {this} This Game Object instance.
      */
