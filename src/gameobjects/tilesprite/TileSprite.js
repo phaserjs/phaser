@@ -47,7 +47,6 @@ var _FLAG = 8; // 1000
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.ComputedSize
- * @extends Phaser.GameObjects.Components.Crop
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
@@ -56,7 +55,7 @@ var _FLAG = 8; // 1000
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
- * @extends Phaser.GameObjects.Components.TextureCrop
+ * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -77,7 +76,6 @@ var TileSprite = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.ComputedSize,
-        Components.Crop,
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
@@ -86,7 +84,7 @@ var TileSprite = new Class({
         Components.Origin,
         Components.RenderNodes,
         Components.ScrollFactor,
-        Components.TextureCrop,
+        Components.Texture,
         Components.Tint,
         Components.Transform,
         Components.Visible,

@@ -19,3 +19,4 @@ This update improves performance related to data buffer size, primarily affectin
 - `WebGLRenderer#genericVertexBuffer` and `#genericVertexData` removed.
   - This frees 16MB of RAM and VRAM.
 - `BatchHandlerConfig#createOwnVertexBuffer` type property removed.
+- `TileSprite` no longer supports texture cropping.
