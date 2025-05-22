@@ -281,7 +281,6 @@ var BatchHandlerQuad = new Class({
             // Lighting uniforms.
             Utils.updateLightingUniforms(
                 renderOptions.lighting,
-                this.manager.renderer,
                 drawingContext,
                 programManager,
                 1,
@@ -345,6 +344,14 @@ var BatchHandlerQuad = new Class({
     finalizeTextureCount: function (count)
     {
         var programManager = this.programManager;
+
+        if (this.renderOptions.lighting)
+        {
+            // The normal map is included in the textures array,
+            // but it's attached to another texture unit,
+            // so we shouldn't count it.
+            count = 1;
+        }
 
         var textureAddition = programManager.getAdditionsByTag('TEXTURE')[0];
         if (textureAddition)

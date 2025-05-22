@@ -286,7 +286,17 @@ var BatchHandler = new Class({
         newConfig.shaderName = config.shaderName || defaultConfig.shaderName;
         newConfig.vertexSource = config.vertexSource || defaultConfig.vertexSource;
         newConfig.fragmentSource = config.fragmentSource || defaultConfig.fragmentSource;
+
+        // Deep copy shaderAdditions to avoid modifying the original object.
         newConfig.shaderAdditions = config.shaderAdditions || defaultConfig.shaderAdditions;
+        if (Array.isArray(newConfig.shaderAdditions))
+        {
+            newConfig.shaderAdditions = newConfig.shaderAdditions.map(function (addition)
+            {
+                return Object.assign({}, addition);
+            });
+        }
+
         newConfig.shaderFeatures = config.shaderFeatures || defaultConfig.shaderFeatures;
 
         newConfig.indexBufferDynamic = config.indexBufferDynamic || defaultConfig.indexBufferDynamic;

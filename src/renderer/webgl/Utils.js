@@ -139,7 +139,6 @@ module.exports = {
      * @webglOnly
      *
      * @param {boolean} enable - Whether to enable lighting.
-     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGLRenderer instance.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The DrawingContext instance.
      * @param {Phaser.Renderer.WebGL.ProgramManager} programManager - The ShaderProgramManager instance.
      * @param {number} textureUnit - The texture unit to use for the normal map.
@@ -150,7 +149,6 @@ module.exports = {
      */
     updateLightingUniforms: function (
         enable,
-        renderer,
         drawingContext,
         programManager,
         textureUnit,
@@ -173,7 +171,7 @@ module.exports = {
         var lights = lightManager.getLights(camera);
         var lightsCount = lights.length;
         var ambientColor = lightManager.ambientColor;
-        var height = renderer.height;
+        var height = drawingContext.height;
 
         if (enable)
         {

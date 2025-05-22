@@ -167,7 +167,6 @@ var BatchHandlerTriFlat = new Class({
             // Lighting uniforms.
             Utils.updateLightingUniforms(
                 this.renderOptions.lighting,
-                this.manager.renderer,
                 drawingContext,
                 programManager,
                 1,

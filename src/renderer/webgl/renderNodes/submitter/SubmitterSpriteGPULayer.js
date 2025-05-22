@@ -449,7 +449,6 @@ var SubmitterSpriteGPULayer = new Class({
         // Lighting uniforms.
         Utils.updateLightingUniforms(
             layer.lighting,
-            this.manager.renderer,
             drawingContext,
             programManager,
             2,

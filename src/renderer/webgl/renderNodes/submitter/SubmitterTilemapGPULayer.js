@@ -325,7 +325,6 @@ var SubmitterTilemapGPULayer = new Class({
         // Lighting uniforms.
         Utils.updateLightingUniforms(
             tilemapLayer.lighting,
-            this.manager.renderer,
             drawingContext,
             programManager,
             3,
