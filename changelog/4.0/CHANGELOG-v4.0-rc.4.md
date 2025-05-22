@@ -20,3 +20,7 @@ This update improves performance related to data buffer size, primarily affectin
   - This frees 16MB of RAM and VRAM.
 - `BatchHandlerConfig#createOwnVertexBuffer` type property removed.
 - `TileSprite` no longer supports texture cropping.
+
+## Fixes
+
+- Lighting fixed on rotated or filtered objects.
