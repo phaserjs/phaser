@@ -17,18 +17,16 @@ var TilemapGPULayerRender = require('./TilemapGPULayerRender');
  * Use it for high-performance rendering of tilemaps which don't update
  * their contents. It still supports tile animation and flip.
  *
- * Performance of this layer can be highly variable.
+ * This layer is designed to be used with the WebGL renderer only.
+ *
+ * Performance of this layer is excellent. If you do not need to
+ * manipulate the tiles in the layer, and the layer is of the supported type,
+ * this is the best option for rendering tilemaps.
  * It is almost entirely GPU-bound, so it will free up CPU resources
  * for other game code (the CPU usually does much more work than the GPU in games).
  * It has a fixed cost per pixel on screen, whether there is anything in that
  * tile or not.
- * In general, it suffers no performance loss when many tiles are visible,
- * which can make it superior to TilemapLayer.
- * However, while it can be many times faster on desktop devices,
- * mobile devices may struggle due to fillrate and texture sampling issues.
- * You may want to check `game.device.os.desktop`,
- * and review whether you want to improve CPU performance,
- * before deciding to use this layer.
+ * In general, it suffers no performance loss when many tiles are visible.
  *
  * Create a TilemapGPULayer by adding the `gpu` flag to a call to
  * `Tilemap.createLayer()`. This will return a TilemapGPULayer instance.
