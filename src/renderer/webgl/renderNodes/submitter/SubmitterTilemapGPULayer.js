@@ -211,6 +211,7 @@ var SubmitterTilemapGPULayer = new Class({
         var layoutSource = config.vertexBufferLayout;
         config.vertexBufferLayout = {};
         config.vertexBufferLayout.usage = layoutSource.usage;
+        config.vertexBufferLayout.count = layoutSource.count || 4;
         config.vertexBufferLayout.layout = [];
         var remove = config.vertexBufferLayoutRemove || [];
 
