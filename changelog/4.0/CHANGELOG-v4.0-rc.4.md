@@ -24,3 +24,9 @@ This update improves performance related to data buffer size, primarily affectin
 ## Fixes
 
 - Lighting fixed on rotated or filtered objects.
+
+## Documentation / TypeScript Enhancements
+
+Thanks to the following people:
+
+@captain-something
