@@ -725,7 +725,7 @@ var Group = new Class({
                 gameObject.removeFromDisplayList();
                 gameObject.removeFromUpdateList();
             }
-        });
+        }, this);
 
         children.clear();
 
