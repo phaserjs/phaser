@@ -5251,10 +5251,10 @@ declare namespace MatterJS {
          * @method collides
          * @param {BodyType} bodyA
          * @param {BodyType} bodyB
-         * @param {Pairs} [pairs] Optionally reuse collision records from existing pairs.
+         * @param {Pairs | null} [pairs] Optionally reuse collision records from existing pairs, pass null to create new records.
          * @return {collision|null} A collision record if detected, otherwise null
          */
-        collides (bodyA: BodyType, bodyB: BodyType, pairs: Pairs): any;
+        collides (bodyA: BodyType, bodyB: BodyType, pairs: Pairs | null): any;
 
     }
 }
