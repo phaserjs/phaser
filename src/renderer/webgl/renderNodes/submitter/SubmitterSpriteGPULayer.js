@@ -41,10 +41,8 @@ var ShaderSourceVS = require('../../shaders/SpriteGPULayer-vert');
  * @constructor
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
- * @param {object} [config] - The configuration object for this handler.
- * @param {string} [config.name='SubmitterSpriteGPULayer'] - The name of this RenderNode.
- * @param {string} [config.vertexSource] - The vertex shader source.
- * @param {string} [config.fragmentSource] - The fragment shader source.
+ * @param {Phaser.Types.Renderer.WebGL.RenderNodes.SubmitterSpriteGPULayerConfig} config - The configuration object for this handler.
+ * @param {Phaser.GameObjects.SpriteGPULayer} gameObject - The SpriteGPULayer object to render.
  */
 var SubmitterSpriteGPULayer = new Class({
     Extends: RenderNode,

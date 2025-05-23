@@ -18,6 +18,11 @@ var BatchHandlerQuad = require('./BatchHandlerQuad');
  * Because mobile devices often struggle with large buffer sizes,
  * this class is designed to handle the case where only one quad is needed.
  *
+ * If no configuration is provided, the default values are:
+ * - `name`: 'BatchHandlerQuadSingle'
+ * - `shaderName`: 'STANDARD_SINGLE'
+ * - `instancesPerBatch`: 1
+ *
  * @class BatchHandlerQuadSingle
  * @extends Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad
  * @memberOf Phaser.Renderer.WebGL.RenderNodes
@@ -25,9 +30,6 @@ var BatchHandlerQuad = require('./BatchHandlerQuad');
  * @since 4.0.0
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this handler.
- * @param {string} [config.name='BatchHandlerQuadSingle'] - The name of this handler.
- * @param {string} [config.shaderName='STANDARD_SINGLE'] - The name of the shader to use for this handler.
- * @param {number} [config.instancesPerBatch=1] - The number of instances per batch.
  */
 var BatchHandlerQuadSingle = new Class({
     Extends: BatchHandlerQuad,
