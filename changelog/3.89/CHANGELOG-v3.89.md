@@ -28,9 +28,13 @@
 * `Grid` Game Objects renders `lineWidth` correctly in WebGL mode. Fix #7029 (thanks @AlvaroNeuronup)
 * Added `collisionMask` and `collisionCategory` checks to `Phaser.Physics.Arcade.World#separate` to allow individual physics game objects within a physics group to have it's own unique collision categories. Fix #7034 (thanks @frederikocmr)
 * Fixed Arcade Physics bug causing immovable circle objects to move when pushed by polygons. Fix #7054 (thanks @hunkydoryrepair)
+* Fixed `createFromTiles` to handle multiple tilesets when using sprite sheets. Fix #7122 (thanks @vikerman)
+* Fixed audio files not loading from Base64 data URIs (thanks @bagyoni)
 
 ## Examples, Documentation, Beta Testing and TypeScript
 
 Thanks to the following for helping with the Phaser Examples, Beta Testing, Docs, and TypeScript definitions, either by reporting errors, fixing them, or helping author the docs:
 
 @justin-calleja
+@ixonstater
+@DayKev
