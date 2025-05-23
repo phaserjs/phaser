@@ -559,6 +559,11 @@ var DrawingContext = new Class({
      */
     beginDraw: function ()
     {
+        if (this.framebuffer)
+        {
+            // Ensure the framebuffer texture is not bound to a texture unit.
+            this.renderer.glTextureUnits.unbindTexture(this.texture);
+        }
         this.renderer.glWrapper.update(this.state);
     },
 

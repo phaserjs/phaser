@@ -150,6 +150,17 @@ var WebGLTextureUnitsWrapper = new Class({
         }
     },
 
+    unbindTexture: function (texture)
+    {
+        for (var i = this.units.length - 1; i >= 0; i--)
+        {
+            if (this.units[i] === texture)
+            {
+                this.bind(null, i, true, false);
+            }
+        }
+    },
+
     /**
      * Unbinds all textures from all texture units.
      * This will change the active texture unit to 0.
