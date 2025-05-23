@@ -56,27 +56,27 @@ var Rectangle = new Class({
 
         /**
          * The radius of the rectangle if this is set to use rounded corners.
-         * 
+         *
          * Do not modify this property. Instead, call the method `setRounded` to set the
          * radius of the rounded corners.
          *
          * @name Phaser.GameObjects.Shape#radius
          * @type {number}
          * @readonly
-         * @since 3.89.0
+         * @since 3.90.0
          */
         this.radius = 20;
 
         /**
          * Does this Rectangle have rounded corners?
-         * 
+         *
          * Do not modify this property. Instead, call the method `setRounded` to set the
          * radius state of this rectangle.
          *
          * @name Phaser.GameObjects.Shape#isRounded
          * @type {boolean}
          * @readonly
-         * @since 3.89.0
+         * @since 3.90.0
          */
         this.isRounded = false;
 
@@ -94,13 +94,13 @@ var Rectangle = new Class({
 
     /**
      * Sets this rectangle to have rounded corners by specifying the radius of the corner.
-     * 
+     *
      * The radius of the rounded corners is limited by the smallest dimension of the rectangle.
-     * 
+     *
      * To disable rounded corners, set the `radius` parameter to 0.
      *
      * @method Phaser.GameObjects.Rectangle#setRounded
-     * @since 3.89.0
+     * @since 3.90.0
      *
      * @param {number} [radius=16] - The radius of all four rounded corners.
      *
@@ -198,7 +198,7 @@ var Rectangle = new Class({
      *
      * @method Phaser.GameObjects.Rectangle#updateRoundedData
      * @private
-     * @since 3.89.0
+     * @since 3.90.0
      *
      * @return {this} This Game Object instance.
      */
@@ -207,11 +207,11 @@ var Rectangle = new Class({
         var path = [];
         var halfWidth = this.width / 2;
         var halfHeight = this.height / 2;
-        
+
         //  Limit max radius to half the smallest dimension
         var maxRadius = Math.min(halfWidth, halfHeight);
         var radius = Math.min(this.radius, maxRadius);
-        
+
         var x = halfWidth;
         var y = halfHeight;
 
@@ -222,38 +222,38 @@ var Rectangle = new Class({
 
         //  Top-left corner
         this.arcTo(path, x - halfWidth + radius, y - halfHeight + radius, radius, Math.PI, Math.PI * 1.5, segments);
-        
+
         //  Top edge and top-right corner
         path.push(x + halfWidth - radius, y - halfHeight);
 
         this.arcTo(path, x + halfWidth - radius, y - halfHeight + radius, radius, Math.PI * 1.5, Math.PI * 2, segments);
-        
+
         //  Right edge and bottom-right corner
         path.push(x + halfWidth, y + halfHeight - radius);
 
         this.arcTo(path, x + halfWidth - radius, y + halfHeight - radius, radius, 0, Math.PI * 0.5, segments);
-        
+
         //  Bottom edge and bottom-left corner
         path.push(x - halfWidth + radius, y + halfHeight);
 
         this.arcTo(path, x - halfWidth + radius, y + halfHeight - radius, radius, Math.PI * 0.5, Math.PI, segments);
-        
+
         //  Left edge (connects back to first point)
         path.push(x - halfWidth, y - halfHeight + radius);
-        
+
         this.pathIndexes = Earcut(path);
         this.pathData = path;
-        
+
         return this;
     },
-    
+
     /**
      * Internal method placing points around the circumference of a circle for the rounded corners.
      *
      * @method Phaser.GameObjects.Rectangle#arcTo
      * @private
-     * @since 3.89.0
-     * 
+     * @since 3.90.0
+     *
      * @param {number[]} path - The array to push the points into.
      * @param {number} centerX - The center x coordinate of the circle.
      * @param {number} centerY - The center y coordinate of the circle.
@@ -267,7 +267,7 @@ var Rectangle = new Class({
     arcTo: function (path, centerX, centerY, radius, startAngle, endAngle, segments)
     {
         var angleInc = (endAngle - startAngle) / segments;
-        
+
         for (var i = 0; i <= segments; i++)
         {
             var angle = startAngle + (angleInc * i);

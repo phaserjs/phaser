@@ -1,4 +1,4 @@
-# Version 3.89 - Tsugumi - in dev
+# Version 3.90 - Tsugumi - 23rd May 2025
 
 ## New Features
 
