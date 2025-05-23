@@ -77,7 +77,7 @@ var StaticPhysicsGroup = new Class({
                 singleConfig.internalRemoveCallback = this.removeCallbackHandler;
                 singleConfig.createMultipleCallback = this.createMultipleCallbackHandler;
                 singleConfig.classType = GetFastValue(singleConfig, 'classType', ArcadeSprite);
-            });
+            }, this);
         }
         else
         {
