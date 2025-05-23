@@ -459,7 +459,7 @@ var Config = new Class({
         this.maxLights = GetValue(renderConfig, 'maxLights', 10, config);
 
         /**
-         * @const {Object<string, Function>} Phaser.Core.Config#renderNodes - A map of custom Render Nodes to be added to the WebGL Renderer. The values will be added to the RenderNodeManager, using the keys as the names.
+         * @const {Object<Phaser.Types.Core.RenderNodesConfig>} Phaser.Core.Config#renderNodes - A map of custom Render Nodes to be added to the WebGL Renderer. The values will be added to the RenderNodeManager, using the keys as the names.
          */
         this.renderNodes = GetValue(renderConfig, 'renderNodes', {}, config);
 
