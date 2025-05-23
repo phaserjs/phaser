@@ -27,9 +27,23 @@ var XHRLoader = function (file, globalXHRSettings)
     {
         var base64Data = file.url.split(';base64,').pop() || file.url.split(',').pop();
 
-        var fakeXHR = {
-            responseText: atob(base64Data)
-        };
+        var fakeXHR;
+
+        if (file.xhrSettings.responseType === 'arraybuffer')
+        {
+            fakeXHR = {
+                response: Uint8Array.from(atob(base64Data), function (c)
+                {
+                    return c.charCodeAt(0);
+                }).buffer
+            };
+        }
+        else
+        {
+            fakeXHR = {
+                responseText: atob(base64Data)
+            };
+        }
 
         file.onBase64Load(fakeXHR);
 
