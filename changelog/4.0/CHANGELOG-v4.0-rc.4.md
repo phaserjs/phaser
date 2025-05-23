@@ -24,9 +24,14 @@ This update improves performance related to data buffer size, primarily affectin
 ## Fixes
 
 - Lighting fixed on rotated or filtered objects.
+- Added missing 'this' value for Group.forEach and StaticGroup.forEach (thanks @TadejZupancic)
+- Fix `createFromTiles` to handle multiple tilesets when using sprite sheets. Fix #7122 (thanks @vikerman)
+- Fix audio files not loading from Base64 data URIs (thanks @bagyoni)
 
 ## Documentation / TypeScript Enhancements
 
 Thanks to the following people:
 
 @captain-something
+@DayKev
+@ixonstater
