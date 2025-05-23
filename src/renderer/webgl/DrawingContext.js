@@ -247,7 +247,7 @@ var DrawingContext = new Class({
             if (!this.framebuffer)
             {
                 var renderer = this.renderer;
-                this.texture = renderer.createTextureFromSource(null, width, height, 0, true);
+                this.texture = renderer.createTextureFromSource(null, width, height, 0);
                 this.framebuffer = renderer.createFramebuffer(this.texture, true, false);
             }
             else
