@@ -83,7 +83,7 @@ var Gamepad = new Class({
 
         for (var i = 0; i < pad.buttons.length; i++)
         {
-            buttons.push(new Button(this, i));
+            buttons.push(new Button(this, i, (pad.buttons[i].value >= 0.5)));
         }
 
         /**
