@@ -242,7 +242,7 @@ var Tween = new Class({
      *
      * @param {number} [index=0] - The Tween Data to return the value from.
      *
-     * @return {number} The value of the requested Tween Data, or `null` if this Tween has been destroyed.
+     * @return {number|null} The value of the requested Tween Data, or `null` if this Tween has been destroyed.
      */
     getValue: function (index)
     {
