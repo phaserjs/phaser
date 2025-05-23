@@ -1609,7 +1609,6 @@ var TextureManager = new Class({
 
         var tileSprite = this.tileSprite;
 
-        tileSprite.setCrop();
         tileSprite.setPosition(0);
         tileSprite.setAngle(0);
         tileSprite.setScale(1);
