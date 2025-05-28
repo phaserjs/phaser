@@ -16,7 +16,7 @@ var DrawRoundedRect = function (ctx, x, y, width, height, tlRadius, trRadius, bl
     var tr = Math.min(trRadius, maxRadius);
     var bl = Math.min(blRadius, maxRadius);
     var br = Math.min(brRadius, maxRadius);
-    
+
     if (tl === 0 && tr === 0 && bl === 0 && br === 0)
     {
         // Fall back to normal rectangle if radius is 0
