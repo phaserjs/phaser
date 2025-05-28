@@ -23,26 +23,66 @@ var DrawRoundedRect = function (ctx, x, y, width, height, tlRadius, trRadius, bl
         ctx.rect(x, y, width, height);
         return;
     }
-    
-    // Start at top-left, after the corner
-    ctx.moveTo(x + tl, y);
-    
-    // Top edge and top-right corner
-    ctx.lineTo(x + width - tr, y);
-    ctx.arcTo(x + width, y, x + width, y + tr, tr);
-    
-    // Right edge and bottom-right corner
-    ctx.lineTo(x + width, y + height - br);
-    ctx.arcTo(x + width, y + height, x + width - br, y + height, br);
-    
-    // Bottom edge and bottom-left corner
-    ctx.lineTo(x + bl, y + height);
-    ctx.arcTo(x, y + height, x, y + height - bl, bl);
-    
-    // Left edge and top-left corner
-    ctx.lineTo(x, y + tl);
-    ctx.arcTo(x, y, x + tl, y, tl);
-    
+
+    if (tl === 0)
+    {
+        // Start at top-left
+        ctx.moveTo(x, y);
+    }
+    else
+    {
+        // Start at top-left, after the corner
+        ctx.moveTo(x + tl, y);
+    }
+
+    if (tr === 0)
+    {
+        // Top edge
+        ctx.lineTo(x + width, y);
+    }
+    else
+    {
+        // Top edge and top-right corner
+        ctx.lineTo(x + width - tr, y);
+        ctx.arcTo(x + width, y, x + width, y + tr, tr);
+    }
+
+    if (br === 0)
+    {
+        // Right edge
+        ctx.lineTo(x + width, y + height);
+    }
+    else
+    {
+        // Right edge and bottom-right corner
+        ctx.lineTo(x + width, y + height - br);
+        ctx.arcTo(x + width, y + height, x + width - br, y + height, br);
+    }
+
+    if (bl === 0)
+    {
+        // Bottom edge
+        ctx.lineTo(x, y + height);
+    }
+    else
+    {
+        // Bottom edge and bottom-left corner
+        ctx.lineTo(x + bl, y + height);
+        ctx.arcTo(x, y + height, x, y + height - bl, bl);
+    }
+
+    if (tl === 0)
+    {
+        // Left edge
+        ctx.lineTo(x, y);
+    }
+    else
+    {
+        // Left edge and top-left corner
+        ctx.lineTo(x, y + tl);
+        ctx.arcTo(x, y, x + tl, y, tl);
+    }
+
     ctx.closePath();
 };
 
