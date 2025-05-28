@@ -533,7 +533,7 @@ var Config = new Class({
         /**
          * @const {number} Phaser.Core.Config#loaderMaxRetries - The number of times to retry a file load if it fails.
          */
-        this.loaderMaxRetries = GetValue(config, 'loader.maxRetries', 2);
+        this.loaderMaxRetries = GetValue(config, 'loader.maxRetries', 5);
 
         /**
          * @const {boolean} Phaser.Core.Config#loaderWithCredentials - Optional XHR withCredentials value.

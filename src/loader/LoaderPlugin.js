@@ -349,10 +349,10 @@ var LoaderPlugin = new Class({
 
         /**
          * The number of times to retry loading a single file before it fails.
-         * 
+         *
          * This property is read by the `File` object when it is created and set to
          * the internal property of the same name. It's not used by the Loader itself.
-         * 
+         *
          * You can set this value via the Game Config, or you can adjust this property
          * at any point after the Loader has started. However, it will not apply to files
          * that have already been added to the Loader, only those added after this value
@@ -360,7 +360,7 @@ var LoaderPlugin = new Class({
          *
          * @name Phaser.Loader.LoaderPlugin#maxRetries
          * @type {number}
-         * @default 2
+         * @default 5
          * @since 3.85.0
          */
         this.maxRetries = GetFastValue(sceneConfig, 'maxRetries', gameConfig.loaderMaxRetries);
@@ -1029,8 +1029,9 @@ var LoaderPlugin = new Class({
      *
      * @param {Phaser.Loader.File} file - The File that just finished loading, or errored during load.
      * @param {boolean} success - `true` if the file loaded successfully, otherwise `false`.
+     * @param {Event | string} [event] - The Event that resulted from an error, if loading was not successful.
      */
-    nextFile: function (file, success)
+    nextFile: function (file, success, event)
     {
         //  Has the game been destroyed during load? If so, bail out now.
         if (!this.inflight)
@@ -1058,7 +1059,7 @@ var LoaderPlugin = new Class({
 
             this._deleteQueue.set(file);
 
-            this.emit(Events.FILE_LOAD_ERROR, file);
+            this.emit(Events.FILE_LOAD_ERROR, file, event);
 
             this.fileProcessComplete(file);
         }

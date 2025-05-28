@@ -51,5 +51,4 @@
  * @property {string} [systemKey] - If this plugin is to be added to Scene.Systems, this is the property key for it.
  * @property {string} [sceneKey] - If this plugin is to be added to the Scene, this is the property key for it.
  * @property {Phaser.Types.Loader.FileTypes.SVGSizeConfig} [svgConfig] - The svg size configuration object.
- * @property {number} [maxRetries=2] - The number of times to retry the file load if it fails.
  */

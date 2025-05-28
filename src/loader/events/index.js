@@ -14,6 +14,7 @@ module.exports = {
     COMPLETE: require('./COMPLETE_EVENT'),
     FILE_COMPLETE: require('./FILE_COMPLETE_EVENT'),
     FILE_KEY_COMPLETE: require('./FILE_KEY_COMPLETE_EVENT'),
+    FILE_LOAD_RETRY: require('./FILE_LOAD_RETRY_EVENT'),
     FILE_LOAD_ERROR: require('./FILE_LOAD_ERROR_EVENT'),
     FILE_LOAD: require('./FILE_LOAD_EVENT'),
     FILE_PROGRESS: require('./FILE_PROGRESS_EVENT'),
