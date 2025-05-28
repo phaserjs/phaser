@@ -55,30 +55,52 @@ var Rectangle = new Class({
         Shape.call(this, scene, 'Rectangle', new GeomRectangle(0, 0, width, height));
 
         /**
-         * The radius of the rectangle if this is set to use rounded corners.
+         * The radius of the top-left corner of the rectangle.
          *
          * Do not modify this property. Instead, call the method `setRounded` to set the
          * radius of the rounded corners.
          *
-         * @name Phaser.GameObjects.Shape#radius
+         * @name Phaser.GameObjects.Rectangle#tintTopLeft
          * @type {number}
          * @readonly
-         * @since 3.90.0
          */
-        this.radius = 20;
+        this.radiusTopLeft = 0;
 
         /**
-         * Does this Rectangle have rounded corners?
+         * The radius of the top-right corner of the rectangle.
          *
          * Do not modify this property. Instead, call the method `setRounded` to set the
-         * radius state of this rectangle.
+         * radius of the rounded corners.
          *
-         * @name Phaser.GameObjects.Shape#isRounded
-         * @type {boolean}
+         * @name Phaser.GameObjects.Rectangle#tintTopLeft
+         * @type {number}
          * @readonly
-         * @since 3.90.0
          */
-        this.isRounded = false;
+        this.radiusTopRight = 0;
+
+        /**
+         * The radius of the bottom-left corner of the rectangle.
+         *
+         * Do not modify this property. Instead, call the method `setRounded` to set the
+         * radius of the rounded corners.
+         *
+         * @name Phaser.GameObjects.Rectangle#tintTopLeft
+         * @type {number}
+         * @readonly
+         */
+        this.radiusBottomLeft = 0;
+
+        /**
+         * The radius of the bottom-right corner of the rectangle.
+         *
+         * Do not modify this property. Instead, call the method `setRounded` to set the
+         * radius of the rounded corners.
+         *
+         * @name Phaser.GameObjects.Rectangle#tintTopLeft
+         * @type {number}
+         * @readonly
+         */
+        this.radiusBottomRight = 0;
 
         this.setPosition(x, y);
         this.setSize(width, height);
@@ -93,25 +115,84 @@ var Rectangle = new Class({
     },
 
     /**
+     * The radius of all the corners of the rectangle if this is set to use rounded corners.
+     * Return `radiusTopLeft` when read this radius property.
+     *
+     * @name Phaser.GameObjects.Shape#radius
+     * @type {number}
+     * @since 3.90.0
+     */
+    radius: {
+
+        get: function ()
+        {
+            return this.radiusTopLeft;
+        },
+
+        set: function (value)
+        {
+            this.setRounded(value, value, value, value);
+        }
+
+    },
+
+    /**
+     * Does this Rectangle have rounded corners?
+     *
+     * It checks to see if the 4 radius properties are set to 0.
+     * This indicates that a Rectangle isn't rounded.
+     *
+     * @name Phaser.GameObjects.Shape#isRounded
+     * @type {boolean}
+     * @readonly
+     * @since 3.90.0
+     */
+    isRounded: {
+
+        get: function ()
+        {
+            return (
+                this.radiusTopLeft !== 0 ||
+                this.radiusTopRight !== 0 ||
+                this.radiusBottomLeft !== 0 ||
+                this.radiusBottomRight !== 0
+            );
+        }
+
+    },
+
+    /**
      * Sets this rectangle to have rounded corners by specifying the radius of the corner.
      *
      * The radius of the rounded corners is limited by the smallest dimension of the rectangle.
      *
-     * To disable rounded corners, set the `radius` parameter to 0.
+     * To disable rounded corners, set the `topLeft` parameter to 0.
      *
      * @method Phaser.GameObjects.Rectangle#setRounded
      * @since 3.90.0
      *
-     * @param {number} [radius=16] - The radius of all four rounded corners.
+     * @param {number} [topLeft=16] - The radius of the top-left corner. If no other values are given this value is applied evenly, setting all corners to this radius.
+     * @param {number} [topRight] - The radius of the top-right corner.
+     * @param {number} [bottomLeft] - The radius of the bottom-left corner.
+     * @param {number} [bottomRight] - The radius of the bottom-right corner.
      *
      * @return {this} This Game Object instance.
      */
-    setRounded: function (radius)
+    setRounded: function (topLeft, topRight, bottomLeft, bottomRight)
     {
-        if (radius === undefined) { radius = 16; }
+        if (topLeft === undefined) { topLeft = 16; }
 
-        this.radius = radius;
-        this.isRounded = radius > 0;
+        if (topRight === undefined)
+        {
+            topRight = topLeft;
+            bottomLeft = topLeft;
+            bottomRight = topLeft;
+        }
+
+        this.radiusTopLeft = topLeft;
+        this.radiusTopRight = topRight;
+        this.radiusBottomLeft = bottomLeft;
+        this.radiusBottomRight = bottomRight;
 
         return this.updateRoundedData();
     },
@@ -210,36 +291,42 @@ var Rectangle = new Class({
 
         //  Limit max radius to half the smallest dimension
         var maxRadius = Math.min(halfWidth, halfHeight);
-        var radius = Math.min(this.radius, maxRadius);
+        var tl = Math.min(this.radiusTopLeft, maxRadius);
+        var tr = Math.min(this.radiusTopRight, maxRadius);
+        var bl = Math.min(this.radiusBottomLeft, maxRadius);
+        var br = Math.min(this.radiusBottomRight, maxRadius);
 
         var x = halfWidth;
         var y = halfHeight;
 
         //  The number of segments is based on radius (more segments = larger radius)
-        var segments = Math.max(1, Math.floor(radius / 5));
+        var tlSegments = Math.max(1, Math.floor(tl));
+        var trSegments = Math.max(1, Math.floor(tr));
+        var blSegments = Math.max(1, Math.floor(bl));
+        var brSegments = Math.max(1, Math.floor(br));
 
         //  Create points going clockwise from top-left
 
         //  Top-left corner
-        this.arcTo(path, x - halfWidth + radius, y - halfHeight + radius, radius, Math.PI, Math.PI * 1.5, segments);
+        this.arcTo(path, x - halfWidth + tl, y - halfHeight + tl, tl, Math.PI, Math.PI * 1.5, tlSegments);
 
         //  Top edge and top-right corner
-        path.push(x + halfWidth - radius, y - halfHeight);
+        path.push(x + halfWidth - tr, y - halfHeight);
 
-        this.arcTo(path, x + halfWidth - radius, y - halfHeight + radius, radius, Math.PI * 1.5, Math.PI * 2, segments);
+        this.arcTo(path, x + halfWidth - tr, y - halfHeight + tr, tr, Math.PI * 1.5, Math.PI * 2, trSegments);
 
         //  Right edge and bottom-right corner
-        path.push(x + halfWidth, y + halfHeight - radius);
+        path.push(x + halfWidth, y + halfHeight - br);
 
-        this.arcTo(path, x + halfWidth - radius, y + halfHeight - radius, radius, 0, Math.PI * 0.5, segments);
+        this.arcTo(path, x + halfWidth - br, y + halfHeight - br, br, 0, Math.PI * 0.5, brSegments);
 
         //  Bottom edge and bottom-left corner
-        path.push(x - halfWidth + radius, y + halfHeight);
+        path.push(x - halfWidth + bl, y + halfHeight);
 
-        this.arcTo(path, x - halfWidth + radius, y + halfHeight - radius, radius, Math.PI * 0.5, Math.PI, segments);
+        this.arcTo(path, x - halfWidth + bl, y + halfHeight - bl, bl, Math.PI * 0.5, Math.PI, blSegments);
 
         //  Left edge (connects back to first point)
-        path.push(x - halfWidth, y - halfHeight + radius);
+        path.push(x - halfWidth, y - halfHeight + tl);
 
         this.pathIndexes = Earcut(path);
         this.pathData = path;
