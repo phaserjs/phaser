@@ -215,8 +215,8 @@ var Rectangle = new Class({
         var x = halfWidth;
         var y = halfHeight;
 
-        //  The number of segments is based on radius (more segments = larger radius)
-        var segments = Math.max(1, Math.floor(radius / 5));
+        //  Ensure minimum smoothness for small radii while preventing excessive tessellation
+        var segments = Math.max(4, Math.min(16, Math.ceil(radius / 2)));
 
         //  Create points going clockwise from top-left
 
