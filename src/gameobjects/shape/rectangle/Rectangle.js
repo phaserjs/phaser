@@ -300,10 +300,10 @@ var Rectangle = new Class({
         var y = halfHeight;
 
         //  The number of segments is based on radius (more segments = larger radius)
-        var tlSegments = Math.max(1, Math.floor(tl));
-        var trSegments = Math.max(1, Math.floor(tr));
-        var blSegments = Math.max(1, Math.floor(bl));
-        var brSegments = Math.max(1, Math.floor(br));
+        var tlSegments = Math.max(4, Math.min(16, Math.ceil(tl / 2)));
+        var trSegments = Math.max(4, Math.min(16, Math.ceil(tr / 2)));
+        var blSegments = Math.max(4, Math.min(16, Math.ceil(bl / 2)));
+        var brSegments = Math.max(4, Math.min(16, Math.ceil(br / 2)));
 
         //  Create points going clockwise from top-left
 
