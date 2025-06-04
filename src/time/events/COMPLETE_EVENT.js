@@ -7,7 +7,7 @@
 /**
  * The Timeline Complete Event.
  *
- * This event is dispatched by timeline when all timeline events complete.
+ * This event is dispatched by a timeline when all of its events have been run.
  *
  * Listen to it from a Timeline instance using `Timeline.on('complete', listener)`, i.e.:
  *
