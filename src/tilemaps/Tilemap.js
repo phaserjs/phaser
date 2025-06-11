@@ -590,7 +590,7 @@ var Tilemap = new Class({
      * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
      * @param {number} [x=0] - The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
      * @param {number} [y=0] - The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
-     * @param {boolean} [gpu=false] - Create a TilemapGPULayer instead of a TilemapLayer. This option is WebGL-only. A TilemapGPULayer is less flexible, but can be much faster.
+     * @param {boolean} [gpu=false] - Create a TilemapGPULayer instead of a TilemapLayer. This option is WebGL-only. A TilemapGPULayer is less flexible, but can be much faster. When `true`, if `tileset` is an array, only the first element of the array is used as the tileset.
      *
      * @return {?Phaser.Tilemaps.TilemapLayer|?Phaser.Tilemaps.TilemapGPULayer} Returns the new layer was created, or null if it failed.
      */
@@ -637,6 +637,15 @@ var Tilemap = new Class({
 
         if (gpu)
         {
+            if (Array.isArray(tileset))
+            {
+                if (tileset.length > 1)
+                {
+                    console.warn('TilemapGPULayer can only use one tileset. Using the first item given.');
+                }
+                tileset = tileset[0];
+            }
+
             layer = new TilemapGPULayer(this.scene, this, index, tileset, x, y);
         }
         else
