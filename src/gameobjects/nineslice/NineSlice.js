@@ -1020,6 +1020,10 @@ var NineSlice = new Class({
         {
             this.setSizeToFrame();
         }
+        else
+        {
+            this.updateUVs();
+        }
 
         if (this._originComponent && updateOrigin)
         {
@@ -1032,8 +1036,6 @@ var NineSlice = new Class({
                 this.updateDisplayOrigin();
             }
         }
-
-        this.updateUVs();
 
         return this;
     },
