@@ -7,9 +7,13 @@
 var DefaultNineSliceNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultQuadNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
 var NineSliceRender = require('./NineSliceRender');
 var Vertex = require('./NineSliceVertex');
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 8; // 1000
 
 /**
  * @classdesc
@@ -428,8 +432,8 @@ var NineSlice = new Class({
                 if (height === undefined) { height = 256; }
             }
 
-            this._width = width;
-            this._height = height;
+            this._width = Math.max(width, leftWidth + rightWidth);
+            this._height = Math.max(height, topHeight + bottomHeight);
 
             this.leftWidth = leftWidth;
             this.rightWidth = rightWidth;
@@ -739,9 +743,7 @@ var NineSlice = new Class({
 
         set: function (value)
         {
-            this._width = Math.max(value, this.leftWidth + this.rightWidth);
-
-            this.updateVertices();
+            this.setSize(value, this.height);
         }
 
     },
@@ -774,9 +776,7 @@ var NineSlice = new Class({
         {
             if (!this.is3Slice)
             {
-                this._height = Math.max(value, this.topHeight + this.bottomHeight);
-
-                this.updateVertices();
+                this.setSize(this.width, value);
             }
         }
 
@@ -855,8 +855,10 @@ var NineSlice = new Class({
      */
     setSize: function (width, height)
     {
-        this.width = width;
-        this.height = height;
+        if (width !== this.width) { this._width = Math.max(width, this.leftWidth + this.rightWidth); }
+        if (height !== this.height) { this._height = Math.max(height, this.topHeight + this.bottomHeight); }
+
+        this.updateVertices();
 
         this.updateDisplayOrigin();
 
@@ -966,6 +968,74 @@ var NineSlice = new Class({
         this.updateVertices();
 
         return this.updateDisplayOrigin();
+    },
+
+    /**
+     * Sets the frame this Game Object will use to render with.
+     *
+     * If you pass a string or index then the Frame has to belong to the current Texture being used
+     * by this Game Object.
+     *
+     * If you pass a Frame instance, then the Texture being used by this Game Object will also be updated.
+     *
+     * Calling `setFrame` will modify the `width` and `height` properties of your Game Object.
+     *
+     * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
+     *
+     * @method Phaser.GameObjects.NineSlice#setFrame
+     * @since 3.60.0
+     *
+     * @param {(string|number|Phaser.Textures.Frame)} frame - The name or index of the frame within the Texture, or a Frame instance.
+     * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
+     * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
+     *
+     * @return {this} This Game Object instance.
+     */
+    setFrame: function (frame, updateSize, updateOrigin)
+    {
+        if (updateSize === undefined) { updateSize = true; }
+        if (updateOrigin === undefined) { updateOrigin = true; }
+
+        if (frame instanceof Frame)
+        {
+            this.texture = this.scene.sys.textures.get(frame.texture.key);
+
+            this.frame = frame;
+        }
+        else
+        {
+            this.frame = this.texture.get(frame);
+        }
+
+        if (!this.frame.cutWidth || !this.frame.cutHeight)
+        {
+            this.renderFlags &= ~_FLAG;
+        }
+        else
+        {
+            this.renderFlags |= _FLAG;
+        }
+
+        if (this._sizeComponent && updateSize)
+        {
+            this.setSizeToFrame();
+        }
+
+        if (this._originComponent && updateOrigin)
+        {
+            if (this.frame.customPivot)
+            {
+                this.setOrigin(this.frame.pivotX, this.frame.pivotY);
+            }
+            else
+            {
+                this.updateDisplayOrigin();
+            }
+        }
+
+        this.updateUVs();
+
+        return this;
     },
 
     /**
