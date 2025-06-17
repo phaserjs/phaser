@@ -185,7 +185,7 @@ var NineSliceCanvasRenderer = function (renderer, src, camera, parentMatrix)
             DrawSlice(
                 ctx, img, rp, res,
                 frameX + frameWidth - src.rightWidth, frameY + frameHeight - src.bottomHeight,
-                src.leftWidth, src.bottomHeight,
+                src.rightWidth, src.bottomHeight,
                 x + src.width - src.rightWidth, y + src.height - src.bottomHeight
             );
 
