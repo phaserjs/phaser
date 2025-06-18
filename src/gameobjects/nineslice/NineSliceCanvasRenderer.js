@@ -14,10 +14,12 @@ var DrawSlice = function (ctx, image, roundPixels, res, fx, fy, width, height, x
 
     if (roundPixels)
     {
-        x = Math.round(x);
-        y = Math.round(y);
-        fw = Math.round(fw);
-        fh = Math.round(fh);
+        var rx = Math.floor(x + 0.5);
+        var ry = Math.floor(y + 0.5);
+        fw = Math.floor((x + fw) + 0.5) - rx;
+        fh = Math.floor((y + fh) + 0.5) - ry;
+        x = rx;
+        y = ry;
     }
 
     ctx.drawImage(
