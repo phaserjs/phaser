@@ -197,9 +197,18 @@ var LightPipeline = new Class({
 
             var lightName = 'uLights[' + i + '].';
 
-            cameraMatrix.transformPoint(light.x, light.y, tempVec2);
-
-            this.set2f(lightName + 'position', tempVec2.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (tempVec2.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
+            if (camera.rotation !== 0)
+            {
+                // When camera is rotated, apply scroll before matrix transformation to avoid double-transformation
+                cameraMatrix.transformPoint(light.x - (camera.scrollX * light.scrollFactorX), light.y - (camera.scrollY * light.scrollFactorY), tempVec2);
+                this.set2f(lightName + 'position', tempVec2.x, height - tempVec2.y);
+            }
+            else
+            {
+                // When camera is not rotated, use original calculation (matrix transform then manual scroll/zoom)
+                cameraMatrix.transformPoint(light.x, light.y, tempVec2);
+                this.set2f(lightName + 'position', tempVec2.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (tempVec2.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
+            }
             this.set3f(lightName + 'color', color.r, color.g, color.b);
             this.set1f(lightName + 'intensity', light.intensity);
             this.set1f(lightName + 'radius', light.radius);
