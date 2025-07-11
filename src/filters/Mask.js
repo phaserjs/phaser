@@ -61,16 +61,27 @@ var Controller = require('./Controller');
  * @param {boolean} [invert=false] - Whether to invert the mask.
  * @param {Phaser.Cameras.Scene2D.Camera} [viewCamera] - The Camera to use when rendering the mask with a GameObject. If not specified, uses the scene's `main` camera.
  * @param {'local'|'world'} [viewTransform='world'] - The transform to use when rendering the mask with a GameObject. 'local' uses the GameObject's own properties. 'world' uses the GameObject's `parentContainer` value to compute a world position.
+ * @param {number} [scaleFactor=1] - Scale factor to apply to the underly mask texture. Can be used to balance memory usage and needed mask precision
  */
 var Mask = new Class({
     Extends: Controller,
 
-    initialize: function Mask (camera, mask, invert, viewCamera, viewTransform)
+    initialize: function Mask (camera, mask, invert, viewCamera, viewTransform, scaleFactor)
     {
         if (mask === undefined) { mask = '__WHITE'; }
         if (invert === undefined) { invert = false; }
+        if (scaleFactor === undefined) { scaleFactor = 1; }
 
         Controller.call(this, camera, 'FilterMask');
+
+        /**
+         * The scale factor to apply to the underlying mask texture.
+         *
+         * @name Phaser.Filters.Mask#scaleFactor
+         * @type {number}
+         * @since 4.0.0
+         */
+        this.scaleFactor = scaleFactor;
 
         /**
          * The underlying texture used for the mask.
@@ -188,8 +199,11 @@ var Mask = new Class({
      * @param {number} width - The width of the DynamicTexture.
      * @param {number} height - The height of the DynamicTexture
      */
-    updateDynamicTexture: function (width, height)
+    updateDynamicTexture: function (originalWidth, originalHeight)
     {
+        var width = originalWidth * this.scaleFactor;
+        var height = originalHeight * this.scaleFactor;
+
         var gameObject = this.maskGameObject;
 
         if (!gameObject)
@@ -200,11 +214,11 @@ var Mask = new Class({
         if (!this._dynamicTexture)
         {
             var textureManager = this.camera.scene.sys.textures;
-            this._dynamicTexture = textureManager.addDynamicTexture(UUID(), width, height, false);
+            this._dynamicTexture = textureManager.addDynamicTexture(UUID(), width , height , false);
         }
         else if (this._dynamicTexture.width !== width || this._dynamicTexture.height !== height)
         {
-            this._dynamicTexture.setSize(width, height);
+            this._dynamicTexture.setSize(width , height);
         }
         else
         {
@@ -216,7 +230,7 @@ var Mask = new Class({
         var camera = this.viewCamera || gameObject.scene.renderer.currentViewCamera;
         
         // Draw the GameObject to the DynamicTexture.
-        this._dynamicTexture.capture(gameObject, { transform: this.viewTransform, camera: camera });
+        this._dynamicTexture.capture(gameObject, { transform: this.viewTransform, camera: camera, scaleX: this.scaleFactor, scaleY: this.scaleFactor });
         this._dynamicTexture.render();
 
         this.needsUpdate = false;
