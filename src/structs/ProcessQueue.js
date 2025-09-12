@@ -17,7 +17,7 @@ var Events = require('./events');
  * The `destroy` list is a selection of items that were active and are awaiting being destroyed in the next update.
  *
  * When new items are added to a Process Queue they are put in the pending list, rather than being added
- * immediately the active list. Equally, items that are removed are put into the destroy list, rather than
+ * immediately to the active list. Equally, items that are removed are put into the destroy list, rather than
  * being destroyed immediately. This allows the Process Queue to carefully process each item at a specific, fixed
  * time, rather than at the time of the request from the API.
  *
