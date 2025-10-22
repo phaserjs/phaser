@@ -167,3 +167,4 @@ The Phaser logo and characters are &copy; 2011 - 2025 Phaser Studio Inc.
 All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
+Welcome to Phaser Web3 Games. Phaser's HTML5 framework supports blockchain P2E. New contributor, start your first NFT scene with the Scene tutorial. Tip: Use Ethers.js for connect!
