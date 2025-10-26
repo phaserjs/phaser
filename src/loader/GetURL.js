@@ -22,7 +22,7 @@ var GetURL = function (file, baseURL)
         return false;
     }
 
-    if (file.url.match(/^(?:blob:|data:|capacitor:\/\/|http:\/\/|https:\/\/|\/\/)/))
+    if (file.url.match(/^(?:blob:|data:|capacitor:\/\/|file:\/\/|http:\/\/|https:\/\/|\/\/)/))
     {
         return file.url;
     }
