@@ -1390,12 +1390,12 @@ var Group = new Class({
     },
 
     /**
-     * Sets the angle of each group member.
+     * Adds the given value to the angle of each group member.
      *
      * @method Phaser.GameObjects.Group#angle
      * @since 3.21.0
      *
-     * @param {number} value - The amount to set the angle to, in degrees.
+     * @param {number} value - The amount to add to the angle, in degrees.
      * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter.
      *
      * @return {this} This Group object.
