@@ -1542,8 +1542,15 @@ var ScaleManager = new Class({
         {
             _this.updateBounds();
 
+            // --- FIX START ---
+            // Recalculate parent container size and force Phaser to resize.
+            _this.getParentBounds();
+            _this.refresh();
+            // --- FIX END ---
+
             _this.dirty = true;
         };
+
 
         //  Only dispatched on mobile devices
         if (screen.orientation && screen.orientation.addEventListener)
