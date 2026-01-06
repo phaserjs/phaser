@@ -57,6 +57,13 @@ module.exports = {
                     type: 'commonjs',
                     exports: 'single spine'
                 }
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                loader: 'babel-loader'
+                }
             }
         ]
     },

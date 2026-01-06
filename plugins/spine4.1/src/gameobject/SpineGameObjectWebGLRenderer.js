@@ -10,6 +10,31 @@ var GetCalcMatrix = require('../../../../src/gameobjects/GetCalcMatrix');
 var RadToDeg = require('../../../../src/math/RadToDeg');
 var Wrap = require('../../../../src/math/Wrap');
 
+var computeRootRotationDeg = function (scaleX, scaleY, rotationRad, useWebGLPath)
+{
+    var rotationDeg = RadToDeg(rotationRad);
+    var ccwDeg = RadToDeg(CounterClockwise(rotationRad));
+    var result;
+
+    if (scaleX < 0)
+    {
+        result = useWebGLPath ? Wrap(rotationDeg - 180, 0, 360) : Wrap(rotationDeg, 0, 360);
+    }
+    else
+    {
+        result = Wrap(ccwDeg + 90, 0, 360);
+    }
+
+    if (scaleY < 0)
+    {
+        var adjustment = rotationDeg * 2;
+
+        result += (scaleX < 0) ? -adjustment : adjustment;
+    }
+
+    return Wrap(result, 0, 360);
+};
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -63,32 +88,23 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
     skeleton.scaleX = calcMatrix.scaleX;
     skeleton.scaleY = calcMatrix.scaleY;
 
+    var computedRotation = computeRootRotationDeg(src.scaleX, src.scaleY, calcMatrix.rotationNormalized, true);
+    var defaultRotation = computeRootRotationDeg(src.scaleX, src.scaleY, 0, true);
+
     if (src.scaleX < 0)
     {
         skeleton.scaleX *= -1;
-
-        //  -180 degrees to account for the difference in Spine vs. Phaser rotation when inversely scaled
-        src.root.rotation = Wrap(RadToDeg(calcMatrix.rotationNormalized) - 180, 0, 360);
-    }
-    else
-    {
-        //  +90 degrees to account for the difference in Spine vs. Phaser rotation
-        src.root.rotation = Wrap(RadToDeg(CounterClockwise(calcMatrix.rotationNormalized)) + 90, 0, 360);
     }
 
     if (src.scaleY < 0)
     {
         skeleton.scaleY *= -1;
-
-        if (src.scaleX < 0)
-        {
-            src.root.rotation -= (RadToDeg(calcMatrix.rotationNormalized) * 2);
-        }
-        else
-        {
-            src.root.rotation += (RadToDeg(calcMatrix.rotationNormalized) * 2);
-        }
     }
+
+    var setupRotation = (typeof src._rootSetupRotation === 'number') ? src._rootSetupRotation : 0;
+    var finalRotation = computedRotation + (setupRotation - defaultRotation);
+
+    src.root.rotation = Wrap(finalRotation, 0, 360);
 
     /*
     if (renderer.currentFramebuffer !== null)

@@ -167,6 +167,17 @@ var SpineGameObject = new Class({
         this.root = null;
 
         /**
+         * Cached setup pose rotation (degrees) for the root bone.
+         * Used to restore the authored orientation after Phaser applies its transform.
+         *
+         * @name SpineGameObject#_rootSetupRotation
+         * @type {number}
+         * @private
+         * @since 3.19.0
+         */
+        this._rootSetupRotation = 0;
+
+        /**
          * This object holds the calculated bounds of the current
          * pose, as set when a new Skeleton is applied.
          *
@@ -284,8 +295,6 @@ var SpineGameObject = new Class({
      *
      * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
      *
-     * To set the alpha of a specific attachment, use the `setSlotAlpha` method instead.
-     *
      * @method SpineGameObject#setAlpha
      * @since 3.19.0
      *
@@ -293,41 +302,22 @@ var SpineGameObject = new Class({
      *
      * @return {this} This Game Object instance.
      */
-    setAlpha: function (value)
+    setAlpha: function (value, slotName)
     {
         if (value === undefined) { value = 1; }
 
-        this.alpha = value;
-
-        return this;
-    },
-
-    /**
-     * Set the Alpha level for the given attachment slot.
-     *
-     * The alpha controls the opacity of the slot as it renders.
-     *
-     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
-     *
-     * To set the alpha for the whole skeleton, use the `setAlpha` method instead.
-     *
-     * @method SpineGameObject#setSlotAlpha
-     * @since 3.80.0
-     *
-     * @param {string} slotName - The name of the slot to find.
-     * @param {number} [value=1] - The alpha value used for the slot.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setSlotAlpha: function (value, slotName)
-    {
-        if (value === undefined) { value = 1; }
-
-        var slot = this.findSlot(slotName);
-
-        if (slot)
+        if (slotName)
         {
-            slot.color.a = Clamp(value, 0, 1);
+            var slot = this.findSlot(slotName);
+
+            if (slot)
+            {
+                slot.color.a = Clamp(value, 0, 1);
+            }
+        }
+        else
+        {
+            this.alpha = value;
         }
 
         return this;
@@ -592,6 +582,19 @@ var SpineGameObject = new Class({
 
         if (this.root)
         {
+            var setupRotation = 0;
+
+            if (this.root.data && typeof this.root.data.rotation === 'number')
+            {
+                setupRotation = this.root.data.rotation;
+            }
+            else if (typeof this.root.rotation === 'number')
+            {
+                setupRotation = this.root.rotation;
+            }
+
+            this._rootSetupRotation = setupRotation;
+
             //  +90 degrees to account for the difference in Spine vs. Phaser rotation
             this.root.rotation = RadToDeg(CounterClockwise(this.rotation)) + 90;
         }
@@ -1015,8 +1018,6 @@ var SpineGameObject = new Class({
     play: function (animationName, loop, ignoreIfPlaying)
     {
         this.setAnimation(0, animationName, loop, ignoreIfPlaying);
-
-        this.preUpdate(0, 16.6);
 
         return this;
     },
