@@ -59,12 +59,12 @@ var AtlasXML = function (texture, sourceIndex, xml)
             var frameHeight = parseInt(frame.frameHeight.value, 10);
 
             newFrame.setTrim(
-                width,
-                height,
+                frameWidth,
+                frameHeight,
                 frameX,
                 frameY,
-                frameWidth,
-                frameHeight
+                width,
+                height
             );
         }
     }
