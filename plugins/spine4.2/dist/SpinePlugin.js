@@ -3331,25 +3331,7 @@ module.exports = SpineGameObjectWebGLDirect;
  */
 
 var Clamp = __webpack_require__(8041);
-var CounterClockwise = __webpack_require__(6846);
 var GetCalcMatrix = __webpack_require__(602);
-var RadToDeg = __webpack_require__(258);
-var Wrap = __webpack_require__(8012);
-var computeRootRotationDeg = function (scaleX, scaleY, rotationRad, useWebGLPath) {
-  var rotationDeg = RadToDeg(rotationRad);
-  var ccwDeg = RadToDeg(CounterClockwise(rotationRad));
-  var result;
-  if (scaleX < 0) {
-    result = useWebGLPath ? Wrap(rotationDeg - 180, 0, 360) : Wrap(rotationDeg, 0, 360);
-  } else {
-    result = Wrap(ccwDeg + 90, 0, 360);
-  }
-  if (scaleY < 0) {
-    var adjustment = rotationDeg * 2;
-    result += scaleX < 0 ? -adjustment : adjustment;
-  }
-  return Wrap(result, 0, 360);
-};
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -3386,37 +3368,28 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
   camera.addToRenderList(src);
   var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
   var viewportHeight = renderer.height;
-  skeleton.x = calcMatrix.tx;
-  skeleton.y = viewportHeight - calcMatrix.ty;
-  skeleton.scaleX = calcMatrix.scaleX;
-  skeleton.scaleY = calcMatrix.scaleY;
-  var computedRotation = computeRootRotationDeg(src.scaleX, src.scaleY, calcMatrix.rotationNormalized, true);
-  var defaultRotation = computeRootRotationDeg(src.scaleX, src.scaleY, 0, true);
-  if (src.scaleX < 0) {
-    skeleton.scaleX *= -1;
-  }
-  if (src.scaleY < 0) {
-    skeleton.scaleY *= -1;
-  }
-  var setupRotation = typeof src._rootSetupRotation === 'number' ? src._rootSetupRotation : 0;
-  var finalRotation = computedRotation + (setupRotation - defaultRotation);
-  src.root.rotation = Wrap(finalRotation, 0, 360);
-
-  /*
-  if (renderer.currentFramebuffer !== null)
-  {
-      skeleton.y = calcMatrix.ty;
-      skeleton.scaleY *= -1;
-  }
-  */
-
+  var a = calcMatrix.a;
+  var b = calcMatrix.b;
+  var c = calcMatrix.c;
+  var d = calcMatrix.d;
+  var tx = calcMatrix.tx;
+  var ty = viewportHeight - calcMatrix.ty;
+  skeleton.x = 0;
+  skeleton.y = 0;
   var physics = 2; // 目前未知這個應該抓哪個設置檔，暫時先固定 0. 0-none;1-reset;2-update;3-pose
 
   skeleton.updateWorldTransform(physics);
 
   //  Draw the current skeleton
 
-  sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha);
+  sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha, -1, -1, function (vertices, numVertices, stride) {
+    for (var i = 0; i < numVertices; i += stride) {
+      var vx = vertices[i];
+      var vy = -vertices[i + 1];
+      vertices[i] = vx * a + vy * c + tx;
+      vertices[i + 1] = -(vx * b + vy * d - ty);
+    }
+  });
   if (container) {
     src.scrollFactorX = scrollFactorX;
     src.scrollFactorY = scrollFactorY;
