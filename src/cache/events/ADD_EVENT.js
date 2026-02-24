@@ -10,7 +10,7 @@
  * This event is dispatched by any Cache that extends the BaseCache each time a new object is added to it.
  *
  * @event Phaser.Cache.Events#ADD
- * @type {string}
+ * @type {'add'}
  * @since 3.0.0
  *
  * @param {Phaser.Cache.BaseCache} cache - The cache to which the object was added.

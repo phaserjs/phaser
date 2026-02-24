@@ -14,7 +14,7 @@
  * If you add lots of files to a Loader from a `preload` method, it will dispatch this event for each one of them.
  *
  * @event Phaser.Loader.Events#ADD
- * @type {string}
+ * @type {'addfile'}
  * @since 3.0.0
  *
  * @param {string} key - The unique key of the file that was added to the Loader.

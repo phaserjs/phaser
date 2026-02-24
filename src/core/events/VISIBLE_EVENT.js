@@ -13,7 +13,7 @@
  * Only browsers that support the Visibility API will cause this event to be emitted.
  *
  * @event Phaser.Core.Events#VISIBLE
- * @type {string}
+ * @type {'visible'}
  * @since 3.0.0
  */
 module.exports = 'visible';

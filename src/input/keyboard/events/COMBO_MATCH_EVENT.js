@@ -20,7 +20,7 @@
  * ```
  *
  * @event Phaser.Input.Keyboard.Events#COMBO_MATCH
- * @type {string}
+ * @type {'keycombomatch'}
  * @since 3.0.0
  *
  * @param {Phaser.Input.Keyboard.KeyCombo} keycombo - The Key Combo object that was matched.

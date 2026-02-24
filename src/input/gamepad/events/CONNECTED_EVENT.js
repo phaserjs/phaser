@@ -17,7 +17,7 @@
  * already connected.
  *
  * @event Phaser.Input.Gamepad.Events#CONNECTED
- * @type {string}
+ * @type {'connected'}
  * @since 3.0.0
  *
  * @param {Phaser.Input.Gamepad} pad - A reference to the Gamepad which was connected.

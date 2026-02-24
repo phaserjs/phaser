@@ -22,7 +22,7 @@
  * ```
  *
  * @event Phaser.Cameras.Scene2D.Events#DESTROY
- * @type {string}
+ * @type {'cameradestroy'}
  * @since 3.0.0
  *
  * @param {Phaser.Cameras.Scene2D.BaseCamera} camera - The camera that was destroyed.

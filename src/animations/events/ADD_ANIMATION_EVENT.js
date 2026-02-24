@@ -13,7 +13,7 @@
  * or the Animation Manager creating a new animation directly.
  *
  * @event Phaser.Animations.Events#ADD_ANIMATION
- * @type {string}
+ * @type {'add'}
  * @since 3.0.0
  *
  * @param {string} key - The key of the Animation that was added to the global Animation Manager.

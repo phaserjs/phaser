@@ -12,7 +12,7 @@
  * Listen for it from a Video Game Object instance using `Video.on('metadata', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_METADATA
- * @type {string}
+ * @type {'metadata'}
  * @since 3.80.0
  *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which fired the event.

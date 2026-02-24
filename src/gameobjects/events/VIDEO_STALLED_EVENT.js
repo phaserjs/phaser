@@ -24,7 +24,7 @@
  * the current batch of frames have rendered.
  *
  * @event Phaser.GameObjects.Events#VIDEO_STALLED
- * @type {string}
+ * @type {'stalled'}
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which threw the error.

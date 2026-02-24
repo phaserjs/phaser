@@ -14,7 +14,7 @@
  * If you wish to know when the final particle is killed, see the `COMPLETE` event.
  *
  * @event Phaser.GameObjects.Particles.Events#DEATH_ZONE
- * @type {string}
+ * @type {'deathzone'}
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - A reference to the Particle Emitter that owns the Particle and Death Zone.

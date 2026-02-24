@@ -12,7 +12,7 @@
  * Listen to it from a Scene using: `this.load.on('loaderror', listener)`.
  *
  * @event Phaser.Loader.Events#FILE_LOAD_ERROR
- * @type {string}
+ * @type {'loaderror'}
  * @since 3.0.0
  *
  * @param {Phaser.Loader.File} file - A reference to the File which errored during load.

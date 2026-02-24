@@ -12,7 +12,7 @@
  * Listen to it from a Camera instance using `Camera.on('camerafadeoutcomplete', listener)`.
  *
  * @event Phaser.Cameras.Scene2D.Events#FADE_OUT_COMPLETE
- * @type {string}
+ * @type {'camerafadeoutcomplete'}
  * @since 3.3.0
  *
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.

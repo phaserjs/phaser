@@ -14,7 +14,7 @@
  * Listen to it from a Scene using: `this.sound.on('stopall', listener)`.
  *
  * @event Phaser.Sound.Events#STOP_ALL
- * @type {string}
+ * @type {'stopall'}
  * @since 3.0.0
  *
  * @param {Phaser.Sound.BaseSoundManager} soundManager - A reference to the sound manager that emitted the event.

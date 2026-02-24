@@ -11,7 +11,7 @@
  * has completed, but before any pending snapshots have been taken.
  *
  * @event Phaser.Renderer.Events#POST_RENDER
- * @type {string}
+ * @type {'postrender'}
  * @since 3.50.0
  */
 module.exports = 'postrender';

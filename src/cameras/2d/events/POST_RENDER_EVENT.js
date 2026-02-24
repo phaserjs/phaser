@@ -13,7 +13,7 @@
  * Listen to it from a Camera instance using: `camera.on('postrender', listener)`.
  *
  * @event Phaser.Cameras.Scene2D.Events#POST_RENDER
- * @type {string}
+ * @type {'postrender'}
  * @since 3.0.0
  *
  * @param {Phaser.Cameras.Scene2D.BaseCamera} camera - The camera that has finished rendering to a texture.

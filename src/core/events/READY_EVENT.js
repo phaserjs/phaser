@@ -11,7 +11,7 @@
  * and all local systems are now able to start.
  *
  * @event Phaser.Core.Events#READY
- * @type {string}
+ * @type {'ready'}
  * @since 3.0.0
  */
 module.exports = 'ready';

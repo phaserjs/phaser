@@ -12,7 +12,7 @@
  * When this happens all current animations will continue updating again.
  *
  * @event Phaser.Animations.Events#RESUME_ALL
- * @type {string}
+ * @type {'resumeall'}
  * @since 3.0.0
  */
 module.exports = 'resumeall';

@@ -18,7 +18,7 @@
  * ```
  *
  * @event Phaser.Time.Events#COMPLETE
- * @type {string}
+ * @type {'complete'}
  * @since 3.70.0
  *
  * @param {Phaser.Time.Timeline} timeline - A reference to the Timeline that emitted the event.

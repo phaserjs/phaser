@@ -12,7 +12,7 @@
  * The renderer halts all rendering and cannot resume after this happens.
  *
  * @event Phaser.Core.Events#CONTEXT_LOST
- * @type {string}
+ * @type {'contextlost'}
  * @since 3.19.0
  */
 module.exports = 'contextlost';

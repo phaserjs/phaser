@@ -22,7 +22,7 @@
  * it is safe to continue.
  *
  * @event Phaser.Renderer.Events#LOSE_WEBGL
- * @type {string}
+ * @type {'losewebgl'}
  * @since 3.80.0
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - the renderer that owns the WebGL context

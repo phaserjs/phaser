@@ -14,7 +14,7 @@
  * Listen to it from a Scene using: `this.sound.on('unlocked', listener)`.
  *
  * @event Phaser.Sound.Events#UNLOCKED
- * @type {string}
+ * @type {'unlocked'}
  * @since 3.0.0
  *
  * @param {Phaser.Sound.BaseSoundManager} soundManager - A reference to the sound manager that emitted the event.
