@@ -140,6 +140,11 @@ var SpineFile = new Class({
         for (var i = 0; i < textures.length; i++) {
           var textureURL = textures[i];
           var key = textureURL;
+          var cacheBustQS = GetFastValue(config, 'cacheBustQS', '');
+          if (cacheBustQS) {
+            var qsSep = textureURL.indexOf('?') !== -1 ? '&' : '?';
+            textureURL = textureURL + qsSep + cacheBustQS;
+          }
           var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
           if (!loader.keyExists(image)) {
             this.addToMultiFile(image);
@@ -769,6 +774,7 @@ var SpinePlugin = new Class({
 
         // Support prefix key
         multifile.prefix = multifile.prefix || settings.prefix || '';
+        multifile.config.cacheBustQS = settings.cacheBustQS || '';
         this.addFile(multifile.files);
       }
     } else {
@@ -776,6 +782,7 @@ var SpinePlugin = new Class({
 
       // Support prefix key
       multifile.prefix = multifile.prefix || settings.prefix || '';
+      multifile.config.cacheBustQS = settings.cacheBustQS || '';
       this.addFile(multifile.files);
     }
     return this;
