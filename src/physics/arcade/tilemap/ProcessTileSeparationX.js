@@ -27,6 +27,17 @@ var ProcessTileSeparationX = function (body, x)
     }
 
     body.position.x -= x;
+
+    // Float arithmetic can leave position at e.g. 63.9997, causing 1px
+    // jitter. Snap near-integer results but preserve intentionally
+    // fractional positions (non-integer body sizes from scaled sprites).
+    var rx = Math.round(body.position.x);
+
+    if (Math.abs(body.position.x - rx) < 0.01)
+    {
+        body.position.x = rx;
+    }
+
     body.updateCenter();
 
     if (body.bounce.x === 0)
