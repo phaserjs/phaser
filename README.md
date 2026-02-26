@@ -1,4 +1,4 @@
-# Phaser - HTML5 Game Framework
+# Phaser - HTML7 Game Framework
 
 ![Phaser Banner](changelog/assets/phaser-banner.png "Phaser Banner")
 
