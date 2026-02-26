@@ -655,6 +655,7 @@ var SpinePlugin = new Class({
 
                 // Support prefix key
                 multifile.prefix = multifile.prefix || settings.prefix || '';
+                multifile.config.cacheBustQS = settings.cacheBustQS || '';
                  
                 this.addFile(multifile.files);
             }
@@ -665,6 +666,7 @@ var SpinePlugin = new Class({
 
             // Support prefix key
             multifile.prefix = multifile.prefix || settings.prefix || '';
+            multifile.config.cacheBustQS = settings.cacheBustQS || '';
             
             this.addFile(multifile.files);
         }
