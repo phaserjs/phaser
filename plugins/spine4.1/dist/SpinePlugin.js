@@ -140,6 +140,11 @@ var SpineFile = new Class({
         for (var i = 0; i < textures.length; i++) {
           var textureURL = textures[i];
           var key = textureURL;
+          var cacheBustQS = GetFastValue(config, 'cacheBustQS', '');
+          if (cacheBustQS) {
+            var qsSep = textureURL.indexOf('?') !== -1 ? '&' : '?';
+            textureURL = textureURL + qsSep + cacheBustQS;
+          }
           var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
           if (!loader.keyExists(image)) {
             this.addToMultiFile(image);
@@ -769,6 +774,7 @@ var SpinePlugin = new Class({
 
         // Support prefix key
         multifile.prefix = multifile.prefix || settings.prefix || '';
+        multifile.config.cacheBustQS = settings.cacheBustQS || '';
         this.addFile(multifile.files);
       }
     } else {
@@ -776,6 +782,7 @@ var SpinePlugin = new Class({
 
       // Support prefix key
       multifile.prefix = multifile.prefix || settings.prefix || '';
+      multifile.config.cacheBustQS = settings.cacheBustQS || '';
       this.addFile(multifile.files);
     }
     return this;
@@ -3361,12 +3368,20 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
   camera.addToRenderList(src);
   var calcMatrix = GetCalcMatrix(src, camera, parentMatrix).calc;
   var viewportHeight = renderer.height;
+
+  //  從 calcMatrix 提取 2D 仿射變換參數。
+  //  為什麼不直接設定 skeleton.scaleX/scaleY：直接設定會汙染 Spine 內部的
+  //  slot transform（path constraint、mesh attachment 等），導致渲染異常。
+  //  改為在下方 drawSkeleton 的 vertex callback 中對每個頂點套用完整變換。
   var a = calcMatrix.a;
   var b = calcMatrix.b;
   var c = calcMatrix.c;
   var d = calcMatrix.d;
   var tx = calcMatrix.tx;
   var ty = viewportHeight - calcMatrix.ty;
+
+  //  將 skeleton 位置歸零，使 updateWorldTransform 以原點為基礎計算頂點座標。
+  //  實際螢幕位置透過 vertex callback 中的 tx/ty 套用。
   skeleton.x = 0;
   skeleton.y = 0;
   skeleton.updateWorldTransform();
@@ -3376,6 +3391,8 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, camera, parentMatrix
   sceneRenderer.drawSkeleton(skeleton, src.preMultipliedAlpha, -1, -1, function (vertices, numVertices, stride) {
     for (var i = 0; i < numVertices; i += stride) {
       var vx = vertices[i];
+
+      //  Y 軸取反：Spine 使用 Y-up 座標系，Phaser/WebGL 使用 Y-down
       var vy = -vertices[i + 1];
       vertices[i] = vx * a + vy * c + tx;
       vertices[i + 1] = -(vx * b + vy * d - ty);

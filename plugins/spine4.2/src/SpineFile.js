@@ -177,6 +177,12 @@ var SpineFile = new Class({
                     var textureURL = textures[i];
 
                     var key = textureURL;
+                    var cacheBustQS = GetFastValue(config, 'cacheBustQS', '');
+                    if (cacheBustQS)
+                    {
+                        var qsSep = textureURL.indexOf('?') !== -1 ? '&' : '?';
+                        textureURL = textureURL + qsSep + cacheBustQS;
+                    }
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
