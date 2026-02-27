@@ -349,10 +349,10 @@ var RandomDataGenerator = new Class({
      * @since 3.0.0
      *
      * @generic T
-     * @genericUse {T[]} - [array]
+     * @genericUse {ArrayLike<T>} - [array]
      * @genericUse {T} - [$return]
      *
-     * @param {T[]} array - The array to pick a random element from.
+     * @param {ArrayLike<T>} array - The array (or array-like object) to pick a random element from.
      *
      * @return {T} A random member of the array.
      */
@@ -368,7 +368,7 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#sign
      * @since 3.0.0
      *
-     * @return {number} -1 or +1.
+     * @return {-1 | 1} -1 or +1.
      */
     sign: function ()
     {
@@ -382,10 +382,10 @@ var RandomDataGenerator = new Class({
      * @since 3.0.0
      *
      * @generic T
-     * @genericUse {T[]} - [array]
+     * @genericUse {ArrayLike<T>} - [array]
      * @genericUse {T} - [$return]
      *
-     * @param {T[]} array - The array to pick a random element from.
+     * @param {ArrayLike<T>} array - The array (or array-like object) to pick a random element from.
      *
      * @return {T} A random member of the array.
      */
