@@ -22,6 +22,8 @@
  * @property {?boolean} [yoyo=false] - Select keys and frames by moving forward then backward through `key` and `frame`.
  * @property {?number} [frameQuantity=1] - The number of times each `frame` should be combined with one `key`.
  * @property {?number} [max=0] - The maximum number of new Game Objects to create. 0 is no maximum.
+ * @property {?(number|number[]|object)} [x=0] - The horizontal position of each new Game Object. See value types in {@link Phaser.Utils.Objects.GetAdvancedValue}.
+ * @property {?(number|number[]|object)} [y=0] - The vertical position of each new Game Object. See value types in {@link Phaser.Utils.Objects.GetAdvancedValue}.
  * @property {?object} [setXY]
  * @property {?number} [setXY.x=0] - The horizontal position of each new Game Object.
  * @property {?number} [setXY.y=0] - The vertical position of each new Game Object.

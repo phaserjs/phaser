@@ -8,6 +8,7 @@ var Actions = require('../../actions/');
 var Class = require('../../utils/Class');
 var Events = require('../events');
 var EventEmitter = require('eventemitter3');
+var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetAll = require('../../utils/array/GetAll');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
@@ -442,9 +443,15 @@ var Group = new Class({
             this.internalRemoveCallback = options.internalRemoveCallback;
         }
 
+        var x;
+        var y;
+
         for (var c = 0; c < range.length; c++)
         {
-            var created = this.create(0, 0, range[c].a, range[c].b, visible, active);
+            x = GetAdvancedValue(options, 'x', 0);
+            y = GetAdvancedValue(options, 'y', 0);
+
+            var created = this.create(x, y, range[c].a, range[c].b, visible, active);
 
             if (!created)
             {
@@ -458,8 +465,8 @@ var Group = new Class({
 
         if (HasValue(options, 'setXY'))
         {
-            var x = GetValue(options, 'setXY.x', 0);
-            var y = GetValue(options, 'setXY.y', 0);
+            x = GetValue(options, 'setXY.x', 0);
+            y = GetValue(options, 'setXY.y', 0);
             var stepX = GetValue(options, 'setXY.stepX', 0);
             var stepY = GetValue(options, 'setXY.stepY', 0);
 
