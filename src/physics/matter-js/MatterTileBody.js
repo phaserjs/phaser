@@ -113,6 +113,8 @@ var MatterTileBody = new Class({
             {
                 this.setFromTileRectangle(options);
             }
+
+            body = this.body;
         }
         else
         {
