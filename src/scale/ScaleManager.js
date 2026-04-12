@@ -271,6 +271,18 @@ var ScaleManager = new Class({
         this.displayScale = new Vector2(1, 1);
 
         /**
+         * The cached inverse of any CSS transforms applied to the canvas or its ancestors.
+         * Used to correctly convert pointer coordinates when the canvas has been CSS rotated or skewed.
+         * `null` if no CSS transforms are detected or DOMMatrix is unavailable.
+         *
+         * @name Phaser.Scale.ScaleManager#_cssTransformInverse
+         * @type {?DOMMatrix}
+         * @private
+         * @since 4.0.0
+         */
+        this._cssTransformInverse = null;
+
+        /**
          * If set, the canvas sizes will be automatically passed through Math.floor.
          * This results in rounded pixel display values, which is important for performance on legacy
          * and low powered devices, but at the cost of not achieving a 'perfect' fit in some browser windows.
@@ -1255,6 +1267,8 @@ var ScaleManager = new Class({
         bounds.y = clientRect.top + (window.pageYOffset || 0) - (document.documentElement.clientTop || 0);
         bounds.width = clientRect.width;
         bounds.height = clientRect.height;
+
+        this._cssTransformInverse = this.getInverseCSSTransform();
     },
 
     /**
@@ -1285,6 +1299,112 @@ var ScaleManager = new Class({
     transformY: function (pageY)
     {
         return (pageY - this.canvasBounds.top) * this.displayScale.y;
+    },
+
+    /**
+     * Transforms page coordinates into the scaled coordinate space of the Scale Manager,
+     * accounting for any CSS transforms (rotation, skew) applied to the canvas or its ancestors.
+     *
+     * Unlike the separate `transformX` and `transformY` methods, this handles coordinate
+     * coupling caused by CSS rotations where the X and Y axes are no longer independent.
+     *
+     * @method Phaser.Scale.ScaleManager#transformXY
+     * @since 4.0.0
+     *
+     * @param {number} pageX - The DOM pageX value.
+     * @param {number} pageY - The DOM pageY value.
+     * @param {object} output - An object with `x` and `y` properties to store the result.
+     *
+     * @return {object} The output object with translated `x` and `y` values.
+     */
+    transformXY: function (pageX, pageY, output)
+    {
+        var inv = this._cssTransformInverse;
+
+        if (inv)
+        {
+            //  CSS transforms couple the X and Y axes, so we transform as a single point.
+            //  Get the center of the canvas AABB in page coordinates.
+            var bounds = this.canvasBounds;
+            var centerX = bounds.x + bounds.width / 2;
+            var centerY = bounds.y + bounds.height / 2;
+
+            //  Offset from canvas center in screen space
+            var dx = pageX - centerX;
+            var dy = pageY - centerY;
+
+            //  Apply inverse rotation/scale to get canvas-local offset from center
+            var lx = inv.a * dx + inv.c * dy;
+            var ly = inv.b * dx + inv.d * dy;
+
+            //  Convert from center-relative to top-left-relative canvas-local coordinates,
+            //  then scale to game coordinates using the canvas CSS dimensions
+            var canvasW = this.canvas.clientWidth || this.canvas.width;
+            var canvasH = this.canvas.clientHeight || this.canvas.height;
+
+            output.x = (lx + canvasW / 2) * (this.baseSize.width / canvasW);
+            output.y = (ly + canvasH / 2) * (this.baseSize.height / canvasH);
+        }
+        else
+        {
+            //  No CSS transforms, use the simple offset + scale path
+            output.x = (pageX - this.canvasBounds.left) * this.displayScale.x;
+            output.y = (pageY - this.canvasBounds.top) * this.displayScale.y;
+        }
+
+        return output;
+    },
+
+    /**
+     * Computes the inverse of the accumulated CSS transform matrix applied to the canvas
+     * and its ancestor elements. Returns `null` if no CSS transforms are present or if
+     * `DOMMatrix` is not available.
+     *
+     * This walks up the DOM tree from the canvas element, composing any CSS `transform`
+     * values found along the way, then extracts the linear (rotation/scale/skew) portion
+     * and returns its inverse. The translation component is excluded because canvas
+     * positioning is already handled by `getBoundingClientRect()`.
+     *
+     * @method Phaser.Scale.ScaleManager#getInverseCSSTransform
+     * @since 4.0.0
+     *
+     * @return {?DOMMatrix} The inverse CSS transform matrix, or `null` if none is needed.
+     */
+    getInverseCSSTransform: function ()
+    {
+        if (typeof DOMMatrix === 'undefined')
+        {
+            return null;
+        }
+
+        var hasTransform = false;
+        var matrix = new DOMMatrix();
+        var el = this.canvas;
+
+        while (el && el instanceof HTMLElement)
+        {
+            var transform = window.getComputedStyle(el).transform;
+
+            if (transform && transform !== 'none')
+            {
+                //  Prepend: outer transforms are applied first
+                matrix = new DOMMatrix(transform).multiply(matrix);
+                hasTransform = true;
+            }
+
+            el = el.parentElement;
+        }
+
+        if (!hasTransform || matrix.isIdentity)
+        {
+            return null;
+        }
+
+        //  Zero the translation since canvas position is already handled by canvasBounds
+        matrix.e = 0;
+        matrix.f = 0;
+
+        return matrix.inverse();
     },
 
     /**
