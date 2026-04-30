@@ -1,4 +1,5 @@
 var Line = require('../../../../src/gameobjects/shape/line/Line');
+var GeomLine = require('../../../../src/geom/line/Line');
 
 describe('Line', function ()
 {
@@ -88,11 +89,9 @@ describe('Line', function ()
 
         beforeEach(function ()
         {
-            geomSetTo = vi.fn();
             obj = Object.create(Line.prototype);
-            obj.geom = {
-                setTo: geomSetTo
-            };
+            obj.geom = new GeomLine();
+            geomSetTo = vi.spyOn(obj.geom, 'setTo');
         });
 
         it('should delegate to geom.setTo with the provided coordinates', function ()
@@ -135,6 +134,48 @@ describe('Line', function ()
         {
             Line.prototype.setTo.call(obj);
             expect(geomSetTo).toHaveBeenCalledWith(undefined, undefined, undefined, undefined);
+        });
+
+        it('should calculate width from the difference of x2 and x1', function ()
+        {
+            obj.width = 0;
+            Line.prototype.setTo.call(obj, 1, 2, 3, 5);
+            expect(obj.width).toBe(2);
+        });
+
+        it('should calculate height from the difference of y2 and y1', function ()
+        {
+            obj.height = 0;
+            Line.prototype.setTo.call(obj, 1, 2, 3, 5);
+            expect(obj.height).toBe(3);
+        });
+
+        it('should calculate the correct width when x2 < x1', function ()
+        {
+            obj.width = 0;
+            Line.prototype.setTo.call(obj, 5, 3, 2, 1);
+            expect(obj.width).toBe(3);
+        });
+
+        it('should calculate the correct height when y2 < y1', function ()
+        {
+            obj.height = 0;
+            Line.prototype.setTo.call(obj, 5, 3, 2, 1);
+            expect(obj.height).toBe(2);
+        });
+
+        it('should set width to 1 (not 0) when x1 equals x2', function ()
+        {
+            obj.width = 0;
+            Line.prototype.setTo.call(obj, 1, 2, 1, 5);
+            expect(obj.width).toBe(1);
+        });
+
+        it('should set height to 1 (not 0) when y1 equals y2', function ()
+        {
+            obj.height = 0;
+            Line.prototype.setTo.call(obj, 2, 1, 5, 1);
+            expect(obj.height).toBe(1);
         });
     });
 });
