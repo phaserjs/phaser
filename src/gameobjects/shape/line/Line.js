@@ -64,9 +64,6 @@ var Line = new Class({
 
         Shape.call(this, scene, 'Line', new GeomLine(x1, y1, x2, y2));
 
-        var width = Math.max(1, this.geom.right - this.geom.left);
-        var height = Math.max(1, this.geom.bottom - this.geom.top);
-
         /**
          * The width (or thickness) of the line.
          * See the setLineWidth method for extra details on changing this on WebGL.
@@ -98,7 +95,7 @@ var Line = new Class({
         this._endWidth = 1;
 
         this.setPosition(x, y);
-        this.setSize(width, height);
+        this.updateSize();
 
         if (strokeColor !== undefined)
         {
@@ -153,9 +150,29 @@ var Line = new Class({
     {
         this.geom.setTo(x1, y1, x2, y2);
 
+        this.updateSize();
+
+        return this;
+    },
+
+    /**
+     * Updates the width and height of the Line based on its geometry.
+     *
+     * @method Phaser.GameObjects.Line#updateSize
+     * @private
+     * @since 4.1.0
+     *
+     * @return {this} This Line instance.
+     */
+    updateSize: function ()
+    {
+        var width = Math.max(1, this.geom.right - this.geom.left);
+        var height = Math.max(1, this.geom.bottom - this.geom.top);
+
+        this.setSize(width, height);
+
         return this;
     }
-
 });
 
 module.exports = Line;
