@@ -368,8 +368,10 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#sign
      * @since 3.0.0
      *
-     * @return {-1 | 1} -1 or +1.
+     * @return {number} -1 or +1.
      */
+    // NB: Catharsis (the underlying parser used by JSDoc) does not support parsing negative numbers inside types.
+    // Moreover, the `jsdoc` package used for typegen is (effectively) unmaintained, preventing us from typing this as `-1 | 1`.
     sign: function ()
     {
         return this.pick(this.signs);
