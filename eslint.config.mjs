@@ -3,6 +3,7 @@ import { defineConfig } from 'eslint/config';
 import js from '@eslint/js';
 import globals from 'globals';
 import es5Plugin from 'eslint-plugin-es5';
+import tseslint from 'typescript-eslint';
 import { fixupPluginRules } from '@eslint/compat';
 
 const projectGlobals = {
@@ -133,6 +134,27 @@ const phaserRules = {
     'no-constant-binary-expression': 'off'
 };
 
+const tsRules = {
+    "es5/no-arrow-functions": "off",
+    "es5/no-block-scoping": "off",
+    "es5/no-classes": "off",
+    "es5/no-computed-properties": "off",
+    "es5/no-default-parameters": "off",
+    "es5/no-destructuring": "off",
+    "es5/no-for-of": "off",
+    "es5/no-generators": "off",
+    "es5/no-modules": "off",
+    "es5/no-object-super": "off",
+    "es5/no-rest-parameters": "off",
+    "es5/no-shorthand-properties": "off",
+    "es5/no-spread": "off",
+    "es5/no-template-literals": "off",
+    "es5/no-typeof-symbol": "off",
+    "es5/no-unicode-code-point-escape": "off",
+    "es5/no-unicode-regex": "off",
+    "es5/no-binary-and-octal-literals": "off",
+};
+
 export default defineConfig([
     {
         ignores: [
@@ -156,11 +178,34 @@ export default defineConfig([
         ]
     },
 
-    js.configs.recommended,
+    {
+        files: ["**/*.ts"],
+        extends: [
+            tseslint.configs.recommended,
+        ],
+        languageOptions: {
+            ecmaVersion: 6,
+            parserOptions: {
+                sourceType: 'module'
+            },
+            globals: {
+                ...globals.browser,
+                ...globals.es2015,
+                ...globals.commonjs,
+                ...projectGlobals
+            }
+        },
+        rules: {
+            ...phaserRules,
+            ...tsRules,
+        }
+    },
 
     {
         files: [ '**/*.js' ],
-
+        extends: [
+            js.configs.recommended
+        ],
         languageOptions: {
             ecmaVersion: 6,
             sourceType: 'commonjs',
@@ -178,6 +223,7 @@ export default defineConfig([
 
         rules: {
             ...es5Rules,
+            ...tsRules,
             ...phaserRules
         }
     }

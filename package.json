@@ -32,9 +32,9 @@
     "watch": "webpack --watch --config config/webpack.config.js",
     "watchns": "webpack --watch --config config/webpack-nospector.config.js",
     "dist": "webpack --config config/webpack.dist.config.js",
-    "lint": "eslint \"src/**/*.js\"",
+    "lint": "eslint \"src/**/*.{js,ts}\"",
     "lintfix": "npm run lint -- --fix",
-    "sloc": "node-sloc \"./src\" --include-extensions \"js\"",
+    "sloc": "node-sloc \"./src\" --include-extensions \"js,ts\"",
     "bundleshaders": "node scripts/bundle-shaders.js",
     "build-tsgen": "cd scripts/tsgen && tsc",
     "tsgen": "cd scripts/tsgen && jsdoc -c jsdoc-tsd.conf.json",
@@ -42,7 +42,8 @@
     "ts": "npm run tsgen && npm run test-ts",
     "tsdev": "npm run build-tsgen && npm run tsgen && npm run test-ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "2d",
@@ -63,6 +64,7 @@
     "@types/source-map": "^0.5.7",
     "clean-webpack-plugin": "^4.0.0",
     "dts-dom": "^3.7.0",
+    "esbuild-loader": "4.4.3",
     "eslint": "^10.2.0",
     "eslint-plugin-es5": "^1.5.0",
     "exports-loader": "^5.0.0",
@@ -78,6 +80,7 @@
     "source-map": "^0.7.6",
     "terser-webpack-plugin": "^5.4.0",
     "typescript": "^6.0.2",
+    "typescript-eslint": "8.59.3",
     "vitest": "^4.1.4",
     "vivid-cli": "^1.1.2",
     "webpack": "^5.106.0",

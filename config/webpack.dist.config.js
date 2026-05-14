@@ -18,6 +18,25 @@ module.exports = [
             'phaser-arcade-physics.min': './phaser-arcade-physics.js'
         },
 
+        resolve: {
+            extensions: ['.js', '.ts'],
+            extensionAlias: {
+                '.js': ['.ts', '.js']
+            }
+        },
+
+        module: {
+            rules: [
+                {
+                    test: /\.ts$/,
+                    loader: 'esbuild-loader',
+                    options: {
+                        target: 'es2018'
+                    }
+                }
+            ]
+        },
+
         output: {
             path: `${__dirname}/../dist/`,
             filename: '[name].js',
@@ -75,6 +94,25 @@ module.exports = [
         entry: {
             'phaser.esm': './phaser-esm.js',
             'phaser.esm.min': './phaser-esm.js'
+        },
+
+        resolve: {
+            extensions: ['.js', '.ts'],
+            extensionAlias: {
+                '.js': ['.ts', '.js']
+            }
+        },
+
+        module: {
+            rules: [
+                {
+                    test: /\.ts$/,
+                    loader: 'esbuild-loader',
+                    options: {
+                        target: 'es2018'
+                    }
+                }
+            ]
         },
 
         output: {
