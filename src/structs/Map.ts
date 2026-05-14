@@ -4,22 +4,21 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Class = require('../utils/Class');
+import { objectKeys } from '../utils/object/TypedObjectUtils.js';
 
 /**
- * @callback EachMapCallback<E>
+ * @param key - The key of the Map entry.
+ * @param entry - The value of the Map entry.
  *
- * @param {string} key - The key of the Map entry.
- * @param {E} entry - The value of the Map entry.
- *
- * @return {?boolean} The callback result.
+ * @returns The callback result.
  */
+type EachMapCallback<K extends string, V> = (key: K, entry: V) => boolean | void;
 
 /**
  * @classdesc
  * A custom Map implementation that stores entries as key-value pairs with ordered iteration.
- * Unlike a native JavaScript Map, it also maintains an internal array of entries for efficient
- * indexed access and iteration. Supports filtering, merging, and contains/size operations.
+ * Unlike a native JavaScript Map, it also maintains an internal object of entries for efficient
+ * keyed access and iteration. Supports filtering, merging, and contains/size operations.
  * Used internally by various Phaser systems for managing collections.
  *
  * ```javascript
@@ -30,76 +29,60 @@ var Class = require('../utils/Class');
  * ]);
  * ```
  *
- * @class Map
  * @memberof Phaser.Structs
- * @constructor
  * @since 3.0.0
- *
- * @generic K
- * @generic V
- * @genericUse {V[]} - [elements]
- *
- * @param {Array.<*>} elements - An optional array of key-value pairs to populate this Map with.
  */
-var Map = new Class({
+export class Map<K extends string = string, V = unknown>
+{
+    /**
+     * The entries in this Map.
+     *
+     * @default {}
+     * @since 3.0.0
+     */
+    entries: Record<K, V>;
 
-    initialize:
+    /**
+     * The number of key / value pairs in this Map.
+     *
+     * @default 0
+     * @since 3.0.0
+     */
+    size: number;
 
-    function Map (elements)
+    /**
+     * @param elements - An optional array of key-value pairs to populate this Map with.
+     */
+    constructor (elements?: Array<[K, V]> | null)
     {
-        /**
-         * The entries in this Map.
-         *
-         * @genericUse {Object.<string, V>} - [$type]
-         *
-         * @name Phaser.Structs.Map#entries
-         * @type {Object.<string, *>}
-         * @default {}
-         * @since 3.0.0
-         */
-        this.entries = {};
-
-        /**
-         * The number of key / value pairs in this Map.
-         *
-         * @name Phaser.Structs.Map#size
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
+        this.entries = {} as Record<K, V>;
         this.size = 0;
 
         this.setAll(elements);
-    },
+    }
 
     /**
      * Adds all the elements in the given array to this Map.
      *
      * If the key already exists, the value will be replaced.
      *
-     * @method Phaser.Structs.Map#setAll
      * @since 3.70.0
      *
-     * @generic K
-     * @generic V
-     * @genericUse {V[]} - [elements]
-     *
-     * @param {Array.<*>} elements - An array of key-value pairs to populate this Map with.
-     *
-     * @return {this} This Map object.
+     * @param elements - An array of key-value pairs to populate this Map with.
+     * @returns This Map object.
      */
-    setAll: function (elements)
+    setAll (elements?: Array<[K, V]> | null): this
     {
         if (Array.isArray(elements))
         {
-            for (var i = 0; i < elements.length; i++)
+            for (let i = 0; i < elements.length; i++)
             {
                 this.set(elements[i][0], elements[i][1]);
             }
         }
 
         return this;
-    },
+    }
 
     /**
      * Adds an element with a specified `key` and `value` to this Map.
@@ -108,19 +91,13 @@ var Map = new Class({
      *
      * If you wish to add multiple elements in a single call, use the `setAll` method instead.
      *
-     * @method Phaser.Structs.Map#set
      * @since 3.0.0
      *
-     * @genericUse {K} - [key]
-     * @genericUse {V} - [value]
-     * @genericUse {Phaser.Structs.Map.<K, V>} - [$return]
-     *
-     * @param {string} key - The key of the element to be added to this Map.
-     * @param {*} value - The value of the element to be added to this Map.
-     *
-     * @return {this} This Map object.
+     * @param key - The key of the element to be added to this Map.
+     * @param value - The value of the element to be added to this Map.
+     * @returns This Map object.
      */
-    set: function (key, value)
+    set (key: K, value: V): this
     {
         if (!this.has(key))
         {
@@ -130,83 +107,66 @@ var Map = new Class({
         this.entries[key] = value;
 
         return this;
-    },
+    }
 
     /**
      * Returns the value associated to the `key`, or `undefined` if there is none.
      *
-     * @method Phaser.Structs.Map#get
      * @since 3.0.0
      *
-     * @genericUse {K} - [key]
-     * @genericUse {V} - [$return]
-     *
-     * @param {string} key - The key of the element to return from the `Map` object.
-     *
-     * @return {*} The element associated with the specified key or `undefined` if the key can't be found in this Map object.
+     * @param key - The key of the element to return from the `Map` object.
+     * @returns The element associated with the specified key or `undefined` if the key can't be found in this Map object.
      */
-    get: function (key)
+    get (key: K): V | undefined
     {
         if (this.has(key))
         {
             return this.entries[key];
         }
-    },
+    }
 
     /**
      * Returns an `Array` of all the values stored in this Map.
      *
-     * @method Phaser.Structs.Map#getArray
      * @since 3.0.0
      *
-     * @genericUse {V[]} - [$return]
-     *
-     * @return {Array.<*>} An array of the values stored in this Map.
+     * @returns An array of the values stored in this Map.
      */
-    getArray: function ()
+    getArray (): V[]
     {
-        var output = [];
-        var entries = this.entries;
+        const output: V[] = [];
+        const entries = this.entries;
 
-        for (var key in entries)
+        for (const key of objectKeys(entries))
         {
             output.push(entries[key]);
         }
 
         return output;
-    },
+    }
 
     /**
      * Returns a boolean indicating whether an element with the specified key exists or not.
      *
-     * @method Phaser.Structs.Map#has
      * @since 3.0.0
      *
-     * @genericUse {K} - [key]
-     *
-     * @param {string} key - The key of the element to test for presence of in this Map.
-     *
-     * @return {boolean} Returns `true` if an element with the specified key exists in this Map, otherwise `false`.
+     * @param key - The key of the element to test for presence of in this Map.
+     * @returns Returns `true` if an element with the specified key exists in this Map, otherwise `false`.
      */
-    has: function (key)
+    has (key: K): boolean
     {
         return (this.entries.hasOwnProperty(key));
-    },
+    }
 
     /**
      * Delete the specified element from this Map.
      *
-     * @method Phaser.Structs.Map#delete
      * @since 3.0.0
      *
-     * @genericUse {K} - [key]
-     * @genericUse {Phaser.Structs.Map.<K, V>} - [$return]
-     *
-     * @param {string} key - The key of the element to delete from this Map.
-     *
-     * @return {this} This Map object.
+     * @param key - The key of the element to delete from this Map.
+     * @returns This Map object.
      */
-    delete: function (key)
+    delete (key: K): this
     {
         if (this.has(key))
         {
@@ -215,111 +175,95 @@ var Map = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Delete all entries from this Map.
      *
-     * @method Phaser.Structs.Map#clear
      * @since 3.0.0
      *
-     * @genericUse {Phaser.Structs.Map.<K, V>} - [$return]
-     *
-     * @return {this} This Map object.
+     * @returns This Map object.
      */
-    clear: function ()
+    clear (): this
     {
-        Object.keys(this.entries).forEach(function (prop)
+        for (const prop of objectKeys(this.entries))
         {
             delete this.entries[prop];
-
-        }, this);
+        }
 
         this.size = 0;
 
         return this;
-    },
+    }
 
     /**
      * Returns an array of all entry keys in this Map.
      *
-     * @method Phaser.Structs.Map#keys
      * @since 3.0.0
      *
-     * @genericUse {K[]} - [$return]
-     *
-     * @return {string[]} Array containing entries' keys.
+     * @returns Array containing entries' keys.
      */
-    keys: function ()
+    keys (): K[]
     {
-        return Object.keys(this.entries);
-    },
+        return objectKeys(this.entries);
+    }
 
     /**
      * Returns an `Array` of all values stored in this Map.
      *
-     * @method Phaser.Structs.Map#values
      * @since 3.0.0
      *
-     * @genericUse {V[]} - [$return]
-     *
-     * @return {Array.<*>} An `Array` of values.
+     * @returns An `Array` of values.
      */
-    values: function ()
+    values (): V[]
     {
-        var output = [];
-        var entries = this.entries;
+        const output: V[] = [];
+        const entries = this.entries;
 
-        for (var key in entries)
+        for (const key of objectKeys(entries))
         {
             output.push(entries[key]);
         }
 
         return output;
-    },
+    }
 
     /**
      * Dumps the contents of this Map to the console via `console.group`.
      *
-     * @method Phaser.Structs.Map#dump
      * @since 3.0.0
      */
-    dump: function ()
+    dump (): void
     {
-        var entries = this.entries;
+        const entries = this.entries;
 
         // eslint-disable-next-line no-console
         console.group('Map');
 
-        for (var key in entries)
+        for (const key of objectKeys(entries))
         {
             console.log(key, entries[key]);
         }
 
         // eslint-disable-next-line no-console
         console.groupEnd();
-    },
+    }
 
     /**
      * Iterates through all entries in this Map, passing each one to the given callback.
      *
      * If the callback returns `false`, the iteration will break.
      *
-     * @method Phaser.Structs.Map#each
      * @since 3.0.0
      *
-     * @genericUse {EachMapCallback.<V>} - [callback]
-     * @genericUse {Phaser.Structs.Map.<K, V>} - [$return]
-     *
-     * @param {EachMapCallback} callback - The callback which will receive the keys and entries held in this Map.
-     *
-     * @return {this} This Map object.
+     * @param callback - The callback which will receive the keys and entries held in this Map.
+     * @returns This Map object.
      */
-    each: function (callback)
+    each (callback: EachMapCallback<K, V>): this
     {
-        var entries = this.entries;
+        const entries = this.entries;
 
-        for (var key in entries)
+        for (const key of objectKeys(entries))
         {
             if (callback(key, entries[key]) === false)
             {
@@ -328,25 +272,21 @@ var Map = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Returns `true` if the value exists within this Map. Otherwise, returns `false`.
      *
-     * @method Phaser.Structs.Map#contains
      * @since 3.0.0
      *
-     * @genericUse {V} - [value]
-     *
-     * @param {*} value - The value to search for.
-     *
-     * @return {boolean} `true` if the value is found, otherwise `false`.
+     * @param value - The value to search for.
+     * @returns `true` if the value is found, otherwise `false`.
      */
-    contains: function (value)
+    contains (value: V): boolean
     {
-        var entries = this.entries;
+        const entries = this.entries;
 
-        for (var key in entries)
+        for (const key of objectKeys(entries))
         {
             if (entries[key] === value)
             {
@@ -355,30 +295,24 @@ var Map = new Class({
         }
 
         return false;
-    },
+    }
 
     /**
      * Merges all new keys from the given Map into this one.
      * If it encounters a key that already exists it will be skipped unless override is set to `true`.
      *
-     * @method Phaser.Structs.Map#merge
      * @since 3.0.0
      *
-     * @genericUse {Phaser.Structs.Map.<K, V>} - [map,$return]
-     *
-     * @param {Phaser.Structs.Map} map - The Map to merge in to this Map.
-     * @param {boolean} [override=false] - Set to `true` to replace values in this Map with those from the source map, or `false` to skip them.
-     *
-     * @return {this} This Map object.
+     * @param map - The Map to merge in to this Map.
+     * @param override - Set to `true` to replace values in this Map with those from the source map, or `false` to skip them.
+     * @returns This Map object.
      */
-    merge: function (map, override)
+    merge (map: Map<K, V>, override: boolean = false): this
     {
-        if (override === undefined) { override = false; }
+        const local = this.entries;
+        const source = map.entries;
 
-        var local = this.entries;
-        var source = map.entries;
-
-        for (var key in source)
+        for (const key of objectKeys(source))
         {
             if (local.hasOwnProperty(key) && override)
             {
@@ -392,7 +326,6 @@ var Map = new Class({
 
         return this;
     }
+}
 
-});
-
-module.exports = Map;
+export default Map;
