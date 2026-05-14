@@ -12,17 +12,14 @@
  * @function Phaser.Math.Fuzzy.Equal
  * @since 3.0.0
  *
- * @param {number} a - The first value.
- * @param {number} b - The second value.
- * @param {number} [epsilon=0.0001] - The maximum absolute difference below which the two values are considered equal.
- *
- * @return {boolean} `true` if the values are fuzzily equal, otherwise `false`.
+ * @param a - The first value.
+ * @param b - The second value.
+ * @param epsilon - The maximum absolute difference below which the two values are considered equal.
+ * @returns `true` if the values are fuzzily equal, otherwise `false`.
  */
-var Equal = function (a, b, epsilon)
+export function Equal (a: number, b: number, epsilon: number = 0.0001): boolean
 {
-    if (epsilon === undefined) { epsilon = 0.0001; }
-
     return Math.abs(a - b) < epsilon;
-};
+}
 
-module.exports = Equal;
+export default Equal;

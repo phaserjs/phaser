@@ -10,15 +10,14 @@
  * @function Phaser.Math.Clamp
  * @since 3.0.0
  *
- * @param {number} value - The value to be clamped.
- * @param {number} min - The minimum bounds.
- * @param {number} max - The maximum bounds.
- *
- * @return {number} The clamped value.
+ * @param value - The value to be clamped.
+ * @param min - The minimum bounds.
+ * @param max - The maximum bounds.
+ * @returns The clamped value.
  */
-var Clamp = function (value, min, max)
+export function Clamp (value: number, min: number, max: number): number
 {
     return Math.max(min, Math.min(max, value));
-};
+}
 
-module.exports = Clamp;
+export default Clamp;
