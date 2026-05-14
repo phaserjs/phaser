@@ -4,8 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Class = require('../../utils/Class');
-var Vector2 = require('../../math/Vector2');
+import Vector2 from '../../math/Vector2.js';
 
 /**
  * @classdesc
@@ -19,82 +18,72 @@ var Vector2 = require('../../math/Vector2');
  * You do not typically create NineSliceVertex instances directly. They are created and
  * managed internally by the NineSlice Game Object.
  *
- * @class NineSliceVertex
  * @memberof Phaser.GameObjects
- * @constructor
- * @extends Phaser.Math.Vector2
  * @since 4.0.0
- *
- * @param {number} x - The x position of the vertex.
- * @param {number} y - The y position of the vertex.
- * @param {number} u - The UV u coordinate of the vertex.
- * @param {number} v - The UV v coordinate of the vertex.
  */
-var Vertex = new Class({
+export class NineSliceVertex extends Vector2
+{
+    /**
+     * The projected x coordinate of this vertex.
+     *
+     * @since 4.0.0
+     */
+    vx: number;
 
-    Extends: Vector2,
+    /**
+     * The projected y coordinate of this vertex.
+     *
+     * @since 4.0.0
+     */
+    vy: number;
 
-    initialize:
+    /**
+     * UV u coordinate of this vertex.
+     *
+     * @since 4.0.0
+     */
+    u: number;
 
-    function Vertex (x, y, u, v)
+    /**
+     * UV v coordinate of this vertex.
+     *
+     * @since 4.0.0
+     */
+    v: number;
+
+    /**
+     * @param x - The x position of the vertex.
+     * @param y - The y position of the vertex.
+     * @param u - The UV u coordinate of the vertex.
+     * @param v - The UV v coordinate of the vertex.
+     */
+    constructor (x: number, y: number, u: number, v: number)
     {
-        Vector2.call(this, x, y);
+        super(x, y);
 
-        /**
-         * The projected x coordinate of this vertex.
-         *
-         * @name Phaser.GameObjects.NineSliceVertex#vx
-         * @type {number}
-         * @since 4.0.0
-         */
         this.vx = 0;
-
-        /**
-         * The projected y coordinate of this vertex.
-         *
-         * @name Phaser.GameObjects.NineSliceVertex#vy
-         * @type {number}
-         * @since 4.0.0
-         */
         this.vy = 0;
-
-        /**
-         * UV u coordinate of this vertex.
-         *
-         * @name Phaser.GameObjects.NineSliceVertex#u
-         * @type {number}
-         * @since 4.0.0
-         */
         this.u = u;
-
-        /**
-         * UV v coordinate of this vertex.
-         *
-         * @name Phaser.GameObjects.NineSliceVertex#v
-         * @type {number}
-         * @since 4.0.0
-         */
         this.v = v;
-    },
+    }
 
     /**
      * Sets the UV texture coordinates of this vertex.
      *
-     * @method Phaser.GameObjects.NineSliceVertex#setUVs
      * @since 4.0.0
      *
-     * @param {number} u - The UV u coordinate of the vertex.
-     * @param {number} v - The UV v coordinate of the vertex.
+     * @param u - The UV u coordinate of the vertex.
+     * @param v - The UV v coordinate of the vertex.
      *
-     * @return {this} This Vertex.
+     * @return This Vertex.
      */
-    setUVs: function (u, v)
+    setUVs (u: number, v: number): this
     {
         this.u = u;
         this.v = v;
 
         return this;
-    },
+    }
 
     /**
      * Updates this vertex's position and calculates its projected screen-space coordinates.
@@ -104,19 +93,18 @@ var Vertex = new Class({
      * offset of the parent object is then factored in, shifting `vx` and `vy` so that the
      * mesh is correctly aligned relative to the object's origin point.
      *
-     * @method Phaser.GameObjects.NineSliceVertex#resize
      * @since 4.0.0
      *
-     * @param {number} x - The x position of the vertex.
-     * @param {number} y - The y position of the vertex.
-     * @param {number} width - The width of the parent object.
-     * @param {number} height - The height of the parent object.
-     * @param {number} originX - The originX of the parent object.
-     * @param {number} originY - The originY of the parent object.
+     * @param x - The x position of the vertex.
+     * @param y - The y position of the vertex.
+     * @param width - The width of the parent object.
+     * @param height - The height of the parent object.
+     * @param originX - The originX of the parent object.
+     * @param originY - The originY of the parent object.
      *
-     * @return {this} This Vertex.
+     * @return This Vertex.
      */
-    resize: function (x, y, width, height, originX, originY)
+    resize (x: number, y: number, width: number, height: number, originX: number, originY: number): this
     {
         this.x = x;
         this.y = y;
@@ -144,6 +132,6 @@ var Vertex = new Class({
 
         return this;
     }
-});
+}
 
-module.exports = Vertex;
+export default NineSliceVertex;
