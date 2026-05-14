@@ -7,8 +7,17 @@
 //  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
 //  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
 
-var Class = require('../utils/Class');
-var FuzzyEqual = require('../math/fuzzy/Equal');
+import FuzzyEqual from './fuzzy/Equal.js';
+
+/**
+ * @memberof Phaser.Types.Math
+ * @since 3.0.0
+ */
+export interface Vector2Like
+{
+    x: number;
+    y: number;
+}
 
 /**
  * @classdesc
@@ -21,38 +30,34 @@ var FuzzyEqual = require('../math/fuzzy/Equal');
  * `Vector2Like` object (any object with `x` and `y` number properties), making
  * Vector2 easy to integrate across the framework.
  *
- * @class Vector2
  * @memberof Phaser.Math
- * @constructor
  * @since 3.0.0
- *
- * @param {number|Phaser.Types.Math.Vector2Like} [x=0] - The x component, or an object with `x` and `y` properties.
- * @param {number} [y=x] - The y component.
  */
-var Vector2 = new Class({
+export class Vector2
+{
+    /**
+     * The x component of this Vector.
+     *
+     * @default 0
+     * @since 3.0.0
+     */
+    x: number;
 
-    initialize:
+    /**
+     * The y component of this Vector.
+     *
+     * @default 0
+     * @since 3.0.0
+     */
+    y: number;
 
-    function Vector2 (x, y)
+    /**
+     * @param x - The x component, or an object with `x` and `y` properties.
+     * @param y - The y component.
+     */
+    constructor (x?: number | Vector2Like, y?: number)
     {
-        /**
-         * The x component of this Vector.
-         *
-         * @name Phaser.Math.Vector2#x
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
         this.x = 0;
-
-        /**
-         * The y component of this Vector.
-         *
-         * @name Phaser.Math.Vector2#y
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
         this.y = 0;
 
         if (typeof x === 'object')
@@ -67,69 +72,62 @@ var Vector2 = new Class({
             this.x = x || 0;
             this.y = y || 0;
         }
-    },
+    }
 
     /**
      * Make a clone of this Vector2.
      *
-     * @method Phaser.Math.Vector2#clone
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Vector2} A clone of this Vector2.
+     * @returns A clone of this Vector2.
      */
-    clone: function ()
+    clone (): Vector2
     {
         return new Vector2(this.x, this.y);
-    },
+    }
 
     /**
      * Copy the components of a given Vector into this Vector.
      *
-     * @method Phaser.Math.Vector2#copy
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to copy the components from.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param src - The Vector to copy the components from.
+     * @returns This Vector2.
      */
-    copy: function (src)
+    copy (src: Vector2Like): this
     {
         this.x = src.x || 0;
         this.y = src.y || 0;
 
         return this;
-    },
+    }
 
     /**
      * Set the component values of this Vector from a given Vector2Like object.
      *
-     * @method Phaser.Math.Vector2#setFromObject
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} obj - The object containing the component values to set for this Vector.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param obj - The object containing the component values to set for this Vector.
+     * @returns This Vector2.
      */
-    setFromObject: function (obj)
+    setFromObject (obj: Vector2Like): this
     {
         this.x = obj.x || 0;
         this.y = obj.y || 0;
 
         return this;
-    },
+    }
 
     /**
      * Set the `x` and `y` components of this Vector to the given `x` and `y` values.
      *
-     * @method Phaser.Math.Vector2#set
      * @since 3.0.0
      *
-     * @param {number} x - The x value to set for this Vector.
-     * @param {number} [y=x] - The y value to set for this Vector.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param x - The x value to set for this Vector.
+     * @param y - The y value to set for this Vector.
+     * @returns This Vector2.
      */
-    set: function (x, y)
+    set (x: number, y?: number): this
     {
         if (y === undefined) { y = x; }
 
@@ -137,136 +135,124 @@ var Vector2 = new Class({
         this.y = y;
 
         return this;
-    },
+    }
 
     /**
      * This method is an alias for `Vector2.set`.
      *
-     * @method Phaser.Math.Vector2#setTo
      * @since 3.4.0
      *
-     * @param {number} x - The x value to set for this Vector.
-     * @param {number} [y=x] - The y value to set for this Vector.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param x - The x value to set for this Vector.
+     * @param y - The y value to set for this Vector.
+     * @returns This Vector2.
      */
-    setTo: function (x, y)
+    setTo (x: number, y?: number): this
     {
         return this.set(x, y);
-    },
-    
+    }
+
     /**
      * Runs the x and y components of this Vector2 through Math.ceil and then sets them.
      *
-     * @method Phaser.Math.Vector2#ceil
      * @since 4.0.0
      *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @returns This Vector2.
      */
-    ceil: function ()
+    ceil (): this
     {
         this.x = Math.ceil(this.x);
         this.y = Math.ceil(this.y);
 
         return this;
-    },
+    }
 
     /**
      * Runs the x and y components of this Vector2 through Math.floor and then sets them.
      *
-     * @method Phaser.Math.Vector2#floor
      * @since 4.0.0
      *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @returns This Vector2.
      */
-    floor: function ()
+    floor (): this
     {
         this.x = Math.floor(this.x);
         this.y = Math.floor(this.y);
 
         return this;
-    },
+    }
 
     /**
      * Swaps the x and y components of this Vector2.
      *
-     * @method Phaser.Math.Vector2#invert
      * @since 4.0.0
      *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @returns This Vector2.
      */
-    invert: function ()
+    invert (): this
     {
         return this.set(this.y, this.x);
-    },
+    }
 
     /**
      * Sets the x and y components of this Vector from the given angle and length.
      *
-     * @method Phaser.Math.Vector2#setToPolar
      * @since 3.0.0
      *
-     * @param {number} angle - The angle from the positive x-axis, in radians.
-     * @param {number} [length=1] - The distance from the origin.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param angle - The angle from the positive x-axis, in radians.
+     * @param length - The distance from the origin.
+     * @returns This Vector2.
      */
-    setToPolar: function (angle, length)
+    setToPolar (angle: number, length?: number | null): this
     {
-        if (length == null) { length = 1; }
+        if (length === null || length === undefined) { length = 1; }
 
         this.x = Math.cos(angle) * length;
         this.y = Math.sin(angle) * length;
 
         return this;
-    },
+    }
 
     /**
      * Check whether this Vector is equal to a given Vector.
      *
      * Performs a strict equality check against each Vector's components.
      *
-     * @method Phaser.Math.Vector2#equals
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} v - The vector to compare with this Vector.
-     *
-     * @return {boolean} Whether the given Vector is equal to this Vector.
+     * @param v - The vector to compare with this Vector.
+     * @returns Whether the given Vector is equal to this Vector.
      */
-    equals: function (v)
+    equals (v: Vector2Like): boolean
     {
         return ((this.x === v.x) && (this.y === v.y));
-    },
+    }
 
     /**
      * Check whether this Vector is approximately equal to a given Vector.
      *
-     * @method Phaser.Math.Vector2#fuzzyEquals
      * @since 3.23.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} v - The vector to compare with this Vector.
-     * @param {number} [epsilon=0.0001] - The tolerance value.
-     *
-     * @return {boolean} Whether both absolute differences of the x and y components are smaller than `epsilon`.
+     * @param v - The vector to compare with this Vector.
+     * @param epsilon - The tolerance value.
+     * @returns Whether both absolute differences of the x and y components are smaller than `epsilon`.
      */
-    fuzzyEquals: function (v, epsilon)
+    fuzzyEquals (v: Vector2Like, epsilon?: number): boolean
     {
         return (FuzzyEqual(this.x, v.x, epsilon) && FuzzyEqual(this.y, v.y, epsilon));
-    },
+    }
 
     /**
      * Calculate the angle between this Vector and the positive x-axis, in radians.
      *
-     * @method Phaser.Math.Vector2#angle
      * @since 3.0.0
      *
-     * @return {number} The angle between this Vector, and the positive x-axis, given in radians.
+     * @returns The angle between this Vector, and the positive x-axis, given in radians.
      */
-    angle: function ()
+    angle (): number
     {
         // computes the angle in radians with respect to the positive x-axis
 
-        var angle = Math.atan2(this.y, this.x);
+        let angle = Math.atan2(this.y, this.x);
 
         if (angle < 0)
         {
@@ -274,90 +260,80 @@ var Vector2 = new Class({
         }
 
         return angle;
-    },
+    }
 
     /**
      * Set the angle of this Vector.
      *
-     * @method Phaser.Math.Vector2#setAngle
      * @since 3.23.0
      *
-     * @param {number} angle - The angle, in radians.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param angle - The angle, in radians.
+     * @returns This Vector2.
      */
-    setAngle: function (angle)
+    setAngle (angle: number): this
     {
         return this.setToPolar(angle, this.length());
-    },
+    }
 
     /**
      * Add a given Vector to this Vector. Addition is component-wise.
      *
-     * @method Phaser.Math.Vector2#add
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to add to this Vector.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param src - The Vector to add to this Vector.
+     * @returns This Vector2.
      */
-    add: function (src)
+    add (src: Vector2Like): this
     {
         this.x += src.x;
         this.y += src.y;
 
         return this;
-    },
+    }
 
     /**
      * Subtract the given Vector from this Vector. Subtraction is component-wise.
      *
-     * @method Phaser.Math.Vector2#subtract
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to subtract from this Vector.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param src - The Vector to subtract from this Vector.
+     * @returns This Vector2.
      */
-    subtract: function (src)
+    subtract (src: Vector2Like): this
     {
         this.x -= src.x;
         this.y -= src.y;
 
         return this;
-    },
+    }
 
     /**
      * Perform a component-wise multiplication between this Vector and the given Vector.
      *
      * Multiplies this Vector by the given Vector.
      *
-     * @method Phaser.Math.Vector2#multiply
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to multiply this Vector by.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param src - The Vector to multiply this Vector by.
+     * @returns This Vector2.
      */
-    multiply: function (src)
+    multiply (src: Vector2Like): this
     {
         this.x *= src.x;
         this.y *= src.y;
 
         return this;
-    },
+    }
 
     /**
      * Scale this Vector by the given value.
      *
-     * @method Phaser.Math.Vector2#scale
      * @since 3.0.0
      *
-     * @param {number} value - The value to scale this Vector by.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param value - The value to scale this Vector by.
+     * @returns This Vector2.
      */
-    scale: function (value)
+    scale (value: number): this
     {
         if (isFinite(value))
         {
@@ -371,142 +347,130 @@ var Vector2 = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Perform a component-wise division between this Vector and the given Vector.
      *
      * Divides this Vector by the given Vector.
      *
-     * @method Phaser.Math.Vector2#divide
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to divide this Vector by.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param src - The Vector to divide this Vector by.
+     * @returns This Vector2.
      */
-    divide: function (src)
+    divide (src: Vector2Like): this
     {
         this.x /= src.x;
         this.y /= src.y;
 
         return this;
-    },
+    }
 
     /**
      * Negate the `x` and `y` components of this Vector.
      *
-     * @method Phaser.Math.Vector2#negate
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @returns This Vector2.
      */
-    negate: function ()
+    negate (): this
     {
         this.x = -this.x;
         this.y = -this.y;
 
         return this;
-    },
+    }
 
     /**
      * Calculate the distance between this Vector and the given Vector.
      *
-     * @method Phaser.Math.Vector2#distance
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to calculate the distance to.
-     *
-     * @return {number} The distance from this Vector to the given Vector.
+     * @param src - The Vector to calculate the distance to.
+     * @returns The distance from this Vector to the given Vector.
      */
-    distance: function (src)
+    distance (src: Vector2Like): number
     {
-        var dx = src.x - this.x;
-        var dy = src.y - this.y;
+        const dx = src.x - this.x;
+        const dy = src.y - this.y;
 
         return Math.sqrt(dx * dx + dy * dy);
-    },
+    }
 
     /**
      * Calculate the distance between this Vector and the given Vector, squared.
      *
-     * @method Phaser.Math.Vector2#distanceSq
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} src - The Vector to calculate the distance to.
-     *
-     * @return {number} The distance from this Vector to the given Vector, squared.
+     * @param src - The Vector to calculate the distance to.
+     * @returns The distance from this Vector to the given Vector, squared.
      */
-    distanceSq: function (src)
+    distanceSq (src: Vector2Like): number
     {
-        var dx = src.x - this.x;
-        var dy = src.y - this.y;
+        const dx = src.x - this.x;
+        const dy = src.y - this.y;
 
         return dx * dx + dy * dy;
-    },
+    }
 
     /**
      * Calculate the length (or magnitude) of this Vector.
      *
-     * @method Phaser.Math.Vector2#length
      * @since 3.0.0
      *
-     * @return {number} The length of this Vector.
+     * @returns The length of this Vector.
      */
-    length: function ()
+    length (): number
     {
-        var x = this.x;
-        var y = this.y;
+        const x = this.x;
+        const y = this.y;
 
         return Math.sqrt(x * x + y * y);
-    },
+    }
 
     /**
      * Set the length (or magnitude) of this Vector.
      *
-     * @method Phaser.Math.Vector2#setLength
      * @since 3.23.0
      *
-     * @param {number} length - The new magnitude of this Vector.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param length - The new magnitude of this Vector.
+     * @returns This Vector2.
      */
-    setLength: function (length)
+    setLength (length: number): this
     {
         return this.normalize().scale(length);
-    },
+    }
 
     /**
      * Calculate the length of this Vector squared.
      *
-     * @method Phaser.Math.Vector2#lengthSq
      * @since 3.0.0
      *
-     * @return {number} The length of this Vector, squared.
+     * @returns The length of this Vector, squared.
      */
-    lengthSq: function ()
+    lengthSq (): number
     {
-        var x = this.x;
-        var y = this.y;
+        const x = this.x;
+        const y = this.y;
 
         return x * x + y * y;
-    },
+    }
 
     /**
      * Normalize this Vector.
      *
      * Makes the vector a unit length vector (magnitude of 1) in the same direction.
      *
-     * @method Phaser.Math.Vector2#normalize
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @returns This Vector2.
      */
-    normalize: function ()
+    normalize (): this
     {
-        var x = this.x;
-        var y = this.y;
-        var len = x * x + y * y;
+        const x = this.x;
+        const y = this.y;
+        let len = x * x + y * y;
 
         if (len > 0)
         {
@@ -517,173 +481,156 @@ var Vector2 = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Rotate this Vector to its perpendicular, in the positive direction.
      *
-     * @method Phaser.Math.Vector2#normalizeRightHand
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @returns This Vector2.
      */
-    normalizeRightHand: function ()
+    normalizeRightHand (): this
     {
-        var x = this.x;
+        const x = this.x;
 
         this.x = this.y * -1;
         this.y = x;
 
         return this;
-    },
+    }
 
     /**
      * Rotate this Vector to its perpendicular, in the negative direction.
      *
-     * @method Phaser.Math.Vector2#normalizeLeftHand
      * @since 3.23.0
      *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @returns This Vector2.
      */
-    normalizeLeftHand: function ()
+    normalizeLeftHand (): this
     {
-        var x = this.x;
+        const x = this.x;
 
         this.x = this.y;
         this.y = x * -1;
 
         return this;
-    },
+    }
 
     /**
      * Calculate the dot product of this Vector and the given Vector.
      *
-     * @method Phaser.Math.Vector2#dot
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} src - The Vector2 to dot product with this Vector2.
-     *
-     * @return {number} The dot product of this Vector and the given Vector.
+     * @param src - The Vector2 to dot product with this Vector2.
+     * @returns The dot product of this Vector and the given Vector.
      */
-    dot: function (src)
+    dot (src: Vector2Like): number
     {
         return this.x * src.x + this.y * src.y;
-    },
+    }
 
     /**
      * Calculate the cross product of this Vector and the given Vector.
      *
-     * @method Phaser.Math.Vector2#cross
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} src - The Vector2 to cross with this Vector2.
-     *
-     * @return {number} The cross product of this Vector and the given Vector.
+     * @param src - The Vector2 to cross with this Vector2.
+     * @returns The cross product of this Vector and the given Vector.
      */
-    cross: function (src)
+    cross (src: Vector2Like): number
     {
         return this.x * src.y - this.y * src.x;
-    },
+    }
 
     /**
      * Linearly interpolate between this Vector and the given Vector.
      *
      * Interpolates this Vector towards the given Vector.
      *
-     * @method Phaser.Math.Vector2#lerp
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Math.Vector2Like} src - The Vector2 to interpolate towards.
-     * @param {number} [t=0] - The interpolation percentage, between 0 and 1.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param src - The Vector2 to interpolate towards.
+     * @param t - The interpolation percentage, between 0 and 1.
+     * @returns This Vector2.
      */
-    lerp: function (src, t)
+    lerp (src: Vector2Like, t: number = 0): this
     {
-        if (t === undefined) { t = 0; }
-
-        var ax = this.x;
-        var ay = this.y;
+        const ax = this.x;
+        const ay = this.y;
 
         this.x = ax + t * (src.x - ax);
         this.y = ay + t * (src.y - ay);
 
         return this;
-    },
+    }
 
     /**
      * Transform this Vector with the given Matrix3.
      *
-     * @method Phaser.Math.Vector2#transformMat3
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix3} mat - The Matrix3 to transform this Vector2 with.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param mat - The Matrix3 to transform this Vector2 with.
+     * @returns This Vector2.
      */
-    transformMat3: function (mat)
+    transformMat3 (mat: { val: Float32Array | number[] }): this
     {
-        var x = this.x;
-        var y = this.y;
-        var m = mat.val;
+        const x = this.x;
+        const y = this.y;
+        const m = mat.val;
 
         this.x = m[0] * x + m[3] * y + m[6];
         this.y = m[1] * x + m[4] * y + m[7];
 
         return this;
-    },
+    }
 
     /**
      * Transform this Vector with the given Matrix4.
      *
-     * @method Phaser.Math.Vector2#transformMat4
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} mat - The Matrix4 to transform this Vector2 with.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param mat - The Matrix4 to transform this Vector2 with.
+     * @returns This Vector2.
      */
-    transformMat4: function (mat)
+    transformMat4 (mat: { val: Float32Array | number[] }): this
     {
-        var x = this.x;
-        var y = this.y;
-        var m = mat.val;
+        const x = this.x;
+        const y = this.y;
+        const m = mat.val;
 
         this.x = m[0] * x + m[4] * y + m[12];
         this.y = m[1] * x + m[5] * y + m[13];
 
         return this;
-    },
+    }
 
     /**
      * Make this Vector the zero vector (0, 0).
      *
-     * @method Phaser.Math.Vector2#reset
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @returns This Vector2.
      */
-    reset: function ()
+    reset (): this
     {
         this.x = 0;
         this.y = 0;
 
         return this;
-    },
+    }
 
     /**
      * Limit the length (or magnitude) of this Vector.
      *
-     * @method Phaser.Math.Vector2#limit
      * @since 3.23.0
      *
-     * @param {number} max - The maximum length.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param max - The maximum length.
+     * @returns This Vector2.
      */
-    limit: function (max)
+    limit (max: number): this
     {
-        var len = this.length();
+        const len = this.length();
 
         if (len && len > max)
         {
@@ -691,174 +638,151 @@ var Vector2 = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Reflect this Vector off a line defined by a normal.
      *
-     * @method Phaser.Math.Vector2#reflect
      * @since 3.23.0
      *
-     * @param {Phaser.Math.Vector2} normal - A vector perpendicular to the line.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param normal - A vector perpendicular to the line.
+     * @returns This Vector2.
      */
-    reflect: function (normal)
+    reflect (normal: Vector2): this
     {
-        normal = normal.clone().normalize();
+        const n = normal.clone().normalize();
 
-        return this.subtract(normal.scale(2 * this.dot(normal)));
-    },
+        return this.subtract(n.scale(2 * this.dot(n)));
+    }
 
     /**
      * Reflect this Vector across another.
      *
-     * @method Phaser.Math.Vector2#mirror
      * @since 3.23.0
      *
-     * @param {Phaser.Math.Vector2} axis - A vector to reflect across.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param axis - A vector to reflect across.
+     * @returns This Vector2.
      */
-    mirror: function (axis)
+    mirror (axis: Vector2): this
     {
         return this.reflect(axis).negate();
-    },
+    }
 
     /**
      * Rotate this Vector by an angle amount.
      *
-     * @method Phaser.Math.Vector2#rotate
      * @since 3.23.0
      *
-     * @param {number} delta - The angle to rotate by, in radians.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param delta - The angle to rotate by, in radians.
+     * @returns This Vector2.
      */
-    rotate: function (delta)
+    rotate (delta: number): this
     {
-        var cos = Math.cos(delta);
-        var sin = Math.sin(delta);
+        const cos = Math.cos(delta);
+        const sin = Math.sin(delta);
 
         return this.set(cos * this.x - sin * this.y, sin * this.x + cos * this.y);
-    },
+    }
 
     /**
      * Project this Vector onto another.
      *
-     * @method Phaser.Math.Vector2#project
      * @since 3.60.0
      *
-     * @param {Phaser.Math.Vector2} src - The vector to project onto.
-     *
-     * @return {Phaser.Math.Vector2} This Vector2.
+     * @param src - The vector to project onto.
+     * @returns This Vector2.
      */
-    project: function (src)
+    project (src: Vector2): this
     {
-        var scalar = this.dot(src) / src.dot(src);
+        const scalar = this.dot(src) / src.dot(src);
 
         return this.copy(src).scale(scalar);
-    },
+    }
 
     /**
      * Calculates the vector projection of this Vector2 onto the non-zero `vecB`. This is the
      * orthogonal projection of this vector onto a straight line parallel to `vecB`.
      *
-     * @method Phaser.Math.Vector2#projectUnit
      * @since 4.0.0
      *
-     * @param {Phaser.Math.Vector2} vecB - The vector to project onto.
-     * @param {Phaser.Math.Vector2} [out] - The Vector2 object to store the position in. If not given, a new Vector2 instance is created.
-     *
-     * @return {Phaser.Math.Vector2} The `out` Vector2 containing the projected values.
+     * @param vecB - The vector to project onto.
+     * @param out - The Vector2 object to store the position in. If not given, a new Vector2 instance is created.
+     * @returns The `out` Vector2 containing the projected values.
      */
-    projectUnit: function (vecB, out)
+    projectUnit (vecB: Vector2, out?: Vector2): Vector2
     {
         if (out === undefined) { out = new Vector2(); }
 
-        var amt = ((this.x * vecB.x) + (this.y * vecB.y));
-    
+        const amt = ((this.x * vecB.x) + (this.y * vecB.y));
+
         if (amt !== 0)
         {
             out.x = amt * vecB.x;
             out.y = amt * vecB.y;
         }
-    
+
         return out;
     }
 
-});
+    /**
+     * A static zero Vector2 for use by reference.
+     *
+     * This constant is meant for comparison operations and should not be modified directly.
+     *
+     * @constant
+     * @since 3.1.0
+     */
+    static readonly ZERO = new Vector2();
 
-/**
- * A static zero Vector2 for use by reference.
- *
- * This constant is meant for comparison operations and should not be modified directly.
- *
- * @constant
- * @name Phaser.Math.Vector2.ZERO
- * @type {Phaser.Math.Vector2}
- * @since 3.1.0
- */
-Vector2.ZERO = new Vector2();
+    /**
+     * A static right Vector2 for use by reference.
+     *
+     * This constant is meant for comparison operations and should not be modified directly.
+     *
+     * @constant
+     * @since 3.16.0
+     */
+    static readonly RIGHT = new Vector2(1, 0);
 
-/**
- * A static right Vector2 for use by reference.
- *
- * This constant is meant for comparison operations and should not be modified directly.
- *
- * @constant
- * @name Phaser.Math.Vector2.RIGHT
- * @type {Phaser.Math.Vector2}
- * @since 3.16.0
- */
-Vector2.RIGHT = new Vector2(1, 0);
+    /**
+     * A static left Vector2 for use by reference.
+     *
+     * This constant is meant for comparison operations and should not be modified directly.
+     *
+     * @constant
+     * @since 3.16.0
+     */
+    static readonly LEFT = new Vector2(-1, 0);
 
-/**
- * A static left Vector2 for use by reference.
- *
- * This constant is meant for comparison operations and should not be modified directly.
- *
- * @constant
- * @name Phaser.Math.Vector2.LEFT
- * @type {Phaser.Math.Vector2}
- * @since 3.16.0
- */
-Vector2.LEFT = new Vector2(-1, 0);
+    /**
+     * A static up Vector2 for use by reference.
+     *
+     * This constant is meant for comparison operations and should not be modified directly.
+     *
+     * @constant
+     * @since 3.16.0
+     */
+    static readonly UP = new Vector2(0, -1);
 
-/**
- * A static up Vector2 for use by reference.
- *
- * This constant is meant for comparison operations and should not be modified directly.
- *
- * @constant
- * @name Phaser.Math.Vector2.UP
- * @type {Phaser.Math.Vector2}
- * @since 3.16.0
- */
-Vector2.UP = new Vector2(0, -1);
+    /**
+     * A static down Vector2 for use by reference.
+     *
+     * This constant is meant for comparison operations and should not be modified directly.
+     *
+     * @constant
+     * @since 3.16.0
+     */
+    static readonly DOWN = new Vector2(0, 1);
 
-/**
- * A static down Vector2 for use by reference.
- *
- * This constant is meant for comparison operations and should not be modified directly.
- *
- * @constant
- * @name Phaser.Math.Vector2.DOWN
- * @type {Phaser.Math.Vector2}
- * @since 3.16.0
- */
-Vector2.DOWN = new Vector2(0, 1);
+    /**
+     * A static one Vector2 for use by reference.
+     *
+     * This constant is meant for comparison operations and should not be modified directly.
+     *
+     * @constant
+     * @since 3.16.0
+     */
+    static readonly ONE = new Vector2(1, 1);
+}
 
-/**
- * A static one Vector2 for use by reference.
- *
- * This constant is meant for comparison operations and should not be modified directly.
- *
- * @constant
- * @name Phaser.Math.Vector2.ONE
- * @type {Phaser.Math.Vector2}
- * @since 3.16.0
- */
-Vector2.ONE = new Vector2(1, 1);
-
-module.exports = Vector2;
+export default Vector2;
