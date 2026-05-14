@@ -33,13 +33,15 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Parser = void 0;
+exports.Parser = exports.SYNTHETIC_META_MARKER = exports.SYNTHETIC_DOCLET_FLAG = void 0;
 const dom = __importStar(require("dts-dom"));
 /**
  * Note that this Parser only works with jsdoc 3.6.6 output.
  * Downgrading, or upgrading jsdoc will cause it to break.
  */
 const regexEndLine = /^(.*)\r\n|\n|\r/gm;
+exports.SYNTHETIC_DOCLET_FLAG = '_syntheticTsgen';
+exports.SYNTHETIC_META_MARKER = '[tsgen-synthetic]';
 class Parser {
     constructor(docs) {
         this.topLevel = [];
@@ -72,6 +74,8 @@ class Parser {
         result = result.concat(this.topLevel.reduce((out, obj) => {
             return out + dom.emit(obj);
         }, ''));
+        // Workaround: dts-dom omits the space before `extends` in interface declarations
+        result = result.replace(/\binterface (\w+)extends /g, 'interface $1 extends ');
         if (ignored.length > 0) {
             console.log('ignored top level properties:');
             console.log(ignored);
@@ -168,13 +172,17 @@ class Parser {
                     obj = this.createEvent(doclet);
                     break;
                 default:
-                    console.log('Ignored doclet kind: ' + doclet.kind);
+                    if (!doclet[exports.SYNTHETIC_DOCLET_FLAG]) {
+                        console.log('Ignored doclet kind: ' + doclet.kind);
+                    }
                     break;
             }
             if (obj) {
                 if (container[doclet.longname]) {
-                    console.log('Warning: ignoring duplicate doc name: ' + doclet.longname);
-                    console.log('Meta: ', doclet.meta);
+                    if (!doclet[exports.SYNTHETIC_DOCLET_FLAG]) {
+                        console.log('Warning: ignoring duplicate doc name: ' + doclet.longname);
+                        console.log('Meta: ', doclet.meta);
+                    }
                     docs.splice(i--, 1);
                     continue;
                 }
@@ -195,8 +203,10 @@ class Parser {
             let obj = (doclet.kind === 'namespace') ? this.namespaces[doclet.longname] : this.objects[doclet.longname];
             // console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
             if (!obj) {
-                console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
-                console.log(`Warning: Didn't find object`);
+                if (!doclet[exports.SYNTHETIC_DOCLET_FLAG]) {
+                    console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
+                    console.log(`Warning: Didn't find object`);
+                }
                 continue;
             }
             if (!doclet.memberof) {
@@ -206,20 +216,26 @@ class Parser {
                 let isNamespaceMember = doclet.kind === 'class' || doclet.kind === 'typedef' || doclet.kind == 'namespace' || doclet.isEnum;
                 let parent = isNamespaceMember ? this.namespaces[doclet.memberof] : (this.objects[doclet.memberof] || this.namespaces[doclet.memberof]);
                 if (!parent) {
-                    console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
-                    console.log(`PARENT WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
+                    if (!doclet[exports.SYNTHETIC_DOCLET_FLAG]) {
+                        console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
+                        console.log(`PARENT WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
+                    }
                     continue;
                 }
                 if (!parent.kind) {
-                    console.log(`PARENT KIND WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
+                    if (!doclet[exports.SYNTHETIC_DOCLET_FLAG]) {
+                        console.log(`PARENT KIND WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
+                    }
                 }
                 if (parent.members) {
                     parent.members.push(obj);
                 }
                 else {
-                    console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
-                    console.log('Could not find members array');
-                    console.log(parent);
+                    if (!doclet[exports.SYNTHETIC_DOCLET_FLAG]) {
+                        console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
+                        console.log('Could not find members array');
+                        console.log(parent);
+                    }
                 }
                 obj._parent = parent;
                 // class / interface members have methods, not functions
@@ -264,6 +280,7 @@ class Parser {
         }
     }
     resolveParents(docs) {
+        var _a;
         console.log('------------------------------------------------------------------');
         console.log('Resolve Parents');
         console.log('------------------------------------------------------------------');
@@ -287,6 +304,24 @@ class Parser {
                         }
                         else {
                             o.implements.push(dom.create.interface(name));
+                            // Add a companion interface declaration for declaration merging so
+                            // that mixin members are accessible as class-instance members.
+                            // TypeScript's `implements` only constrains at definition time; a
+                            // companion `interface Foo extends Mixin {}` in the same namespace
+                            // is the idiomatic way to expose mixin members on the class type.
+                            const parentNs = this.namespaces[doclet.memberof];
+                            if (parentNs) {
+                                // Reuse an existing companion interface for this class if one
+                                // was already created by a previous mixin in the same loop,
+                                // avoiding duplicate interface declarations with the same name.
+                                let companion = parentNs.members.find((m) => m.kind === 'interface' && m.name === doclet.name);
+                                if (!companion) {
+                                    companion = dom.create.interface(doclet.name);
+                                    companion.baseTypes = (_a = companion.baseTypes) !== null && _a !== void 0 ? _a : [];
+                                    parentNs.members.push(companion);
+                                }
+                                companion.baseTypes.push(dom.create.interface(name));
+                            }
                         }
                     }
                 }
@@ -478,6 +513,8 @@ class Parser {
     processTypeName(name) {
         if (name === 'float')
             return 'number';
+        if (name === 'String')
+            return 'string';
         if (name === 'function')
             return 'Function';
         if (name === 'Array.<function()>')
@@ -485,6 +522,9 @@ class Parser {
         if (name === 'array')
             return 'any[]';
         // if (name === 'object') return '{[key: string]: any}';
+        if (name.includes('<')) {
+            name = name.replace(/([<,]\s*)String(?=\s*[,>])/g, '$1string');
+        }
         if (name.startsWith('Array<')) {
             let matches = name.match(/^Array<(.*)>$/);
             if (matches && matches[1]) {

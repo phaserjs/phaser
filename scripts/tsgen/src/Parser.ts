@@ -7,6 +7,9 @@ import * as dom from 'dts-dom';
 
 const regexEndLine = /^(.*)\r\n|\n|\r/gm;
 
+export const SYNTHETIC_DOCLET_FLAG = '_syntheticTsgen';
+export const SYNTHETIC_META_MARKER = '[tsgen-synthetic]';
+
 export class Parser {
 
     topLevel: dom.TopLevelDeclaration[];
@@ -59,6 +62,9 @@ export class Parser {
         result = result.concat(this.topLevel.reduce((out: string, obj: dom.TopLevelDeclaration) => {
             return out + dom.emit(obj);
         }, ''));
+
+        // Workaround: dts-dom omits the space before `extends` in interface declarations
+        result = result.replace(/\binterface (\w+)extends /g, 'interface $1 extends ');
 
         if (ignored.length > 0)
         {
@@ -171,7 +177,10 @@ export class Parser {
                     obj = this.createEvent(doclet);
                     break;
                 default:
-                    console.log('Ignored doclet kind: ' + doclet.kind);
+                    if (!doclet[SYNTHETIC_DOCLET_FLAG])
+                    {
+                        console.log('Ignored doclet kind: ' + doclet.kind);
+                    }
                     break;
             }
 
@@ -179,8 +188,11 @@ export class Parser {
             {
                 if (container[doclet.longname])
                 {
-                    console.log('Warning: ignoring duplicate doc name: ' + doclet.longname);
-                    console.log('Meta: ', doclet.meta);
+                    if (!doclet[SYNTHETIC_DOCLET_FLAG])
+                    {
+                        console.log('Warning: ignoring duplicate doc name: ' + doclet.longname);
+                        console.log('Meta: ', doclet.meta);
+                    }
 
                     docs.splice(i--, 1);
                     continue;
@@ -213,8 +225,11 @@ export class Parser {
 
             if (!obj)
             {
-                console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
-                console.log(`Warning: Didn't find object`);
+                if (!doclet[SYNTHETIC_DOCLET_FLAG])
+                {
+                    console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
+                    console.log(`Warning: Didn't find object`);
+                }
 
                 continue;
             }
@@ -231,14 +246,20 @@ export class Parser {
 
                 if (!parent)
                 {
-                    console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
-                    console.log(`PARENT WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
+                    if (!doclet[SYNTHETIC_DOCLET_FLAG])
+                    {
+                        console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
+                        console.log(`PARENT WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
+                    }
                     continue;
                 }
 
                 if (!(parent as any).kind)
                 {
-                    console.log(`PARENT KIND WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
+                    if (!doclet[SYNTHETIC_DOCLET_FLAG])
+                    {
+                        console.log(`PARENT KIND WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
+                    }
                 }
 
                 if ((<any>parent).members)
@@ -247,9 +268,12 @@ export class Parser {
                 }
                 else
                 {
-                    console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
-                    console.log('Could not find members array');
-                    console.log(parent);
+                    if (!doclet[SYNTHETIC_DOCLET_FLAG])
+                    {
+                        console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
+                        console.log('Could not find members array');
+                        console.log(parent);
+                    }
                 }
 
                 (<any>obj)._parent = parent;
@@ -351,6 +375,31 @@ export class Parser {
                         else
                         {
                             o.implements.push(dom.create.interface(name));
+
+                            // Add a companion interface declaration for declaration merging so
+                            // that mixin members are accessible as class-instance members.
+                            // TypeScript's `implements` only constrains at definition time; a
+                            // companion `interface Foo extends Mixin {}` in the same namespace
+                            // is the idiomatic way to expose mixin members on the class type.
+                            const parentNs = this.namespaces[doclet.memberof];
+                            if (parentNs)
+                            {
+                                // Reuse an existing companion interface for this class if one
+                                // was already created by a previous mixin in the same loop,
+                                // avoiding duplicate interface declarations with the same name.
+                                let companion = parentNs.members.find(
+                                    (m): m is dom.InterfaceDeclaration => m.kind === 'interface' && m.name === doclet.name
+                                ) as dom.InterfaceDeclaration | undefined;
+
+                                if (!companion)
+                                {
+                                    companion = dom.create.interface(doclet.name);
+                                    companion.baseTypes = companion.baseTypes ?? [];
+                                    parentNs.members.push(companion);
+                                }
+
+                                companion.baseTypes!.push(dom.create.interface(name));
+                            }
                         }
                     }
                 }
@@ -603,10 +652,15 @@ export class Parser {
 
     private processTypeName(name: string): string {
         if (name === 'float') return 'number';
+        if (name === 'String') return 'string';
         if (name === 'function') return 'Function';
         if (name === 'Array.<function()>') return 'Function[]';
         if (name === 'array') return 'any[]';
         // if (name === 'object') return '{[key: string]: any}';
+
+        if (name.includes('<')) {
+            name = name.replace(/([<,]\s*)String(?=\s*[,>])/g, '$1string');
+        }
 
         if (name.startsWith('Array<')) {
             let matches = name.match(/^Array<(.*)>$/);

@@ -1,6 +1,21 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { Parser } from './Parser';
+import {
+    discoverMigratedModules,
+    flattenCanonicalSymbols,
+    reportMigrationProgress,
+    buildSyntheticDoclets,
+    applyMigratedAuthorityOverlay,
+    normalizeDeclarationOutput,
+    validateNoSyntheticLeak,
+} from './MigratedOverlay';
+
+let migratedCanonicalSymbolLookup: Set<string> | null = null;
+
+export function isMigratedCanonicalSymbol(symbol: string): boolean {
+    return migratedCanonicalSymbolLookup !== null && migratedCanonicalSymbolLookup.has(symbol);
+}
 
 export function publish(data: any, opts: any) {
     // remove undocumented stuff.
@@ -18,11 +33,30 @@ export function publish(data: any, opts: any) {
         fs.mkdirSync(opts.destination);
     }
 
-    var str = JSON.stringify(data().get(), null, 4);
+    const docs = data().get();
+
+    var str = JSON.stringify(docs, null, 4);
 
     fs.writeFileSync(path.join(opts.destination, 'phaser.json'), str);
 
-    var out = new Parser(data().get()).emit();
+    const manifest = discoverMigratedModules();
+    const canonicalSymbols = flattenCanonicalSymbols(manifest);
+
+    migratedCanonicalSymbolLookup = new Set(canonicalSymbols);
+
+    reportMigrationProgress(canonicalSymbols.length);
+
+    const syntheticDoclets = buildSyntheticDoclets(manifest, docs);
+
+    docs.push(...syntheticDoclets);
+
+    var out = new Parser(docs).emit();
+
+    out = applyMigratedAuthorityOverlay(out, manifest);
+
+    out = normalizeDeclarationOutput(out);
+
+    validateNoSyntheticLeak(out, canonicalSymbols);
 
     fs.writeFileSync(path.join(opts.destination, 'phaser.d.ts'), out);
 };
