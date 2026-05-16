@@ -1129,7 +1129,7 @@ var BitmapText = new Class({
      */
     displayWidth: {
 
-        set: function(value)
+        set: function (value)
         {
             this.setScaleX(1);
 
@@ -1161,7 +1161,7 @@ var BitmapText = new Class({
      */
     displayHeight: {
 
-        set: function(value)
+        set: function (value)
         {
             this.setScaleY(1);
 
