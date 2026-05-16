@@ -60,7 +60,7 @@ const phaserRules = {
     'array-bracket-spacing': [ 'error', 'always' ],
     'block-spacing': [ 'error', 'always' ],
     'brace-style': [ 'error', 'allman', { allowSingleLine: true } ],
-    camelcase: 'error',
+    camelcase: ['error', { allow: ["^TODO_MIGRATE_"] }],
     'comma-dangle': [ 'error', 'never' ],
     'comma-style': [ 'error', 'last' ],
     'computed-property-spacing': [ 'error', 'never' ],

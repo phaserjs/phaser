@@ -9,7 +9,6 @@
  */
 
 module.exports = {
-
     Alpha: require('./Alpha'),
     AlphaSingle: require('./AlphaSingle'),
     BlendMode: require('./BlendMode'),

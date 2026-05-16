@@ -4,14 +4,19 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BlendModes = require('../../renderer/BlendModes');
-var Circle = require('../../geom/circle/Circle');
-var CircleContains = require('../../geom/circle/Contains');
-var Class = require('../../utils/Class');
-var Components = require('../components');
-var GameObject = require('../GameObject');
-var Rectangle = require('../../geom/rectangle/Rectangle');
-var RectangleContains = require('../../geom/rectangle/Contains');
+import BlendModes from '../../renderer/BlendModes.js';
+import Circle from '../../geom/circle/Circle.js';
+import CircleContains from '../../geom/circle/Contains.js';
+import Components from '../components/index.js';
+import { Rectangle } from '../../geom/rectangle/Rectangle.js';
+import { Contains as RectangleContains } from '../../geom/rectangle/Contains.js';
+import { Visible } from '../components/Visible.js';
+import { Depth } from '../components/Depth.js';
+import { applyMixin, composeMixins } from '../../utils/Mixin.js';
+import { TODO_MIGRATE_GameObjectCtor, TODO_MIGRATE_Scene } from '../../utils/migrationPlaceholders.js';
+import type { HitAreaCallback } from '../../input/typedefs/HitAreaCallback';
+
+const ZoneBase = composeMixins(Visible, Depth)(TODO_MIGRATE_GameObjectCtor);
 
 /**
  * @classdesc
@@ -38,135 +43,111 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Visible
  *
- * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
- * @param {number} x - The horizontal position of this Game Object in the world.
- * @param {number} y - The vertical position of this Game Object in the world.
- * @param {number} [width=1] - The width of the Game Object.
- * @param {number} [height=1] - The height of the Game Object.
+ * @param scene - The Scene to which this Game Object belongs.
+ * @param x - The horizontal position of this Game Object in the world.
+ * @param y - The vertical position of this Game Object in the world.
+ * @param [width=1] - The width of the Game Object.
+ * @param [height=1] - The height of the Game Object.
  */
-var Zone = new Class({
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export class Zone extends ZoneBase
+{
+    /**
+     * The native (un-scaled) width of this Game Object.
+     *
+     * @name Phaser.GameObjects.Zone#width
+     * @since 3.0.0
+     */
+    width: number;
 
-    Extends: GameObject,
+    /**
+     * The native (un-scaled) height of this Game Object.
+     *
+     * @name Phaser.GameObjects.Zone#height
+     * @since 3.0.0
+     */
+    height: number;
 
-    Mixins: [
-        Components.Depth,
-        Components.GetBounds,
-        Components.Origin,
-        Components.Transform,
-        Components.ScrollFactor,
-        Components.Visible
-    ],
+    /**
+     * The Blend Mode of the Game Object.
+     * Although a Zone never renders, it still has a blend mode to allow it to fit seamlessly into
+     * display lists without causing a batch flush.
+     *
+     * @name Phaser.GameObjects.Zone#blendMode
+     * @since 3.0.0
+     */
+    blendMode: number;
 
-    initialize:
-
-    function Zone (scene, x, y, width, height)
+    /**
+     * @since 3.0.0
+     */
+    constructor (scene: TODO_MIGRATE_Scene, x: number, y: number, width: number = 1, height: number = width)
     {
-        if (width === undefined) { width = 1; }
-        if (height === undefined) { height = width; }
-
-        GameObject.call(this, scene, 'Zone');
+        super(scene, 'Zone');
 
         this.setPosition(x, y);
 
-        /**
-         * The native (un-scaled) width of this Game Object.
-         *
-         * @name Phaser.GameObjects.Zone#width
-         * @type {number}
-         * @since 3.0.0
-         */
         this.width = width;
-
-        /**
-         * The native (un-scaled) height of this Game Object.
-         *
-         * @name Phaser.GameObjects.Zone#height
-         * @type {number}
-         * @since 3.0.0
-         */
         this.height = height;
 
-        /**
-         * The Blend Mode of the Game Object.
-         * Although a Zone never renders, it still has a blend mode to allow it to fit seamlessly into
-         * display lists without causing a batch flush.
-         *
-         * @name Phaser.GameObjects.Zone#blendMode
-         * @type {number}
-         * @since 3.0.0
-         */
         this.blendMode = BlendModes.NORMAL;
 
         this.updateDisplayOrigin();
-    },
+    }
 
     /**
      * The displayed width of this Game Object.
      * This value takes into account the scale factor.
      *
      * @name Phaser.GameObjects.Zone#displayWidth
-     * @type {number}
      * @since 3.0.0
      */
-    displayWidth: {
+    get displayWidth (): number
+    {
+        return this.scaleX * this.width;
+    }
 
-        get: function ()
-        {
-            return this.scaleX * this.width;
-        },
-
-        set: function (value)
-        {
-            this.scaleX = value / this.width;
-        }
-
-    },
+    set displayWidth (value: number)
+    {
+        this.scaleX = value / this.width;
+    }
 
     /**
      * The displayed height of this Game Object.
      * This value takes into account the scale factor.
      *
-     * @name Phaser.GameObjects.Zone#displayHeight
-     * @type {number}
      * @since 3.0.0
      */
-    displayHeight: {
+    get displayHeight (): number
+    {
+        return this.scaleY * this.height;
+    }
 
-        get: function ()
-        {
-            return this.scaleY * this.height;
-        },
-
-        set: function (value)
-        {
-            this.scaleY = value / this.height;
-        }
-
-    },
+    set displayHeight (value: number)
+    {
+        this.scaleY = value / this.height;
+    }
 
     /**
      * Sets the native (un-scaled) width and height of this Zone. Also updates the display origin
      * and, by default, resizes any non-custom input hit area associated with this Zone.
      *
-     * @method Phaser.GameObjects.Zone#setSize
      * @since 3.0.0
      *
-     * @param {number} width - The width of this Game Object.
-     * @param {number} height - The height of this Game Object.
-     * @param {boolean} [resizeInput=true] - If this Zone has a Rectangle for a hit area this argument will resize the hit area as well.
+     * @param width - The width of this Game Object.
+     * @param height - The height of this Game Object.
+     * @param [resizeInput=true] - If this Zone has a Rectangle for a hit area this argument will resize the hit area as well.
      *
-     * @return {this} This Game Object.
+     * @return This Game Object.
      */
-    setSize: function (width, height, resizeInput)
+    setSize (width: number, height: number, resizeInput: boolean = true): this
     {
-        if (resizeInput === undefined) { resizeInput = true; }
-
         this.width = width;
         this.height = height;
 
         this.updateDisplayOrigin();
 
-        var input = this.input;
+        const input = this.input;
 
         if (resizeInput && input && !input.customHitArea)
         {
@@ -175,60 +156,58 @@ var Zone = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * Sets the display size of this Game Object.
      * Calling this will adjust the scale.
      *
-     * @method Phaser.GameObjects.Zone#setDisplaySize
      * @since 3.0.0
      *
-     * @param {number} width - The width of this Game Object.
-     * @param {number} height - The height of this Game Object.
+     * @param width - The width of this Game Object.
+     * @param height - The height of this Game Object.
      *
-     * @return {this} This Game Object.
+     * @return This Game Object.
      */
-    setDisplaySize: function (width, height)
+    setDisplaySize (width: number, height: number): this
     {
         this.displayWidth = width;
         this.displayHeight = height;
 
         return this;
-    },
+    }
 
     /**
      * Sets this Zone to be a Circular Drop Zone.
      * The circle is centered on this Zone's `x` and `y` coordinates.
      *
-     * @method Phaser.GameObjects.Zone#setCircleDropZone
      * @since 3.0.0
      *
-     * @param {number} radius - The radius of the Circle that will form the Drop Zone.
+     * @param radius - The radius of the Circle that will form the Drop Zone.
      *
-     * @return {this} This Game Object.
+     * @return This Game Object.
      */
-    setCircleDropZone: function (radius)
+    setCircleDropZone (radius: number): this
     {
+        // @ts-expect-error - Circle is a JS Class() factory, not a native ES6 class
         return this.setDropZone(new Circle(0, 0, radius), CircleContains);
-    },
+    }
 
     /**
      * Sets this Zone to be a Rectangle Drop Zone.
      * The rectangle is centered on this Zone's `x` and `y` coordinates.
      *
-     * @method Phaser.GameObjects.Zone#setRectangleDropZone
      * @since 3.0.0
      *
-     * @param {number} width - The width of the rectangle drop zone.
-     * @param {number} height - The height of the rectangle drop zone.
+     * @param width - The width of the rectangle drop zone.
+     * @param height - The height of the rectangle drop zone.
      *
-     * @return {this} This Game Object.
+     * @return This Game Object.
      */
-    setRectangleDropZone: function (width, height)
+    setRectangleDropZone (width: number, height: number): this
     {
         return this.setDropZone(new Rectangle(0, 0, width, height), RectangleContains);
-    },
+    }
 
     /**
      * Enables this Zone as an interactive Drop Zone by calling `setInteractive` with the given
@@ -236,15 +215,14 @@ var Zone = new Class({
      * a matching hit-test callback. If no arguments are provided, a Rectangle matching the size of
      * this Zone will be used automatically. Has no effect if this Zone is already interactive.
      *
-     * @method Phaser.GameObjects.Zone#setDropZone
      * @since 3.0.0
      *
-     * @param {object} [hitArea] - A Geometry shape instance, such as Phaser.Geom.Ellipse, or your own custom shape. If not given it will try to create a Rectangle based on the size of this zone.
-     * @param {Phaser.Types.Input.HitAreaCallback} [hitAreaCallback] - A function that will return `true` if the given x/y coords it is sent are within the shape. If you provide a shape you must also provide a callback.
+     * @param [hitArea] - A Geometry shape instance, such as Phaser.Geom.Ellipse, or your own custom shape.
+     * @param [hitAreaCallback] - A function that will return `true` if the given x/y coords it is sent are within the shape.
      *
-     * @return {this} This Game Object.
+     * @return This Game Object.
      */
-    setDropZone: function (hitArea, hitAreaCallback)
+    setDropZone<T = unknown> (hitArea?: T, hitAreaCallback?: HitAreaCallback<T>): this
     {
         if (!this.input)
         {
@@ -252,7 +230,7 @@ var Zone = new Class({
         }
 
         return this;
-    },
+    }
 
     /**
      * A NOOP method so you can pass a Zone to a Container.
@@ -262,9 +240,9 @@ var Zone = new Class({
      * @private
      * @since 3.11.0
      */
-    setAlpha: function ()
+    setAlpha (): void
     {
-    },
+    }
 
     /**
      * A NOOP method so you can pass a Zone to a Container in Canvas.
@@ -274,9 +252,9 @@ var Zone = new Class({
      * @private
      * @since 3.16.2
      */
-    setBlendMode: function ()
+    setBlendMode (): void
     {
-    },
+    }
 
     /**
      * A Zone does not render.
@@ -285,15 +263,14 @@ var Zone = new Class({
      * @private
      * @since 3.53.0
      *
-     * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
-     * @param {Phaser.GameObjects.Image} src - The Game Object being rendered in this call.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+     * @param renderer - A reference to the current active Canvas renderer.
+     * @param src - The Game Object being rendered in this call.
+     * @param camera - The Camera that is rendering the Game Object.
      */
-    renderCanvas: function (renderer, src, camera)
+    renderCanvas (_renderer: object, src: Zone, camera: { addToRenderList(src: object): void }): void
     {
         camera.addToRenderList(src);
-    },
+    }
 
     /**
      * A Zone does not render.
@@ -302,15 +279,46 @@ var Zone = new Class({
      * @private
      * @since 3.53.0
      *
-     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
-     * @param {Phaser.GameObjects.Image} src - The Game Object being rendered in this call.
-     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     * @param renderer - A reference to the current active WebGL renderer.
+     * @param src - The Game Object being rendered in this call.
+     * @param drawingContext - The current drawing context.
      */
-    renderWebGL: function (renderer, src, drawingContext)
+    renderWebGL (_renderer: object, src: Zone, drawingContext: { camera: { addToRenderList(src: object): void } }): void
     {
         drawingContext.camera.addToRenderList(src);
     }
+}
 
-});
+// ---------------------------------------------------------------------------
+// Unmigrated JS mixin application
+// ---------------------------------------------------------------------------
+// These remain as runtime applyMixin() calls until each component .js is
+// converted to a typed mixin function. Remove each line as you migrate its
+// component to TypeScript.
+applyMixin(Zone, Components.GetBounds);
+applyMixin(Zone, Components.Origin);
+applyMixin(Zone, Components.ScrollFactor);
+applyMixin(Zone, Components.Transform);
 
-module.exports = Zone;
+// ---------------------------------------------------------------------------
+// Declaration merging — unmigrated mixin / parent surface used by Zone's body.
+// Remove entries as each dependency is migrated to TypeScript.
+// ---------------------------------------------------------------------------
+// eslint-disable-next-line no-redeclare, @typescript-eslint/no-unsafe-declaration-merging
+export interface Zone
+{
+
+    // From Transform mixin
+    scaleX: number;
+    scaleY: number;
+    setPosition(x: number, y: number): this;
+
+    // From Origin mixin
+    updateDisplayOrigin(): this;
+
+    // From GameObject parent
+    input: { customHitArea: boolean; hitArea: { width: number; height: number } } | null;
+    setInteractive<T = unknown>(hitArea?: T, hitAreaCallback?: HitAreaCallback<T>, dropZone?: boolean): this;
+}
+
+export default Zone;
