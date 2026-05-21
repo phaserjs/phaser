@@ -130,9 +130,14 @@ var TimeStep = new Class({
          *
          * Use it purely to _restrict_ updates in low-intensity situations only.
          *
+         * You can change the FPS limit at any time by calling
+         * `TimeStep.setFPSLimit(limit)`.
+         * This will update the `fpsLimit`, `hasFpsLimit` and `_limitRate` properties.
+         *
          * @name Phaser.Core.TimeStep#fpsLimit
          * @type {number}
          * @default 0
+         * @readonly
          * @since 3.60.0
          */
         this.fpsLimit = GetValue(config, 'limit', 0);
@@ -147,6 +152,7 @@ var TimeStep = new Class({
          * @name Phaser.Core.TimeStep#hasFpsLimit
          * @type {boolean}
          * @default false
+         * @readonly
          * @since 3.60.0
          */
         this.hasFpsLimit = (this.fpsLimit > 0);
@@ -157,6 +163,7 @@ var TimeStep = new Class({
          * @name Phaser.Core.TimeStep#_limitRate
          * @type {number}
          * @private
+         * @readonly
          * @since 3.60.0
          */
         this._limitRate = (this.hasFpsLimit) ? (1000 / this.fpsLimit) : 0;
@@ -842,6 +849,39 @@ var TimeStep = new Class({
     getDurationMS: function ()
     {
         return Math.round(this.lastTime - this.startTime);
+    },
+
+    /**
+     * Sets the FPS limit (`fpsLimit` property) and related properties.
+     *
+     * Use this method to set the FPS limit at runtime, rather than setting the
+     * `fpsLimit` property directly, to ensure the related properties are
+     * updated correctly. If the TimeStep is running, it will be stopped and
+     * restarted with the new FPS limit.
+     *
+     * If you just want a constant limit, use the Game Config `fps: { limit: 30 }` value instead.
+     *
+     * @method Phaser.Core.TimeStep#setFPSLimit
+     * @since 4.NEXT
+     *
+     * @param {number} limit - The FPS limit to set. Set to 0 to remove the FPS limit.
+     *
+     * @return {this} The TimeStep object.
+     */
+    setFPSLimit: function (limit)
+    {
+        this.fpsLimit = limit;
+        this.hasFpsLimit = (this.fpsLimit > 0);
+        this._limitRate = (this.hasFpsLimit) ? (1000 / this.fpsLimit) : 0;
+
+        if (this.running)
+        {
+            var step = (this.hasFpsLimit) ? this.stepLimitFPS.bind(this) : this.step.bind(this);
+            this.raf.stop();
+            this.raf.start(step, this.forceSetTimeOut, this._limitRate);
+        }
+
+        return this;
     },
 
     /**
