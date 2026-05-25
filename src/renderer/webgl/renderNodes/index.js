@@ -59,6 +59,7 @@ var RenderNodes = {
     RebindContext: require('./RebindContext'),
     RenderNode: require('./RenderNode'),
     StrokePath: require('./StrokePath'),
+    SubmitterMeshToQuad: require('./submitter/SubmitterMeshToQuad'),
     SubmitterQuad: require('./submitter/SubmitterQuad'),
     SubmitterSpriteGPULayer: require('./submitter/SubmitterSpriteGPULayer'),
     SubmitterTile: require('./submitter/SubmitterTile'),
@@ -70,6 +71,7 @@ var RenderNodes = {
     TransformerStamp: require('./transformer/TransformerStamp'),
     TransformerTile: require('./transformer/TransformerTile'),
     TransformerTileSprite: require('./transformer/TransformerTileSprite'),
+    TransformerVertex: require('./transformer/TransformerVertex'),
     YieldContext: require('./YieldContext')
 };
 

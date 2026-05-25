@@ -56,6 +56,7 @@ var FilterWipe = require('./filters/FilterWipe');
 var ListCompositor = require('./ListCompositor');
 var RebindContext = require('./RebindContext');
 var StrokePath = require('./StrokePath');
+var SubmitterMeshToQuad = require('./submitter/SubmitterMeshToQuad');
 var SubmitterQuad = require('./submitter/SubmitterQuad');
 var SubmitterTile = require('./submitter/SubmitterTile');
 var SubmitterTilemapGPULayer = require('./submitter/SubmitterTilemapGPULayer');
@@ -66,6 +67,7 @@ var TransformerImage = require('./transformer/TransformerImage');
 var TransformerStamp = require('./transformer/TransformerStamp');
 var TransformerTile = require('./transformer/TransformerTile');
 var TransformerTileSprite = require('./transformer/TransformerTileSprite');
+var TransformerVertex = require('./transformer/TransformerVertex');
 var YieldContext = require('./YieldContext');
 
 /**
@@ -213,6 +215,7 @@ var RenderNodeManager = new Class({
             ListCompositor: ListCompositor,
             RebindContext: RebindContext,
             StrokePath: StrokePath,
+            SubmitterMeshToQuad: SubmitterMeshToQuad,
             SubmitterQuad: SubmitterQuad,
             SubmitterTile: SubmitterTile,
             SubmitterTilemapGPULayer: SubmitterTilemapGPULayer,
@@ -223,6 +226,7 @@ var RenderNodeManager = new Class({
             TransformerStamp: TransformerStamp,
             TransformerTile: TransformerTile,
             TransformerTileSprite: TransformerTileSprite,
+            TransformerVertex: TransformerVertex,
             YieldContext: YieldContext
         };
 

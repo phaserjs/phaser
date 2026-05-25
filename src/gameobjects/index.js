@@ -131,6 +131,7 @@ if (typeof WEBGL_RENDERER)
 {
     GameObjects.CaptureFrame = require('./captureframe/CaptureFrame');
     GameObjects.Gradient = require('./gradient/Gradient');
+    GameObjects.Mesh2D = require('./mesh2d/Mesh2D');
     GameObjects.Noise = require('./noise/Noise');
     GameObjects.NoiseCell2D = require('./noise/noisecell2d/NoiseCell2D');
     GameObjects.NoiseCell3D = require('./noise/noisecell3d/NoiseCell3D');
@@ -144,6 +145,7 @@ if (typeof WEBGL_RENDERER)
 
     GameObjects.Factories.CaptureFrame = require('./captureframe/CaptureFrameFactory');
     GameObjects.Factories.Gradient = require('./gradient/GradientFactory');
+    GameObjects.Factories.Mesh2D = require('./mesh2d/Mesh2DFactory');
     GameObjects.Factories.Noise = require('./noise/NoiseFactory');
     GameObjects.Factories.NoiseCell2D = require('./noise/noisecell2d/NoiseCell2DFactory');
     GameObjects.Factories.NoiseCell3D = require('./noise/noisecell3d/NoiseCell3DFactory');
@@ -157,6 +159,7 @@ if (typeof WEBGL_RENDERER)
 
     GameObjects.Creators.CaptureFrame = require('./captureframe/CaptureFrameCreator');
     GameObjects.Creators.Gradient = require('./gradient/GradientCreator');
+    GameObjects.Creators.Mesh2D = require('./mesh2d/Mesh2DCreator');
     GameObjects.Creators.Noise = require('./noise/NoiseCreator');
     GameObjects.Creators.NoiseCell2D = require('./noise/noisecell2d/NoiseCell2DCreator');
     GameObjects.Creators.NoiseCell3D = require('./noise/noisecell3d/NoiseCell3DCreator');
