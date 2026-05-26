@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var MapStruct = require('../../structs/Map');
 var Components = require('../components');
 var GameObject = require('../GameObject.js');
 var SubmitterSpriteGPULayer = require('../../renderer/webgl/renderNodes/submitter/SubmitterSpriteGPULayer.js');
@@ -278,7 +279,7 @@ var SpriteGPULayer = new Class({
         this.EASE_CODES = EasingNaming;
 
         this.setTexture(texture);
-        this.initRenderNodes(new Phaser.Structs.Map());
+        this.initRenderNodes(new MapStruct());
 
         /**
          * A texture containing the frame data for the SpriteGPULayer.
