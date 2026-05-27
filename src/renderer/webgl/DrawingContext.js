@@ -599,7 +599,7 @@ var DrawingContext = new Class({
      */
     beginDraw: function ()
     {
-        if (this.framebuffer)
+        if (this.texture)
         {
             // Ensure the framebuffer texture is not bound to a texture unit.
             this.renderer.glTextureUnits.unbindTexture(this.texture);
