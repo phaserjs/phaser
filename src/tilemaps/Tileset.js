@@ -197,6 +197,17 @@ var Tileset = new Class({
         */
         this.texCoordinates = [];
 
+        
+		/**
+		 * Whether the tileset animations should play or not. If false, animated tiles will stay on their first frame.
+		 *
+		 * @name Phaser.Tilemaps.Tileset#animating
+		 * @type {boolean}
+		 * @since 4.2.0
+		 * @default true
+		 */
+		this.animating = true;
+
         /**
          * The number of frames above which a tile is considered to have
          * many animation frames. This is used to optimize rendering.

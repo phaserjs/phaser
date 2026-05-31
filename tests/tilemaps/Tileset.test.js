@@ -22,6 +22,7 @@ describe('Tileset', function ()
             expect(ts.columns).toBe(0);
             expect(ts.total).toBe(0);
             expect(ts.texCoordinates).toEqual([]);
+            expect(ts.animating).toBe(true);
             expect(ts.animationSearchThreshold).toBe(64);
             expect(ts.maxAnimationLength).toBe(0);
         });

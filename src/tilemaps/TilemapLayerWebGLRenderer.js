@@ -78,7 +78,7 @@ var TilemapLayerWebGLRenderer = function (renderer, src, drawingContext, parentM
             continue;
         }
 
-        var tileIndex = tileset.getAnimatedTileId(tile.index, timeElapsed);
+        var tileIndex = tileset.getAnimatedTileId(tile.index, tileset.animating ? timeElapsed : 0);
 
         if (tileIndex === null)
         {
