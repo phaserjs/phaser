@@ -101,6 +101,46 @@ var Light = new Class({
         this.z = z === undefined ? radius * 0.1 : z;
 
         /**
+         * Whether this Light is restricted to a cone.
+         *
+         * @name Phaser.GameObjects.Light#coneEnabled
+         * @type {boolean}
+         * @default false
+         * @since 4.2.0
+         */
+        this.coneEnabled = false;
+
+        /**
+         * The cone direction, in radians, in world space.
+         *
+         * @name Phaser.GameObjects.Light#coneRotation
+         * @type {number}
+         * @default 0
+         * @since 4.2.0
+         */
+        this.coneRotation = 0;
+
+        /**
+         * The inner cone angle, in radians. Fragments inside this angle receive full light.
+         *
+         * @name Phaser.GameObjects.Light#coneInnerAngle
+         * @type {number}
+         * @default 0
+         * @since 4.2.0
+         */
+        this.coneInnerAngle = 0;
+
+        /**
+         * The outer cone angle, in radians. Fragments outside this angle receive no light.
+         *
+         * @name Phaser.GameObjects.Light#coneOuterAngle
+         * @type {number}
+         * @default 0
+         * @since 4.2.0
+         */
+        this.coneOuterAngle = 0;
+
+        /**
          * The flags that are compared against `RENDER_MASK` to determine if this Light will render or not.
          * The relevant bit is 0001, set by the Visible component. The remaining bits are unused by Light
          * but are reserved for custom use if required.
@@ -346,6 +386,103 @@ var Light = new Class({
     setZNormal: function (z)
     {
         this.z = z * this.radius;
+
+        return this;
+    },
+
+    /**
+     * Restrict this Light to a cone, suitable for flashlights, lanterns and other focal lights.
+     *
+     * The `rotation` is in radians, where 0 points to the right in world space. The `innerAngle`
+     * is the fully-lit cone width. The `outerAngle` is the wider falloff cone width; if omitted,
+     * the cone has a hard edge. Both angles are full cone widths, not half-angles.
+     *
+     * @method Phaser.GameObjects.Light#setCone
+     * @since 4.2.0
+     *
+     * @param {number} rotation - The direction of the cone, in radians.
+     * @param {number} innerAngle - The fully-lit cone width, in radians.
+     * @param {number} [outerAngle=innerAngle] - The outer falloff cone width, in radians.
+     *
+     * @return {this} This Light object.
+     */
+    setCone: function (rotation, innerAngle, outerAngle)
+    {
+        if (outerAngle === undefined) { outerAngle = innerAngle; }
+
+        innerAngle = Math.max(0, Math.min(Math.PI * 2, innerAngle));
+        outerAngle = Math.max(0, Math.min(Math.PI * 2, outerAngle));
+
+        if (outerAngle < innerAngle)
+        {
+            outerAngle = innerAngle;
+        }
+
+        this.coneEnabled = true;
+        this.coneRotation = rotation;
+        this.coneInnerAngle = innerAngle;
+        this.coneOuterAngle = outerAngle;
+
+        return this;
+    },
+
+    /**
+     * Set the direction of this Light cone, in radians.
+     *
+     * @method Phaser.GameObjects.Light#setConeRotation
+     * @since 4.2.0
+     *
+     * @param {number} rotation - The direction of the cone, in radians.
+     *
+     * @return {this} This Light object.
+     */
+    setConeRotation: function (rotation)
+    {
+        this.coneRotation = rotation;
+
+        return this;
+    },
+
+    /**
+     * Set the inner and outer cone angles, in radians.
+     *
+     * @method Phaser.GameObjects.Light#setConeAngles
+     * @since 4.2.0
+     *
+     * @param {number} innerAngle - The fully-lit cone width, in radians.
+     * @param {number} [outerAngle=innerAngle] - The outer falloff cone width, in radians.
+     *
+     * @return {this} This Light object.
+     */
+    setConeAngles: function (innerAngle, outerAngle)
+    {
+        if (outerAngle === undefined) { outerAngle = innerAngle; }
+
+        innerAngle = Math.max(0, Math.min(Math.PI * 2, innerAngle));
+        outerAngle = Math.max(0, Math.min(Math.PI * 2, outerAngle));
+
+        if (outerAngle < innerAngle)
+        {
+            outerAngle = innerAngle;
+        }
+
+        this.coneInnerAngle = innerAngle;
+        this.coneOuterAngle = outerAngle;
+
+        return this;
+    },
+
+    /**
+     * Disable cone limiting and make this Light omnidirectional again.
+     *
+     * @method Phaser.GameObjects.Light#disableCone
+     * @since 4.2.0
+     *
+     * @return {this} This Light object.
+     */
+    disableCone: function ()
+    {
+        this.coneEnabled = false;
 
         return this;
     }
