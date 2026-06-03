@@ -659,6 +659,10 @@ var BatchHandlerQuad = new Class({
      * @param {number} tintTR - The top-right tint color.
      * @param {number} tintBR - The bottom-right tint color.
      * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerQuadRenderOptions} renderOptions - Optional render features.
+     * @param {number} [tint2TL] - The secondary tint color for the top-left corner.
+     * @param {number} [tint2BL] - The secondary tint color for the bottom-left corner.
+     * @param {number} [tint2TR] - The secondary tint color for the top-right corner.
+     * @param {number} [tint2BR] - The secondary tint color for the bottom-right corner.
      * @param {...*} [args] - Additional arguments for subclasses.
      */
     batch: function (
@@ -803,6 +807,11 @@ var BatchHandlerQuad = new Class({
      * @param {number} tintTR - The tint color for the top-right corner.
      * @param {number} tintBR - The tint color for the bottom-right corner.
      * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerQuadRenderOptions} renderOptions - Optional render features.
+     * @param {number} [tint2TL] - The secondary tint color for the top-left corner.
+     * @param {number} [tint2BL] - The secondary tint color for the bottom-left corner.
+     * @param {number} [tint2TR] - The secondary tint color for the top-right corner.
+     * @param {number} [tint2BR] - The secondary tint color for the bottom-right corner.
+     * @param {...*} [args] - Additional arguments for subclasses.
      */
     batchWithUV: function(
         currentContext,

@@ -236,6 +236,10 @@ var BatchHandlerTileSprite = new Class({
      * @param {number} v2 - The v coordinate of the distorted top-right corner.
      * @param {number} u3 - The u coordinate of the distorted bottom-right corner.
      * @param {number} v3 - The v coordinate of the distorted bottom-right corner.
+     * @param {number} [tint2TL] - The secondary tint color for the top-left corner.
+     * @param {number} [tint2BL] - The secondary tint color for the bottom-left corner.
+     * @param {number} [tint2TR] - The secondary tint color for the top-right corner.
+     * @param {number} [tint2BR] - The secondary tint color for the bottom-right corner.
      */
     batch: function (
         drawingContext,
