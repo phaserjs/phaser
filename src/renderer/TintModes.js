@@ -83,5 +83,18 @@ module.exports = {
      * @const
      * @since 4.0.0
      */
-    HARD_LIGHT: 6
+    HARD_LIGHT: 6,
+
+    /**
+     * Double color multiply tint mode.
+     * The tint color is multiplied with the texture color,
+     * and the inverse of the texture color is multiplied by a second tint color.
+     * This allows control of light and dark regions separately.
+     *
+     * @name Phaser.TintModes.MULTIPLY_TWO
+     * @type {number}
+     * @const
+     * @since 4.NEXT
+     */
+    MULTIPLY_TWO: 7
 };

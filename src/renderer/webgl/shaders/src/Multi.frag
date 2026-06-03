@@ -16,7 +16,7 @@ uniform vec2 uResolution;
 
 varying vec2 outTexCoord;
 varying float outTexDatum;
-varying float outTintEffect;
+varying vec4 outTintEffect;
 varying vec4 outTint;
 
 #pragma phaserTemplate(outVariables)

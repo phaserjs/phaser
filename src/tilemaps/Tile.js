@@ -313,6 +313,17 @@ var Tile = new Class({
         this.tint = 0xffffff;
 
         /**
+         * The secondary tint to apply to this tile.
+         * Used in two-color tint modes.
+         *
+         * @name Phaser.Tilemaps.Tile#tint2
+         * @type {number}
+         * @default 0x000000
+         * @since 4.NEXT
+         */
+        this.tint2 = 0x000000;
+
+        /**
          * The tint mode.
          *
          * Available modes are:
@@ -322,6 +333,7 @@ var Tile = new Class({
          * - Phaser.TintModes.SCREEN
          * - Phaser.TintModes.OVERLAY
          * - Phaser.TintModes.HARD_LIGHT
+         * - Phaser.TintModes.MULTIPLY_TWO
          *
          * @name Phaser.Tilemaps.Tile#tintMode
          * @type {Phaser.TintModes}
@@ -376,6 +388,7 @@ var Tile = new Class({
         this.visible = tile.visible;
         this.setFlip(tile.flipX, tile.flipY);
         this.tint = tile.tint;
+        this.tint2 = tile.tint2;
         this.rotation = tile.rotation;
         this.collideUp = tile.collideUp;
         this.collideDown = tile.collideDown;

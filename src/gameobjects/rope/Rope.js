@@ -186,6 +186,8 @@ var Rope = new Class({
          * - Phaser.TintModes.OVERLAY
          * - Phaser.TintModes.HARD_LIGHT
          *
+         * Rope does not currently support secondary tint colors or modes.
+         *
          * @name Phaser.GameObjects.Rope#tintMode
          * @type {Phaser.TintModes}
          * @default Phaser.TintModes.MULTIPLY
@@ -474,6 +476,8 @@ var Rope = new Class({
      * - Phaser.TintModes.HARD_LIGHT
      *
      * See the `setColors` method for details of how to color each of the vertices.
+     *
+     * Rope does not currently support secondary tint colors or modes.
      *
      * @method Phaser.GameObjects.Rope#setTintMode
      * @webglOnly

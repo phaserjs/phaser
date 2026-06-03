@@ -21,7 +21,10 @@ var MakeRotationDatum = require('../shaders/additionMakers/MakeRotationDatum');
 var MakeSmoothPixelArt = require('../shaders/additionMakers/MakeSmoothPixelArt');
 var MakeTexCoordFrameClamp = require('../shaders/additionMakers/MakeTexCoordFrameClamp');
 var MakeTexCoordFrameWrap = require('../shaders/additionMakers/MakeTexCoordFrameWrap');
+var Utils = require('../Utils.js');
 var BatchHandlerQuad = require('./BatchHandlerQuad');
+
+var getTint = Utils.getTintAppendFloatAlpha;
 
 /**
  * @classdesc
@@ -96,7 +99,10 @@ var BatchHandlerTileSprite = new Class({
                     name: 'inTexDatum'
                 },
                 {
-                    name: 'inTintEffect'
+                    name: 'inTintEffect',
+                    size: 4,
+                    type: 'UNSIGNED_BYTE',
+                    normalized: true
                 },
                 {
                     name: 'inTint',
@@ -243,7 +249,8 @@ var BatchHandlerTileSprite = new Class({
         tintMode,
         tintTL, tintBL, tintTR, tintBR,
         renderOptions,
-        u0, v0, u1, v1, u2, v2, u3, v3
+        u0, v0, u1, v1, u2, v2, u3, v3,
+        tint2TL, tint2BL, tint2TR, tint2BR
     )
     {
         if (this.instanceCount === 0)
@@ -262,6 +269,23 @@ var BatchHandlerTileSprite = new Class({
         // Process textures and get relevant data.
         var textureDatum = this.batchTextures(glTexture, renderOptions);
 
+        // Pack tint mode with secondary tint colors.
+        // Assign default secondary tint colors if not provided.
+        if (tint2TL === undefined)
+        {
+            tint2TL = tintMode << 24;
+            tint2BL = tint2TL;
+            tint2TR = tint2TL;
+            tint2BR = tint2TL;
+        }
+        else
+        {
+            tint2TL = getTint(tint2TL, tintMode / 255);
+            tint2BL = getTint(tint2BL, tintMode / 255);
+            tint2TR = getTint(tint2TR, tintMode / 255);
+            tint2BR = getTint(tint2BR, tintMode / 255);
+        }
+
         // Update the vertex buffer.
         var vertexOffset32 = this.instanceCount * this.floatsPerInstance;
         var vertexBuffer = this.vertexBufferLayout.buffer;
@@ -278,7 +302,7 @@ var BatchHandlerTileSprite = new Class({
         vertexViewF32[vertexOffset32++] = texWidth;
         vertexViewF32[vertexOffset32++] = texHeight;
         vertexViewF32[vertexOffset32++] = textureDatum;
-        vertexViewF32[vertexOffset32++] = tintMode;
+        vertexViewU32[vertexOffset32++] = tint2BL;
         vertexViewU32[vertexOffset32++] = tintBL;
 
         // Top-left
@@ -291,7 +315,7 @@ var BatchHandlerTileSprite = new Class({
         vertexViewF32[vertexOffset32++] = texWidth;
         vertexViewF32[vertexOffset32++] = texHeight;
         vertexViewF32[vertexOffset32++] = textureDatum;
-        vertexViewF32[vertexOffset32++] = tintMode;
+        vertexViewU32[vertexOffset32++] = tint2TL;
         vertexViewU32[vertexOffset32++] = tintTL;
 
         // Bottom-right
@@ -304,7 +328,7 @@ var BatchHandlerTileSprite = new Class({
         vertexViewF32[vertexOffset32++] = texWidth;
         vertexViewF32[vertexOffset32++] = texHeight;
         vertexViewF32[vertexOffset32++] = textureDatum;
-        vertexViewF32[vertexOffset32++] = tintMode;
+        vertexViewU32[vertexOffset32++] = tint2BR;
         vertexViewU32[vertexOffset32++] = tintBR;
 
         // Top-right
@@ -317,7 +341,7 @@ var BatchHandlerTileSprite = new Class({
         vertexViewF32[vertexOffset32++] = texWidth;
         vertexViewF32[vertexOffset32++] = texHeight;
         vertexViewF32[vertexOffset32++] = textureDatum;
-        vertexViewF32[vertexOffset32++] = tintMode;
+        vertexViewU32[vertexOffset32++] = tint2TR;
         vertexViewU32[vertexOffset32++] = tintTR;
 
         // Increment the instance count.

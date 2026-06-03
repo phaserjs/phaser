@@ -18,12 +18,12 @@ uniform vec2 uResolution;
 attribute vec2 inPosition;
 attribute vec2 inTexCoord;
 attribute float inTexDatum;
-attribute float inTintEffect;
+attribute vec4 inTintEffect;
 attribute vec4 inTint;
 
 varying vec2 outTexCoord;
 varying float outTexDatum;
-varying float outTintEffect;
+varying vec4 outTintEffect;
 varying vec4 outTint;
 
 #pragma phaserTemplate(outVariables)
@@ -37,7 +37,7 @@ void main ()
     outTexCoord = inTexCoord;
     outTexDatum = inTexDatum;
     outTint = inTint;
-    outTintEffect = inTintEffect;
+    outTintEffect = inTintEffect * vec4(1.0, 1.0, 1.0, 255.0); // Denormalize tint mode to an integer.
 
     #pragma phaserTemplate(vertexProcess)
 }

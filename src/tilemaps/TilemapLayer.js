@@ -359,10 +359,11 @@ var TilemapLayer = new Class({
     },
 
     /**
-     * Sets an additive tint on each Tile within the given area.
+     * Sets a tint color on each Tile within the given area.
      *
-     * The tint works by taking the pixel color values from the tileset texture, and then
-     * multiplying it by the color value of the tint.
+     * The tint works by taking the pixel color values from the tileset texture
+     * and combining it with the color value of the tint,
+     * according to the tint mode.
      *
      * If no area values are given then all tiles will be tinted to the given color.
      *
@@ -396,6 +397,41 @@ var TilemapLayer = new Class({
     },
 
     /**
+     * Sets a secondary tint color on each Tile within the given area.
+     * Secondary tints are used by two-color tint modes such as MULTIPLY_TWO.
+     *
+     * If no area values are given then all tiles will be tinted to the given color.
+     *
+     * To remove a secondary tint call this method with either no parameters, or by passing black `0x000000` as the secondary tint color.
+     *
+     * If a tile already has a secondary tint set then calling this method will override that.
+     *
+     * @method Phaser.Tilemaps.TilemapLayer#setTint2
+     * @webglOnly
+     * @since 4.NEXT
+     *
+     * @param {number} [tint2=0x000000] - The secondary tint color being applied to each tile within the region. Given as a hex value, i.e. `0xff0000` for red. Set to black (`0x000000`) to reset the secondary tint.
+     * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area to search.
+     * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
+     * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} [height] - How many tiles tall from the `tileY` index the area will be.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
+     *
+     * @return {this} This Tilemap Layer object.
+     */
+    setTint2: function (tint2, tileX, tileY, width, height, filteringOptions)
+    {
+        if (tint2 === undefined) { tint2 = 0x000000; }
+
+        var tintTile = function (tile)
+        {
+            tile.tint2 = tint2;
+        };
+
+        return this.forEachTile(tintTile, this, tileX, tileY, width, height, filteringOptions);
+    },
+
+    /**
      * Sets the tint mode to use when applying the tint to the texture.
      *
      * Available modes are:
@@ -406,6 +442,7 @@ var TilemapLayer = new Class({
      * - Phaser.TintModes.SCREEN
      * - Phaser.TintModes.OVERLAY
      * - Phaser.TintModes.HARD_LIGHT
+     * - Phaser.TintModes.MULTIPLY_TWO
      *
      * Call this method with no parameters to reset the tint mode to the default.
      *

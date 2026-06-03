@@ -85,7 +85,10 @@ var BatchHandlerStrip = new Class({
                     name: 'inTexDatum'
                 },
                 {
-                    name: 'inTintEffect'
+                    name: 'inTintEffect',
+                    size: 4,
+                    type: 'UNSIGNED_BYTE',
+                    normalized: true
                 },
                 {
                     name: 'inTint',
@@ -242,6 +245,8 @@ var BatchHandlerStrip = new Class({
         var e = calcMatrix.e;
         var f = calcMatrix.f;
 
+        var tintCombined = tintMode << 24;
+
         var meshVerticesLength = vertices.length;
 
         for (var i = 0; i < meshVerticesLength; i += 2)
@@ -257,7 +262,7 @@ var BatchHandlerStrip = new Class({
             vertexViewF32[vertexOffset32++] = uv[i];
             vertexViewF32[vertexOffset32++] = uv[i + 1];
             vertexViewF32[vertexOffset32++] = textureDatum;
-            vertexViewF32[vertexOffset32++] = tintMode;
+            vertexViewU32[vertexOffset32++] = tintCombined;
             vertexViewU32[vertexOffset32++] = getTint(
                 colors[i / 2],
                 alphas[i / 2] * alpha

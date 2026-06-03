@@ -129,7 +129,7 @@ var SubmitterQuad = new Class({
     {
         this.onRunBegin(drawingContext);
 
-        var tintEffect, tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight;
+        var tintEffect, tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight, tint2TopLeft, tint2BottomLeft, tint2TopRight, tint2BottomRight;
 
         if (texturerNode.run)
         {
@@ -150,6 +150,10 @@ var SubmitterQuad = new Class({
             tintBottomLeft = tinterNode.tintBottomLeft;
             tintTopRight = tinterNode.tintTopRight;
             tintBottomRight = tinterNode.tintBottomRight;
+            tint2TopLeft = tinterNode.tint2TopLeft;
+            tint2BottomLeft = tinterNode.tint2BottomLeft;
+            tint2TopRight = tinterNode.tint2TopRight;
+            tint2BottomRight = tinterNode.tint2BottomRight;
         }
         else
         {
@@ -158,6 +162,10 @@ var SubmitterQuad = new Class({
             tintBottomLeft = getTint(gameObject.tintBottomLeft, gameObject._alphaBL);
             tintTopRight = getTint(gameObject.tintTopRight, gameObject._alphaTR);
             tintBottomRight = getTint(gameObject.tintBottomRight, gameObject._alphaBR);
+            tint2TopLeft = gameObject.tint2TopLeft;
+            tint2BottomLeft = gameObject.tint2BottomLeft;
+            tint2TopRight = gameObject.tint2TopRight;
+            tint2BottomRight = gameObject.tint2BottomRight;
         }
 
         var quad = transformerNode.quad;
@@ -194,7 +202,10 @@ var SubmitterQuad = new Class({
             tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight,
 
             // Extra render options:
-            this._renderOptions
+            this._renderOptions,
+
+            // Secondary tint colors in order TL, BL, TR, BR:
+            tint2TopLeft, tint2BottomLeft, tint2TopRight, tint2BottomRight
         );
 
         this.onRunEnd(drawingContext);

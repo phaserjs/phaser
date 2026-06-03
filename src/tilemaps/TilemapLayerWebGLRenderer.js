@@ -103,6 +103,7 @@ var TilemapLayerWebGLRenderer = function (renderer, src, drawingContext, parentM
         var frameY = tileTexCoords.y;
 
         var tint = getTint(tile.tint, alpha * tile.alpha);
+        var tint2 = tile.tint2;
 
         texturerData.frame.source.glTexture = tileset.glTexture;
         texturerData.frameWidth = frameWidth;
@@ -117,6 +118,10 @@ var TilemapLayerWebGLRenderer = function (renderer, src, drawingContext, parentM
         tinterData.tintTopRight = tint;
         tinterData.tintBottomLeft = tint;
         tinterData.tintBottomRight = tint;
+        tinterData.tint2TopLeft = tint2;
+        tinterData.tint2TopRight = tint2;
+        tinterData.tint2BottomLeft = tint2;
+        tinterData.tint2BottomRight = tint2;
 
         submitterNode.run(
             drawingContext,

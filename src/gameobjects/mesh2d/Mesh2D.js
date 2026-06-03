@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var TintModes = require('../../renderer/TintModes');
 var DefaultMesh2DNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultMesh2DNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
@@ -18,8 +19,7 @@ var Mesh2DRender = require('./Mesh2DRender');
  * It is a WebGL only Game Object.
  * It contains a number of textured triangles.
  * Each triangle is defined by a set of three vertices,
- * with a position, texture coordinate, color, and alpha;
- * and a reference to a texture.
+ * with a position and texture coordinate; and a reference to a texture.
  *
  * Because the triangles define their own texture coordinates,
  * Mesh2D does not directly use frame data from the texture.
@@ -45,7 +45,7 @@ var Mesh2DRender = require('./Mesh2DRender');
  * @constructor
  * @since 4.NEXT
  *
- * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
@@ -56,7 +56,6 @@ var Mesh2DRender = require('./Mesh2DRender');
  * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.TextureCrop
- * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
@@ -64,7 +63,7 @@ var Mesh2DRender = require('./Mesh2DRender');
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {(string|Phaser.Textures.Texture)} texture - The key, or instance of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {number[]} vertices - The vertices of the mesh. Each vertex is a sequence within the array: x, y, u, v, color, alpha. The array has a step of 6.
+ * @param {number[]} vertices - The vertices of the mesh. Each vertex is a sequence within the array: x, y, u, v. The array has a step of 4.
  * @param {number[]} indices - The indices of the mesh. Each index is a sequence: a, b, c, page. The abc values index to vertices in the vertices array. The page value is the index of the texture source in the texture atlas to use for this triangle. Typically 0. The array has a step of 4.
  * @param {boolean} [flipV=false] - Whether to flip the texture coordinates vertically. This affects texture coordinates, not the vertices. Set this property if your geometry provides texture coordinates that are opposite to GL texture expectations (which are bottom-up).
  */
@@ -72,7 +71,7 @@ var Mesh2D = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Alpha,
+        Components.AlphaSingle,
         Components.BlendMode,
         Components.ComputedSize,
         Components.Depth,
@@ -83,7 +82,6 @@ var Mesh2D = new Class({
         Components.RenderNodes,
         Components.ScrollFactor,
         Components.TextureCrop,
-        Components.Tint,
         Components.Transform,
         Components.Visible,
         Mesh2DRender
@@ -99,15 +97,13 @@ var Mesh2D = new Class({
         /**
          * The vertices of the mesh.
          * Each vertex is a sequence within the array:
-         * x, y, u, v, color, alpha.
-         * The array has a step of 6.
+         * x, y, u, v.
+         * The array has a step of 4.
          *
          * - x (offset 0): The x position of the vertex.
          * - y (offset 1): The y position of the vertex.
          * - u (offset 2): The u texture coordinate of the vertex.
          * - v (offset 3): The v texture coordinate of the vertex.
-         * - color (offset 4): The color of the vertex, as an integer RGB value.
-         * - alpha (offset 5): The alpha of the vertex, as a float value between 0 and 1.
          *
          * @name Phaser.GameObjects.Mesh2D#vertices
          * @type {number[]}
@@ -146,6 +142,10 @@ var Mesh2D = new Class({
          * @default false
          */
         this.flipV = !!flipV;
+
+        this.tintMode = TintModes.MULTIPLY;
+        this.tint = 0xffffff;
+        this.tint2 = 0x000000;
     },
 
     /**
@@ -163,6 +163,37 @@ var Mesh2D = new Class({
         {
             return DefaultMesh2DNodes;
         }
+    },
+
+    clearTint: function ()
+    {
+        this.tintMode = TintModes.MULTIPLY;
+        this.tint = 0xffffff;
+        this.tint2 = 0x000000;
+        return this;
+    },
+
+    setTint: function (color)
+    {
+        this.tint = color;
+        return this;
+    },
+
+    setTint2: function (color)
+    {
+        this.tint2 = color;
+        return this;
+    },
+
+    setTintMode: function (mode)
+    {
+        this.tintMode = mode;
+        return this;
+    },
+
+    isTinted: function ()
+    {
+        return this.tint !== 0xffffff || this.tint2 !== 0x000000 || this.tintMode !== TintModes.MULTIPLY;
     },
 
     /**

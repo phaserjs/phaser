@@ -21,7 +21,10 @@ var MakeGetTexture = require('../shaders/additionMakers/MakeGetTexture');
 var MakeOutInverseRotation = require('../shaders/additionMakers/MakeOutInverseRotation');
 var MakeRotationDatum = require('../shaders/additionMakers/MakeRotationDatum');
 var MakeSmoothPixelArt = require('../shaders/additionMakers/MakeSmoothPixelArt');
+var Utils = require('../Utils.js');
 var BatchHandler = require('./BatchHandler');
+
+var getTint = Utils.getTintAppendFloatAlpha;
 
 /**
  * @classdesc
@@ -146,7 +149,10 @@ var BatchHandlerQuad = new Class({
                     name: 'inTexDatum'
                 },
                 {
-                    name: 'inTintEffect'
+                    name: 'inTintEffect',
+                    size: 4,
+                    type: 'UNSIGNED_BYTE',
+                    normalized: true
                 },
                 {
                     name: 'inTint',
@@ -666,7 +672,8 @@ var BatchHandlerQuad = new Class({
         texWidth, texHeight,
         tintMode,
         tintTL, tintBL, tintTR, tintBR,
-        renderOptions
+        renderOptions,
+        tint2TL, tint2BL, tint2TR, tint2BR
     )
     {
         if (this.instanceCount === 0)
@@ -685,6 +692,23 @@ var BatchHandlerQuad = new Class({
         // Process textures and get relevant data.
         var textureDatum = this.batchTextures(glTexture, renderOptions);
 
+        // Pack tint mode with secondary tint colors.
+        // Assign default secondary tint colors if not provided.
+        if (tint2TL === undefined)
+        {
+            tint2TL = tintMode << 24;
+            tint2BL = tint2TL;
+            tint2TR = tint2TL;
+            tint2BR = tint2TL;
+        }
+        else
+        {
+            tint2TL = getTint(tint2TL, tintMode / 255);
+            tint2BL = getTint(tint2BL, tintMode / 255);
+            tint2TR = getTint(tint2TR, tintMode / 255);
+            tint2BR = getTint(tint2BR, tintMode / 255);
+        }
+
         // Update the vertex buffer.
         var vertexOffset32 = this.instanceCount * this.floatsPerInstance;
         var vertexBuffer = this.vertexBufferLayout.buffer;
@@ -697,7 +721,7 @@ var BatchHandlerQuad = new Class({
         vertexViewF32[vertexOffset32++] = texX;
         vertexViewF32[vertexOffset32++] = texY + texHeight;
         vertexViewF32[vertexOffset32++] = textureDatum;
-        vertexViewF32[vertexOffset32++] = tintMode;
+        vertexViewU32[vertexOffset32++] = tint2BL;
         vertexViewU32[vertexOffset32++] = tintBL;
 
         // Top-left
@@ -706,7 +730,7 @@ var BatchHandlerQuad = new Class({
         vertexViewF32[vertexOffset32++] = texX;
         vertexViewF32[vertexOffset32++] = texY;
         vertexViewF32[vertexOffset32++] = textureDatum;
-        vertexViewF32[vertexOffset32++] = tintMode;
+        vertexViewU32[vertexOffset32++] = tint2TL;
         vertexViewU32[vertexOffset32++] = tintTL;
 
         // Bottom-right
@@ -715,7 +739,7 @@ var BatchHandlerQuad = new Class({
         vertexViewF32[vertexOffset32++] = texX + texWidth;
         vertexViewF32[vertexOffset32++] = texY + texHeight;
         vertexViewF32[vertexOffset32++] = textureDatum;
-        vertexViewF32[vertexOffset32++] = tintMode;
+        vertexViewU32[vertexOffset32++] = tint2BR;
         vertexViewU32[vertexOffset32++] = tintBR;
 
         // Top-right
@@ -724,7 +748,7 @@ var BatchHandlerQuad = new Class({
         vertexViewF32[vertexOffset32++] = texX + texWidth;
         vertexViewF32[vertexOffset32++] = texY;
         vertexViewF32[vertexOffset32++] = textureDatum;
-        vertexViewF32[vertexOffset32++] = tintMode;
+        vertexViewU32[vertexOffset32++] = tint2TR;
         vertexViewU32[vertexOffset32++] = tintTR;
 
         // Increment the instance count.
@@ -793,7 +817,8 @@ var BatchHandlerQuad = new Class({
         u3, v3,
         tintMode,
         tintTL, tintBL, tintTR, tintBR,
-        renderOptions
+        renderOptions,
+        tint2TL, tint2BL, tint2TR, tint2BR
     )
     {
         if (this.instanceCount === 0)
@@ -812,6 +837,23 @@ var BatchHandlerQuad = new Class({
         // Process textures and get relevant data.
         var textureDatum = this.batchTextures(glTexture, renderOptions);
 
+        // Pack tint mode with secondary tint colors.
+        // Assign default secondary tint colors if not provided.
+        if (tint2TL === undefined)
+        {
+            tint2TL = tintMode << 24;
+            tint2BL = tint2TL;
+            tint2TR = tint2TL;
+            tint2BR = tint2TL;
+        }
+        else
+        {
+            tint2TL = getTint(tint2TL, tintMode / 255);
+            tint2BL = getTint(tint2BL, tintMode / 255);
+            tint2TR = getTint(tint2TR, tintMode / 255);
+            tint2BR = getTint(tint2BR, tintMode / 255);
+        }
+
         // Update the vertex buffer.
         var vertexOffset32 = this.instanceCount * this.floatsPerInstance;
         var vertexBuffer = this.vertexBufferLayout.buffer;
@@ -824,7 +866,7 @@ var BatchHandlerQuad = new Class({
         vertexViewF32[vertexOffset32++] = u1;
         vertexViewF32[vertexOffset32++] = v1;
         vertexViewF32[vertexOffset32++] = textureDatum;
-        vertexViewF32[vertexOffset32++] = tintMode;
+        vertexViewU32[vertexOffset32++] = tint2BL;
         vertexViewU32[vertexOffset32++] = tintBL;
 
         // Top-left
@@ -833,7 +875,7 @@ var BatchHandlerQuad = new Class({
         vertexViewF32[vertexOffset32++] = u0;
         vertexViewF32[vertexOffset32++] = v0;
         vertexViewF32[vertexOffset32++] = textureDatum;
-        vertexViewF32[vertexOffset32++] = tintMode;
+        vertexViewU32[vertexOffset32++] = tint2TL;
         vertexViewU32[vertexOffset32++] = tintTL;
 
         // Bottom-right
@@ -842,7 +884,7 @@ var BatchHandlerQuad = new Class({
         vertexViewF32[vertexOffset32++] = u3;
         vertexViewF32[vertexOffset32++] = v3;
         vertexViewF32[vertexOffset32++] = textureDatum;
-        vertexViewF32[vertexOffset32++] = tintMode;
+        vertexViewU32[vertexOffset32++] = tint2BR;
         vertexViewU32[vertexOffset32++] = tintBR;
 
         // Top-right
@@ -851,7 +893,7 @@ var BatchHandlerQuad = new Class({
         vertexViewF32[vertexOffset32++] = u2;
         vertexViewF32[vertexOffset32++] = v2;
         vertexViewF32[vertexOffset32++] = textureDatum;
-        vertexViewF32[vertexOffset32++] = tintMode;
+        vertexViewU32[vertexOffset32++] = tint2TR;
         vertexViewU32[vertexOffset32++] = tintTR;
 
         // Increment the instance count.

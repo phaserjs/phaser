@@ -294,33 +294,27 @@ var SubmitterMeshToQuad = new Class({
         normalMapRotation
     )
     {
-        var xA = gameObject.vertices[a * 6];
-        var yA = gameObject.vertices[a * 6 + 1];
-        var uA = gameObject.vertices[a * 6 + 2];
-        var vA = gameObject.vertices[a * 6 + 3];
-        var colorA = gameObject.vertices[a * 6 + 4];
-        var alphaA = gameObject.vertices[a * 6 + 5];
+        var step = 4;
 
-        var xB = gameObject.vertices[b * 6];
-        var yB = gameObject.vertices[b * 6 + 1];
-        var uB = gameObject.vertices[b * 6 + 2];
-        var vB = gameObject.vertices[b * 6 + 3];
-        var colorB = gameObject.vertices[b * 6 + 4];
-        var alphaB = gameObject.vertices[b * 6 + 5];
+        var xA = gameObject.vertices[a * step];
+        var yA = gameObject.vertices[a * step + 1];
+        var uA = gameObject.vertices[a * step + 2];
+        var vA = gameObject.vertices[a * step + 3];
 
-        var xC = gameObject.vertices[c * 6];
-        var yC = gameObject.vertices[c * 6 + 1];
-        var uC = gameObject.vertices[c * 6 + 2];
-        var vC = gameObject.vertices[c * 6 + 3];
-        var colorC = gameObject.vertices[c * 6 + 4];
-        var alphaC = gameObject.vertices[c * 6 + 5];
+        var xB = gameObject.vertices[b * step];
+        var yB = gameObject.vertices[b * step + 1];
+        var uB = gameObject.vertices[b * step + 2];
+        var vB = gameObject.vertices[b * step + 3];
 
-        var xD = gameObject.vertices[d * 6];
-        var yD = gameObject.vertices[d * 6 + 1];
-        var uD = gameObject.vertices[d * 6 + 2];
-        var vD = gameObject.vertices[d * 6 + 3];
-        var colorD = gameObject.vertices[d * 6 + 4];
-        var alphaD = gameObject.vertices[d * 6 + 5];
+        var xC = gameObject.vertices[c * step];
+        var yC = gameObject.vertices[c * step + 1];
+        var uC = gameObject.vertices[c * step + 2];
+        var vC = gameObject.vertices[c * step + 3];
+
+        var xD = gameObject.vertices[d * step];
+        var yD = gameObject.vertices[d * step + 1];
+        var uD = gameObject.vertices[d * step + 2];
+        var vD = gameObject.vertices[d * step + 3];
 
         if (gameObject.flipV)
         {
@@ -331,10 +325,8 @@ var SubmitterMeshToQuad = new Class({
         }
 
         var tintEffect = gameObject.tintMode;
-        var tintTopLeft = getTint(colorA, alphaA);
-        var tintBottomLeft = getTint(colorB, alphaB);
-        var tintTopRight = getTint(colorC, alphaC);
-        var tintBottomRight = getTint(colorD, alphaD);
+        var tint = getTint(gameObject.tint, gameObject.alpha);
+        var tint2 = gameObject.tint2;
 
         _tempPoint.set(xA, yA);
         transformerNode.run(drawingContext, gameObject, parentMatrix, _tempPoint);
@@ -371,10 +363,13 @@ var SubmitterMeshToQuad = new Class({
             tintEffect,
 
             // Tint colors in order TL, BL, TR, BR:
-            tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight,
+            tint, tint, tint, tint,
 
             // Extra render options:
-            this._renderOptions
+            this._renderOptions,
+
+            // Secondary tint colors in order TL, BL, TR, BR:
+            tint2, tint2, tint2, tint2,
         );
     }
 });

@@ -35,7 +35,7 @@ module.exports = [
     'attribute vec4 inOriginAndTintModeAndCreationTime;',
     'attribute vec2 inScrollFactor;',
     'varying vec2 outTexCoord;',
-    'varying float outTintEffect;',
+    'varying vec4 outTintEffect;',
     'varying vec4 outTint;',
     '#pragma phaserTemplate(outVariables)',
     '#pragma phaserTemplate(vertexHeader)',
@@ -551,7 +551,7 @@ module.exports = [
     '    gl_Position = uProjectionMatrix * vec4(position.xy, 1.0, 1.0);',
     '    outTexCoord = vec2(u, 1.0 - v);',
     '    outTint = mix(vec4(1.0, 1.0, 1.0, tint.a), tint, tintBlend);',
-    '    outTintEffect = tintMode;',
+    '    outTintEffect = vec4(0.0, 0.0, 0.0, tintMode * 255.0); // Denormalize tint mode to an integer.',
     '    #pragma phaserTemplate(vertexProcess)',
     '}',
 ].join('\n');

@@ -80,7 +80,7 @@ var SubmitterTile = new Class({
     {
         this.onRunBegin(drawingContext);
 
-        var tintEffect, tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight;
+        var tintEffect, tintTopLeft, tintBottomLeft, tintTopRight, tintBottomRight, tint2TopLeft, tint2BottomLeft, tint2TopRight, tint2BottomRight;
 
         if (texturerNode.run)
         {
@@ -101,6 +101,10 @@ var SubmitterTile = new Class({
             tintBottomLeft = tinterNode.tintBottomLeft;
             tintTopRight = tinterNode.tintTopRight;
             tintBottomRight = tinterNode.tintBottomRight;
+            tint2TopLeft = tinterNode.tint2TopLeft;
+            tint2BottomLeft = tinterNode.tint2BottomLeft;
+            tint2TopRight = tinterNode.tint2TopRight;
+            tint2BottomRight = tinterNode.tint2BottomRight;
         }
         else
         {
@@ -110,6 +114,11 @@ var SubmitterTile = new Class({
             tintBottomLeft = tint;
             tintTopRight = tint;
             tintBottomRight = tint;
+            var tint2 = 0x000000;
+            tint2TopLeft = tint2;
+            tint2BottomLeft = tint2;
+            tint2TopRight = tint2;
+            tint2BottomRight = tint2;
         }
 
         var frame = texturerNode.frame;
@@ -153,7 +162,10 @@ var SubmitterTile = new Class({
             u0, v1,
             u0, v0,
             u1, v1,
-            u1, v0
+            u1, v0,
+
+            // Secondary tint colors in order TL, BL, TR, BR:
+            tint2TopLeft, tint2BottomLeft, tint2TopRight, tint2BottomRight
         );
 
         this.onRunEnd(drawingContext);

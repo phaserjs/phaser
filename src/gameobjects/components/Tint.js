@@ -66,6 +66,58 @@ var Tint = {
     tintBottomRight: 0xffffff,
 
     /**
+     * The secondary tint value being applied to the top-left vertex of the Game Object.
+     * Used in two-color tint modes.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tint2TopLeft
+     * @type {number}
+     * @default 0x000000
+     * @since 4.NEXT
+     */
+    tint2TopLeft: 0x000000,
+
+    /**
+     * The secondary tint value being applied to the top-right vertex of the Game Object.
+     * Used in two-color tint modes.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tint2TopRight
+     * @type {number}
+     * @default 0x000000
+     * @since 4.NEXT
+     */
+    tint2TopRight: 0x000000,
+
+    /**
+     * The secondary tint value being applied to the bottom-left vertex of the Game Object.
+     * Used in two-color tint modes.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tint2BottomLeft
+     * @type {number}
+     * @default 0x000000
+     * @since 4.NEXT
+     */
+    tint2BottomLeft: 0x000000,
+
+    /**
+     * The secondary tint value being applied to the bottom-right vertex of the Game Object.
+     * Used in two-color tint modes.
+     * This value is interpolated from the corner to the center of the Game Object.
+     * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
+     *
+     * @name Phaser.GameObjects.Components.Tint#tint2BottomRight
+     * @type {number}
+     * @default 0x000000
+     * @since 4.NEXT
+    */
+    tint2BottomRight: 0x000000,
+
+    /**
      * The tint mode to use when applying the tint to the texture.
      *
      * Available modes are:
@@ -75,6 +127,7 @@ var Tint = {
      * - Phaser.TintModes.SCREEN
      * - Phaser.TintModes.OVERLAY
      * - Phaser.TintModes.HARD_LIGHT
+     * - Phaser.TintModes.MULTIPLY_TWO
      *
      * Note that in Phaser 3, tint mode and color were set at the same time.
      * In Phaser 4 they are separate settings.
@@ -101,6 +154,7 @@ var Tint = {
     clearTint: function ()
     {
         this.setTint(0xffffff);
+        this.setTint2(0x000000);
         this.setTintMode(TintModes.MULTIPLY);
 
         return this;
@@ -152,6 +206,40 @@ var Tint = {
         this.tintTopRight = topRight;
         this.tintBottomLeft = bottomLeft;
         this.tintBottomRight = bottomRight;
+
+        return this;
+    },
+
+    /**
+     * Sets the secondary tint color on this Game Object.
+     * This is used in two-color tint modes.
+     * See {@link Phaser.GameObjects.Components.Tint#setTint} for more information.
+     *
+     * @method Phaser.GameObjects.Components.Tint#setTint2
+     * @webglOnly
+     * @since 4.NEXT
+     *
+     * @param {number} [topLeft=0xffffff] - The secondary tint being applied to the top-left of the Game Object. If no other values are given this value is applied evenly, tinting the whole Game Object.
+     * @param {number} [topRight] - The secondary tint being applied to the top-right of the Game Object.
+     * @param {number} [bottomLeft] - The secondary tint being applied to the bottom-left of the Game Object.
+     * @param {number} [bottomRight] - The secondary tint being applied to the bottom-right of the Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTint2: function (topLeft, topRight, bottomLeft, bottomRight)
+    {
+        if (topLeft === undefined) { topLeft = 0x000000; }
+        if (topRight === undefined)
+        {
+            topRight = topLeft;
+            bottomLeft = topLeft;
+            bottomRight = topLeft;
+        }
+
+        this.tint2TopLeft = topLeft;
+        this.tint2TopRight = topRight;
+        this.tint2BottomLeft = bottomLeft;
+        this.tint2BottomRight = bottomRight;
 
         return this;
     },
@@ -219,9 +307,9 @@ var Tint = {
      * Does this Game Object have a tint applied?
      *
      * Returns `true` if any of the four corner tint values differ from 0xffffff,
-     * or if the `tintMode` property is set to anything other than `MULTIPLY`.
-     * Returns `false` when all four tint values are 0xffffff and the tint mode
-     * is `MULTIPLY`, which is the default untinted state.
+     * or if the `tintMode` property is set to anything other than `MULTIPLY`,
+     * or if any of the four secondary corner tint values differ from 0x000000.
+     * Returns `false` in the default untinted state.
      *
      * @name Phaser.GameObjects.Components.Tint#isTinted
      * @type {boolean}
@@ -234,13 +322,18 @@ var Tint = {
         get: function ()
         {
             var white = 0xffffff;
+            var black = 0x000000;
 
             return (
                 this.tintMode !== TintModes.MULTIPLY ||
                 this.tintTopLeft !== white ||
                 this.tintTopRight !== white ||
                 this.tintBottomLeft !== white ||
-                this.tintBottomRight !== white
+                this.tintBottomRight !== white ||
+                this.tint2TopLeft !== black ||
+                this.tint2TopRight !== black ||
+                this.tint2BottomLeft !== black ||
+                this.tint2BottomRight !== black
             );
         }
 

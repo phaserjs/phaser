@@ -27,6 +27,7 @@ sprite.setTintMode(Phaser.TintModes.FILL);           // sets mode separately
 | `SCREEN` | 4 | Brightens dark areas of the texture |
 | `OVERLAY` | 5 | Brightens lights, darkens darks |
 | `HARD_LIGHT` | 6 | Like overlay with tint/texture swapped |
+| `MULTIPLY_TWO` | 7 | Like multiply, but with an extra tint color for dark regions |
 
 **Source**: `src/renderer/TintModes.js`
 
