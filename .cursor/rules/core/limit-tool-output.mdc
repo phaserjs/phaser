@@ -1,0 +1,16 @@
+---
+description: Cap tool output size to keep context lean
+alwaysApply: true
+---
+
+When using search and shell tools:
+
+- Prefer Grep `files_with_matches` or `count` when you only need paths or counts, not full line content.
+- Grep `content` mode always requires `head_limit` (enforced by hook); paginate with `offset` if you need more.
+- Scope Glob patterns with a directory prefix (e.g. `src/**/*.ts`); unscoped `**/*` patterns are blocked.
+- Use Read `offset` and `limit` for large files — never read an entire large file when a section suffices.
+- Avoid shell commands that dump unbounded output (`find` without scope, `cat` on large logs, recursive listing of big trees).
+- When tool output is large, summarize what matters for the task instead of quoting it verbatim in your response.
+- Stop collecting more data once you have enough to act — do not run duplicate searches with broader patterns.
+- For web content, use WebSearch (not WebFetch — blocked by the efficiency hook to save context tokens); summarize key points — do not paste full page bodies into the thread.
+- Hooks may deny unbounded Read, Grep, Shell, or WebFetch calls — use capped built-in tools instead of retrying the same broad query.

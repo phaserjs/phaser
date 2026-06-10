@@ -1,0 +1,14 @@
+---
+description: Milestone scope, vertical slices, and production discipline for game projects
+alwaysApply: true
+---
+
+When planning or executing game work:
+
+1. **Milestone definition** — each milestone has a player-visible outcome, a target vertical slice, and a cut list of deferred work.
+2. **Vertical slice first** — prove core loop fun before breadth (more levels, content, or systems).
+3. **Feature freeze** — stop adding scope before milestone sign-off; only bug fixes and agreed polish enter the final week.
+4. **Cut list** — when over scope, cut features explicitly (document what was removed and why), do not silently half-implement.
+5. **Definition of done** — a milestone is done when playtest passes, known blockers are triaged, and a build runs on the target platform.
+6. **One authoritative backlog** — track milestone tasks in one place (issues, design doc, or board); avoid duplicate todo lists.
+7. **Risk early** — flag save/load, multiplayer, progression, or platform-cert dependencies at milestone start, not at ship.

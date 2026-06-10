@@ -1,0 +1,19 @@
+---
+description: Cross-engine game development conventions
+alwaysApply: true
+---
+
+When working on game code or assets:
+
+1. Keep update/render/input loops explicit — avoid hidden per-frame work in getters or property accessors.
+2. Name assets consistently (prefix by type: `tex_`, `sfx_`, `ui_`, or follow repo convention).
+3. Prefer data-driven tuning (constants, resources, config) over magic numbers in logic.
+4. Note playtest observations when changing feel, balance, or difficulty.
+5. Profile before optimizing hot paths; measure frame time and allocations.
+6. Keep scenes/nodes organized — one responsibility per node when practical.
+7. Give immediate player feedback for actions (visual, audio, UI) — silent failures confuse playtesters.
+8. Separate simulation logic from rendering and input when practical — aids testing and determinism.
+9. Treat save/load, pause, and menu state as first-class systems — regressions here block shipping.
+10. Document reproduction steps for gameplay bugs (seed, inputs, scene) before fixing feel issues.
+11. Prefer engine-native lifecycle hooks (`_process`, `Update`, `Tick`) over ad-hoc timers for per-frame work.
+12. Keep platform and build-target differences behind config or feature flags, not scattered conditionals.

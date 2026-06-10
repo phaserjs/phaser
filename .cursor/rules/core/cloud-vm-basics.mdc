@@ -1,0 +1,13 @@
+---
+description: Cloud VM constraints for Cursor Cloud Agents
+alwaysApply: true
+---
+
+When running as a Cursor Cloud Agent:
+
+1. **Secrets** — Use dashboard Secrets (never commit API keys). `${env:VAR}` is unreliable for dashboard MCP config; use literal values in integration UI when required.
+2. **Project context** — Read `AGENTS.md` (especially the Cloud-specific section) before install, test, or debug steps.
+3. **Install** — `.cursor/environment.json` `install` runs on VM provision; it must be idempotent. If setup fails, run `verify-cloud-readiness.sh` from a Cursor_base checkout when available.
+4. **Long-running processes** — Use tmux-backed shell sessions for dev servers, watchers, and background jobs that must survive across commands.
+5. **Network** — Document URLs to whitelist in `AGENTS.md` when external APIs or auth flows are required.
+6. **Integrations** — GitHub and Linear use built-in Cursor integrations for the workspace repo. Use `GITHUB_ACCESS_TOKEN` and the `github-cli` skill only as a backup for other repos or integration gaps (see `cloud/secrets-guide.md`). Optional MCP is for external systems only (see `mcp/recommended-servers.md`).

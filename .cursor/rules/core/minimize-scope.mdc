@@ -1,0 +1,12 @@
+---
+description: Keep code changes focused and minimal
+alwaysApply: true
+---
+
+When writing code:
+
+1. Minimize scope — Use the simplest correct diff. Do not add or change unrelated or unrequested code.
+2. Avoid over-engineering — Do not over-abstract the code or add excessive error handling for edge cases that are extremely unlikely.
+3. Use existing conventions — Read the surrounding code before writing. Match naming, types, abstractions, import style, and documentation level.
+4. Comments — Good code should mostly be self-explanatory. Only add comments that explain non-obvious business logic or deep technical details.
+5. Useful tests only — Only add tests if requested or they add meaningful coverage of real behavior. Do not add tests that trivially assert the obvious.

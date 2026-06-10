@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": ".cursor/hooks/scripts/block-dangerous-shell.sh"
+      }
+    ],
+    "preToolUse": [
+      {
+        "command": ".cursor/hooks/scripts/enforce-efficient-tools.sh",
+        "matcher": "Shell|Read|Grep|Glob|WebFetch|mcp_web_fetch"
+      }
+    ]
+  }
+}

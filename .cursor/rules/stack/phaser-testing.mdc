@@ -1,0 +1,14 @@
+---
+description: Phaser test conventions
+alwaysApply: false
+globs: "**/*.{test,spec}.{ts,js}"
+---
+
+When writing or editing Phaser tests:
+
+1. Name tests after behavior: `test_player_dies_at_zero_health`, not `test_works`.
+2. Extract pure game logic for unit tests; mock Phaser APIs for scene tests.
+3. Reset scene registry, timers, and global stubs between tests.
+4. For E2E, drive the game through player-visible flows — not internal scene private fields.
+5. When fixing a bug, add a regression test that fails without the fix.
+6. Run tests via the project runner (`npm test`, `pnpm test`) — not ad-hoc node invocations.

@@ -1,0 +1,14 @@
+---
+description: Versioning, build channels, and release checklist for game milestones
+alwaysApply: false
+---
+
+When preparing a milestone build or release:
+
+1. **Version semantics** — use the repo's scheme (`0.x` prototype, `1.0` first public, patch bumps for hotfixes). Document the bump in changelog or release notes.
+2. **Build channels** — keep dev, staging, and release builds distinct; do not ship a debug or cheat-enabled build to players.
+3. **Changelog** — list player-visible changes, known issues, and save-format or compatibility warnings.
+4. **Smoke test** — fresh install, first-run tutorial, save/load, main menu → gameplay → quit on the target platform.
+5. **Asset integrity** — no missing scenes, broken references, or placeholder assets in release unless intentionally documented.
+6. **Engine export** — defer preset names and platform export steps to the stack child skill (e.g. `godot`); parent checklist covers cross-engine readiness only.
+7. **Rollback plan** — note the previous good build tag or branch so a bad release can be reverted quickly.

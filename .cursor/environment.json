@@ -1,0 +1,5 @@
+{
+  "install": "chmod +x .cursor/hooks/scripts/*.sh 2>/dev/null || true && npm ci",
+  "build": "npm run build",
+  "start": ""
+}

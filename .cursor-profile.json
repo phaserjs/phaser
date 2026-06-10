@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "layers": {
+    "global": true,
+    "parent": "game-development",
+    "child": "phaser"
+  }
+}

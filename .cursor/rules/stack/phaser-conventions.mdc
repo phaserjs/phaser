@@ -1,0 +1,15 @@
+---
+description: Phaser scene and game object conventions
+alwaysApply: false
+globs: "**/*.{ts,js}"
+---
+
+When working in Phaser projects:
+
+1. Keep scene classes focused — `preload` loads assets, `create` sets up objects, `update` handles per-frame logic only when needed.
+2. Use typed scene classes (`extends Phaser.Scene`) and explicit `Scene` config keys.
+3. Prefer scene events or a small game-state module over mutable globals.
+4. Group related sprites with `Phaser.GameObjects.Group` or containers.
+5. Register physics bodies in `create`; tune Arcade/Matter settings in scene or game config.
+6. Clean up timers, tweens, and custom listeners in `shutdown` when scenes are restarted.
+7. Match the repo's module style (ESM imports, path aliases) and bundler conventions.

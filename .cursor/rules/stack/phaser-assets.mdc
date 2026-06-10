@@ -1,0 +1,14 @@
+---
+description: Phaser asset loading and path conventions
+alwaysApply: false
+globs: "**/*.{ts,js,json}"
+---
+
+When loading or organizing Phaser assets:
+
+1. Define asset keys in one constants module or manifest — avoid string literals scattered across scenes.
+2. Load all assets for a scene in `preload`; do not lazy-load mid-frame without a loading state.
+3. Use texture atlases and audio sprites for many small files; keep individual images for hero assets.
+4. Place static files under the bundler public directory (`public/`, `static/`) per repo layout.
+5. Use paths that work in both dev server and production build — verify with `npm run preview`.
+6. Commit source art; do not commit generated build output unless the repo documents that pattern.

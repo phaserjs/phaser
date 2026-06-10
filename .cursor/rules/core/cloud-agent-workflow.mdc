@@ -1,0 +1,20 @@
+---
+description: Git workflow for cloud agents completing tasks
+alwaysApply: true
+---
+
+When completing tasks as a cloud agent:
+
+1. Create feature branches off the base branch (typically `main`) for your work.
+2. Commit with clear, descriptive commit messages as you make progress.
+3. Push your branch before testing: `git push -u origin <branch-name>`.
+4. Create or update a pull request at the end of every turn where you made changes.
+5. If push fails due to network errors, retry up to 4 times with exponential backoff (4s, 8s, 16s, 32s).
+6. Run commands and use tools to investigate and solve problems yourself — do not give up after a single failure.
+7. Mark todo items done as they are completed; do not leave todos marked in_progress if they are actually completed.
+8. Read `AGENTS.md` Cloud-specific instructions before running install, test, or service commands.
+9. When setup or environment issues block progress, run `verify-cloud-readiness.sh` (from Cursor_base) or follow the `verify-cloud-run` skill.
+10. Before marking substantial work complete, consider invoking `code-reviewer` or `verifier` subagents when the change warrants extra validation.
+11. When expanding profile layers in parallel, use per-profile `CHANGELOG.md` subsections (e.g. `### Added — python child`) or serialize merges through `main` to avoid `[Unreleased]` conflicts.
+12. For layer profile expansions, follow `expand-layer-profile` — bump the layer manifest, add `dogfood-test.sh` assertions, and run `./scripts/validate.sh` before opening a PR.
+13. When a Linear or issue tracker payload is in the thread, extract the task ID and acceptance criteria once — do not re-quote full `<LINEAR_ISSUE>` blocks or long XML/JSON issue bodies in responses.

@@ -1,0 +1,21 @@
+---
+description: Cost-efficient codebase exploration and tool usage
+alwaysApply: true
+---
+
+When exploring codebases or gathering information:
+
+- Prefer targeted Grep and Read over broad directory listing or exhaustive search.
+- Grep `content` mode requires `head_limit`; use `files_with_matches` for paths only. Scope Glob to a directory prefix.
+- Use parallel tool calls when operations are independent (e.g. reading multiple files at once).
+- Do not re-read files you already have in context unless they may have changed.
+- Use the Task tool with subagent_type `lightweight-explorer` for narrow multi-file questions when available; if Task rejects that subagent type on cloud VMs, use `explore` with thoroughness `quick` instead.
+- Use `explore` for broad surveys; for single known paths or symbols, search directly — do not delegate.
+- Stop searching once you have enough context to act — avoid redundant passes over the same code.
+- Prefer reading the smallest relevant file section (offset/limit) for large files.
+- When diagnosing failures, read error output and stack traces before exploring unrelated areas.
+- Prefer StrReplace for targeted edits; avoid full-file rewrites that inflate diff context in the thread.
+- Before fetching more data, note what files and facts are already established in the thread — do not re-read or re-search unless files may have changed.
+- From large tool output, extract only lines or facts needed for the task; summarize in responses instead of pasting full output.
+- In long threads, cite prior conclusions briefly instead of re-explaining; do not restate user rules or skill text back to the user.
+- When Task rejects `lightweight-explorer`, prefer direct Grep/Read over `explore` — subagent overhead often costs more tokens than a targeted search.

@@ -1,0 +1,17 @@
+---
+description: Communication standards for agent responses
+alwaysApply: true
+---
+
+When communicating with the user:
+
+- Use code citation blocks to reference existing code: ```startLine:endLine:filepath format. Code citations are strictly better than describing code in prose.
+- Code citation fences (the opening ```) MUST be on their own line, never prefixed by list markers or other text on the same line.
+- Inside fenced code blocks and inline backticked text, content is shown literally: do not use HTML character references.
+- In code citations, skip large irrelevant chunks using `...` or pseudocode comments.
+- In non-citation code blocks meant for copy-pasting, write full commands with no omissions.
+- Users prefer markdown links for ease of navigation when referencing web content.
+- Write like an excellent technical blog post — precise, well-structured, and clear, in complete sentences.
+- Keep final responses proportional to task complexity.
+- Do not overuse bolding or backticks for decoration.
+- Avoid engagement baiting at the end of responses.

@@ -1,0 +1,15 @@
+---
+description: Cross-engine game architecture and state ownership
+alwaysApply: true
+---
+
+When designing or changing game systems:
+
+1. **State ownership** — each piece of mutable game state has one authoritative owner (autoload, manager, or component). Avoid duplicate sources of truth.
+2. **Systems over god objects** — split gameplay into focused systems (input, combat, inventory, audio) rather than one mega-controller script.
+3. **Scene flow** — keep transitions explicit (main menu → level select → gameplay). Document which systems persist across scenes.
+4. **Events over polling** — prefer signals, delegates, or message buses for cross-system communication; avoid every system reading every other system's state each frame.
+5. **Data vs logic** — store tunable values in resources, scriptable objects, or data files; keep scripts for behavior, not spreadsheets of constants.
+6. **Dependency direction** — core simulation should not depend on UI or VFX layers. UI reads game state; it does not own it.
+7. **Initialization order** — document or enforce setup order when systems depend on each other (`_ready`, `Awake`, service locator registration).
+8. **Feature flags** — gate unfinished mechanics behind debug toggles or cheats so playtests can focus on the current slice.
