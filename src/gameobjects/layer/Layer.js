@@ -154,12 +154,6 @@ var Layer = new Class({
             this.add(children);
         }
 
-        // Initialize RenderSteps mixin.
-        if (this.addRenderStep)
-        {
-            this.addRenderStep(this.renderWebGL);
-        }
-
         //  Tell the Scene to re-sort the children
         scene.sys.queueDepthSort();
     },
