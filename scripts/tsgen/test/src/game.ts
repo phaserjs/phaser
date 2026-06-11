@@ -499,7 +499,10 @@ class BootScene extends Phaser.Scene {
         // ---------------------------------------------------------------
 
         let between: number = Phaser.Math.Between(1, 100);
-        let clamp: number = Phaser.Math.Clamp(150, 0, 100);
+        let clampRef: typeof Phaser.Math.Clamp = Phaser.Math.Clamp;
+        let clampedValue: number = Phaser.Math.Clamp(120, 0, 100);
+        let wrapRef: typeof Phaser.Math.Wrap = Phaser.Math.Wrap;
+        let wrappedValue: number = Phaser.Math.Wrap(-2, 0, 10);
         let distance: number = Phaser.Math.Distance.Between(0, 0, 100, 100);
         let chebyshev: number = Phaser.Math.Distance.Chebyshev(0, 0, 100, 100);
         let snake: number = Phaser.Math.Distance.Snake(0, 0, 100, 100);
@@ -513,6 +516,7 @@ class BootScene extends Phaser.Scene {
         let snap: number = Phaser.Math.Snap.To(55, 10);
         let snapFloor: number = Phaser.Math.Snap.Floor(55, 10);
         let snapCeil: number = Phaser.Math.Snap.Ceil(55, 10);
+        let fuzzyEqualRef: typeof Phaser.Math.Fuzzy.Equal = Phaser.Math.Fuzzy.Equal;
         let fuzzyEqual: boolean = Phaser.Math.Fuzzy.Equal(1.001, 1, 0.01);
         let fuzzyGreater: boolean = Phaser.Math.Fuzzy.GreaterThan(1.001, 1, 0.01);
         let fuzzyLess: boolean = Phaser.Math.Fuzzy.LessThan(0.999, 1, 0.01);
@@ -521,6 +525,7 @@ class BootScene extends Phaser.Scene {
         let piOver2: number = Phaser.Math.PI_OVER_2;
 
         // Vector2
+        let vector2Ref: typeof Phaser.Math.Vector2 = Phaser.Math.Vector2;
         let v1 = new Phaser.Math.Vector2(10, 20);
         let v2 = new Phaser.Math.Vector2(30, 40);
         v1.add(v2);
@@ -588,7 +593,11 @@ class BootScene extends Phaser.Scene {
         let circleRandom = geomCircle.getRandomPoint();
 
         // Rectangle
+        let rectangleRef: typeof Phaser.Geom.Rectangle = Phaser.Geom.Rectangle;
         let geomRect = new Phaser.Geom.Rectangle(0, 0, 200, 100);
+        let geomRectFromXY = Phaser.Geom.Rectangle.FromXY(0, 0, 200, 100);
+        let rectangleContainsRef: typeof Phaser.Geom.Rectangle.Contains = Phaser.Geom.Rectangle.Contains;
+        let rectContainsStatic: boolean = Phaser.Geom.Rectangle.Contains(geomRect, 10, 10);
         let rectArea: number = Phaser.Geom.Rectangle.Area(geomRect);
         let rectPerimeter: number = Phaser.Geom.Rectangle.Perimeter(geomRect);
         let rectContains: boolean = geomRect.contains(50, 50);
@@ -761,6 +770,9 @@ class BootScene extends Phaser.Scene {
         pq.add(sprite);
         pq.remove(sprite);
         pq.update();
+
+        let mapRef: typeof Phaser.Structs.Map = Phaser.Structs.Map;
+        let structMap = new Phaser.Structs.Map();
 
         // ---------------------------------------------------------------
         // Utils

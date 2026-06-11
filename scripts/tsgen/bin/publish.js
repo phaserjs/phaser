@@ -33,10 +33,16 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.isMigratedCanonicalSymbol = isMigratedCanonicalSymbol;
 exports.publish = publish;
 const fs = __importStar(require("fs-extra"));
 const path = __importStar(require("path"));
 const Parser_1 = require("./Parser");
+const MigratedOverlay_1 = require("./MigratedOverlay");
+let migratedCanonicalSymbolLookup = null;
+function isMigratedCanonicalSymbol(symbol) {
+    return migratedCanonicalSymbolLookup !== null && migratedCanonicalSymbolLookup.has(symbol);
+}
 function publish(data, opts) {
     // remove undocumented stuff.
     data({ undocumented: true }).remove();
@@ -51,9 +57,19 @@ function publish(data, opts) {
     if (!fs.existsSync(opts.destination)) {
         fs.mkdirSync(opts.destination);
     }
-    var str = JSON.stringify(data().get(), null, 4);
+    const docs = data().get();
+    var str = JSON.stringify(docs, null, 4);
     fs.writeFileSync(path.join(opts.destination, 'phaser.json'), str);
-    var out = new Parser_1.Parser(data().get()).emit();
+    const manifest = (0, MigratedOverlay_1.discoverMigratedModules)();
+    const canonicalSymbols = (0, MigratedOverlay_1.flattenCanonicalSymbols)(manifest);
+    migratedCanonicalSymbolLookup = new Set(canonicalSymbols);
+    (0, MigratedOverlay_1.reportMigrationProgress)(canonicalSymbols.length);
+    const syntheticDoclets = (0, MigratedOverlay_1.buildSyntheticDoclets)(manifest, docs);
+    docs.push(...syntheticDoclets);
+    var out = new Parser_1.Parser(docs).emit();
+    out = (0, MigratedOverlay_1.applyMigratedAuthorityOverlay)(out, manifest);
+    out = (0, MigratedOverlay_1.normalizeDeclarationOutput)(out);
+    (0, MigratedOverlay_1.validateNoSyntheticLeak)(out, canonicalSymbols);
     fs.writeFileSync(path.join(opts.destination, 'phaser.d.ts'), out);
 }
 ;

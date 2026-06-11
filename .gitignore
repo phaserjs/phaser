@@ -18,5 +18,7 @@ test-fix-logs/
 build/
 out/
 types/phaser.json
+types/generated/
 scripts/tsgen/test/bin/
 scripts/tsgen/test/output.txt
+tsconfig.tsbuildinfo

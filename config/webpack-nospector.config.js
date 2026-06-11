@@ -16,6 +16,25 @@ module.exports = [
 
         devtool: 'source-map',
 
+        resolve: {
+            extensions: ['.js', '.ts'],
+            extensionAlias: {
+                '.js': ['.ts', '.js']
+            }
+        },
+
+        module: {
+            rules: [
+                {
+                    test: /\.ts$/,
+                    loader: 'esbuild-loader',
+                    options: {
+                        target: 'es2018'
+                    }
+                }
+            ]
+        },
+
         output: {
             path: `${__dirname}/../build/`,
             globalObject: 'this',
