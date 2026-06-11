@@ -278,7 +278,7 @@ var ScaleManager = new Class({
          * @name Phaser.Scale.ScaleManager#_cssTransformInverse
          * @type {?DOMMatrix}
          * @private
-         * @since 4.0.0
+         * @since 4.NEXT
          */
         this._cssTransformInverse = null;
 
@@ -1308,14 +1308,17 @@ var ScaleManager = new Class({
      * Unlike the separate `transformX` and `transformY` methods, this handles coordinate
      * coupling caused by CSS rotations where the X and Y axes are no longer independent.
      *
+     * Only 2D CSS transforms are supported. 3D rotations and `perspective` cannot be
+     * inverted to a flat 2D mapping and will not produce correct results.
+     *
      * @method Phaser.Scale.ScaleManager#transformXY
-     * @since 4.0.0
+     * @since 4.NEXT
      *
      * @param {number} pageX - The DOM pageX value.
      * @param {number} pageY - The DOM pageY value.
-     * @param {object} output - An object with `x` and `y` properties to store the result.
+     * @param {Phaser.Types.Math.Vector2Like} output - An object with `x` and `y` properties to store the result.
      *
-     * @return {object} The output object with translated `x` and `y` values.
+     * @return {Phaser.Types.Math.Vector2Like} The output object with translated `x` and `y` values.
      */
     transformXY: function (pageX, pageY, output)
     {
@@ -1361,12 +1364,16 @@ var ScaleManager = new Class({
      * `DOMMatrix` is not available.
      *
      * This walks up the DOM tree from the canvas element, composing any CSS `transform`
-     * values found along the way, then extracts the linear (rotation/scale/skew) portion
-     * and returns its inverse. The translation component is excluded because canvas
-     * positioning is already handled by `getBoundingClientRect()`.
+     * values found along the way, as well as the individual `rotate` and `scale`
+     * properties, then extracts the linear (rotation/scale/skew) portion and returns
+     * its inverse. Translation, including the `translate` property, is excluded because
+     * canvas positioning is already handled by `getBoundingClientRect()`.
+     *
+     * Only 2D transforms are supported: 3D rotations and `perspective` cannot be
+     * inverted to a flat 2D mapping.
      *
      * @method Phaser.Scale.ScaleManager#getInverseCSSTransform
-     * @since 4.0.0
+     * @since 4.NEXT
      *
      * @return {?DOMMatrix} The inverse CSS transform matrix, or `null` if none is needed.
      */
@@ -1383,12 +1390,12 @@ var ScaleManager = new Class({
 
         while (el && el instanceof HTMLElement)
         {
-            var transform = window.getComputedStyle(el).transform;
+            var local = this.getElementCSSMatrix(el);
 
-            if (transform && transform !== 'none')
+            if (!local.isIdentity)
             {
-                //  Prepend: outer transforms are applied first
-                matrix = new DOMMatrix(transform).multiply(matrix);
+                //  Pre-multiply: ancestor transforms apply on the outside
+                matrix = local.multiply(matrix);
                 hasTransform = true;
             }
 
@@ -1404,7 +1411,86 @@ var ScaleManager = new Class({
         matrix.e = 0;
         matrix.f = 0;
 
-        return matrix.inverse();
+        var inverse = matrix.inverse();
+
+        //  A degenerate transform (e.g. `scale(0)`) cannot be inverted and yields NaNs
+        if (!isFinite(inverse.a + inverse.b + inverse.c + inverse.d))
+        {
+            return null;
+        }
+
+        return inverse;
+    },
+
+    /**
+     * Builds the CSS transformation matrix for a single element, composing the
+     * individual `rotate` and `scale` properties with the `transform` property in
+     * the order defined by the CSS Transforms Level 2 specification (rotate, then
+     * scale, then transform).
+     *
+     * The `translate` property is intentionally ignored: only the linear part of
+     * the composed matrix is used by `getInverseCSSTransform`, and translation
+     * anywhere in the chain never affects the linear part.
+     *
+     * @method Phaser.Scale.ScaleManager#getElementCSSMatrix
+     * @since 4.NEXT
+     *
+     * @param {HTMLElement} el - The element to read the computed transform styles from.
+     *
+     * @return {DOMMatrix} The composed transformation matrix for the element.
+     */
+    getElementCSSMatrix: function (el)
+    {
+        var style = window.getComputedStyle(el);
+
+        var transform = style.transform;
+        var matrix = (transform && transform !== 'none') ? new DOMMatrix(transform) : new DOMMatrix();
+
+        var scale = style.scale;
+
+        if (scale && scale !== 'none')
+        {
+            var s = scale.split(' ');
+            var sx = parseFloat(s[0]);
+            var sy = (s.length > 1) ? parseFloat(s[1]) : sx;
+            var sz = (s.length > 2) ? parseFloat(s[2]) : 1;
+
+            matrix = new DOMMatrix().scaleSelf(sx, sy, sz).multiply(matrix);
+        }
+
+        var rotate = style.rotate;
+
+        if (rotate && rotate !== 'none')
+        {
+            var r = rotate.split(' ');
+            var angle = parseFloat(r[r.length - 1]);
+            var rm = new DOMMatrix();
+
+            if (r.length === 1)
+            {
+                rm.rotateSelf(angle);
+            }
+            else if (r[0] === 'x')
+            {
+                rm.rotateAxisAngleSelf(1, 0, 0, angle);
+            }
+            else if (r[0] === 'y')
+            {
+                rm.rotateAxisAngleSelf(0, 1, 0, angle);
+            }
+            else if (r[0] === 'z')
+            {
+                rm.rotateAxisAngleSelf(0, 0, 1, angle);
+            }
+            else
+            {
+                rm.rotateAxisAngleSelf(parseFloat(r[0]), parseFloat(r[1]), parseFloat(r[2]), angle);
+            }
+
+            matrix = rm.multiply(matrix);
+        }
+
+        return matrix;
     },
 
     /**
