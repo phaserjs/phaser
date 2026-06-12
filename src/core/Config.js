@@ -421,6 +421,21 @@ var Config = new Class({
         this.transparent = GetValue(renderConfig, 'transparent', false, config);
 
         /**
+         * @const {'keep'|'dither'|number} Phaser.Core.Config#alphaStrategy - The default alpha strategy to use when rendering transparent objects with compatible shaders. Strategies other than `keep` will discard fragments instead of turning them transparent, which creates a very grainy look.
+         */
+        this.alphaStrategy = GetValue(renderConfig, 'alphaStrategy', 'keep', config);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#stencil - Whether to enable stencil testing. Disabling this will prevent creation of stencil buffers, which can save framebuffer memory. Disabling stencil prevents the use of stencil-based rendering.
+         */
+        this.stencil = GetValue(renderConfig, 'stencil', true, config);
+
+        /**
+         * @const {'keep'|'dither'|number} Phaser.Core.Config#stencilAlphaStrategy - The default alpha strategy to use when rendering stencils. Keeping transparent pixels still creates opaque stencil, which is usually not what you want.
+         */
+        this.stencilAlphaStrategy = GetValue(renderConfig, 'stencilAlphaStrategy', 'dither', config);
+
+        /**
          * @const {boolean} Phaser.Core.Config#clearBeforeRender - Whether the game canvas will be cleared between each rendering frame. You can disable this if you have a full-screen background image or game object.
          */
         this.clearBeforeRender = GetValue(renderConfig, 'clearBeforeRender', true, config);

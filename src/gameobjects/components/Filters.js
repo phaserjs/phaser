@@ -280,8 +280,10 @@ if (typeof WEBGL_RENDERER)
                 this.filtersFocusContext = true;
             }
 
-            // Add filters as a render step.
-            this.addRenderStep(this.renderWebGLFilters, 0);
+            // Add filters as a render step,
+            // immediately prior to the main renderWebGL step.
+            var renderWebGLIndex = this._renderSteps.indexOf(this.renderWebGL);
+            this.addRenderStep(this.renderWebGLFilters, renderWebGLIndex);
 
             return this;
         },

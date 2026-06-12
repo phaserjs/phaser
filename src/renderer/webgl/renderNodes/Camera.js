@@ -224,6 +224,7 @@ var Camera = new Class({
 
             // Set up render options.
             var renderOptions = {
+                alphaStrategy: baseContext.alphaStrategy,
                 smoothPixelArt: manager.renderer.game.config.smoothPixelArt
             };
 

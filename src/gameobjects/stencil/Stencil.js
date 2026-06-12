@@ -1,0 +1,304 @@
+/**
+ * @author       Benjamin D. Richards <benjamindrichards@gmail.com>
+ * @copyright    2013-2026 Phaser Studio Inc.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = require('../../utils/Class');
+var Container = require('../container/Container');
+const Layer = require('../layer/Layer');
+
+/**
+ * A Stencil Game Object.
+ *
+ * A Stencil is a special type of Game Object used to place stencils over the canvas.
+ * You can use it to efficiently control where subsequent objects are rendered.
+ * It is WebGL-only.
+ * Study the documentation carefully to understand how it works.
+ *
+ * A Stencil is an extended Container Game Object.
+ * It contains a list of child Game Objects to render to the stencil buffer.
+ * Think of these as opaque sheets of card held up over the canvas,
+ * preventing anything from being drawn through them.
+ *
+ * The stencil buffer is provided by WebGL.
+ * It is available if the game render config set `stencil` to `true`.
+ * It is an 8-bit attachment to framebuffers, like an extra alpha channel.
+ * But if the stencil channel is not 0 at a pixel, WebGL will skip rendering that pixel.
+ * There are no degrees of transparency, only on or off.
+ *
+ * When you draw objects with alpha to a Stencil,
+ * a special `alphaStrategy` is used. Compatible shaders switch from rendering
+ * alpha, to discarding fragments based on their alpha value.
+ * By default, this uses dithering to preserve alpha gradients.
+ * You can change `stencilAlphaStrategy` to a threshold value to instead
+ * discard without dithering.
+ * If `stencilAlphaStrategy` is `'keep'`,
+ * or the child's shader does not support alpha strategies,
+ * transparent pixels will be drawn as opaque to the stencil buffer!
+ * This is rarely what you want.
+ * Fragment shaders must `discard` fragments for them to be transparent to the stencil buffer.
+ *
+ * Stencils are drawn as order-independent layers.
+ * You can add or remove layers in sequence using `addLayer` and `removeLayer`.
+ * Each layers adds or subtracts 1 from the stencil buffer.
+ * Only when the stencil is 0 at a pixel will anything be drawn there.
+ *
+ * Sequential stencil layers combine and persist,
+ * because they are drawn to the stencil buffer and stay there until the next frame.
+ * Do not add too many layers, though. There are only 8 bits in the stencil buffer,
+ * so it only safely supports 255 layers.
+ * If you go over this limit, the buffer wraps back to 0.
+ * You can still add and remove layers in this case,
+ * and they will continue to be accurately tracked,
+ * but layer 256 (and subsequent multiples of 256) will be effectively 0 and allow drawing.
+ * The same applies if you remove layers below 0: it wraps back to 255
+ * and prevents drawing.
+ *
+ * Nested stencils are a separate concern.
+ * If you add a Stencil as the child of another Stencil,
+ * the parent Stencil will composite its contents to a framebuffer,
+ * including child stencils.
+ * This effectively traps the child stencil in the framebuffer,
+ * and only the final composite from the framebuffer needs to be considered.
+ * It is used as the source for the stencil, subject to alpha strategy.
+ * This requires extra draw calls to composite,
+ * and framebuffers have poor anti-aliasing quality,
+ * so you should avoid nesting stencils unless you know what you are doing.
+ *
+ * To determine whether the stencil needs to composite to a framebuffer,
+ * it runs a check before rendering (`'auto'` mode).
+ * If you know the answer already,
+ * or if you have a custom game object that Phaser doesn't understand,
+ * you can set `stencilCompositeCheck` to `true` or `false`
+ * to skip the auto check.
+ * If you set it to `false`, it will never composite,
+ * and any child stencils may render in unexpected ways.
+ * (Generally, they will appear backwards from what you expect:
+ * child stencils will not affect the parent stencil, but things drawn later.)
+ *
+ * Best practice: use few stencils and don't nest them.
+ *
+ * Stencil is best used for efficient, sharp-edged, reused masks.
+ * You can draw a stencil once, and it will affect everything that is drawn later.
+ * Its rendering cost is minimal: it is just the draw cost of its children.
+ * This can be as low as 1 call.
+ * If there are nested stencils, it will take more calls for the framebuffer.
+ *
+ * If you need better quality alpha handling, consider using a Mask filter instead.
+ * Filters have a higher rendering cost, and apply to just 1 object at a time,
+ * but they have the best quality.
+ * (And you can apply them to Containers, to cheat the object limitation.)
+ *
+ * @class Stencil
+ * @extends Phaser.GameObjects.Container
+ * @memberof Phaser.GameObjects
+ * @constructor
+ * @since 4.NEXT
+ *
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {'addLayer'|'subtractLayer'} [stencilLayerMode='addLayer'] - The mode to use when rendering the stencil.
+ * @param {Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to the Stencil.
+ * @param {Phaser.Types.Renderer.WebGL.AlphaStrategy} [stencilAlphaStrategy='dither'] - The alpha strategy to use when rendering the stencil.
+ * @param {boolean|'auto'} [stencilCompositeCheck='auto'] - Whether to composite the contents of the stencil to a framebuffer.
+ */
+var Stencil = new Class({
+    Extends: Container,
+
+    initialize: function Stencil (scene, x, y, stencilLayerMode, children, stencilAlphaStrategy, stencilCompositeCheck) {
+        Container.call(this, scene, x, y, children);
+
+        /**
+         * The mode to use when rendering the stencil.
+         *
+         * - 'addLayer' - Add a stencil layer.
+         * - 'subtractLayer' - Subtract a stencil layer.
+         *
+         * @name Phaser.GameObjects.Stencil#stencilLayerMode
+         * @type {'addLayer'|'subtractLayer'}
+         * @default 'addLayer'
+         * @since 4.NEXT
+         */
+        this.stencilLayerMode = stencilLayerMode || 'addLayer';
+
+        /**
+         * The alpha strategy to use when rendering the stencil.
+         * This is usually set to `dither`, or the default game config setting.
+         *
+         * @name Phaser.GameObjects.Stencil#stencilAlphaStrategy
+         * @type {Phaser.Types.Renderer.WebGL.AlphaStrategy}
+         * @since 4.NEXT
+         */
+        this.stencilAlphaStrategy = stencilAlphaStrategy === undefined ? scene.renderer.config.stencilAlphaStrategy : stencilAlphaStrategy;
+
+        /**
+         * Whether to composite the contents of the stencil to a framebuffer.
+         * This is necessary when the stencil contains stencils.
+         * It requires extra draw calls to composite.
+         * You should set this to `false` or `true` if you know the answer,
+         * or `auto` to have Phaser automatically determine the best option.
+         *
+         * This will set `filtersForceComposite` to `true` during rendering.
+         *
+         * @name Phaser.GameObjects.Stencil#stencilCompositeCheck
+         * @type {boolean|'auto'}
+         * @default 'auto'
+         * @since 4.NEXT
+         */
+        this.stencilCompositeCheck = stencilCompositeCheck === undefined ? 'auto' : stencilCompositeCheck;
+
+        // Add the stencil render step as the first render step.
+        this.addRenderStep(this.stencilRenderStep, 0);
+    },
+
+    /**
+     * Sets the mode to use when rendering the stencil.
+     *
+     * - 'addLayer' - Add a stencil layer.
+     * - 'subtractLayer' - Subtract a stencil layer.
+     *
+     * @method Phaser.GameObjects.Stencil#setStencilLayerMode
+     * @since 4.NEXT
+     * @param {'addLayer'|'subtractLayer'} stencilLayerMode - The mode to use when rendering the stencil.
+     * @returns {this} This Game Object instance.
+     */
+    setStencilLayerMode: function (stencilLayerMode)
+    {
+        this.stencilLayerMode = stencilLayerMode;
+        return this;
+    },
+
+    /**
+     * Sets the alpha strategy to use when rendering the stencil.
+     *
+     * @method Phaser.GameObjects.Stencil#setStencilAlphaStrategy
+     * @since 4.NEXT
+     * @param {Phaser.Types.Renderer.WebGL.AlphaStrategy} stencilAlphaStrategy - The alpha strategy to use when rendering the stencil.
+     * @returns {this} This Game Object instance.
+     */
+    setStencilAlphaStrategy: function (stencilAlphaStrategy)
+    {
+        this.stencilAlphaStrategy = stencilAlphaStrategy;
+        return this;
+    },
+
+    /**
+     * Sets whether to composite the contents of the stencil to a framebuffer.
+     * While `auto` is default, it must run extra checks,
+     * so you should set it to `true` or `false` if you know the answer.
+     *
+     * - `true` - Composite the contents of the stencil to a framebuffer.
+     * - `false` - Do not composite the contents of the stencil to a framebuffer.
+     * - `'auto'` - Automatically determine whether to composite the contents of the stencil to a framebuffer.
+     *
+     * @method Phaser.GameObjects.Stencil#setStencilCompositeCheck
+     * @since 4.NEXT
+     * @param {boolean|'auto'} stencilCompositeCheck - The check mode to use.
+     * @returns {this} This Game Object instance.
+     */
+    setStencilCompositeCheck: function (stencilCompositeCheck)
+    {
+        this.stencilCompositeCheck = stencilCompositeCheck;
+        return this;
+    },
+
+    /**
+     * The stencil render step.
+     * This runs before other render steps,
+     * so it can set up the drawing context to render to the stencil buffer.
+     * It also activates forced composite mode if the stencil contains stencils.
+     *
+     * @method Phaser.GameObjects.Stencil#stencilRenderStep
+     * @webglOnly
+     * @since 4.NEXT
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered in this call.
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested
+     * @param {number} [renderStep=0] - The index of this function in the Game Object's list of render processes. Used to support multiple rendering functions.
+     * @param {Phaser.GameObjects.GameObject[]} [displayList] - The display list which is currently being rendered.
+     * @param {number} [displayListIndex] - The index of the Game Object within the display list.
+     */
+    stencilRenderStep: function (renderer, gameObject, drawingContext, parentMatrix, renderStep, displayList, displayListIndex)
+    {
+        var gl = renderer.gl;
+
+        // If the tree of child game objects has any stencil children,
+        // activate forced composite mode on `gameObject`.
+        var filtersForceComposite = gameObject.filtersForceComposite;
+        if (
+            gameObject.stencilCompositeCheck === true ||
+            (gameObject.stencilCompositeCheck === 'auto' && gameObject.hasStencilChildren(gameObject, drawingContext.camera))
+        )
+        {
+            gameObject.enableFilters().setFiltersForceComposite(true);
+        }
+
+        // Set up the drawing context to render to the stencil buffer.
+        var currentContext = drawingContext.getClone();
+        currentContext.setAlphaStrategy(gameObject.stencilAlphaStrategy);
+        currentContext.stencilDepth++;
+        currentContext.setColorWritemask(false, false, false, false);
+        var op = gl.INCR_WRAP;
+        if (gameObject.stencilLayerMode === 'subtractLayer')
+        {
+            op = gl.DECR_WRAP;
+        }
+        currentContext.setStencil(true, gl.ALWAYS, 0, 0xFF, op, op, op, 0, 0xFF);
+
+        currentContext.use();
+
+        gameObject.renderWebGLStep(
+            renderer,
+            gameObject,
+            currentContext,
+            parentMatrix,
+            renderStep + 1,
+            displayList,
+            displayListIndex
+        );
+
+        currentContext.release();
+
+        gameObject.setFiltersForceComposite(filtersForceComposite);
+    },
+
+    /**
+     * Checks if the game object or any of its children has a stencil.
+     * This is used internally to determine if the stencil should composite its contents to a framebuffer.
+     *
+     * This is a depth-first, succeed-fast search.
+     *
+     * @method Phaser.GameObjects.Stencil#hasStencilChildren
+     * @since 4.NEXT
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to check.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to check.
+     * @returns {boolean} Whether the game object or any of its children has a stencil.
+     */
+    hasStencilChildren: function (gameObject, camera)
+    {
+        if (gameObject instanceof Container || gameObject instanceof Layer)
+        {
+            for (var i = 0; i < gameObject.list.length; i++)
+            {
+                var child = gameObject.list[i];
+                if (
+                    child &&
+                    child.willRender(camera) &&
+                    (
+                        child instanceof Stencil ||
+                        this.hasStencilChildren(child, camera)
+                    )
+                )
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+});
+
+module.exports = Stencil;

@@ -6,6 +6,7 @@
 
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 var Class = require('../../utils/Class');
+var WebGLStencilParametersFactory = require('./parameters/WebGLStencilParametersFactory');
 
 /**
  * Descriptor of the context within which a drawing operation is performed.
@@ -17,6 +18,9 @@ var Class = require('../../utils/Class');
  * - Scissor box
  * - Blend mode
  * - Clear color
+ * - Color writemask
+ * - Alpha strategy
+ * - Stencil parameters
  *
  * This is analogous to a drafting table in a studio. The paper is the
  * framebuffer, while the rest of the data specifies masks, guides etc for
@@ -80,10 +84,12 @@ var DrawingContext = new Class({
                 // This will be automatically populated below.
             },
             colorClearValue: options.clearColor || [ 0, 0, 0, 0 ],
+            colorWritemask: options.colorWritemask || [ true, true, true, true ],
             scissor: {
                 box: [ 0, 0, 0, 0 ],
                 enable: true
             },
+            stencil: options.stencilParameters || WebGLStencilParametersFactory.create(renderer),
             viewport: [ 0, 0, 0, 0 ]
         };
 
@@ -100,6 +106,19 @@ var DrawingContext = new Class({
         this.blendMode = -1;
 
         this.setBlendMode(options.blendMode || 0);
+
+        /**
+         * The alpha strategy to use when rendering.
+         * Shaders can opt in to alpha strategies via this value.
+         * Typically, this is used to switch from floating-point alpha
+         * to a fragment discard strategy for use in stencil rendering.
+         *
+         * @name Phaser.Renderer.WebGL.DrawingContext#alphaStrategy
+         * @type {Phaser.Types.Renderer.WebGL.AlphaStrategy}
+         * @default 'keep'
+         * @since 4.NEXT
+         */
+        this.alphaStrategy = options.alphaStrategy || renderer.config.alphaStrategy;
 
         /**
          * Which renderbuffers in the framebuffer to clear when the DrawingContext comes into use.
@@ -288,7 +307,7 @@ var DrawingContext = new Class({
                     width,
                     height
                 );
-                this.framebuffer = renderer.createFramebuffer(this.texture, true, false);
+                this.framebuffer = renderer.createFramebuffer(this.texture, renderer.config.stencil, false);
             }
             else
             {
@@ -323,6 +342,7 @@ var DrawingContext = new Class({
         var state = source.state;
         var blend = state.blend;
         var scissor = state.scissor;
+        var stencil = state.stencil;
 
         this.autoClear = source.autoClear;
         this.useCanvas = source.useCanvas;
@@ -330,6 +350,7 @@ var DrawingContext = new Class({
         this.texture = source.texture;
         this.camera = source.camera;
         this.blendMode = source.blendMode;
+        this.alphaStrategy = source.alphaStrategy;
         this.width = source.width;
         this.height = source.height;
 
@@ -345,9 +366,25 @@ var DrawingContext = new Class({
                 func: blend.func
             },
             colorClearValue: state.colorClearValue.slice(),
+            colorWritemask: state.colorWritemask.slice(),
             scissor: {
                 box: scissor.box.slice(),
                 enable: scissor.enable
+            },
+            stencil: {
+                enabled: stencil.enabled,
+                func: {
+                    func: stencil.func.func,
+                    ref: stencil.func.ref,
+                    mask: stencil.func.mask
+                },
+                op: {
+                    fail: stencil.op.fail,
+                    zfail: stencil.op.zfail,
+                    zpass: stencil.op.zpass
+                },
+                clear: stencil.clear,
+                writeMask: stencil.writeMask
             },
             viewport: state.viewport.slice()
         };
@@ -376,6 +413,18 @@ var DrawingContext = new Class({
         }
 
         return context;
+    },
+
+    /**
+     * Set the alpha strategy for the DrawingContext.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#setAlphaStrategy
+     * @since 4.NEXT
+     * @param {Phaser.Types.Renderer.WebGL.AlphaStrategy} alphaStrategy - The alpha strategy to use when rendering.
+     */
+    setAlphaStrategy: function (alphaStrategy)
+    {
+        this.alphaStrategy = alphaStrategy;
     },
 
     /**
@@ -465,6 +514,21 @@ var DrawingContext = new Class({
     },
 
     /**
+     * Set the color writemask for the DrawingContext.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#setColorWritemask
+     * @since 4.NEXT
+     * @param {boolean} r - Whether to write the red channel.
+     * @param {boolean} g - Whether to write the green channel.
+     * @param {boolean} b - Whether to write the blue channel.
+     * @param {boolean} a - Whether to write the alpha channel.
+     */
+    setColorWritemask: function (r, g, b, a)
+    {
+        this.state.colorWritemask = [ r, g, b, a ];
+    },
+
+    /**
      * Set the scissor box for the DrawingContext.
      *
      * @method Phaser.Renderer.WebGL.DrawingContext#setScissorBox
@@ -492,6 +556,50 @@ var DrawingContext = new Class({
     setScissorEnable: function (enable)
     {
         this.state.scissor.enable = enable;
+    },
+
+    /**
+     * Set the stencil parameters for the DrawingContext.
+     *
+     * @method Phaser.Renderer.WebGL.DrawingContext#setStencil
+     * @since 4.NEXT
+     * @param {GLboolean} [enabled=true] - Whether the stencil test is enabled.
+     * @param {GLenum} [func=GL_EQUAL] - The stencil comparison function used to compare the reference value against the current stencil buffer value.
+     * @param {GLint} [funcRef=0] - The reference value against which the stencil buffer value is compared during the stencil test.
+     * @param {GLuint} [funcMask=0xFF] - The bitwise mask applied to both the reference value and the stencil buffer value before they are compared.
+     * @param {GLenum} [opFail=GL_KEEP] - The operation to perform if the stencil test fails.
+     * @param {GLenum} [opZfail=GL_KEEP] - The operation to perform if the stencil test passes but the depth test fails.
+     * @param {GLenum} [opZpass=GL_KEEP] - The operation to perform if the stencil test passes and the depth test passes or is disabled.
+     * @param {GLint} [clear=0] - The value to clear the stencil buffer to.
+     * @param {GLuint} [writeMask=0x00] - The mask applied to the stencil buffer value when it is written. Set to 0 to prevent writing. Set to 0xFF to allow full writing.
+     */
+    setStencil: function (enabled, func, funcRef, funcMask, opFail, opZfail, opZpass, clear, writeMask)
+    {
+        if (enabled === undefined) { enabled = true; }
+        if (func === undefined) { func = this.renderer.gl.EQUAL; }
+        if (funcRef === undefined) { funcRef = 0; }
+        if (funcMask === undefined) { funcMask = 0xFF; }
+        if (opFail === undefined) { opFail = this.renderer.gl.KEEP; }
+        if (opZfail === undefined) { opZfail = this.renderer.gl.KEEP; }
+        if (opZpass === undefined) { opZpass = this.renderer.gl.KEEP; }
+        if (clear === undefined) { clear = 0; }
+        if (writeMask === undefined) { writeMask = 0x00; }
+
+        this.state.stencil = {
+            enabled: enabled,
+            func: {
+                func: func,
+                ref: funcRef,
+                mask: funcMask
+            },
+            op: {
+                fail: opFail,
+                zfail: opZfail,
+                zpass: opZpass
+            },
+            clear: clear,
+            writeMask: writeMask
+        };
     },
 
     /**

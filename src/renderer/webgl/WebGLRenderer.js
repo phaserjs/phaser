@@ -90,7 +90,7 @@ var WebGLRenderer = new Class({
             depth: true,
             antialias: gameConfig.antialiasGL,
             premultipliedAlpha: gameConfig.premultipliedAlpha,
-            stencil: true,
+            stencil: gameConfig.stencil,
             failIfMajorPerformanceCaveat: gameConfig.failIfMajorPerformanceCaveat,
             powerPreference: gameConfig.powerPreference,
             preserveDrawingBuffer: gameConfig.preserveDrawingBuffer,
@@ -107,6 +107,9 @@ var WebGLRenderer = new Class({
         this.config = {
             clearBeforeRender: gameConfig.clearBeforeRender,
             antialias: gameConfig.antialias,
+            alphaStrategy: gameConfig.alphaStrategy,
+            stencil: gameConfig.stencil,
+            stencilAlphaStrategy: gameConfig.stencilAlphaStrategy,
             backgroundColor: gameConfig.backgroundColor,
             contextCreation: contextCreationConfig,
             roundPixels: gameConfig.roundPixels,

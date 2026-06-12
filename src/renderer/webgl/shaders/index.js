@@ -10,6 +10,7 @@
 
 module.exports = {
 
+    ApplyAlphaDiscard: require('./ApplyAlphaDiscard-glsl.js'),
     ApplyLighting: require('./ApplyLighting-glsl.js'),
     ApplyTint: require('./ApplyTint-glsl.js'),
     BoundedSampler: require('./BoundedSampler-glsl.js'),

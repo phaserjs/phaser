@@ -11,6 +11,9 @@
  * @property {boolean} [selfShadow=false] - On textured objects with lighting, this enables self-shadowing based on the diffuse map.
  * @property {number} [pathDetailThreshold=1] - Threshold for combining points into a single path in the WebGL renderer for Graphics objects. This can be overridden at the Graphics object level.
  * @property {boolean} [transparent=false] - Whether the game canvas will be transparent. Boolean that indicates if the canvas contains an alpha channel. If set to false, the browser now knows that the backdrop is always opaque, which can speed up drawing of transparent content and images.
+ * @property {'keep'|'dither'|number} [alphaStrategy='keep'] - The default alpha strategy to use when rendering transparent objects with compatible shaders. Strategies other than `keep` will discard fragments instead of turning them transparent, which creates a very grainy look.
+ * @property {boolean} [stencil=true] - Whether to enable stencil testing. Disabling this will prevent creation of stencil buffers, which can save framebuffer memory. Disabling stencil prevents the use of stencil-based rendering.
+ * @property {'keep'|'dither'|number} [stencilAlphaStrategy='dither'] - The default alpha strategy to use when rendering stencils. Keeping transparent pixels still creates opaque stencil, which is usually not what you want.
  * @property {boolean} [clearBeforeRender=true] - Whether the game canvas will be cleared between each rendering frame.
  * @property {boolean} [preserveDrawingBuffer=false] - If the value is true the WebGL buffers will not be cleared and will preserve their values until cleared or overwritten by the author.
  * @property {boolean} [premultipliedAlpha=true] - In WebGL mode, the drawing buffer contains colors with pre-multiplied alpha.

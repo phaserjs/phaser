@@ -12,9 +12,12 @@
  *
  * @property {boolean|boolean[]} [autoClear=true] - Whether to automatically clear the framebuffer when the context comes into use. If an array, the elements are whether to clear the color, depth, and stencil buffers respectively.
  * @property {number} [blendMode=0] - The blend mode to use when rendering.
+ * @property {Phaser.Types.Renderer.WebGL.AlphaStrategy} [alphaStrategy='keep'] - The alpha strategy to use when rendering.
  * @property {?Phaser.Cameras.Scene2D.Camera} [camera=null] - The camera to use for this context.
+ * @property {boolean[]} [colorWritemask=[true, true, true, true]] - The color writemask to use when rendering. This is an array of 4 values: red, green, blue, alpha.
  * @property {number[]} [clearColor=[0, 0, 0, 0]] - The color to clear the framebuffer with. This is an array of 4 values: red, green, blue, alpha.
  * @property {boolean} [useCanvas=false] - Whether to use the canvas as the framebuffer.
+ * @property {Phaser.Types.Renderer.WebGL.WebGLStencilParameters} [stencilParameters] - The stencil parameters to use when rendering.
  * @property {Phaser.Renderer.WebGL.DrawingContext} [copyFrom] - The DrawingContext to copy from.
  * @property {boolean} [enableMipmap=false] - Whether to enable mipmaps on the framebuffer texture, if it exists.
  * @property {number} [width] - The width of the framebuffer, used if `copyFrom` and `useCanvas` are not set. Default is the renderer width.

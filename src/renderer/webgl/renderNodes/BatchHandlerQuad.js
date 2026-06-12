@@ -10,6 +10,7 @@ var DeepCopy = require('../../../utils/object/DeepCopy');
 var Utils = require('../Utils');
 var ShaderSourceFS = require('../shaders/Multi-frag');
 var ShaderSourceVS = require('../shaders/Multi-vert');
+var MakeApplyAlphaDiscard = require('../shaders/additionMakers/MakeApplyAlphaDiscard');
 var MakeApplyLighting = require('../shaders/additionMakers/MakeApplyLighting');
 var MakeApplyTint = require('../shaders/additionMakers/MakeApplyTint');
 var MakeDefineLights = require('../shaders/additionMakers/MakeDefineLights');
@@ -54,10 +55,11 @@ var BatchHandlerQuad = new Class({
          * These help define the shader.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#renderOptions
-         * @type {object}
+         * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerQuadRenderOptions}
          * @since 4.0.0
          */
         this.renderOptions = {
+            alphaStrategy: 'keep',
             multiTexturing: false,
             texRes: false,
             lighting: false,
@@ -80,7 +82,7 @@ var BatchHandlerQuad = new Class({
          * The render options currently being built.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#nextRenderOptions
-         * @type {object}
+         * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerQuadRenderOptions}
          * @since 4.0.0
          */
         this.nextRenderOptions = DeepCopy(this.renderOptions);
@@ -132,7 +134,8 @@ var BatchHandlerQuad = new Class({
             MakeRotationDatum(true),
             MakeOutInverseRotation(true),
             MakeGetNormalFromMap(true),
-            MakeApplyLighting(true)
+            MakeApplyLighting(true),
+            MakeApplyAlphaDiscard(true)
         ],
         vertexBufferLayout: {
             usage: 'DYNAMIC_DRAW',
@@ -396,13 +399,19 @@ var BatchHandlerQuad = new Class({
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#updateRenderOptions
      * @since 4.0.0
-     * @param {object} renderOptions - The new render options.
+     * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerQuadRenderOptions} renderOptions - The new render options.
      */
     updateRenderOptions: function (renderOptions)
     {
         var newRenderOptions = this.nextRenderOptions;
         var oldRenderOptions = this.renderOptions;
         var changed = false;
+
+        if (renderOptions.alphaStrategy !== oldRenderOptions.alphaStrategy)
+        {
+            newRenderOptions.alphaStrategy = renderOptions.alphaStrategy;
+            changed = true;
+        }
 
         var multiTexturing = !!renderOptions.multiTexturing && !renderOptions.lighting;
         if (multiTexturing !== oldRenderOptions.multiTexturing)
@@ -463,6 +472,24 @@ var BatchHandlerQuad = new Class({
         var oldRenderOptions = this.renderOptions;
         var newRenderOptions = this.nextRenderOptions;
         var i;
+
+        if (oldRenderOptions.alphaStrategy !== newRenderOptions.alphaStrategy)
+        {
+            var alphaStrategy = newRenderOptions.alphaStrategy;
+            oldRenderOptions.alphaStrategy = alphaStrategy;
+
+            var alphaDiscardAddition = programManager.getAdditionsByTag('ALPHA_DISCARD')[0];
+            if (alphaDiscardAddition)
+            {
+                var keep = alphaStrategy === 'keep';
+                var dither = alphaStrategy === 'dither';
+                var threshold = (typeof alphaStrategy === 'number') ? alphaStrategy : undefined;
+                programManager.replaceAddition(
+                    alphaDiscardAddition.name,
+                    MakeApplyAlphaDiscard(keep, dither, threshold)
+                );
+            }
+        }
 
         if (oldRenderOptions.multiTexturing !== newRenderOptions.multiTexturing)
         {
