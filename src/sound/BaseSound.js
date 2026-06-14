@@ -248,7 +248,6 @@ var BaseSound = new Class({
 
         if (!this.markers[marker.name])
         {
-            // eslint-disable-next-line no-console
             console.warn('Audio Marker: ' + marker.name + ' missing in Sound: ' + this.key);
 
             return false;
@@ -322,7 +321,6 @@ var BaseSound = new Class({
         {
             if (!this.markers[markerName])
             {
-                // eslint-disable-next-line no-console
                 console.warn('Marker: ' + markerName + ' missing in Sound: ' + this.key);
 
                 return false;

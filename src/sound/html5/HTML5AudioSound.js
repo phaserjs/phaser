@@ -377,7 +377,6 @@ var HTML5AudioSound = new Class({
 
         if (playPromise)
         {
-            // eslint-disable-next-line no-unused-vars
             playPromise.catch(function (reason)
             {
                 console.warn(reason);

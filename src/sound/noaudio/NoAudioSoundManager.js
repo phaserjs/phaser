@@ -138,7 +138,6 @@ var NoAudioSoundManager = new Class({
      *
      * @return {boolean} Always 'false' for the No Audio Sound Manager.
      */
-    // eslint-disable-next-line no-unused-vars
     play: function (key, extra)
     {
         return false;
@@ -157,7 +156,6 @@ var NoAudioSoundManager = new Class({
      *
      * @return {boolean} Always 'false' for the No Audio Sound Manager.
      */
-    // eslint-disable-next-line no-unused-vars
     playAudioSprite: function (key, spriteName, config)
     {
         return false;

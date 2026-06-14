@@ -57,7 +57,7 @@ var resolveFullName = function (raw, folders, extSuffix)
     }
 
     //  Extension index: "name~N" (per-name, overrides line-level)
-    var extMatch = /~([1-5])$/.exec(name);
+    var extMatch = (/~([1-5])$/).exec(name);
 
     if (extMatch)
     {
@@ -82,7 +82,7 @@ var expandNames = function (line, folders)
 {
     //  Check for trailing extension suffix: ~N at very end
     var extSuffix = '';
-    var extMatch = /~([1-5])$/.exec(line);
+    var extMatch = (/~([1-5])$/).exec(line);
 
     if (extMatch)
     {
