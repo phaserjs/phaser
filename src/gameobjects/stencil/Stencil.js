@@ -53,6 +53,15 @@ const Layer = require('../layer/Layer');
  * by child geometry.
  * It works by filling the camera, then drawing the child stencil in reverse.
  *
+ * You can also clear the stencil by setting `stencilLayerMode` to `clear`.
+ * It replaces all stencil buffer values with the `stencilClearValue`.
+ * This should normally set them back to 0 so everything renders again.
+ * This destroys all layer information.
+ * It does not use the child list.
+ * Be careful not to mess up your scene this way.
+ * You cannot invert the stencil if the `stencilLayerMode` is `clear`,
+ * because it affects the entire stencil buffer.
+ *
  * Sequential stencil layers combine and persist,
  * because they are drawn to the stencil buffer and stay there until the next frame.
  * Do not add too many layers, though. There are only 8 bits in the stencil buffer,
@@ -122,6 +131,7 @@ var Stencil = new Class({
         var stencilCompositeCheck = options.stencilCompositeCheck;
         var stencilInvert = options.stencilInvert || false;
         var stencilLayerMode = options.stencilLayerMode || 'addLayer';
+        var stencilClearValue = options.stencilClearValue || 0;
         if (stencilAlphaStrategy === undefined)
         {
             stencilAlphaStrategy = scene.renderer.config.stencilAlphaStrategy;
@@ -179,6 +189,16 @@ var Stencil = new Class({
          * @since 4.NEXT
          */
         this.stencilCompositeCheck = stencilCompositeCheck;
+
+        /**
+         * The value to clear the stencil to, if the `stencilLayerMode` is `clear`.
+         *
+         * @name Phaser.GameObjects.Stencil#stencilClearValue
+         * @type {number}
+         * @default 0
+         * @since 4.NEXT
+         */
+        this.stencilClearValue = stencilClearValue;
 
         // Add the stencil render step as the first render step.
         this.addRenderStep(this.stencilRenderStep, 0);
@@ -265,10 +285,27 @@ var Stencil = new Class({
     },
 
     /**
+     * Sets the value to clear the stencil to, if the `stencilLayerMode` is `clear`.
+     *
+     * @method Phaser.GameObjects.Stencil#setStencilClearValue
+     * @since 4.NEXT
+     * @param {number} stencilClearValue - The value to clear the stencil to.
+     * @returns {this} This Game Object instance.
+     */
+    setStencilClearValue: function (stencilClearValue)
+    {
+        this.stencilClearValue = stencilClearValue;
+        return this;
+    },
+
+    /**
      * The stencil render step.
+     * This is an internal function, which is automatically assigned;
+     * you should not call it directly.
+     *
      * This runs before other render steps,
-     * so it can set up the drawing context to render to the stencil buffer.
-     * It also activates forced composite mode if the stencil contains stencils.
+     * so it can set up the drawing context to render properly.
+     * It delegates to the appropriate render step function based on the `stencilLayerMode`.
      *
      * @method Phaser.GameObjects.Stencil#stencilRenderStep
      * @webglOnly
@@ -282,6 +319,40 @@ var Stencil = new Class({
      * @param {number} [displayListIndex] - The index of the Game Object within the display list.
      */
     stencilRenderStep: function (renderer, gameObject, drawingContext, parentMatrix, renderStep, displayList, displayListIndex)
+    {
+        switch (gameObject.stencilLayerMode)
+        {
+            case 'clear':
+            {
+                gameObject.stencilRenderStepClear(renderer, gameObject, drawingContext, parentMatrix, renderStep, displayList, displayListIndex);
+                break;
+            }
+            case 'addLayer':
+            case 'subtractLayer':
+            default:
+            {
+                gameObject.stencilRenderStepLayers(renderer, gameObject, drawingContext, parentMatrix, renderStep, displayList, displayListIndex);
+                break;
+            }
+        }
+    },
+
+    /**
+     * The render step used when the `stencilLayerMode` is `addLayer` or `subtractLayer`.
+     * You should not call this directly.
+     *
+     * @method Phaser.GameObjects.Stencil#stencilRenderStepLayers
+     * @webglOnly
+     * @since 4.NEXT
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered in this call.
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested
+     * @param {number} [renderStep=0] - The index of this function in the Game Object's list of render processes. Used to support multiple rendering functions.
+     * @param {Phaser.GameObjects.GameObject[]} [displayList] - The display list which is currently being rendered.
+     * @param {number} [displayListIndex] - The index of the Game Object within the display list.
+     */
+    stencilRenderStepLayers: function (renderer, gameObject, drawingContext, parentMatrix, renderStep, displayList, displayListIndex)
     {
         var gl = renderer.gl;
 
@@ -337,6 +408,32 @@ var Stencil = new Class({
         currentContext.release();
 
         gameObject.setFiltersForceComposite(filtersForceComposite);
+    },
+
+    /**
+     * The render step used when the `stencilLayerMode` is `clear`.
+     * You should not call this directly.
+     *
+     * @method Phaser.GameObjects.Stencil#stencilRenderStepClear
+     * @webglOnly
+     * @since 4.NEXT
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered in this call.
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested
+     * @param {number} [renderStep=0] - The index of this function in the Game Object's list of render processes. Used to support multiple rendering functions.
+     * @param {Phaser.GameObjects.GameObject[]} [displayList] - The display list which is currently being rendered.
+     * @param {number} [displayListIndex] - The index of the Game Object within the display list.
+     */
+    stencilRenderStepClear: function (renderer, gameObject, drawingContext, parentMatrix, renderStep, displayList, displayListIndex)
+    {
+        var gl = renderer.gl;
+
+        var currentContext = drawingContext.getClone();
+        currentContext.state.stencil.clear = gameObject.stencilClearValue;
+        currentContext.state.stencil.writeMask = 0xFF;
+        currentContext.use();
+        currentContext.clear(gl.STENCIL_BUFFER_BIT);
     },
 
     /**
