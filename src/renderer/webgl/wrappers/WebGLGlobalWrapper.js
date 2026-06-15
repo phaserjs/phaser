@@ -730,6 +730,10 @@ var WebGLGlobalWrapper = new Class({
         {
             this.updateStencilOp(state, force);
         }
+        if (stencil.writeMask !== undefined)
+        {
+            this.updateStencilWriteMask(state, force);
+        }
     },
 
     /**
@@ -840,6 +844,31 @@ var WebGLGlobalWrapper = new Class({
         {
             var gl = this.renderer.gl;
             gl.stencilOp(op.fail, op.zfail, op.zpass);
+        }
+    },
+
+    /**
+     * Updates the stencil write mask state.
+     *
+     * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateStencilWriteMask
+     * @since 4.NEXT
+     * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
+     * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
+     */
+    updateStencilWriteMask: function (state, force)
+    {
+        var writeMask = state.stencil.writeMask;
+
+        var different = writeMask !== this.state.stencil.writeMask;
+
+        if (different)
+        {
+            this.state.stencil.writeMask = writeMask;
+        }
+        if (different || force)
+        {
+            var gl = this.renderer.gl;
+            gl.stencilMask(writeMask);
         }
     },
 

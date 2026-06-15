@@ -23,14 +23,12 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
- * @param {'addLayer'|'subtractLayer'} [stencilLayerMode='addLayer'] - The mode to use when rendering the stencil.
  * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} [children] - An optional Game Object, or array of Game Objects, to add to this Stencil.
- * @param {Phaser.Types.Renderer.WebGL.AlphaStrategy} [stencilAlphaStrategy='dither'] - The alpha strategy to use when rendering the stencil.
- * @param {boolean|'auto'} [stencilCompositeCheck='auto'] - Whether to composite the contents of the stencil to a framebuffer.
+ * @param {Phaser.Types.GameObjects.Stencil.StencilOptions} [options] - The options for the Stencil.
  *
  * @return {Phaser.GameObjects.Stencil} The Game Object that was created.
  */
-GameObjectFactory.register('stencil', function (x, y, stencilLayerMode, children, stencilAlphaStrategy, stencilCompositeCheck)
+GameObjectFactory.register('stencil', function (x, y, children, options)
 {
-    return this.displayList.add(new Stencil(this.scene, x, y, stencilLayerMode, children, stencilAlphaStrategy, stencilCompositeCheck));
+    return this.displayList.add(new Stencil(this.scene, x, y, children, options));
 });

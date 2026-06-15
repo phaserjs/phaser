@@ -44,6 +44,15 @@ const Layer = require('../layer/Layer');
  * Each layers adds or subtracts 1 from the stencil buffer.
  * Only when the stencil is 0 at a pixel will anything be drawn there.
  *
+ * You can invert the stencil by setting `stencilInvert` to `true`.
+ * This will use an extra draw call to invert the stencil:
+ * it adds a layer everywhere that the children would not draw.
+ * It is more efficient to render a shape that covers the whole area you wish to stencil,
+ * but if that's not possible, you can use this.
+ * Inversion makes it possible to render to parts of the screen not touched
+ * by child geometry.
+ * It works by filling the camera, then drawing the child stencil in reverse.
+ *
  * Sequential stencil layers combine and persist,
  * because they are drawn to the stencil buffer and stay there until the next frame.
  * Do not add too many layers, though. There are only 8 bits in the stencil buffer,
@@ -99,16 +108,28 @@ const Layer = require('../layer/Layer');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {'addLayer'|'subtractLayer'} [stencilLayerMode='addLayer'] - The mode to use when rendering the stencil.
  * @param {Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to the Stencil.
- * @param {Phaser.Types.Renderer.WebGL.AlphaStrategy} [stencilAlphaStrategy='dither'] - The alpha strategy to use when rendering the stencil.
- * @param {boolean|'auto'} [stencilCompositeCheck='auto'] - Whether to composite the contents of the stencil to a framebuffer.
+ * @param {Phaser.Types.GameObjects.Stencil.StencilOptions} [options] - The options for the Stencil.
  */
 var Stencil = new Class({
     Extends: Container,
 
-    initialize: function Stencil (scene, x, y, stencilLayerMode, children, stencilAlphaStrategy, stencilCompositeCheck) {
+    initialize: function Stencil (scene, x, y, children, options) {
         Container.call(this, scene, x, y, children);
+
+        var options = options || {};
+        var stencilAlphaStrategy = options.stencilAlphaStrategy;
+        var stencilCompositeCheck = options.stencilCompositeCheck;
+        var stencilInvert = options.stencilInvert || false;
+        var stencilLayerMode = options.stencilLayerMode || 'addLayer';
+        if (stencilAlphaStrategy === undefined)
+        {
+            stencilAlphaStrategy = scene.renderer.config.stencilAlphaStrategy;
+        }
+        if (stencilCompositeCheck === undefined)
+        {
+            stencilCompositeCheck = 'auto';
+        }
 
         /**
          * The mode to use when rendering the stencil.
@@ -121,7 +142,17 @@ var Stencil = new Class({
          * @default 'addLayer'
          * @since 4.NEXT
          */
-        this.stencilLayerMode = stencilLayerMode || 'addLayer';
+        this.stencilLayerMode = stencilLayerMode;
+
+        /**
+         * Whether to invert the stencil, using an extra draw call.
+         *
+         * @name Phaser.GameObjects.Stencil#stencilInvert
+         * @type {boolean}
+         * @default false
+         * @since 4.NEXT
+         */
+        this.stencilInvert = stencilInvert;
 
         /**
          * The alpha strategy to use when rendering the stencil.
@@ -131,7 +162,7 @@ var Stencil = new Class({
          * @type {Phaser.Types.Renderer.WebGL.AlphaStrategy}
          * @since 4.NEXT
          */
-        this.stencilAlphaStrategy = stencilAlphaStrategy === undefined ? scene.renderer.config.stencilAlphaStrategy : stencilAlphaStrategy;
+        this.stencilAlphaStrategy = stencilAlphaStrategy;
 
         /**
          * Whether to composite the contents of the stencil to a framebuffer.
@@ -147,28 +178,26 @@ var Stencil = new Class({
          * @default 'auto'
          * @since 4.NEXT
          */
-        this.stencilCompositeCheck = stencilCompositeCheck === undefined ? 'auto' : stencilCompositeCheck;
+        this.stencilCompositeCheck = stencilCompositeCheck;
 
         // Add the stencil render step as the first render step.
         this.addRenderStep(this.stencilRenderStep, 0);
     },
 
     /**
-     * Sets the mode to use when rendering the stencil.
+     * Whether this Game Object is a stencil modifier.
+     * Do not edit this property. It is used internally.
      *
-     * - 'addLayer' - Add a stencil layer.
-     * - 'subtractLayer' - Subtract a stencil layer.
+     * Any object with `isStencilModifier` set to `true` is a positive result
+     * for `hasStencilChildren`, and can affect stencil compositing.
      *
-     * @method Phaser.GameObjects.Stencil#setStencilLayerMode
+     * @name Phaser.GameObjects.Stencil#isStencilModifier
+     * @type {boolean}
      * @since 4.NEXT
-     * @param {'addLayer'|'subtractLayer'} stencilLayerMode - The mode to use when rendering the stencil.
-     * @returns {this} This Game Object instance.
+     * @default true
+     * @readonly
      */
-    setStencilLayerMode: function (stencilLayerMode)
-    {
-        this.stencilLayerMode = stencilLayerMode;
-        return this;
-    },
+    isStencilModifier: true,
 
     /**
      * Sets the alpha strategy to use when rendering the stencil.
@@ -201,6 +230,37 @@ var Stencil = new Class({
     setStencilCompositeCheck: function (stencilCompositeCheck)
     {
         this.stencilCompositeCheck = stencilCompositeCheck;
+        return this;
+    },
+
+    /**
+     * Sets whether to invert the stencil, using an extra draw call.
+     *
+     * @method Phaser.GameObjects.Stencil#setStencilInvert
+     * @since 4.NEXT
+     * @param {boolean} stencilInvert - Whether to invert the stencil.
+     * @returns {this} This Game Object instance.
+     */
+    setStencilInvert: function (stencilInvert)
+    {
+        this.stencilInvert = stencilInvert;
+        return this;
+    },
+
+    /**
+     * Sets the mode to use when rendering the stencil.
+     *
+     * - 'addLayer' - Add a stencil layer.
+     * - 'subtractLayer' - Subtract a stencil layer.
+     *
+     * @method Phaser.GameObjects.Stencil#setStencilLayerMode
+     * @since 4.NEXT
+     * @param {Phaser.Types.GameObjects.Stencil.StencilLayerMode} stencilLayerMode - The mode which the Stencil should run in.
+     * @returns {this} This Game Object instance.
+     */
+    setStencilLayerMode: function (stencilLayerMode)
+    {
+        this.stencilLayerMode = stencilLayerMode;
         return this;
     },
 
@@ -250,6 +310,20 @@ var Stencil = new Class({
 
         currentContext.use();
 
+        // Invert the stencil area if needed.
+        if (gameObject.stencilInvert)
+        {
+            renderer.renderNodes.getNode('FillCamera').run(currentContext, 0x000000, drawingContext.useCanvas);
+
+            currentContext = currentContext.getClone();
+            currentContext.use();
+
+            // Invert the stencil operation.
+            op = op === gl.INCR_WRAP ? gl.DECR_WRAP : gl.INCR_WRAP;
+            currentContext.setStencil(true, gl.ALWAYS, 0, 0xFF, op, op, op, 0, 0xFF);
+        }
+
+        // Render the children.
         gameObject.renderWebGLStep(
             renderer,
             gameObject,
@@ -288,7 +362,7 @@ var Stencil = new Class({
                     child &&
                     child.willRender(camera) &&
                     (
-                        child instanceof Stencil ||
+                        child.isStencilModifier ||
                         this.hasStencilChildren(child, camera)
                     )
                 )

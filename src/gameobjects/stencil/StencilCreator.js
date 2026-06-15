@@ -29,12 +29,10 @@ GameObjectCreator.register('stencil', function (config, addToScene)
 
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
-    var stencilLayerMode = GetAdvancedValue(config, 'stencilLayerMode', 'addLayer');
     var children = GetFastValue(config, 'children', null);
-    var stencilAlphaStrategy = GetAdvancedValue(config, 'stencilAlphaStrategy', undefined);
-    var stencilCompositeCheck = GetAdvancedValue(config, 'stencilCompositeCheck', undefined);
+    var options = GetAdvancedValue(config, 'options', {});
 
-    var stencil = new Stencil(this.scene, x, y, stencilLayerMode, children, stencilAlphaStrategy, stencilCompositeCheck);
+    var stencil = new Stencil(this.scene, x, y, children, options);
 
     if (addToScene !== undefined)
     {
