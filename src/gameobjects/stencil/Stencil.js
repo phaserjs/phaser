@@ -59,8 +59,12 @@ const Layer = require('../layer/Layer');
  * This destroys all layer information.
  * It does not use the child list.
  * Be careful not to mess up your scene this way.
- * You cannot invert the stencil if the `stencilLayerMode` is `clear`,
- * because it affects the entire stencil buffer.
+ *
+ * Set `stencilLayerMode` to `clearRegion` to fill a region
+ * of the stencil buffer defined by the children, with the `stencilClearValue`.
+ * This can be used as a selective eraser, or to set a region to a specific value.
+ *
+ * You cannot invert the stencil if the `stencilLayerMode` is `clear` or `clearRegion`.
  *
  * Sequential stencil layers combine and persist,
  * because they are drawn to the stencil buffer and stay there until the next frame.
@@ -72,6 +76,14 @@ const Layer = require('../layer/Layer');
  * but layer 256 (and subsequent multiples of 256) will be effectively 0 and allow drawing.
  * The same applies if you remove layers below 0: it wraps back to 255
  * and prevents drawing.
+ *
+ * Deactivate `stencilValueWrap` to prevent the stencil buffer from wrapping.
+ * This is useful when defining stencils with subtraction,
+ * and you don't want to underflow from 0 to 255.
+ * For example, you can use one stencil in `clearRegion` to define a value,
+ * then use another stencil in `subtractLayer` to erase parts of that region.
+ * But be careful when using stencils for different purposes:
+ * if you mix stencil data, you will get unexpected results.
  *
  * Nested stencils are a separate concern.
  * If you add a Stencil as the child of another Stencil,
@@ -128,10 +140,11 @@ var Stencil = new Class({
 
         var options = options || {};
         var stencilAlphaStrategy = options.stencilAlphaStrategy;
+        var stencilClearValue = options.stencilClearValue || 0;
         var stencilCompositeCheck = options.stencilCompositeCheck;
         var stencilInvert = options.stencilInvert || false;
         var stencilLayerMode = options.stencilLayerMode || 'addLayer';
-        var stencilClearValue = options.stencilClearValue || 0;
+        var stencilValueWrap = options.stencilValueWrap === undefined ? true : options.stencilValueWrap;
         if (stencilAlphaStrategy === undefined)
         {
             stencilAlphaStrategy = scene.renderer.config.stencilAlphaStrategy;
@@ -191,7 +204,9 @@ var Stencil = new Class({
         this.stencilCompositeCheck = stencilCompositeCheck;
 
         /**
-         * The value to clear the stencil to, if the `stencilLayerMode` is `clear`.
+         * The value to clear the stencil buffer to,
+         * if the `stencilLayerMode` is `clear` or `clearRegion`.
+         * Must be between 0 and 255.
          *
          * @name Phaser.GameObjects.Stencil#stencilClearValue
          * @type {number}
@@ -199,6 +214,19 @@ var Stencil = new Class({
          * @since 4.NEXT
          */
         this.stencilClearValue = stencilClearValue;
+
+        /**
+         * Whether to wrap the value in the stencil buffer when it overflows or underflows
+         * when using the `addLayer` or `subtractLayer` mode.
+         * This is useful when defining stencils with subtraction,
+         * and you don't want to underflow from 0 to 255.
+         *
+         * @name Phaser.GameObjects.Stencil#stencilValueWrap
+         * @type {boolean}
+         * @default true
+         * @since 4.NEXT
+         */
+        this.stencilValueWrap = stencilValueWrap;
 
         // Add the stencil render step as the first render step.
         this.addRenderStep(this.stencilRenderStep, 0);
@@ -272,6 +300,9 @@ var Stencil = new Class({
      *
      * - 'addLayer' - Add a stencil layer.
      * - 'subtractLayer' - Subtract a stencil layer.
+     * - 'clear' - Clear the whole stencil buffer.
+     * - 'clearRegion' - Clear a specific region of the stencil buffer.
+     *   You can also use this to fill a region with a specific value.
      *
      * @method Phaser.GameObjects.Stencil#setStencilLayerMode
      * @since 4.NEXT
@@ -285,11 +316,13 @@ var Stencil = new Class({
     },
 
     /**
-     * Sets the value to clear the stencil to, if the `stencilLayerMode` is `clear`.
+     * Sets the value to clear the stencil to,
+     * if the `stencilLayerMode` is `clear` or `clearRegion`.
+     * Must be between 0 and 255.
      *
      * @method Phaser.GameObjects.Stencil#setStencilClearValue
      * @since 4.NEXT
-     * @param {number} stencilClearValue - The value to clear the stencil to.
+     * @param {number} stencilClearValue - The value to clear the stencil buffer to.
      * @returns {this} This Game Object instance.
      */
     setStencilClearValue: function (stencilClearValue)
@@ -325,6 +358,11 @@ var Stencil = new Class({
             case 'clear':
             {
                 gameObject.stencilRenderStepClear(renderer, gameObject, drawingContext, parentMatrix, renderStep, displayList, displayListIndex);
+                break;
+            }
+            case 'clearRegion':
+            {
+                gameObject.stencilRenderStepClearRegion(renderer, gameObject, drawingContext, parentMatrix, renderStep, displayList, displayListIndex);
                 break;
             }
             case 'addLayer':
@@ -370,12 +408,13 @@ var Stencil = new Class({
         // Set up the drawing context to render to the stencil buffer.
         var currentContext = drawingContext.getClone();
         currentContext.setAlphaStrategy(gameObject.stencilAlphaStrategy);
-        currentContext.stencilDepth++;
         currentContext.setColorWritemask(false, false, false, false);
-        var op = gl.INCR_WRAP;
+        var opIncr = gameObject.stencilValueWrap ? gl.INCR_WRAP : gl.INCR;
+        var opDecr = gameObject.stencilValueWrap ? gl.DECR_WRAP : gl.DECR;
+        var op = opIncr;
         if (gameObject.stencilLayerMode === 'subtractLayer')
         {
-            op = gl.DECR_WRAP;
+            op = opDecr;
         }
         currentContext.setStencil(true, gl.ALWAYS, 0, 0xFF, op, op, op, 0, 0xFF);
 
@@ -390,7 +429,7 @@ var Stencil = new Class({
             currentContext.use();
 
             // Invert the stencil operation.
-            op = op === gl.INCR_WRAP ? gl.DECR_WRAP : gl.INCR_WRAP;
+            op = op === opIncr ? opDecr : opIncr;
             currentContext.setStencil(true, gl.ALWAYS, 0, 0xFF, op, op, op, 0, 0xFF);
         }
 
@@ -434,6 +473,62 @@ var Stencil = new Class({
         currentContext.state.stencil.writeMask = 0xFF;
         currentContext.use();
         currentContext.clear(gl.STENCIL_BUFFER_BIT);
+    },
+
+    /**
+     * The render step used when the `stencilLayerMode` is `clearRegion`.
+     * You should not call this directly.
+     *
+     * @method Phaser.GameObjects.Stencil#stencilRenderStepClearRegion
+     * @webglOnly
+     * @since 4.NEXT
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered in this call.
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested
+     * @param {number} [renderStep=0] - The index of this function in the Game Object's list of render processes. Used to support multiple rendering functions.
+     * @param {Phaser.GameObjects.GameObject[]} [displayList] - The display list which is currently being rendered.
+     * @param {number} [displayListIndex] - The index of the Game Object within the display list.
+     */
+    stencilRenderStepClearRegion: function (renderer, gameObject, drawingContext, parentMatrix, renderStep, displayList, displayListIndex)
+    {
+        var gl = renderer.gl;
+
+        // If the tree of child game objects has any stencil children,
+        // activate forced composite mode on `gameObject`.
+        var filtersForceComposite = gameObject.filtersForceComposite;
+        if (
+            gameObject.stencilCompositeCheck === true ||
+            (gameObject.stencilCompositeCheck === 'auto' && gameObject.hasStencilChildren(gameObject, drawingContext.camera))
+        )
+        {
+            gameObject.enableFilters().setFiltersForceComposite(true);
+        }
+
+        // Set up the drawing context to render to the stencil buffer.
+        var currentContext = drawingContext.getClone();
+        currentContext.setAlphaStrategy(gameObject.stencilAlphaStrategy);
+        currentContext.setColorWritemask(false, false, false, false);
+        var clearValue = gameObject.stencilClearValue;
+        var op = gl.REPLACE;
+        currentContext.setStencil(true, gl.ALWAYS, clearValue, 0xFF, op, op, op, clearValue, 0xFF);
+
+        currentContext.use();
+
+        // Render the children.
+        gameObject.renderWebGLStep(
+            renderer,
+            gameObject,
+            currentContext,
+            parentMatrix,
+            renderStep + 1,
+            displayList,
+            displayListIndex
+        );
+
+        currentContext.release();
+
+        gameObject.setFiltersForceComposite(filtersForceComposite);
     },
 
     /**

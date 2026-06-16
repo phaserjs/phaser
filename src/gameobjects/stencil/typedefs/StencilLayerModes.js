@@ -1,4 +1,4 @@
 /**
- * @typedef {'addLayer'|'subtractLayer'|'clear'} Phaser.Types.GameObjects.Stencil.StencilLayerMode
+ * @typedef {'addLayer'|'subtractLayer'|'clear'|'clearRegion'} Phaser.Types.GameObjects.Stencil.StencilLayerMode
  * @since 4.NEXT
  */
