@@ -51,6 +51,7 @@ var SubmitterQuad = new Class({
 
         /**
          * Persistent object reused to pass render options to the batch handler.
+         * Alpha strategy will be set by the drawing context.
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad#_renderOptions
          * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerQuadRenderOptions}
@@ -58,7 +59,6 @@ var SubmitterQuad = new Class({
          * @private
          */
         this._renderOptions = {
-            alphaStrategy: 'keep',
             multiTexturing: true,
             lighting: null,
             smoothPixelArt: null
@@ -176,7 +176,7 @@ var SubmitterQuad = new Class({
         var u1 = uvSource.u1;
         var v1 = uvSource.v1;
 
-        this.setRenderOptions(gameObject, normalMap, normalMapRotation, drawingContext.alphaStrategy);
+        this.setRenderOptions(gameObject, normalMap, normalMapRotation);
 
         (
             gameObject.customRenderNodes[this.batchHandler] ||
@@ -227,9 +227,8 @@ var SubmitterQuad = new Class({
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [normalMap] - The normal map texture to use for lighting. If omitted, it will be resolved from the game object's base texture data source or the renderer's default normal texture.
      * @param {number} [normalMapRotation] - The rotation of the normal map texture, in radians. If omitted or `NaN`, it will be resolved from the game object's rotation or its world transform matrix if it belongs to a container.
-     * @param {Phaser.Types.Renderer.WebGL.AlphaStrategy} [alphaStrategy] - The alpha strategy to use when rendering.
      */
-    setRenderOptions: function (gameObject, normalMap, normalMapRotation, alphaStrategy)
+    setRenderOptions: function (gameObject, normalMap, normalMapRotation)
     {
         var renderOptions = this._renderOptions;
         var baseTexture, sourceIndex;
@@ -319,9 +318,6 @@ var SubmitterQuad = new Class({
             smoothPixelArt = gameObject.scene.sys.game.config.smoothPixelArt;
         }
         renderOptions.smoothPixelArt = smoothPixelArt;
-
-        // Set alpha strategy.
-        renderOptions.alphaStrategy = alphaStrategy === undefined ? 'keep' : alphaStrategy;
     }
 });
 

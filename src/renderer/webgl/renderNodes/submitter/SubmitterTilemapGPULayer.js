@@ -10,6 +10,7 @@ var Class = require('../../../../utils/Class');
 var Merge = require('../../../../utils/object/Merge');
 var ProgramManager = require('../../ProgramManager');
 var MakeAnimLength = require('../../shaders/additionMakers/MakeAnimLength');
+var MakeApplyAlphaDiscard = require('../../shaders/additionMakers/MakeApplyAlphaDiscard');
 var MakeApplyLighting = require('../../shaders/additionMakers/MakeApplyLighting');
 var MakeDefineLights = require('../../shaders/additionMakers/MakeDefineLights');
 var MakeSampleNormal = require('../../shaders/additionMakers/MakeSampleNormal');
@@ -185,7 +186,8 @@ var SubmitterTilemapGPULayer = new Class({
             MakeSmoothPixelArt(true),
             MakeSampleNormal(true),
             MakeDefineLights(true),
-            MakeApplyLighting(true)
+            MakeApplyLighting(true),
+            MakeApplyAlphaDiscard(true)
         ],
         vertexBufferLayout: {
             usage: 'DYNAMIC_DRAW',
@@ -361,8 +363,9 @@ var SubmitterTilemapGPULayer = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.SubmitterTilemapGPULayer#updateRenderOptions
      * @since 4.0.0
      * @param {Phaser.Tilemaps.TilemapGPULayer} gameObject - The TilemapGPULayer being rendered.
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    updateRenderOptions: function (gameObject)
+    updateRenderOptions: function (gameObject, drawingContext)
     {
         var programManager = this.programManager;
         var texture = gameObject.tileset.image;
@@ -370,6 +373,20 @@ var SubmitterTilemapGPULayer = new Class({
         // We do not track whether the shader program has changed.
         // This is because this is not a batch renderer,
         // and the program is set every time this is called.
+
+        // Set alpha strategy options.
+        var alphaStrategy = drawingContext.alphaStrategy;
+        var alphaStrategyAddition = programManager.getAdditionsByTag('ALPHA_DISCARD')[0];
+        if (alphaStrategyAddition)
+        {
+            var keep = alphaStrategy === 'keep';
+            var dither = alphaStrategy === 'dither';
+            var threshold = (typeof alphaStrategy === 'number') ? alphaStrategy : undefined;
+            programManager.replaceAddition(
+                alphaStrategyAddition.name,
+                MakeApplyAlphaDiscard(keep, dither, threshold)
+            );
+        }
 
         // Set animation options.
         var animAddition = programManager.getAdditionsByTag('MAXANIMS')[0];
@@ -571,7 +588,7 @@ var SubmitterTilemapGPULayer = new Class({
             textures[3] = normalMap;
         }
 
-        this.updateRenderOptions(tilemapLayer);
+        this.updateRenderOptions(tilemapLayer, drawingContext);
 
         var programManager = this.programManager;
         var programSuite = programManager.getCurrentProgramSuite();

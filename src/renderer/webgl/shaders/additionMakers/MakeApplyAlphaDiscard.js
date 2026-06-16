@@ -35,7 +35,7 @@ var MakeApplyAlphaDiscard = function (disable, dither, threshold)
     if (dither)
     {
         name += 'Dither';
-        additions.features = '#define ALPHA_DISCARD_STRATEGY_DITHER';
+        additions.fragmentDefine = '#define ALPHA_DISCARD_STRATEGY_DITHER';
     }
     else if (threshold)
     {
@@ -46,7 +46,7 @@ var MakeApplyAlphaDiscard = function (disable, dither, threshold)
             // Integer, so add a decimal point to convert to a float.
             thresholdString += '.';
         }
-        additions.features = '#define ALPHA_DISCARD_STRATEGY_THRESHOLD ' + thresholdString;
+        additions.fragmentDefine = '#define ALPHA_DISCARD_STRATEGY_THRESHOLD ' + thresholdString;
     }
     else
     {

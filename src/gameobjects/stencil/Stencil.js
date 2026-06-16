@@ -39,6 +39,17 @@ const Layer = require('../layer/Layer');
  * This is rarely what you want.
  * Fragment shaders must `discard` fragments for them to be transparent to the stencil buffer.
  *
+ * By default, most Phaser shaders support alpha strategies.
+ * Notable exceptions include:
+ *
+ * - PointLight (additive lighting)
+ * - Shader game objects, and extended classes like Noise
+ *
+ * To apply an alpha strategy without a compatible shader,
+ * force stencil composition by setting `stencilCompositeCheck` to `true`.
+ * This will composite the stencil contents to a framebuffer,
+ * which is rendered using a compatible shader.
+ *
  * Stencils are drawn as order-independent layers.
  * You can add or remove layers in sequence using `addLayer` and `removeLayer`.
  * Each layers adds or subtracts 1 from the stencil buffer.

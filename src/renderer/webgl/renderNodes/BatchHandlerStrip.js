@@ -7,6 +7,7 @@
 var Class = require('../../../utils/Class');
 var ShaderSourceFS = require('../shaders/Multi-frag');
 var ShaderSourceVS = require('../shaders/Multi-vert');
+var MakeApplyAlphaDiscard = require('../shaders/additionMakers/MakeApplyAlphaDiscard');
 var MakeApplyTint = require('../shaders/additionMakers/MakeApplyTint');
 var MakeDefineTexCount = require('../shaders/additionMakers/MakeDefineTexCount');
 var MakeGetTexCoordOut = require('../shaders/additionMakers/MakeGetTexCoordOut');
@@ -68,7 +69,8 @@ var BatchHandlerStrip = new Class({
             MakeSmoothPixelArt(true),
             MakeDefineTexCount(1),
             MakeGetTexture(),
-            MakeApplyTint()
+            MakeApplyTint(),
+            MakeApplyAlphaDiscard(true)
         ],
         vertexBufferLayout: {
             usage: 'DYNAMIC_DRAW',
@@ -197,6 +199,7 @@ var BatchHandlerStrip = new Class({
         }
 
         // Check render options and run the batch if they differ.
+        renderOptions.alphaStrategy = drawingContext.alphaStrategy;
         this.updateRenderOptions(renderOptions);
         if (this._renderOptionsChanged)
         {

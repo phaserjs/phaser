@@ -9,6 +9,7 @@ var Vector2 = require('../../../../math/Vector2');
 var Class = require('../../../../utils/Class');
 var Merge = require('../../../../utils/object/Merge');
 var ProgramManager = require('../../ProgramManager');
+var MakeApplyAlphaDiscard = require('../../shaders/additionMakers/MakeApplyAlphaDiscard');
 var MakeApplyLighting = require('../../shaders/additionMakers/MakeApplyLighting');
 var MakeApplyTint = require('../../shaders/additionMakers/MakeApplyTint');
 var MakeDefineLights = require('../../shaders/additionMakers/MakeDefineLights');
@@ -199,7 +200,8 @@ var SubmitterSpriteGPULayer = new Class({
             MakeDefineLights(true),
             MakeOutInverseRotation(true),
             MakeGetNormalFromMap(true),
-            MakeApplyLighting(true)
+            MakeApplyLighting(true),
+            MakeApplyAlphaDiscard(true)
         ],
         instanceBufferLayout: {
             usage: 'STATIC_DRAW',
@@ -477,10 +479,25 @@ var SubmitterSpriteGPULayer = new Class({
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.SubmitterSpriteGPULayer#updateRenderOptions
      * @since 4.0.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    updateRenderOptions: function ()
+    updateRenderOptions: function (drawingContext)
     {
         var programManager = this.programManager;
+
+        // Set alpha strategy options.
+        var alphaStrategy = drawingContext.alphaStrategy;
+        var alphaStrategyAddition = programManager.getAdditionsByTag('ALPHA_DISCARD')[0];
+        if (alphaStrategyAddition)
+        {
+            var keep = alphaStrategy === 'keep';
+            var dither = alphaStrategy === 'dither';
+            var threshold = (typeof alphaStrategy === 'number') ? alphaStrategy : undefined;
+            programManager.replaceAddition(
+                alphaStrategyAddition.name,
+                MakeApplyAlphaDiscard(keep, dither, threshold)
+            );
+        }
 
         // Set lighting options.
         var lighting = this.gameObject.lighting;
@@ -614,7 +631,7 @@ var SubmitterSpriteGPULayer = new Class({
             textures[2] = normalMap;
         }
 
-        this.updateRenderOptions();
+        this.updateRenderOptions(drawingContext);
 
         var programManager = this.programManager;
         var programSuite = programManager.getCurrentProgramSuite();

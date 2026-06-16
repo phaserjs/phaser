@@ -7,6 +7,7 @@
 var Class = require('../../../utils/Class');
 var ShaderSourceFS = require('../shaders/Multi-frag');
 var ShaderSourceVS = require('../shaders/Multi-vert');
+var MakeApplyAlphaDiscard = require('../shaders/additionMakers/MakeApplyAlphaDiscard');
 var MakeApplyLighting = require('../shaders/additionMakers/MakeApplyLighting');
 var MakeApplyTint = require('../shaders/additionMakers/MakeApplyTint');
 var MakeDefineLights = require('../shaders/additionMakers/MakeDefineLights');
@@ -78,7 +79,8 @@ var BatchHandlerTileSprite = new Class({
             MakeRotationDatum(true),
             MakeOutInverseRotation(true),
             MakeGetNormalFromMap(true),
-            MakeApplyLighting(true)
+            MakeApplyLighting(true),
+            MakeApplyAlphaDiscard(true)
         ],
         vertexBufferLayout: {
             usage: 'DYNAMIC_DRAW',
@@ -263,6 +265,7 @@ var BatchHandlerTileSprite = new Class({
         }
 
         // Check render options and run the batch if they differ.
+        renderOptions.alphaStrategy = drawingContext.alphaStrategy;
         this.updateRenderOptions(renderOptions);
         if (this._renderOptionsChanged)
         {

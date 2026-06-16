@@ -6,6 +6,7 @@
 
 var Vector2 = require('../../../math/Vector2');
 var Class = require('../../../utils/Class');
+var MakeApplyAlphaDiscard = require('../shaders/additionMakers/MakeApplyAlphaDiscard');
 var MakeApplyLighting = require('../shaders/additionMakers/MakeApplyLighting');
 var MakeDefineLights = require('../shaders/additionMakers/MakeDefineLights');
 var MakeFlatNormal = require('../shaders/additionMakers/MakeFlatNormal');
@@ -86,6 +87,7 @@ var BatchHandlerTriFlat = new Class({
          * @since 4.0.0
          */
         this.renderOptions = {
+            alphaStrategy: 'keep',
             lighting: false
         };
 
@@ -97,6 +99,7 @@ var BatchHandlerTriFlat = new Class({
          * @since 4.0.0
          */
         this.nextRenderOptions = {
+            alphaStrategy: 'keep',
             lighting: false
         };
 
@@ -121,7 +124,8 @@ var BatchHandlerTriFlat = new Class({
         shaderAdditions: [
             MakeDefineLights(true),
             MakeFlatNormal(true),
-            MakeApplyLighting(true)
+            MakeApplyLighting(true),
+            MakeApplyAlphaDiscard(true)
         ],
         indexBufferDynamic: true,
         vertexBufferLayout: {
@@ -195,7 +199,7 @@ var BatchHandlerTriFlat = new Class({
 
     /**
      * Compare the incoming render options against the current batch's render
-     * options and record whether they have changed. If the lighting value
+     * options and record whether they have changed. If the alpha strategy or lighting value
      * differs from the one used to build the current batch, the change is
      * staged in `nextRenderOptions` and `_renderOptionsChanged` is set to
      * `true`, signalling that the batch must be flushed and the shader
@@ -204,12 +208,19 @@ var BatchHandlerTriFlat = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTriFlat#updateRenderOptions
      * @since 4.0.0
      * @param {object|false} lighting - The lighting configuration for the next draw call, or `false` if lighting is disabled.
+     * @param {string} alphaStrategy - The alpha strategy for the next draw call.
      */
-    updateRenderOptions: function (lighting)
+    updateRenderOptions: function (lighting, alphaStrategy)
     {
         var newRenderOptions = this.nextRenderOptions;
         var oldRenderOptions = this.renderOptions;
         var changed = false;
+
+        if (alphaStrategy !== oldRenderOptions.alphaStrategy)
+        {
+            newRenderOptions.alphaStrategy = alphaStrategy;
+            changed = true;
+        }
 
         if (lighting !== oldRenderOptions.lighting)
         {
@@ -224,8 +235,8 @@ var BatchHandlerTriFlat = new Class({
      * Apply any pending render option changes to the shader program. This
      * method is called after the current batch has been flushed, when
      * `_renderOptionsChanged` is `true`. It synchronises `renderOptions` with
-     * `nextRenderOptions` and enables or disables the lighting shader
-     * additions accordingly. When lighting is enabled it also updates the
+     * `nextRenderOptions` and enables or disables the shader additions accordingly.
+     * When lighting is enabled it also updates the
      * `LIGHT_COUNT` preprocessor define to match the renderer's configured
      * maximum number of lights.
      *
@@ -237,6 +248,24 @@ var BatchHandlerTriFlat = new Class({
         var programManager = this.programManager;
         var renderOptions = this.renderOptions;
         var nextRenderOptions = this.nextRenderOptions;
+
+        if (renderOptions.alphaStrategy !== nextRenderOptions.alphaStrategy)
+        {
+            var alphaStrategy = nextRenderOptions.alphaStrategy;
+            renderOptions.alphaStrategy = alphaStrategy;
+
+            var alphaDiscardAddition = programManager.getAdditionsByTag('ALPHA_DISCARD')[0];
+            if (alphaDiscardAddition)
+            {
+                var keep = alphaStrategy === 'keep';
+                var dither = alphaStrategy === 'dither';
+                var threshold = (typeof alphaStrategy === 'number') ? alphaStrategy : undefined;
+                programManager.replaceAddition(
+                    alphaDiscardAddition.name,
+                    MakeApplyAlphaDiscard(keep, dither, threshold)
+                );
+            }
+        }
 
         if (renderOptions.lighting !== nextRenderOptions.lighting)
         {
@@ -335,7 +364,7 @@ var BatchHandlerTriFlat = new Class({
      * @param {number[]} indexes - The index data. Each triangle is defined by three indices into the vertices array, so the length of this should be a multiple of 3.
      * @param {number[]} vertices - The vertices data. Each vertex is defined by an x-coordinate and a y-coordinate.
      * @param {number[]} colors - The color data. Each vertex has a color as a Uint32 value.
-     * @param {boolean} [lighting=false] - Should this batch use lighting?
+     * @param {object|false} lighting - The lighting configuration for the next draw call, or `false` if lighting is disabled.
      */
     batch: function (currentContext, indexes, vertices, colors, lighting)
     {
@@ -345,7 +374,7 @@ var BatchHandlerTriFlat = new Class({
         }
 
         // Check render options and run the batch if they differ.
-        this.updateRenderOptions(lighting);
+        this.updateRenderOptions(lighting, currentContext.alphaStrategy);
         if (this._renderOptionsChanged)
         {
             this.run(currentContext);
