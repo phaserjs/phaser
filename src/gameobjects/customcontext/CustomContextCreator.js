@@ -2,7 +2,7 @@
  * @author       Benjamin D. Richards <benjamindrichards@gmail.com>
  * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
-*/
+ */
 
 var BuildGameObject = require('../BuildGameObject');
 var GameObjectCreator = require('../GameObjectCreator');
@@ -29,10 +29,9 @@ GameObjectCreator.register('customContext', function (config, addToScene)
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
     var children = GetAdvancedValue(config, 'children', null);
-    var options = GetAdvancedValue(config, 'options', undefined);
     var customContextCallback = GetAdvancedValue(config, 'customContextCallback', undefined);
 
-    var customContext = new CustomContext(this.scene, x, y, children, options, customContextCallback);
+    var customContext = new CustomContext(this.scene, x, y, children, customContextCallback);
 
     if (addToScene !== undefined)
     {
