@@ -9,6 +9,7 @@ var Container = require('../container/Container');
 var Layer = require('../layer/Layer');
 
 /**
+ * @classdesc
  * A Stencil Game Object.
  *
  * A Stencil is a special type of Game Object used to place stencils over the canvas.

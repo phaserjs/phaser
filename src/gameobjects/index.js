@@ -130,6 +130,7 @@ var GameObjects = {
 if (typeof WEBGL_RENDERER)
 {
     GameObjects.CaptureFrame = require('./captureframe/CaptureFrame');
+    GameObjects.CustomContext = require('./customcontext/CustomContext');
     GameObjects.Gradient = require('./gradient/Gradient');
     GameObjects.Mesh2D = require('./mesh2d/Mesh2D');
     GameObjects.Noise = require('./noise/Noise');
@@ -146,6 +147,7 @@ if (typeof WEBGL_RENDERER)
     GameObjects.StencilReference = require('./stencilreference/StencilReference');
 
     GameObjects.Factories.CaptureFrame = require('./captureframe/CaptureFrameFactory');
+    GameObjects.Factories.CustomContext = require('./customcontext/CustomContextFactory');
     GameObjects.Factories.Gradient = require('./gradient/GradientFactory');
     GameObjects.Factories.Mesh2D = require('./mesh2d/Mesh2DFactory');
     GameObjects.Factories.Noise = require('./noise/NoiseFactory');
@@ -162,6 +164,7 @@ if (typeof WEBGL_RENDERER)
     GameObjects.Factories.StencilReference = require('./stencilreference/StencilReferenceFactory');
 
     GameObjects.Creators.CaptureFrame = require('./captureframe/CaptureFrameCreator');
+    GameObjects.Creators.CustomContext = require('./customcontext/CustomContextCreator');
     GameObjects.Creators.Gradient = require('./gradient/GradientCreator');
     GameObjects.Creators.Mesh2D = require('./mesh2d/Mesh2DCreator');
     GameObjects.Creators.Noise = require('./noise/NoiseCreator');

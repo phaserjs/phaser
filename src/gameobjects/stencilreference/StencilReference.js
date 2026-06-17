@@ -11,6 +11,7 @@ var GameObject = require('../GameObject');
 var Render = require('./StencilReferenceRender');
 
 /**
+ * @classdesc
  * A StencilReference Game Object.
  *
  * A StencilReference is a special type of Game Object that uses a Stencil
