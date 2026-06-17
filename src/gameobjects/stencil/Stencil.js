@@ -6,7 +6,7 @@
 
 var Class = require('../../utils/Class');
 var Container = require('../container/Container');
-const Layer = require('../layer/Layer');
+var Layer = require('../layer/Layer');
 
 /**
  * A Stencil Game Object.
@@ -52,8 +52,12 @@ const Layer = require('../layer/Layer');
  *
  * Stencils are drawn as order-independent layers.
  * You can add or remove layers in sequence using `addLayer` and `removeLayer`.
- * Each layers adds or subtracts 1 from the stencil buffer.
+ * Each layer adds or subtracts 1 from the stencil buffer.
  * Only when the stencil is 0 at a pixel will anything be drawn there.
+ * (This 0-test is a rule set by the renderer's base DrawingContext.)
+ * Note that overlapping geometry within the same Stencil is additive,
+ * and can adjust the layer by more than 1 in aggregate.
+ * The results can be surprising, so try to avoid overlaps.
  *
  * You can invert the stencil by setting `stencilInvert` to `true`.
  * This will use an extra draw call to invert the stencil:
@@ -63,6 +67,11 @@ const Layer = require('../layer/Layer');
  * Inversion makes it possible to render to parts of the screen not touched
  * by child geometry.
  * It works by filling the camera, then drawing the child stencil in reverse.
+ *
+ * You can remove the stencil by using {@link Phaser.GameObjects.StencilReference}.
+ * This object copies a target Stencil, and re-renders it
+ * with different stencil options, elsewhere in the display list.
+ * This is an efficient way to re-use stencil geometry.
  *
  * You can also clear the stencil by setting `stencilLayerMode` to `clear`.
  * It replaces all stencil buffer values with the `stencilClearValue`.
@@ -170,9 +179,11 @@ var Stencil = new Class({
          *
          * - 'addLayer' - Add a stencil layer.
          * - 'subtractLayer' - Subtract a stencil layer.
+         * - 'clear' - Clear the stencil buffer.
+         * - 'clearRegion' - Clear a region of the stencil buffer.
          *
          * @name Phaser.GameObjects.Stencil#stencilLayerMode
-         * @type {'addLayer'|'subtractLayer'}
+         * @type {Phaser.Types.GameObjects.Stencil.StencilLayerMode}
          * @default 'addLayer'
          * @since 4.NEXT
          */
@@ -253,10 +264,17 @@ var Stencil = new Class({
      * @name Phaser.GameObjects.Stencil#isStencilModifier
      * @type {boolean}
      * @since 4.NEXT
-     * @default true
      * @readonly
+     * @default true
      */
-    isStencilModifier: true,
+    isStencilModifier: {
+        get: function() {
+            return true;
+        },
+        set: function(value) {
+            // Do nothing
+        }
+    },
 
     /**
      * Sets the alpha strategy to use when rendering the stencil.

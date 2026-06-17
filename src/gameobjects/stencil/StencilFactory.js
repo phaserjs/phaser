@@ -10,11 +10,15 @@ var GameObjectFactory = require('../GameObjectFactory');
 /**
  * Creates a new Stencil Game Object and adds it to the Scene.
  *
- * A Stencil is a special type of Game Object that can hold other Game Objects as children.
- * You can use a Stencil to group related Game Objects together, then move, rotate, scale,
- * or set the alpha of the Stencil to affect all of its children at once. Children are
- * rendered relative to the Stencil's position and transform, making Stencils useful for
- * building composite objects, UI panels, or any group of Game Objects that should move together.
+ * A Stencil is a special type of Game Object used to place stencils over the canvas.
+ * You can use it to efficiently control where subsequent objects are rendered.
+ * It is WebGL-only.
+ * Study the documentation ({@link Phaser.GameObjects.Stencil}) carefully to understand how it works.
+ *
+ * A Stencil is an extended Container Game Object.
+ * It contains a list of child Game Objects to render to the stencil buffer.
+ * Think of these as opaque sheets of card held up over the canvas,
+ * preventing anything from being drawn through them.
  *
  * Note: This method will only be available if the Stencil Game Object has been built into Phaser.
  *
