@@ -29,6 +29,7 @@ module.exports = {
     RenderSteps: require('./RenderSteps'),
     ScrollFactor: require('./ScrollFactor'),
     Size: require('./Size'),
+    StencilModifier: require('./StencilModifier'),
     Texture: require('./Texture'),
     TextureCrop: require('./TextureCrop'),
     Tint: require('./Tint'),
