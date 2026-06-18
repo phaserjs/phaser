@@ -864,6 +864,7 @@ var BatchHandlerQuad = new Class({
         }
 
         // Check render options and run the batch if they differ.
+        renderOptions.alphaStrategy = currentContext.alphaStrategy;
         this.updateRenderOptions(renderOptions);
         if (this._renderOptionsChanged)
         {
