@@ -159,7 +159,7 @@ var Stencil = new Class({
     initialize: function Stencil (scene, x, y, children, options) {
         Container.call(this, scene, x, y, children);
 
-        var options = options || {};
+        options = options || {};
         var stencilAlphaStrategy = options.stencilAlphaStrategy;
         var stencilClearValue = options.stencilClearValue || 0;
         var stencilCompositeCheck = options.stencilCompositeCheck;
@@ -229,7 +229,7 @@ var Stencil = new Class({
         /**
          * The value to clear the stencil buffer to,
          * if the `stencilLayerMode` is `clear` or `clearRegion`.
-         * Must be between 0 and 255.
+         * Should be between 0 and 255, as the buffer is 8 bits.
          *
          * @name Phaser.GameObjects.Stencil#stencilClearValue
          * @type {number}
@@ -292,6 +292,22 @@ var Stencil = new Class({
     },
 
     /**
+     * Sets the value to clear the stencil to,
+     * if the `stencilLayerMode` is `clear` or `clearRegion`.
+     * Should be between 0 and 255, as the buffer is 8 bits.
+     *
+     * @method Phaser.GameObjects.Stencil#setStencilClearValue
+     * @since 4.NEXT
+     * @param {number} stencilClearValue - The value to clear the stencil buffer to.
+     * @returns {this} This Game Object instance.
+     */
+    setStencilClearValue: function (stencilClearValue)
+    {
+        this.stencilClearValue = stencilClearValue;
+        return this;
+    },
+
+    /**
      * Sets whether to composite the contents of the stencil to a framebuffer.
      * While `auto` is default, it must run extra checks,
      * so you should set it to `true` or `false` if you know the answer.
@@ -346,18 +362,18 @@ var Stencil = new Class({
     },
 
     /**
-     * Sets the value to clear the stencil to,
-     * if the `stencilLayerMode` is `clear` or `clearRegion`.
-     * Must be between 0 and 255.
+     * Sets whether to wrap the value in the stencil buffer when it overflows or underflows.
+     * This is useful when defining stencils with subtraction,
+     * and you don't want to underflow from 0 to 255.
      *
-     * @method Phaser.GameObjects.Stencil#setStencilClearValue
+     * @method Phaser.GameObjects.Stencil#setStencilValueWrap
      * @since 4.NEXT
-     * @param {number} stencilClearValue - The value to clear the stencil buffer to.
+     * @param {boolean} stencilValueWrap - Whether to wrap the value in the stencil buffer when it overflows or underflows.
      * @returns {this} This Game Object instance.
      */
-    setStencilClearValue: function (stencilClearValue)
+    setStencilValueWrap: function (stencilValueWrap)
     {
-        this.stencilClearValue = stencilClearValue;
+        this.stencilValueWrap = stencilValueWrap;
         return this;
     },
 

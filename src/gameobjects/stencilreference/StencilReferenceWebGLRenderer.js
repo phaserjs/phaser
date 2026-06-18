@@ -25,6 +25,11 @@ var StencilReferenceWebGLRenderer = function (renderer, src, drawingContext, par
 {
     var stencil = src.targetStencil;
 
+    if (!stencil || stencil.isDestroyed)
+    {
+        return;
+    }
+
     // Cache the stencil options.
     var stencilAlphaStrategy = stencil.stencilAlphaStrategy;
     var stencilClearValue = stencil.stencilClearValue;

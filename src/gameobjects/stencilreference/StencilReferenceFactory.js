@@ -19,7 +19,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @method Phaser.GameObjects.GameObjectFactory#stencilreference
  * @since 4.NEXT
  *
- * @param {Phaser.GameObjects.Stencil} [targetStencil] - The Stencil to use as a reference.
+ * @param {Phaser.GameObjects.Stencil} targetStencil - The Stencil to use as a reference.
  * @param {Phaser.Types.GameObjects.Stencil.StencilOptions} [options] - The options for the StencilReference.
  *
  * @return {Phaser.GameObjects.StencilReference} The Game Object that was created.
