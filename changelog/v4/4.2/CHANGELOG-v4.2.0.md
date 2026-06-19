@@ -44,6 +44,12 @@
 
 ### New Feature: Cone Lights
 
+Cone lights are standard Phaser dynamic lights restricted to a directional cone. They are useful for flashlights, lantern beams, vision cones, headlights, searchlights, and other focal light sources.
+
+Cone lights run through the existing WebGL lighting shader. They do not require a mask, a second Camera, or rendering the map twice. Any Game Object that already works with Phaser lighting can be lit by a cone light.
+
+Full details can be found in the `Phaser 4 Cone Lights.md` file in the docs folder in this repo.
+
 - `Light.coneEnabled` is a new boolean property that controls if the light is restricted to a cone.
 - `Light.coneRotation` is a new number property that sets the cone direction in radians.
 - `Light.coneInnerAngle` is a new number property that sets the inner cone angle in radians.
@@ -53,7 +59,9 @@
 - `Light.setConeAngles` is a new method that sets the cone light inner and outer angles.
 - `Light.disableCone` is a new method that disables a cone light.
 - `LightsManager.addConeLight` is a new method that creates a cone-limited light.
+- The `DefineLights` GLSL shader gains two new uniforms: `vec2 direction` and `vec3 cone`.
 
+Thanks to @FSDevelop for adding this feature.
 
 ### Changes
 
@@ -69,3 +77,4 @@
 - `SpriteGPULayer` no longer has a Mask component, as it's a Canvas feature but the object is WebGL only.
 - `DrawingContext` no longer attempts to unbind textures based on the game canvas, which cannot exist and just wastes time.
 - A Blitter will now call `destroy` on its Bob Game Objects as part of its own destroy process. Fix #7292 (thanks @samme)
+- Fixed a bug where the Line `width` and `height` values were not being updated after a call to `setTo()`. Fix #7270 (thanks @samme)
