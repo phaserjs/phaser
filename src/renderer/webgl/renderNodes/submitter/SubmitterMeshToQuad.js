@@ -90,7 +90,7 @@ var SubmitterMeshToQuad = new Class({
      * @since 4.2.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - The parent matrix of the GameObject, if it is a nested game object.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent matrix of the GameObject, if it is a nested game object.
      * @param {Phaser.Renderer.WebGL.RenderNodes.TransformerVertex} transformerNode - The transformer node used to transform the GameObject.
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [normalMap] - The normal map texture to use for lighting. If omitted, the normal map texture of the GameObject will be used, or the default normal map texture of the renderer.
      * @param {number} [normalMapRotation] - The rotation of the normal map texture. If omitted, the rotation of the GameObject will be used.
@@ -171,7 +171,7 @@ var SubmitterMeshToQuad = new Class({
      * @param {number} texturePage - The index of the texture source to use for the quad.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - The parent matrix of the GameObject, if it is a nested game object.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent matrix of the GameObject, if it is a nested game object.
      * @param {Phaser.Renderer.WebGL.RenderNodes.TransformerVertex} transformerNode - The transformer node used to transform the GameObject.
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} [normalMap] - The normal map texture to use for lighting. If omitted, the normal map texture of the GameObject will be used, or the default normal map texture of the renderer.
      * @param {number} [normalMapRotation] - The rotation of the normal map texture. If omitted, the rotation of the GameObject will be used.

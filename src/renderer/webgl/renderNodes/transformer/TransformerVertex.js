@@ -89,7 +89,7 @@ var TransformerVertex = new Class({
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested.
      * @param {Phaser.Math.Vector2} vertex - The vertex to transform.
      */
     run: function (drawingContext, gameObject, parentMatrix, vertex)
