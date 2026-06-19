@@ -6,9 +6,9 @@
 ![JSDelivr](https://img.shields.io/jsdelivr/npm/hm/phaser?style=for-the-badge)
 ![GitHub](https://img.shields.io/github/downloads/phaserjs/phaser/total?style=for-the-badge)
 
-Phaser is a fast, free, and fun open source HTML5 game framework that offers WebGL and Canvas rendering across desktop and mobile web browsers and has been actively developed for over 10 years.
+Phaser is a fast, free, and fun open source HTML5 game framework that offers WebGL and Canvas rendering across desktop and mobile web browsers and has been actively developed for over 13 years.
 
-Games can be built for the web, or as YouTube Playables, Discord Activities, Twitch Overlays or compiled to iOS, Android, Steam and native apps using 3rd party tools. You can use JavaScript or TypeScript for development. Phaser supports over 40 different front-end frameworks including React and Vue.
+Games can be built for the web, or as YouTube Playables, Discord Activities, Reddit games, Twitch Overlays or compiled to iOS, Android, Steam and native apps using 3rd party tools. You can use JavaScript or TypeScript for development. Phaser supports over 40 different front-end frameworks including React and Vue.
 
 Phaser is commercially developed and maintained by **Phaser Studio Inc** along with our fantastic open source community. As a result of rapid support, and a developer friendly API, Phaser is currently one of the [most starred](https://github.com/collections/javascript-game-engines) game frameworks on GitHub.
 
@@ -37,15 +37,15 @@ import Phaser from 'phaser';
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include _either_ of the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@4.1.0/dist/phaser.js"></script>
-<script src="//cdn.jsdelivr.net/npm/phaser@4.1.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@4.2.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@4.2.0/dist/phaser.min.js"></script>
 ```
 
 It is also available from Cloudflare's [cdnjs](https://cdnjs.com/libraries/phaser):
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/4.1.0/phaser.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/4.1.0/phaser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/4.2.0/phaser.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/4.2.0/phaser.min.js"></script>
 ```
 
 ## Create Phaser Game App
@@ -68,7 +68,7 @@ We support Vue.js, React, Angular, Next.js, SolidJS, Svelte and Remix with Vite,
 
 Don't be alarmed if you look at `phaser.js` and see a file over 8 MB. Over 84% of that is inline documentation - JSDoc comments, type annotations, and detailed method descriptions that power the TypeScript definitions and API docs. It's there for your IDE, not for your players.
 
-The minified build, `phaser.min.js`, strips all of that out and comes in at **345 KB** with standard gzip web server compression. This is the full version, with every feature included, but is still smaller than most title screen images. You can reduce it further still by tweaking the build settings to exclude features your game doesn't need.
+The minified build, `phaser.min.js`, strips all of that out and comes in at **345 KB** with standard gzip web server compression. This is the full version, with every feature included, but is still smaller than most texture images. You can reduce it further still by tweaking the build settings to exclude features your game doesn't need.
 
 | Build | Raw Size | Compressed (gzip) |
 | ----- | -------- | ------------------ |
@@ -199,6 +199,7 @@ We've also included a dedicated [v3 to v4 migration skill](skills/v3-to-v4-migra
 
 We meticulously keep track of new features, updates and bug fixes in our change logs. Each version of Phaser has its own change log:
 
+* [v4.2.0 Change Log](changelog/v4/4.2/CHANGELOG-v4.2.0.md)
 * [v4.1.0 Change Log](changelog/v4/4.1/CHANGELOG-v4.1.0.md)
 * [v4.0.0 Change Log](changelog/v4/4.0/CHANGELOG-v4.0.0.md)
 * [All Phaser Change Logs](CHANGELOG.md)
