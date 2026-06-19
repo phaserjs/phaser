@@ -42,6 +42,19 @@
   - Game objects with the Tint component now support a second tint per corner (`tint2TopLeft` etc), and have a new method `setTint2()`. Additionally, the Mesh2D and Tile objects support constant tint via `tint2`. (TilemapGPULayer does not support tinting on tiles.)
 - `Timestep#setFPSLimit` method changes the frame rate at runtime. This method updates derived properties, making it safer than manually adjusting `Timestep#fpsLimit`.
 
+### New Feature: Cone Lights
+
+- `Light.coneEnabled` is a new boolean property that controls if the light is restricted to a cone.
+- `Light.coneRotation` is a new number property that sets the cone direction in radians.
+- `Light.coneInnerAngle` is a new number property that sets the inner cone angle in radians.
+- `Light.coneOuterAngle` is a new number property that sets the outer cone angle in radians.
+- `Light.setCone` is a new method that sets a Light to be a Cone light.
+- `Light.setConeRotation` is a new method that sets the cone light rotation.
+- `Light.setConeAngles` is a new method that sets the cone light inner and outer angles.
+- `Light.disableCone` is a new method that disables a cone light.
+- `LightsManager.addConeLight` is a new method that creates a cone-limited light.
+
+
 ### Changes
 
 - `GameObjects.Components.Filters` now adds its RenderStep just before the core render method. This allows other steps to run beforehand.
@@ -55,3 +68,4 @@
 - `SpriteGPULayer` no longer tries to access global namespace for Phaser functionality, which can cause a crash in modules.
 - `SpriteGPULayer` no longer has a Mask component, as it's a Canvas feature but the object is WebGL only.
 - `DrawingContext` no longer attempts to unbind textures based on the game canvas, which cannot exist and just wastes time.
+- A Blitter will now call `destroy` on its Bob Game Objects as part of its own destroy process. Fix #7292 (thanks @samme)
