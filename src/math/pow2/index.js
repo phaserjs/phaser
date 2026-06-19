@@ -11,7 +11,10 @@
 module.exports = {
 
     GetNext: require('./GetPowerOfTwo'),
+    GetPowerOfTwo: require('./GetPowerOfTwo'),
     IsSize: require('./IsSizePowerOfTwo'),
-    IsValue: require('./IsValuePowerOfTwo')
+    IsSizePowerOfTwo: require('./IsSizePowerOfTwo'),
+    IsValue: require('./IsValuePowerOfTwo'),
+    IsValuePowerOfTwo: require('./IsValuePowerOfTwo')
 
 };
