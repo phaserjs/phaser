@@ -52,6 +52,6 @@
 ### Fixes
 
 - `Layer` no longer has a duplicate RenderStep which does nothing.
-- SpriteGPULayer no longer tries to access global namespace for Phaser functionality, which can cause a crash in modules.
-- SpriteGPULayer no longer has a Mask component, as it's a Canvas feature but the object is WebGL only.
+- `SpriteGPULayer` no longer tries to access global namespace for Phaser functionality, which can cause a crash in modules.
+- `SpriteGPULayer` no longer has a Mask component, as it's a Canvas feature but the object is WebGL only.
 - `DrawingContext` no longer attempts to unbind textures based on the game canvas, which cannot exist and just wastes time.

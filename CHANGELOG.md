@@ -4,6 +4,7 @@
 
 | Document | Description |
 | -------- | ----------- |
+| [4.2.0 Changelog](changelog/v4/4.2/CHANGELOG-v4.2.0.md) | Full changelog for Phaser 4.2.0 |
 | [4.1.0 Changelog](changelog/v4/4.1/CHANGELOG-v4.1.0.md) | Full changelog for Phaser 4.1.0 |
 | [4.0.0 Changelog](changelog/v4/4.0/CHANGELOG-v4.0.0.md) | Full changelog for Phaser 4.0.0 |
 | [Migration Guide](changelog/v4/4.0/MIGRATION-GUIDE.md) | Guide for upgrading from Phaser 3 to Phaser 4 |
