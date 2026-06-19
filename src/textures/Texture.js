@@ -5,6 +5,7 @@
  */
 
 var Class = require('../utils/Class');
+var FilterMode = require('./const');
 var Frame = require('./Frame');
 var TextureSource = require('./TextureSource');
 
@@ -633,7 +634,7 @@ var Texture = new Class({
 
         if (value)
         {
-            this.setFilter(Phaser.Textures.FilterMode.LINEAR);
+            this.setFilter(FilterMode.LINEAR);
         }
     },
 
