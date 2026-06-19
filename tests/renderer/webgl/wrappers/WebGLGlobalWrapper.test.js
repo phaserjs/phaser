@@ -32,6 +32,7 @@ function createMockGl ()
         clearStencil: vi.fn(),
         stencilFunc: vi.fn(),
         stencilOp: vi.fn(),
+        stencilMask: vi.fn(),
         pixelStorei: vi.fn(),
         bindVertexArray: vi.fn(),
         viewport: vi.fn(),
@@ -440,9 +441,19 @@ describe('WebGLGlobalWrapper', function ()
         it('should enable STENCIL_TEST when enabled changes to true', function ()
         {
             var gl = renderer.gl;
+            wrapper.state.stencil.enabled = false;
             wrapper.updateStencilEnabled({ stencil: { enabled: true } });
             expect(gl.enable).toHaveBeenCalledWith(gl.STENCIL_TEST);
             expect(wrapper.state.stencil.enabled).toBe(true);
+        });
+
+        it('should disable STENCIL_TEST when enabled changes to false', function ()
+        {
+            var gl = renderer.gl;
+            wrapper.state.stencil.enabled = true;
+            wrapper.updateStencilEnabled({ stencil: { enabled: false } });
+            expect(gl.disable).toHaveBeenCalledWith(gl.STENCIL_TEST);
+            expect(wrapper.state.stencil.enabled).toBe(false);
         });
     });
 

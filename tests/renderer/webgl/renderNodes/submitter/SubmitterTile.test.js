@@ -347,8 +347,8 @@ describe('SubmitterTile', function ()
         {
             node.run(drawingContext, gameObject, parentMatrix, null, texturerNode, transformerNode);
             var args = mockBatch.mock.calls[0];
-            // drawingContext + glTexture + 8 quad coords + 4 uv + tintEffect + 4 tints + renderOptions + 8 frame coords = 28
-            expect(args.length).toBe(28);
+            // drawingContext + glTexture + 8 quad coords + 4 uv + tintEffect + 4 tints + renderOptions + 4 secondary tints + 8 frame coords = 32
+            expect(args.length).toBe(32);
         });
     });
 });

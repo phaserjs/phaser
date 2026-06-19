@@ -140,10 +140,10 @@ describe('WebGLGlobalParametersFactory', function ()
             expect(result.scissor.box).toEqual([ 0, 0, 0, 0 ]);
         });
 
-        it('should set stencil.enabled to false', function ()
+        it('should set stencil.enabled to true', function ()
         {
             var result = WebGLGlobalParametersFactory.getDefault(mockRenderer);
-            expect(result.stencil.enabled).toBe(false);
+            expect(result.stencil.enabled).toBe(true);
         });
 
         it('should set stencil.func.ref to 0', function ()

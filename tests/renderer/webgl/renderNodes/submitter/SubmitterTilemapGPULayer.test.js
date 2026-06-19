@@ -372,9 +372,9 @@ describe('SubmitterTilemapGPULayer', function ()
             expect(Array.isArray(SubmitterTilemapGPULayer.prototype.defaultConfig.shaderAdditions)).toBe(true);
         });
 
-        it('should have four shader additions', function ()
+        it('should have five shader additions', function ()
         {
-            expect(SubmitterTilemapGPULayer.prototype.defaultConfig.shaderAdditions.length).toBe(4);
+            expect(SubmitterTilemapGPULayer.prototype.defaultConfig.shaderAdditions.length).toBe(5);
         });
 
         it('should have a vertexBufferLayout defined', function ()

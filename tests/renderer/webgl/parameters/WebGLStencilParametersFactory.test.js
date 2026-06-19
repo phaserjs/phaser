@@ -9,6 +9,7 @@ describe('WebGLStencilParametersFactory', function ()
         mockRenderer = {
             gl: {
                 ALWAYS: 0x0207,
+                EQUAL: 0x0200,
                 KEEP: 0x1E00
             }
         };
@@ -26,18 +27,18 @@ describe('WebGLStencilParametersFactory', function ()
             expect(result).toHaveProperty('clear');
         });
 
-        it('should default enabled to false', function ()
+        it('should default enabled to true', function ()
         {
             var result = WebGLStencilParametersFactory.create(mockRenderer);
 
-            expect(result.enabled).toBe(false);
+            expect(result.enabled).toBe(true);
         });
 
-        it('should default func.func to gl.ALWAYS', function ()
+        it('should default func.func to gl.EQUAL', function ()
         {
             var result = WebGLStencilParametersFactory.create(mockRenderer);
 
-            expect(result.func.func).toBe(mockRenderer.gl.ALWAYS);
+            expect(result.func.func).toBe(mockRenderer.gl.EQUAL);
         });
 
         it('should default func.ref to 0', function ()
