@@ -160,7 +160,7 @@ var Line = new Class({
      *
      * @method Phaser.GameObjects.Line#updateSize
      * @private
-     * @since 4.1.0
+     * @since 4.2.0
      *
      * @return {this} This Line instance.
      */
