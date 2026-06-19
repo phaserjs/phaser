@@ -118,6 +118,7 @@ var BatchHandlerTriFlat = new Class({
         name: 'BatchHandlerTriFlat',
         verticesPerInstance: 3,
         indicesPerInstance: 3,
+        topology: 0x0004,  // gl.TRIANGLES
         shaderName: 'FLAT',
         vertexSource: ShaderSourceVS,
         fragmentSource: ShaderSourceFS,
@@ -341,7 +342,7 @@ var BatchHandlerTriFlat = new Class({
                 vao,
                 instanceCount * indicesPerInstance,
                 0,
-                renderer.gl.TRIANGLES
+                this.topology
             );
         }
 

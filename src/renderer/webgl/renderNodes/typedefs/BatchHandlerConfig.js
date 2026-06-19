@@ -14,6 +14,7 @@
  * @property {number} [indicesPerInstance=6] - The number of indices per instance. This is used to populate and advance the element buffer. Default quads use 6 indices in the TRIANGLE_STRIP pattern [0, 0, 1, 2, 3, 3] to connect independent quads with degenerate topology. The minimum number is 3.
  * @property {number} [maxTexturesPerBatch] - The maximum number of textures per batch entry. This defaults to the maximum number of textures supported by the renderer. It is used to compile the shader program. At runtime, the manager may suggest a different number, which is interpreted by the node's `updateTextureCount` method.
  * @property {boolean} [indexBufferDynamic=false] - Whether the index buffer should be created as a dynamic buffer. This is useful for handlers that need to change the index data frequently.
+ * @property {number} [topology=gl.TRIANGLE_STRIP] - The topology to use for the batch handler. This is the GL topology to use for the draw call. Default is TRIANGLE_STRIP.
  * @property {string} [shaderName] - The base name to use for the shader program.
  * @property {string} [vertexSource] - The vertex shader source code. If not provided, a default quad shader will be used.
  * @property {string} [fragmentSource] - The fragment shader source code. If not provided, a default quad shader will be used.

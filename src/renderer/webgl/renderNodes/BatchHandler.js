@@ -118,6 +118,15 @@ var BatchHandler = new Class({
          */
         this.maxTexturesPerBatch = 1;
 
+        /**
+         * The topology to use for the batch handler. This is the GL topology to use for the draw call.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandler#topology
+         * @type {number}
+         * @since 4.NEXT
+         */
+        this.topology = config.topology || gl.TRIANGLE_STRIP;
+
         // Listen for changes to the number of draw calls per batch.
         this.manager.on(
             Renderer.Events.SET_PARALLEL_TEXTURE_UNITS,
@@ -282,6 +291,7 @@ var BatchHandler = new Class({
         newConfig.name = config.name || defaultConfig.name;
         newConfig.verticesPerInstance = config.verticesPerInstance || defaultConfig.verticesPerInstance;
         newConfig.indicesPerInstance = config.indicesPerInstance || defaultConfig.indicesPerInstance;
+        newConfig.topology = config.topology || defaultConfig.topology;
 
         newConfig.shaderName = config.shaderName || defaultConfig.shaderName;
         newConfig.vertexSource = config.vertexSource || defaultConfig.vertexSource;

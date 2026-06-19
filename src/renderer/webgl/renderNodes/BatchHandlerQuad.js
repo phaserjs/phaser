@@ -640,7 +640,8 @@ var BatchHandlerQuad = new Class({
                     program,
                     vao,
                     entry.count * indicesPerInstance,
-                    entry.start * bytesPerIndexPerInstance
+                    entry.start * bytesPerIndexPerInstance,
+                    this.topology
                 );
             }
         }

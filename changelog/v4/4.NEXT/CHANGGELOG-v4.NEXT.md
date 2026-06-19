@@ -25,6 +25,7 @@
         - `keep`: use alpha as normal.
         - `dither`: use a dithering algorithm to select pixels to discard.
         - `threshold`: discard all pixels below a certain alpha.
+- `BatchHandler` render node now has a config option for `topology`, allowing extended nodes to opt into different triangulation modes.
 - `DrawingContext` adds more controls:
     - Alpha strategy
     - Color writemask
