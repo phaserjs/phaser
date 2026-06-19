@@ -1,18 +1,4 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+"use strict";
 // ---------------------------------------------------------------------------
 // Phaser TypeScript Definitions Test
 // ---------------------------------------------------------------------------
@@ -20,17 +6,17 @@ var __extends = (this && this.__extends) || (function () {
 // TypeScript compilation errors reveal problems in the generated .d.ts file.
 // It is NOT a runtime test -- it just needs to compile cleanly.
 // ---------------------------------------------------------------------------
+Object.defineProperty(exports, "__esModule", { value: true });
 // ---------------------------------------------------------------------------
 // Scene
 // ---------------------------------------------------------------------------
-var BootScene = /** @class */ (function (_super) {
-    __extends(BootScene, _super);
-    function BootScene() {
-        return _super.call(this, { key: 'BootScene', active: true }) || this;
+class BootScene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'BootScene', active: true });
     }
-    BootScene.prototype.init = function (data) {
-    };
-    BootScene.prototype.preload = function () {
+    init(data) {
+    }
+    preload() {
         // Loader - various file types (files do not exist, so these will 404 at runtime, but that's not what we're testing here)
         this.load.image('logo', 'assets/logo.png');
         this.load.atlas('cards', 'assets/atlas/cards.png', 'assets/atlas/cards.json');
@@ -44,15 +30,15 @@ var BootScene = /** @class */ (function (_super) {
         this.load.html('form', 'assets/form.html');
         this.load.video('intro', 'assets/intro.mp4');
         // Loader events
-        this.load.on(Phaser.Loader.Events.COMPLETE, function () { });
-        this.load.on(Phaser.Loader.Events.PROGRESS, function (value) { });
-    };
-    BootScene.prototype.create = function () {
+        this.load.on(Phaser.Loader.Events.COMPLETE, () => { });
+        this.load.on(Phaser.Loader.Events.PROGRESS, (value) => { });
+    }
+    create() {
         // ---------------------------------------------------------------
         // Game Objects - Core types
         // ---------------------------------------------------------------
         // Image
-        var image = this.add.image(100, 100, 'logo');
+        let image = this.add.image(100, 100, 'logo');
         image.setOrigin(0.5, 0.5);
         image.setScale(2);
         image.setAngle(45);
@@ -75,13 +61,13 @@ var BootScene = /** @class */ (function (_super) {
         image.setDataEnabled();
         image.destroy();
         // Sprite
-        var sprite = this.add.sprite(400, 300, 'cards', 'clubs3');
+        let sprite = this.add.sprite(400, 300, 'cards', 'clubs3');
         sprite.play('walk');
         sprite.anims.pause();
         sprite.anims.resume();
         sprite.anims.stop();
         // Text
-        var text = this.add.text(100, 100, 'Hello Phaser 4', {
+        let text = this.add.text(100, 100, 'Hello Phaser 4', {
             fontFamily: 'Arial',
             fontSize: '32px',
             color: '#ffffff',
@@ -101,25 +87,25 @@ var BootScene = /** @class */ (function (_super) {
         text.setWordWrapWidth(400);
         text.setPadding(10, 10, 10, 10);
         // BitmapText
-        var bitmapText = this.add.bitmapText(200, 200, 'font', 'Hello', 32);
+        let bitmapText = this.add.bitmapText(200, 200, 'font', 'Hello', 32);
         bitmapText.setText('Updated');
         bitmapText.setFontSize(48);
         bitmapText.setLetterSpacing(2);
         bitmapText.setTint(0x00ff00);
         // Container
-        var container = this.add.container(0, 0);
+        let container = this.add.container(0, 0);
         container.add(sprite);
         container.addAt(image, 0);
         container.setSize(300, 200);
         container.setDepth(5);
         container.removeAll();
         // Layer
-        var layer = this.add.layer();
+        let layer = this.add.layer();
         layer.add(sprite);
         layer.setDepth(1);
         layer.setVisible(true);
         // Graphics
-        var graphics = this.add.graphics();
+        let graphics = this.add.graphics();
         graphics.fillStyle(0xff0000, 1);
         graphics.fillRect(0, 0, 100, 100);
         graphics.fillCircle(200, 200, 50);
@@ -136,33 +122,33 @@ var BootScene = /** @class */ (function (_super) {
         graphics.fillPath();
         graphics.clear();
         // Shapes
-        var rect = this.add.rectangle(100, 100, 200, 150, 0xff0000);
+        let rect = this.add.rectangle(100, 100, 200, 150, 0xff0000);
         rect.setStrokeStyle(2, 0x00ff00);
-        var circle = this.add.circle(300, 300, 50, 0x0000ff);
+        let circle = this.add.circle(300, 300, 50, 0x0000ff);
         circle.setStrokeStyle(1, 0xffffff);
-        var triangle = this.add.triangle(400, 400, 0, 100, 50, 0, 100, 100, 0xff00ff);
-        var ellipse = this.add.ellipse(500, 300, 120, 80, 0xffff00);
-        var line = this.add.line(0, 0, 100, 100, 300, 300, 0x00ffff);
+        let triangle = this.add.triangle(400, 400, 0, 100, 50, 0, 100, 100, 0xff00ff);
+        let ellipse = this.add.ellipse(500, 300, 120, 80, 0xffff00);
+        let line = this.add.line(0, 0, 100, 100, 300, 300, 0x00ffff);
         line.setLineWidth(3);
-        var star = this.add.star(200, 200, 5, 30, 60, 0xffaa00);
-        var polygon = this.add.polygon(300, 300, [0, 0, 100, 0, 100, 100, 0, 100], 0x00aaff);
-        var arc = this.add.arc(400, 200, 50, 0, 270, false, 0xaa00ff);
-        var grid = this.add.grid(400, 300, 256, 256, 32, 32, 0x222222, 1, 0x444444, 1);
+        let star = this.add.star(200, 200, 5, 30, 60, 0xffaa00);
+        let polygon = this.add.polygon(300, 300, [0, 0, 100, 0, 100, 100, 0, 100], 0x00aaff);
+        let arc = this.add.arc(400, 200, 50, 0, 270, false, 0xaa00ff);
+        let grid = this.add.grid(400, 300, 256, 256, 32, 32, 0x222222, 1, 0x444444, 1);
         // NineSlice
-        var nineSlice = this.add.nineslice(400, 300, 'logo', undefined, 256, 128, 20, 20, 20, 20);
+        let nineSlice = this.add.nineslice(400, 300, 'logo', undefined, 256, 128, 20, 20, 20, 20);
         nineSlice.setSize(512, 256);
         // TileSprite
-        var tileSprite = this.add.tileSprite(400, 300, 800, 600, 'logo');
+        let tileSprite = this.add.tileSprite(400, 300, 800, 600, 'logo');
         tileSprite.setTilePosition(10, 20);
         tileSprite.setTileScale(2, 2);
         // Video
-        var video = this.add.video(400, 300, 'intro');
+        let video = this.add.video(400, 300, 'intro');
         video.play(true);
         // Zone
-        var zone = this.add.zone(400, 300, 200, 200);
+        let zone = this.add.zone(400, 300, 200, 200);
         zone.setInteractive();
         // Particles
-        var particles = this.add.particles(400, 300, 'logo', {
+        let particles = this.add.particles(400, 300, 'logo', {
             speed: 100,
             scale: { start: 1, end: 0 },
             lifespan: 2000,
@@ -178,15 +164,15 @@ var BootScene = /** @class */ (function (_super) {
         particles.stop();
         particles.start();
         // Blitter
-        var blitter = this.add.blitter(0, 0, 'cards');
+        let blitter = this.add.blitter(0, 0, 'cards');
         blitter.create(100, 100, 'clubs3');
         // ---------------------------------------------------------------
         // RenderTexture / DynamicTexture
         // ---------------------------------------------------------------
-        var rt = this.add.renderTexture(400, 300, 256, 256);
+        let rt = this.add.renderTexture(400, 300, 256, 256);
         rt.draw(sprite);
         rt.clear();
-        var dt = this.textures.addDynamicTexture('dynamic', 256, 256);
+        let dt = this.textures.addDynamicTexture('dynamic', 256, 256);
         if (dt) {
             dt.fill(0xff0000);
             dt.stamp('logo', undefined, 128, 128);
@@ -212,42 +198,42 @@ var BootScene = /** @class */ (function (_super) {
             repeat: 0,
             hideOnComplete: true
         });
-        var anim = this.anims.get('walk');
+        let anim = this.anims.get('walk');
         if (anim) {
-            var totalFrames = anim.getTotalFrames();
+            let totalFrames = anim.getTotalFrames();
         }
         this.anims.remove('walk');
         // ---------------------------------------------------------------
         // Input
         // ---------------------------------------------------------------
         // Pointer input
-        this.input.on(Phaser.Input.Events.POINTER_DOWN, function (pointer) {
-            var x = pointer.x;
-            var y = pointer.y;
-            var isDown = pointer.isDown;
-            var worldX = pointer.worldX;
-            var worldY = pointer.worldY;
+        this.input.on(Phaser.Input.Events.POINTER_DOWN, (pointer) => {
+            let x = pointer.x;
+            let y = pointer.y;
+            let isDown = pointer.isDown;
+            let worldX = pointer.worldX;
+            let worldY = pointer.worldY;
         });
-        this.input.on(Phaser.Input.Events.POINTER_UP, function () { });
-        this.input.on(Phaser.Input.Events.POINTER_MOVE, function () { });
+        this.input.on(Phaser.Input.Events.POINTER_UP, () => { });
+        this.input.on(Phaser.Input.Events.POINTER_MOVE, () => { });
         // Game object input events
-        sprite.on(Phaser.Input.Events.POINTER_OVER, function () { });
-        sprite.on(Phaser.Input.Events.POINTER_OUT, function () { });
-        sprite.on(Phaser.Input.Events.DRAG_START, function () { });
-        sprite.on(Phaser.Input.Events.DRAG, function () { });
-        sprite.on(Phaser.Input.Events.DRAG_END, function () { });
+        sprite.on(Phaser.Input.Events.POINTER_OVER, () => { });
+        sprite.on(Phaser.Input.Events.POINTER_OUT, () => { });
+        sprite.on(Phaser.Input.Events.DRAG_START, () => { });
+        sprite.on(Phaser.Input.Events.DRAG, () => { });
+        sprite.on(Phaser.Input.Events.DRAG_END, () => { });
         this.input.setDraggable(sprite);
         // Keyboard
-        var cursors = this.input.keyboard.createCursorKeys();
-        var spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        var combo = this.input.keyboard.createCombo('PHASER', {
+        let cursors = this.input.keyboard.createCursorKeys();
+        let spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        let combo = this.input.keyboard.createCombo('PHASER', {
             resetOnWrongKey: true,
             resetOnMatch: true
         });
         // ---------------------------------------------------------------
         // Camera
         // ---------------------------------------------------------------
-        var cam = this.cameras.main;
+        let cam = this.cameras.main;
         cam.setZoom(1.5);
         cam.setScroll(100, 100);
         cam.setBounds(0, 0, 1600, 1200);
@@ -267,12 +253,12 @@ var BootScene = /** @class */ (function (_super) {
         cam.ignore(graphics);
         cam.centerOn(400, 300);
         cam.setViewport(0, 0, 800, 600);
-        var cam2 = this.cameras.add(0, 0, 400, 300);
+        let cam2 = this.cameras.add(0, 0, 400, 300);
         this.cameras.remove(cam2);
         // ---------------------------------------------------------------
         // Tweens
         // ---------------------------------------------------------------
-        var tween = this.tweens.add({
+        let tween = this.tweens.add({
             targets: sprite,
             x: 600,
             y: 400,
@@ -287,18 +273,18 @@ var BootScene = /** @class */ (function (_super) {
             repeatDelay: 200,
             yoyo: true,
             hold: 100,
-            onStart: function () { },
-            onComplete: function () { },
-            onUpdate: function () { },
-            onRepeat: function () { },
-            onYoyo: function () { }
+            onStart: () => { },
+            onComplete: () => { },
+            onUpdate: () => { },
+            onRepeat: () => { },
+            onYoyo: () => { }
         });
         tween.pause();
         tween.resume();
         tween.stop();
         tween.remove();
         // Tween chain
-        var chain = this.tweens.chain({
+        let chain = this.tweens.chain({
             targets: sprite,
             tweens: [
                 { x: 100, duration: 500 },
@@ -308,13 +294,13 @@ var BootScene = /** @class */ (function (_super) {
             loop: 2
         });
         // Number tween
-        var counter = this.tweens.addCounter({
+        let counter = this.tweens.addCounter({
             from: 0,
             to: 100,
             duration: 2000,
             ease: 'Linear',
-            onUpdate: function (tween) {
-                var value = tween.getValue();
+            onUpdate: (tween) => {
+                let value = tween.getValue();
             }
         });
         // Stagger
@@ -329,15 +315,15 @@ var BootScene = /** @class */ (function (_super) {
         // ---------------------------------------------------------------
         this.time.addEvent({
             delay: 1000,
-            callback: function () { },
+            callback: () => { },
             callbackScope: this,
             loop: true
         });
-        this.time.delayedCall(2000, function () { });
+        this.time.delayedCall(2000, () => { });
         // ---------------------------------------------------------------
         // Physics - Arcade
         // ---------------------------------------------------------------
-        var physSprite = this.physics.add.sprite(400, 300, 'logo');
+        let physSprite = this.physics.add.sprite(400, 300, 'logo');
         physSprite.setVelocity(100, 200);
         physSprite.setAcceleration(10, 10);
         physSprite.setBounce(0.5, 0.5);
@@ -351,26 +337,26 @@ var BootScene = /** @class */ (function (_super) {
         physSprite.setCircle(16);
         physSprite.setSize(32, 32);
         physSprite.setOffset(0, 0);
-        var physImage = this.physics.add.image(200, 200, 'logo');
+        let physImage = this.physics.add.image(200, 200, 'logo');
         physImage.setVelocityX(50);
-        var staticGroup = this.physics.add.staticGroup();
-        var dynamicGroup = this.physics.add.group();
+        let staticGroup = this.physics.add.staticGroup();
+        let dynamicGroup = this.physics.add.group();
         this.physics.add.collider(physSprite, staticGroup);
-        this.physics.add.overlap(physSprite, dynamicGroup, function (obj1, obj2) { });
+        this.physics.add.overlap(physSprite, dynamicGroup, (obj1, obj2) => { });
         this.physics.world.setBounds(0, 0, 1600, 1200);
         this.physics.world.gravity.y = 300;
-        var closest = this.physics.closest(physSprite);
+        let closest = this.physics.closest(physSprite);
         // ---------------------------------------------------------------
         // Tilemap
         // ---------------------------------------------------------------
-        var tilemap = this.make.tilemap({ key: 'map' });
-        var tileset = tilemap.addTilesetImage('tiles', 'logo');
+        let tilemap = this.make.tilemap({ key: 'map' });
+        let tileset = tilemap.addTilesetImage('tiles', 'logo');
         if (tileset) {
-            var tilemapLayer = tilemap.createLayer('ground', tileset, 0, 0);
+            let tilemapLayer = tilemap.createLayer('ground', tileset, 0, 0);
             if (tilemapLayer) {
                 tilemapLayer.setCollisionByProperty({ collides: true });
                 tilemapLayer.setCollisionBetween(1, 100);
-                tilemapLayer.setTileIndexCallback(1, function () { }, this);
+                tilemapLayer.setTileIndexCallback(1, () => { }, this);
                 tilemap.setCollision([1, 2, 3]);
             }
             tilemap.createFromObjects('objects', { gid: 1 });
@@ -392,7 +378,7 @@ var BootScene = /** @class */ (function (_super) {
         // ---------------------------------------------------------------
         // Sound
         // ---------------------------------------------------------------
-        var sound = this.sound.add('bgm', {
+        let sound = this.sound.add('bgm', {
             volume: 0.5,
             loop: true,
             delay: 0
@@ -408,7 +394,7 @@ var BootScene = /** @class */ (function (_super) {
         // Data Manager
         // ---------------------------------------------------------------
         this.registry.set('highscore', 1000);
-        var hs = this.registry.get('highscore');
+        let hs = this.registry.get('highscore');
         this.registry.remove('highscore');
         this.data.set('lives', 3);
         this.data.get('lives');
@@ -416,55 +402,55 @@ var BootScene = /** @class */ (function (_super) {
         // ---------------------------------------------------------------
         // Events
         // ---------------------------------------------------------------
-        this.events.on('custom-event', function (data) { });
+        this.events.on('custom-event', (data) => { });
         this.events.emit('custom-event', { score: 100 });
-        this.events.once('one-time', function () { });
+        this.events.once('one-time', () => { });
         this.events.off('custom-event');
-        this.game.events.on(Phaser.Core.Events.BLUR, function () { });
-        this.game.events.on(Phaser.Core.Events.FOCUS, function () { });
-        this.game.events.on(Phaser.Core.Events.HIDDEN, function () { });
-        this.game.events.on(Phaser.Core.Events.VISIBLE, function () { });
+        this.game.events.on(Phaser.Core.Events.BLUR, () => { });
+        this.game.events.on(Phaser.Core.Events.FOCUS, () => { });
+        this.game.events.on(Phaser.Core.Events.HIDDEN, () => { });
+        this.game.events.on(Phaser.Core.Events.VISIBLE, () => { });
         // ---------------------------------------------------------------
         // Math
         // ---------------------------------------------------------------
-        var between = Phaser.Math.Between(1, 100);
-        var clamp = Phaser.Math.Clamp(150, 0, 100);
-        var distance = Phaser.Math.Distance.Between(0, 0, 100, 100);
-        var chebyshev = Phaser.Math.Distance.Chebyshev(0, 0, 100, 100);
-        var snake = Phaser.Math.Distance.Snake(0, 0, 100, 100);
-        var mathAngle = Phaser.Math.Angle.Between(0, 0, 100, 100);
-        var angleBetweenPoints = Phaser.Math.Angle.BetweenPoints({ x: 0, y: 0 }, { x: 100, y: 100 });
-        var angleWrap = Phaser.Math.Angle.Wrap(7);
-        var degToRad = Phaser.Math.DegToRad(90);
-        var radToDeg = Phaser.Math.RadToDeg(Math.PI);
-        var lerp = Phaser.Math.Linear(0, 100, 0.5);
-        var percent = Phaser.Math.Percent(50, 0, 100);
-        var snap = Phaser.Math.Snap.To(55, 10);
-        var snapFloor = Phaser.Math.Snap.Floor(55, 10);
-        var snapCeil = Phaser.Math.Snap.Ceil(55, 10);
-        var fuzzyEqual = Phaser.Math.Fuzzy.Equal(1.001, 1, 0.01);
-        var fuzzyGreater = Phaser.Math.Fuzzy.GreaterThan(1.001, 1, 0.01);
-        var fuzzyLess = Phaser.Math.Fuzzy.LessThan(0.999, 1, 0.01);
-        var tau = Phaser.Math.TAU;
-        var piOver2 = Phaser.Math.PI_OVER_2;
+        let between = Phaser.Math.Between(1, 100);
+        let clamp = Phaser.Math.Clamp(150, 0, 100);
+        let distance = Phaser.Math.Distance.Between(0, 0, 100, 100);
+        let chebyshev = Phaser.Math.Distance.Chebyshev(0, 0, 100, 100);
+        let snake = Phaser.Math.Distance.Snake(0, 0, 100, 100);
+        let mathAngle = Phaser.Math.Angle.Between(0, 0, 100, 100);
+        let angleBetweenPoints = Phaser.Math.Angle.BetweenPoints({ x: 0, y: 0 }, { x: 100, y: 100 });
+        let angleWrap = Phaser.Math.Angle.Wrap(7);
+        let degToRad = Phaser.Math.DegToRad(90);
+        let radToDeg = Phaser.Math.RadToDeg(Math.PI);
+        let lerp = Phaser.Math.Linear(0, 100, 0.5);
+        let percent = Phaser.Math.Percent(50, 0, 100);
+        let snap = Phaser.Math.Snap.To(55, 10);
+        let snapFloor = Phaser.Math.Snap.Floor(55, 10);
+        let snapCeil = Phaser.Math.Snap.Ceil(55, 10);
+        let fuzzyEqual = Phaser.Math.Fuzzy.Equal(1.001, 1, 0.01);
+        let fuzzyGreater = Phaser.Math.Fuzzy.GreaterThan(1.001, 1, 0.01);
+        let fuzzyLess = Phaser.Math.Fuzzy.LessThan(0.999, 1, 0.01);
+        let tau = Phaser.Math.TAU;
+        let piOver2 = Phaser.Math.PI_OVER_2;
         // Vector2
-        var v1 = new Phaser.Math.Vector2(10, 20);
-        var v2 = new Phaser.Math.Vector2(30, 40);
+        let v1 = new Phaser.Math.Vector2(10, 20);
+        let v2 = new Phaser.Math.Vector2(30, 40);
         v1.add(v2);
         v1.subtract(v2);
         v1.scale(2);
         v1.normalize();
-        var len = v1.length();
-        var lenSq = v1.lengthSq();
-        var dot = v1.dot(v2);
-        var cross = v1.cross(v2);
+        let len = v1.length();
+        let lenSq = v1.lengthSq();
+        let dot = v1.dot(v2);
+        let cross = v1.cross(v2);
         v1.lerp(v2, 0.5);
         v1.set(5, 10);
         v1.setAngle(Math.PI);
         v1.setLength(100);
         v1.negate();
         v1.rotate(Math.PI / 2);
-        var v1Clone = v1.clone();
+        let v1Clone = v1.clone();
         v1.copy(v2);
         v1.equals(v2);
         v1.ceil();
@@ -472,15 +458,15 @@ var BootScene = /** @class */ (function (_super) {
         v1.invert();
         v1.project(v2);
         // Vector3
-        var v3 = new Phaser.Math.Vector3(1, 2, 3);
-        var v4 = new Phaser.Math.Vector3(4, 5, 6);
+        let v3 = new Phaser.Math.Vector3(1, 2, 3);
+        let v4 = new Phaser.Math.Vector3(4, 5, 6);
         v3.add(v4);
         v3.subtract(v4);
         v3.scale(2);
         v3.normalize();
         v3.cross(v4);
         // Matrix
-        var matrix = new Phaser.Math.Matrix4();
+        let matrix = new Phaser.Math.Matrix4();
         matrix.identity();
         matrix.translate(new Phaser.Math.Vector3(1, 2, 3));
         matrix.scale(new Phaser.Math.Vector3(2, 2, 2));
@@ -488,109 +474,109 @@ var BootScene = /** @class */ (function (_super) {
         matrix.transpose();
         matrix.determinant();
         // Random data generator
-        var rng = new Phaser.Math.RandomDataGenerator(['seed1']);
-        var rngInt = rng.integer();
-        var rngReal = rng.real();
-        var rngFrac = rng.frac();
-        var rngBetween = rng.between(0, 100);
-        var rngSign = rng.sign();
-        var rngAngle = rng.angle();
-        var rngPick = rng.pick(['a', 'b', 'c']);
-        var rngWeightedPick = rng.weightedPick(['a', 'b', 'c']);
+        let rng = new Phaser.Math.RandomDataGenerator(['seed1']);
+        let rngInt = rng.integer();
+        let rngReal = rng.real();
+        let rngFrac = rng.frac();
+        let rngBetween = rng.between(0, 100);
+        let rngSign = rng.sign();
+        let rngAngle = rng.angle();
+        let rngPick = rng.pick(['a', 'b', 'c']);
+        let rngWeightedPick = rng.weightedPick(['a', 'b', 'c']);
         // ---------------------------------------------------------------
         // Geometry
         // ---------------------------------------------------------------
         // Circle
-        var geomCircle = new Phaser.Geom.Circle(100, 100, 50);
-        var circleArea = Phaser.Geom.Circle.Area(geomCircle);
-        var circumference = Phaser.Geom.Circle.Circumference(geomCircle);
-        var circleContains = geomCircle.contains(110, 110);
-        var circlePoint = geomCircle.getPoint(0.5);
-        var circlePoints = geomCircle.getPoints(10);
-        var circleRandom = geomCircle.getRandomPoint();
+        let geomCircle = new Phaser.Geom.Circle(100, 100, 50);
+        let circleArea = Phaser.Geom.Circle.Area(geomCircle);
+        let circumference = Phaser.Geom.Circle.Circumference(geomCircle);
+        let circleContains = geomCircle.contains(110, 110);
+        let circlePoint = geomCircle.getPoint(0.5);
+        let circlePoints = geomCircle.getPoints(10);
+        let circleRandom = geomCircle.getRandomPoint();
         // Rectangle
-        var geomRect = new Phaser.Geom.Rectangle(0, 0, 200, 100);
-        var rectArea = Phaser.Geom.Rectangle.Area(geomRect);
-        var rectPerimeter = Phaser.Geom.Rectangle.Perimeter(geomRect);
-        var rectContains = geomRect.contains(50, 50);
-        var rectPoint = geomRect.getPoint(0.5);
-        var rectPoints = geomRect.getPoints(10);
-        var rectRandom = geomRect.getRandomPoint();
-        var rectCenter = Phaser.Geom.Rectangle.GetCenter(geomRect);
-        var rectSize = Phaser.Geom.Rectangle.GetSize(geomRect);
+        let geomRect = new Phaser.Geom.Rectangle(0, 0, 200, 100);
+        let rectArea = Phaser.Geom.Rectangle.Area(geomRect);
+        let rectPerimeter = Phaser.Geom.Rectangle.Perimeter(geomRect);
+        let rectContains = geomRect.contains(50, 50);
+        let rectPoint = geomRect.getPoint(0.5);
+        let rectPoints = geomRect.getPoints(10);
+        let rectRandom = geomRect.getRandomPoint();
+        let rectCenter = Phaser.Geom.Rectangle.GetCenter(geomRect);
+        let rectSize = Phaser.Geom.Rectangle.GetSize(geomRect);
         Phaser.Geom.Rectangle.Inflate(geomRect, 10, 10);
         Phaser.Geom.Rectangle.CeilAll(geomRect);
         Phaser.Geom.Rectangle.FloorAll(geomRect);
         // Line
-        var geomLine = new Phaser.Geom.Line(0, 0, 100, 100);
-        var lineLength = Phaser.Geom.Line.Length(geomLine);
-        var lineAngle = Phaser.Geom.Line.Angle(geomLine);
-        var linePoint = geomLine.getPoint(0.5);
-        var linePoints = geomLine.getPoints(10);
-        var lineMid = Phaser.Geom.Line.GetMidPoint(geomLine);
+        let geomLine = new Phaser.Geom.Line(0, 0, 100, 100);
+        let lineLength = Phaser.Geom.Line.Length(geomLine);
+        let lineAngle = Phaser.Geom.Line.Angle(geomLine);
+        let linePoint = geomLine.getPoint(0.5);
+        let linePoints = geomLine.getPoints(10);
+        let lineMid = Phaser.Geom.Line.GetMidPoint(geomLine);
         // Triangle
-        var geomTriangle = new Phaser.Geom.Triangle(0, 100, 50, 0, 100, 100);
-        var triArea = Phaser.Geom.Triangle.Area(geomTriangle);
-        var triContains = geomTriangle.contains(50, 50);
-        var triPoint = geomTriangle.getPoint(0.5);
-        var triPoints = geomTriangle.getPoints(10);
-        var triCentroid = Phaser.Geom.Triangle.Centroid(geomTriangle);
-        var triInCenter = Phaser.Geom.Triangle.InCenter(geomTriangle);
+        let geomTriangle = new Phaser.Geom.Triangle(0, 100, 50, 0, 100, 100);
+        let triArea = Phaser.Geom.Triangle.Area(geomTriangle);
+        let triContains = geomTriangle.contains(50, 50);
+        let triPoint = geomTriangle.getPoint(0.5);
+        let triPoints = geomTriangle.getPoints(10);
+        let triCentroid = Phaser.Geom.Triangle.Centroid(geomTriangle);
+        let triInCenter = Phaser.Geom.Triangle.InCenter(geomTriangle);
         // Ellipse
-        var geomEllipse = new Phaser.Geom.Ellipse(200, 200, 100, 60);
-        var ellipseArea = Phaser.Geom.Ellipse.Area(geomEllipse);
-        var ellipseContains = geomEllipse.contains(200, 200);
-        var ellipsePoint = geomEllipse.getPoint(0.5);
-        var ellipsePoints = geomEllipse.getPoints(10);
+        let geomEllipse = new Phaser.Geom.Ellipse(200, 200, 100, 60);
+        let ellipseArea = Phaser.Geom.Ellipse.Area(geomEllipse);
+        let ellipseContains = geomEllipse.contains(200, 200);
+        let ellipsePoint = geomEllipse.getPoint(0.5);
+        let ellipsePoints = geomEllipse.getPoints(10);
         // Polygon
-        var geomPolygon = new Phaser.Geom.Polygon([0, 0, 100, 0, 100, 100, 0, 100]);
-        var polyArea = Phaser.Geom.Polygon.GetAABB(geomPolygon).width;
-        var polyContains = geomPolygon.contains(50, 50);
-        var polyPoints = geomPolygon.getPoints(10);
+        let geomPolygon = new Phaser.Geom.Polygon([0, 0, 100, 0, 100, 100, 0, 100]);
+        let polyArea = Phaser.Geom.Polygon.GetAABB(geomPolygon).width;
+        let polyContains = geomPolygon.contains(50, 50);
+        let polyPoints = geomPolygon.getPoints(10);
         // Intersects
-        var rectOverlap = Phaser.Geom.Intersects.RectangleToRectangle(geomRect, new Phaser.Geom.Rectangle(50, 50, 100, 100));
-        var circleRect = Phaser.Geom.Intersects.CircleToRectangle(geomCircle, geomRect);
-        var lineRect = Phaser.Geom.Intersects.LineToRectangle(geomLine, geomRect);
-        var lineCircle = Phaser.Geom.Intersects.LineToCircle(geomLine, geomCircle);
+        let rectOverlap = Phaser.Geom.Intersects.RectangleToRectangle(geomRect, new Phaser.Geom.Rectangle(50, 50, 100, 100));
+        let circleRect = Phaser.Geom.Intersects.CircleToRectangle(geomCircle, geomRect);
+        let lineRect = Phaser.Geom.Intersects.LineToRectangle(geomLine, geomRect);
+        let lineCircle = Phaser.Geom.Intersects.LineToCircle(geomLine, geomCircle);
         // ---------------------------------------------------------------
         // Display - Color
         // ---------------------------------------------------------------
-        var color = new Phaser.Display.Color(255, 128, 0, 255);
-        var r = color.red;
-        var g = color.green;
-        var b = color.blue;
-        var a = color.alpha;
-        var colorInt = color.color;
-        var colorStr = color.rgba;
+        let color = new Phaser.Display.Color(255, 128, 0, 255);
+        let r = color.red;
+        let g = color.green;
+        let b = color.blue;
+        let a = color.alpha;
+        let colorInt = color.color;
+        let colorStr = color.rgba;
         color.setTo(0, 255, 0, 255);
-        var fromHex = Phaser.Display.Color.HexStringToColor('#ff0000');
-        var fromInt = Phaser.Display.Color.IntegerToColor(0xff0000);
-        var fromRGB = Phaser.Display.Color.RGBStringToColor('rgb(255,0,0)');
-        var fromValue = Phaser.Display.Color.ValueToColor('#ff0000');
-        var random = Phaser.Display.Color.RandomRGB();
-        var interpolated = Phaser.Display.Color.Interpolate.ColorWithColor(color, fromHex, 100, 50);
+        let fromHex = Phaser.Display.Color.HexStringToColor('#ff0000');
+        let fromInt = Phaser.Display.Color.IntegerToColor(0xff0000);
+        let fromRGB = Phaser.Display.Color.RGBStringToColor('rgb(255,0,0)');
+        let fromValue = Phaser.Display.Color.ValueToColor('#ff0000');
+        let random = Phaser.Display.Color.RandomRGB();
+        let interpolated = Phaser.Display.Color.Interpolate.ColorWithColor(color, fromHex, 100, 50);
         // ---------------------------------------------------------------
         // Texture Manager
         // ---------------------------------------------------------------
-        var texManager = this.textures;
-        var exists = texManager.exists('logo');
-        var texture = texManager.get('logo');
-        var frame = texture.get();
-        var frameWidth = frame.width;
-        var frameHeight = frame.height;
+        let texManager = this.textures;
+        let exists = texManager.exists('logo');
+        let texture = texManager.get('logo');
+        let frame = texture.get();
+        let frameWidth = frame.width;
+        let frameHeight = frame.height;
         // ---------------------------------------------------------------
         // Scale Manager
         // ---------------------------------------------------------------
-        var scaleManager = this.scale;
+        let scaleManager = this.scale;
         scaleManager.resize(1024, 768);
         scaleManager.setGameSize(1024, 768);
-        var gameWidth = scaleManager.width;
-        var gameHeight = scaleManager.height;
+        let gameWidth = scaleManager.width;
+        let gameHeight = scaleManager.height;
         scaleManager.lockOrientation('landscape');
         // ---------------------------------------------------------------
         // Game Config
         // ---------------------------------------------------------------
-        var config2 = {
+        let config2 = {
             type: Phaser.WEBGL,
             width: 1024,
             height: 768,
@@ -628,7 +614,7 @@ var BootScene = /** @class */ (function (_super) {
         // ---------------------------------------------------------------
         // Actions
         // ---------------------------------------------------------------
-        var sprites = [sprite, physSprite];
+        let sprites = [sprite, physSprite];
         Phaser.Actions.SetXY(sprites, 100, 200);
         Phaser.Actions.SetAlpha(sprites, 0.5);
         Phaser.Actions.SetRotation(sprites, 1.5);
@@ -656,39 +642,38 @@ var BootScene = /** @class */ (function (_super) {
         // ---------------------------------------------------------------
         // Structs
         // ---------------------------------------------------------------
-        var list = new Phaser.Structs.List(null);
+        let list = new Phaser.Structs.List(null);
         list.add(sprite);
         list.remove(sprite);
-        var pq = new Phaser.Structs.ProcessQueue();
+        let pq = new Phaser.Structs.ProcessQueue();
         pq.add(sprite);
         pq.remove(sprite);
         pq.update();
         // ---------------------------------------------------------------
         // Utils
         // ---------------------------------------------------------------
-        var arr = Phaser.Utils.Array.Shuffle([1, 2, 3, 4, 5]);
-        var removed = Phaser.Utils.Array.Remove(arr, 3);
-        var item = Phaser.Utils.Array.GetRandom(arr);
-        var merged = Phaser.Utils.Objects.Merge({ a: 1 }, { b: 2 });
-        var value = Phaser.Utils.Objects.GetValue({ nested: { key: 42 } }, 'nested.key', 0);
-        var objClone = Phaser.Utils.Objects.Clone({ x: 1, y: 2 });
-        var padded = Phaser.Utils.String.Pad('42', 5, '0', 1);
-    };
-    BootScene.prototype.update = function (time, delta) {
+        let arr = Phaser.Utils.Array.Shuffle([1, 2, 3, 4, 5]);
+        let removed = Phaser.Utils.Array.Remove(arr, 3);
+        let item = Phaser.Utils.Array.GetRandom(arr);
+        let merged = Phaser.Utils.Objects.Merge({ a: 1 }, { b: 2 });
+        let value = Phaser.Utils.Objects.GetValue({ nested: { key: 42 } }, 'nested.key', 0);
+        let objClone = Phaser.Utils.Objects.Clone({ x: 1, y: 2 });
+        let padded = Phaser.Utils.String.Pad('42', 5, '0', 1);
+    }
+    update(time, delta) {
         // Standard update parameters
-        var fps = this.game.loop.actualFps;
-    };
-    return BootScene;
-}(Phaser.Scene));
+        let fps = this.game.loop.actualFps;
+    }
+}
 // ---------------------------------------------------------------------------
 // Game instantiation
 // ---------------------------------------------------------------------------
-var config = {
+let config = {
     type: Phaser.AUTO,
     parent: 'phaser-example',
     width: 800,
     height: 600,
     scene: BootScene
 };
-var game = new Phaser.Game(config);
+let game = new Phaser.Game(config);
 //# sourceMappingURL=game.js.map
