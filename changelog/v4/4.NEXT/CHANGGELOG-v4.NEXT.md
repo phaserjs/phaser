@@ -13,6 +13,10 @@
     - Selectively activating alpha handling strategies
     - Freehand GL scissor modification
 - `Mesh2D` game object renders textured triangles. It batches with regular sprites.
+    - `Mesh2D#buildOrderedIndices` precomputes an optimized index list (`Mesh2D#indicesOrdered`) which arranges triangles into quad-forming pairs, synthesizing degenerate triangles where a triangle has no edge-sharing partner. You choose the optimization strategy (`0` fast, `1` medium, `2` high), paying the cost once when the topology is stable. Use `Mesh2D#useOrderedIndices` (and `Mesh2D#setUseOrderedIndices`) to toggle between the ordered and unordered lists without rebuilding.
+    - `Mesh2D#renderAsTriangles` (and `Mesh2D#setRenderAsTriangles`) renders the mesh as individual triangles via the new `BatchHandlerTri` render node, which is suitable for dynamic topology that cannot be optimized into quads.
+- `BatchHandlerTri` render node draws individual textured triangles (`gl.TRIANGLES`) as a batch. It extends `BatchHandlerQuad`, reusing its shader, vertex layout, and texture handling, and adds a `batchTriangles` method which accepts vertex and index arrays directly.
+- `TransformerVertex` render node now splits its per-vertex `run` into `setupMatrix` (build the transform matrix once per GameObject) and `transformVertex` (project a single vertex with the cached matrix). Mesh rendering uses this to avoid rebuilding the transform matrix for every vertex. `run` is unchanged for existing callers.
 - `Stencil` game object is a container whose contents modify the stencil buffer. This is a fast way to persistently mask the game canvas. There are many ways to combine stencils. The default approach is to add layers to the stencil mask.
     - Unlike stencil masks in Phaser 3, Stencil objects are universal, persistent, and support anything as a stencil source, so long as it draws pixels. Use sprites and filter outputs as stencil sources!
     - Operating modes include `addLayer`, `subtractLayer`, `clear`, and `clearRegion`. Add and subtract can be inverted.
@@ -26,6 +30,7 @@
         - `dither`: use a dithering algorithm to select pixels to discard.
         - `threshold`: discard all pixels below a certain alpha.
 - `BatchHandler` render node now has a config option for `topology`, allowing extended nodes to opt into different triangulation modes.
+- `BatchHandlerTri` render node renders textured triangles. It is used by `Mesh2D` in triangle rendering mode. This can be more efficient than attempting to compile triangles into quads, which is the default strategy.
 - `DrawingContext` adds more controls:
     - Alpha strategy
     - Color writemask

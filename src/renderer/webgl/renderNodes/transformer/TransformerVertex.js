@@ -57,6 +57,18 @@ var TransformerVertex = new Class({
          * @private
          */
         this._calcMatrix = new TransformMatrix();
+
+        /**
+         * Whether vertices transformed with the current matrix should be
+         * rounded to the nearest integer. This is computed by `setupMatrix`
+         * and consumed by `transformVertex`.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerVertex#_roundVertices
+         * @type {boolean}
+         * @since 4.NEXT
+         * @private
+         */
+        this._roundVertices = false;
     },
 
     defaultConfig: {
@@ -84,6 +96,32 @@ var TransformerVertex = new Class({
     {
         this.onRunBegin(drawingContext);
 
+        this.setupMatrix(drawingContext, gameObject, parentMatrix);
+        this.transformVertex(vertex);
+
+        this.onRunEnd(drawingContext);
+    },
+
+    /**
+     * Builds the final transform matrix for the given GameObject and caches it,
+     * along with whether transformed vertices should be rounded. This combines
+     * the camera view matrix (modified by the game object's scroll factors), an
+     * optional parent container matrix, and the game object's own position,
+     * rotation, and scale.
+     *
+     * Call this once before transforming a batch of vertices with
+     * `transformVertex`, since the matrix is constant for all vertices of a
+     * single GameObject. This avoids rebuilding the matrix for every vertex.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.TransformerVertex#setupMatrix
+     * @since 4.NEXT
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested.
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The cached transform matrix.
+     */
+    setupMatrix: function (drawingContext, gameObject, parentMatrix)
+    {
         var camera = drawingContext.camera;
         var spriteMatrix = this._spriteMatrix;
         var calcMatrix = this._calcMatrix.copyWithScrollFactorFrom(
@@ -105,21 +143,39 @@ var TransformerVertex = new Class({
 
         calcMatrix.multiply(spriteMatrix);
 
-        calcMatrix.transformPoint(vertex.x, vertex.y, vertex);
-
         // Determine whether the matrix does not rotate, scale, or skew.
         // Keyword: #OnlyTranslate
         var cmm = calcMatrix.matrix;
         var onlyTranslate = cmm[0] === 1 && cmm[1] === 0 && cmm[2] === 0 && cmm[3] === 1;
 
-        // Handle vertex rounding.
-        if (gameObject.willRoundVertices(camera, onlyTranslate))
+        // Cache whether vertices should be rounded, as this is constant
+        // for the whole GameObject.
+        this._roundVertices = gameObject.willRoundVertices(camera, onlyTranslate);
+
+        return calcMatrix;
+    },
+
+    /**
+     * Projects a single vertex through the matrix built by the most recent
+     * `setupMatrix` call, writing the result back to the vertex. If vertex
+     * rounding is required, the values are snapped to the nearest integer.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.TransformerVertex#transformVertex
+     * @since 4.NEXT
+     * @param {Phaser.Math.Vector2} vertex - The vertex to transform.
+     * @return {Phaser.Math.Vector2} The transformed vertex.
+     */
+    transformVertex: function (vertex)
+    {
+        this._calcMatrix.transformPoint(vertex.x, vertex.y, vertex);
+
+        if (this._roundVertices)
         {
             vertex.x = Math.round(vertex.x);
             vertex.y = Math.round(vertex.y);
         }
 
-        this.onRunEnd(drawingContext);
+        return vertex;
     }
 });
 

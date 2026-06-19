@@ -57,7 +57,7 @@ var SubmitterMeshToQuad = new Class({
          * @since 4.NEXT
          * @private
          */
-        _tempPoint = new Vector2();
+        this._tempPoint = new Vector2();
     },
 
     /**
@@ -103,6 +103,36 @@ var SubmitterMeshToQuad = new Class({
     )
     {
         this.onRunBegin(drawingContext);
+
+        // Build the transform matrix once for the whole mesh, so that
+        // `_submitQuad` can transform each vertex cheaply.
+        transformerNode.setupMatrix(drawingContext, gameObject, parentMatrix);
+
+        // If the game object has a prebuilt ordered index list, consume it
+        // directly. It is arranged into quad-forming pairs of triangles, so we
+        // can submit quads without searching for shared edges.
+        if (gameObject.useOrderedIndices && gameObject.indicesOrdered)
+        {
+            var ordered = gameObject.indicesOrdered;
+
+            // Each quad is a pair of triangles (8 values):
+            // p, q, r, page (first triangle) and q, r, s, page (second).
+            for (var o = 0; o < ordered.length; o += 8)
+            {
+                this._submitQuad(
+                    ordered[o],
+                    ordered[o + 1],
+                    ordered[o + 2],
+                    ordered[o + 6],
+                    ordered[o + 3],
+                    drawingContext, gameObject, parentMatrix, transformerNode, normalMap, normalMapRotation
+                );
+            }
+
+            this.onRunEnd(drawingContext);
+
+            return;
+        }
 
         var cached = false;
         var triCount = gameObject.indices.length / 4;
@@ -327,23 +357,26 @@ var SubmitterMeshToQuad = new Class({
         var tintEffect = gameObject.tintMode;
         var tint = getTint(gameObject.tint, gameObject.alpha);
         var tint2 = gameObject.tint2;
+        var tempPoint = this._tempPoint;
 
-        _tempPoint.set(xA, yA);
-        transformerNode.run(drawingContext, gameObject, parentMatrix, _tempPoint);
-        xA = _tempPoint.x;
-        yA = _tempPoint.y;
-        _tempPoint.set(xB, yB);
-        transformerNode.run(drawingContext, gameObject, parentMatrix, _tempPoint);
-        xB = _tempPoint.x;
-        yB = _tempPoint.y;
-        _tempPoint.set(xC, yC);
-        transformerNode.run(drawingContext, gameObject, parentMatrix, _tempPoint);
-        xC = _tempPoint.x;
-        yC = _tempPoint.y;
-        _tempPoint.set(xD, yD);
-        transformerNode.run(drawingContext, gameObject, parentMatrix, _tempPoint);
-        xD = _tempPoint.x;
-        yD = _tempPoint.y;
+        // The transform matrix is built once per mesh by `run`, via
+        // `transformerNode.setupMatrix`, so we only project each vertex here.
+        tempPoint.set(xA, yA);
+        transformerNode.transformVertex(tempPoint);
+        xA = tempPoint.x;
+        yA = tempPoint.y;
+        tempPoint.set(xB, yB);
+        transformerNode.transformVertex(tempPoint);
+        xB = tempPoint.x;
+        yB = tempPoint.y;
+        tempPoint.set(xC, yC);
+        transformerNode.transformVertex(tempPoint);
+        xC = tempPoint.x;
+        yC = tempPoint.y;
+        tempPoint.set(xD, yD);
+        transformerNode.transformVertex(tempPoint);
+        xD = tempPoint.x;
+        yD = tempPoint.y;
 
         this.setRenderOptions(gameObject, normalMap, normalMapRotation);
 

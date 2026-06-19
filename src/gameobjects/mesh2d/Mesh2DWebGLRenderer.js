@@ -25,11 +25,38 @@ var Mesh2DWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
     var customRenderNodes = src.customRenderNodes;
     var defaultRenderNodes = src.defaultRenderNodes;
 
-    (customRenderNodes.Submitter || defaultRenderNodes.Submitter).run(
+    var transformerNode = customRenderNodes.Transformer || defaultRenderNodes.Transformer;
+    var submitterNode = customRenderNodes.Submitter || defaultRenderNodes.Submitter;
+
+    if (src.renderAsTriangles)
+    {
+        // Render each triangle individually, rather than combining triangles
+        // into quads. Suitable for dynamic topology which cannot be optimized.
+        var triangleNode = customRenderNodes.BatchHandlerTriangles || defaultRenderNodes.BatchHandlerTriangles;
+
+        // Resolve render options (lighting, smooth pixel art, etc.) using the
+        // submitter, then hand the raw vertex and index arrays to the triangle
+        // batch handler.
+        submitterNode.setRenderOptions(src);
+
+        triangleNode.batchTriangles(
+            drawingContext,
+            src,
+            parentMatrix,
+            transformerNode,
+            src.vertices,
+            src.indices,
+            submitterNode._renderOptions
+        );
+
+        return;
+    }
+
+    submitterNode.run(
         drawingContext,
         src,
         parentMatrix,
-        customRenderNodes.Transformer || defaultRenderNodes.Transformer
+        transformerNode
     );
 };
 

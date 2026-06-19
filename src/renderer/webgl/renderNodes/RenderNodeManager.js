@@ -16,6 +16,7 @@ var BatchHandlerQuad = require('./BatchHandlerQuad');
 var BatchHandlerQuadSingle = require('./BatchHandlerQuadSingle');
 var BatchHandlerStrip = require('./BatchHandlerStrip');
 var BatchHandlerTileSprite = require('./BatchHandlerTileSprite');
+var BatchHandlerTri = require('./BatchHandlerTri');
 var BatchHandlerTriFlat = require('./BatchHandlerTriFlat');
 
 var Camera = require('./Camera');
@@ -175,6 +176,7 @@ var RenderNodeManager = new Class({
             BatchHandlerQuadSingle: BatchHandlerQuadSingle,
             BatchHandlerStrip: BatchHandlerStrip,
             BatchHandlerTileSprite: BatchHandlerTileSprite,
+            BatchHandlerTri: BatchHandlerTri,
             BatchHandlerTriFlat: BatchHandlerTriFlat,
 
             Camera: Camera,
