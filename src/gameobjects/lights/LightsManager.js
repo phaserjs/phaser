@@ -335,6 +335,36 @@ var LightsManager = new Class({
     },
 
     /**
+     * Creates a new cone-limited {@link Phaser.GameObjects.Light} object, adds it to this Lights Manager,
+     * and returns it.
+     *
+     * The cone angles are full cone widths in radians. Fragments inside `innerAngle` receive full light,
+     * and fragments between `innerAngle` and `outerAngle` are softly attenuated.
+     *
+     * @method Phaser.GameObjects.LightsManager#addConeLight
+     * @since 4.2.0
+     *
+     * @param {number} [x=0] - The horizontal position of the Light.
+     * @param {number} [y=0] - The vertical position of the Light.
+     * @param {number} [radius=128] - The radius of the Light.
+     * @param {number} [rgb=0xffffff] - The integer RGB color of the light.
+     * @param {number} [intensity=1] - The intensity of the Light.
+     * @param {number} [rotation=0] - The direction of the cone, in radians.
+     * @param {number} [innerAngle=Math.PI / 4] - The fully-lit cone width, in radians.
+     * @param {number} [outerAngle=innerAngle] - The outer falloff cone width, in radians.
+     * @param {number} [z] - The z position of the light. If omitted, it will be set to `radius * 0.1`.
+     *
+     * @return {Phaser.GameObjects.Light} The Light that was added.
+     */
+    addConeLight: function (x, y, radius, rgb, intensity, rotation, innerAngle, outerAngle, z)
+    {
+        if (rotation === undefined) { rotation = 0; }
+        if (innerAngle === undefined) { innerAngle = Math.PI / 4; }
+
+        return this.addLight(x, y, radius, rgb, intensity, z).setCone(rotation, innerAngle, outerAngle);
+    },
+
+    /**
      * Removes a {@link Phaser.GameObjects.Light} from this Lights Manager. The Light will no longer
      * influence the rendering of any Game Objects. The Light object itself is not destroyed; it is
      * simply removed from the manager's active list.

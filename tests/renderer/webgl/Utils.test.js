@@ -529,5 +529,121 @@ describe('Phaser.Renderer.WebGL.Utils.getTintFromFloats', function ()
             expect(setUniformCalls.indexOf('uDiffuseFlatThreshold')).toBe(-1);
             expect(setUniformCalls.indexOf('uPenumbra')).toBe(-1);
         });
+
+        it('should upload disabled cone uniforms for normal radius lights', function ()
+        {
+            var programManager = {
+                setUniform: vi.fn(),
+                removeUniform: vi.fn()
+            };
+
+            var light = {
+                x: 100,
+                y: 150,
+                z: 10,
+                scrollFactorX: 1,
+                scrollFactorY: 1,
+                color: { r: 1, g: 0.5, b: 0.25 },
+                intensity: 2,
+                radius: 256,
+                coneEnabled: false
+            };
+
+            var drawingContext = {
+                camera: {
+                    scene: {
+                        sys: {
+                            lights: {
+                                active: true,
+                                getLights: function () { return [ { light: light } ]; },
+                                ambientColor: { r: 0, g: 0, b: 0 }
+                            }
+                        }
+                    },
+                    x: 0,
+                    y: 0,
+                    rotation: 0,
+                    zoom: 1,
+                    scrollX: 0,
+                    scrollY: 0,
+                    matrixCombined: { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }
+                },
+                height: 600
+            };
+
+            var vec = { x: 0, y: 0 };
+
+            Utils.updateLightingUniforms(true, drawingContext, programManager, 1, vec, false, 0, 0);
+
+            expect(programManager.setUniform).toHaveBeenCalledWith('uLights[0].position', [100, 450, 10]);
+            expect(programManager.setUniform).toHaveBeenCalledWith('uLights[0].direction', [1, 0]);
+            expect(programManager.setUniform).toHaveBeenCalledWith('uLights[0].cone', [-1, 1, 0]);
+        });
+
+        it('should upload cone direction and cutoffs for cone lights', function ()
+        {
+            var programManager = {
+                setUniform: vi.fn(),
+                removeUniform: vi.fn()
+            };
+
+            var light = {
+                x: 100,
+                y: 150,
+                z: 10,
+                scrollFactorX: 1,
+                scrollFactorY: 1,
+                color: { r: 1, g: 1, b: 1 },
+                intensity: 1,
+                radius: 128,
+                coneEnabled: true,
+                coneRotation: Math.PI / 2,
+                coneInnerAngle: Math.PI / 4,
+                coneOuterAngle: Math.PI / 2
+            };
+
+            var drawingContext = {
+                camera: {
+                    scene: {
+                        sys: {
+                            lights: {
+                                active: true,
+                                getLights: function () { return [ { light: light } ]; },
+                                ambientColor: { r: 0, g: 0, b: 0 }
+                            }
+                        }
+                    },
+                    x: 0,
+                    y: 0,
+                    rotation: 0,
+                    zoom: 2,
+                    scrollX: 0,
+                    scrollY: 0,
+                    matrixCombined: { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }
+                },
+                height: 600
+            };
+
+            var vec = { x: 0, y: 0 };
+
+            Utils.updateLightingUniforms(true, drawingContext, programManager, 1, vec, false, 0, 0);
+
+            var directionCall = programManager.setUniform.mock.calls.find(function (call)
+            {
+                return call[0] === 'uLights[0].direction';
+            });
+
+            expect(programManager.setUniform).toHaveBeenCalledWith('uLights[0].position', [100, 450, 20]);
+            expect(directionCall[1][0]).toBeCloseTo(0);
+            expect(directionCall[1][1]).toBeCloseTo(-1);
+            expect(programManager.setUniform).toHaveBeenCalledWith(
+                'uLights[0].cone',
+                [
+                    Math.cos(Math.PI / 4),
+                    Math.cos(Math.PI / 8),
+                    1
+                ]
+            );
+        });
     });
 });

@@ -135,9 +135,9 @@ module.exports = {
      *
      * When `enable` is `true`, this function queries the Scene's Light Manager for all
      * active lights visible to the camera and uploads their positions, colors, intensities,
-     * and radii as uniform arrays to the shader. It also uploads the ambient light color,
-     * camera transform, and the normal map texture unit. Optionally enables self-shadowing
-     * by uploading the penumbra and diffuse threshold uniforms.
+     * radii, and cone settings as uniform arrays to the shader. It also uploads the ambient
+     * light color, camera transform, and the normal map texture unit. Optionally enables
+     * self-shadowing by uploading the penumbra and diffuse threshold uniforms.
      *
      * When `enable` is `false`, all previously set lighting uniforms are removed from the
      * program manager. If the Scene has no active Light Manager, the function returns early
@@ -231,11 +231,14 @@ module.exports = {
                     vec
                 );
 
+                var lightX = vec.x;
+                var lightY = height - vec.y;
+
                 programManager.setUniform(
                     lightName + 'position',
                     [
-                        vec.x,
-                        height - (vec.y),
+                        lightX,
+                        lightY,
                         light.z * camera.zoom
                     ]
                 );
@@ -255,6 +258,64 @@ module.exports = {
                     lightName + 'radius',
                     light.radius
                 );
+
+                if (light.coneEnabled)
+                {
+                    camMatrix.transformPoint(
+                        light.x + Math.cos(light.coneRotation),
+                        light.y + Math.sin(light.coneRotation),
+                        vec
+                    );
+
+                    var dirX = vec.x - lightX;
+                    var dirY = (height - vec.y) - lightY;
+                    var dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
+
+                    if (dirLength === 0)
+                    {
+                        dirX = 1;
+                        dirY = 0;
+                    }
+                    else
+                    {
+                        dirX /= dirLength;
+                        dirY /= dirLength;
+                    }
+
+                    programManager.setUniform(
+                        lightName + 'direction',
+                        [
+                            dirX,
+                            dirY
+                        ]
+                    );
+                    programManager.setUniform(
+                        lightName + 'cone',
+                        [
+                            Math.cos(light.coneOuterAngle * 0.5),
+                            Math.cos(light.coneInnerAngle * 0.5),
+                            1
+                        ]
+                    );
+                }
+                else
+                {
+                    programManager.setUniform(
+                        lightName + 'direction',
+                        [
+                            1,
+                            0
+                        ]
+                    );
+                    programManager.setUniform(
+                        lightName + 'cone',
+                        [
+                            -1,
+                            1,
+                            0
+                        ]
+                    );
+                }
             }
 
             if (selfShadow)
@@ -290,6 +351,8 @@ module.exports = {
                 programManager.removeUniform(lightName + 'color');
                 programManager.removeUniform(lightName + 'intensity');
                 programManager.removeUniform(lightName + 'radius');
+                programManager.removeUniform(lightName + 'direction');
+                programManager.removeUniform(lightName + 'cone');
             }
         }
     }

@@ -4,6 +4,8 @@ struct Light
     vec3 color;
     float intensity;
     float radius;
+    vec2 direction;
+    vec3 cone; // outer cosine, inner cosine, enabled flag
 };
 
 // #define LIGHT_COUNT N
@@ -40,6 +42,16 @@ vec4 getLighting (vec4 fragColor, vec3 normal)
             float diffuseFactor = max(dot(normal, lightNormal), 0.0);
             float radius = (light.radius / res.x * uCamera.w) * uCamera.w;
             float attenuation = clamp(1.0 - distToSurf * distToSurf / (radius * radius), 0.0, 1.0);
+            if (light.cone.z > 0.5)
+            {
+                vec2 coneVector = gl_FragCoord.xy - light.position.xy;
+                float coneLength = length(coneVector);
+                vec2 lightToFrag = coneLength > 0.0 ? coneVector / coneLength : light.direction;
+                float coneDot = dot(lightToFrag, light.direction);
+                float coneRange = abs(light.cone.y - light.cone.x);
+                float coneAttenuation = coneRange < 0.0001 ? step(light.cone.y, coneDot) : smoothstep(light.cone.x, light.cone.y, coneDot);
+                attenuation *= coneAttenuation;
+            }
             #ifdef FEATURE_SELFSHADOW
             float occluded = smoothstep(0.0, 1.0, (diffuseFactor - occlusionThreshold) / uPenumbra);
             vec3 diffuse = light.color * diffuseFactor * occluded;
