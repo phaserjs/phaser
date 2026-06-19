@@ -810,8 +810,8 @@ var BatchHandlerQuad = new Class({
      * - Bottom-right
      * - Top-right
      *
-     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#batch
-     * @since 4.0.0
+     * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad#batchWithUV
+     * @since 4.2.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} currentContext - The current drawing context.
      * @param {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} glTexture - The texture to render.
      * @param {number} x0 - The x coordinate of the top-left corner.
