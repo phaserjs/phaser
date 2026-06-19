@@ -14,7 +14,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * @method Phaser.GameObjects.GameObjectFactory#customContext
  * @webglOnly
- * @since 4.NEXT
+ * @since 4.2.0
  *
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.

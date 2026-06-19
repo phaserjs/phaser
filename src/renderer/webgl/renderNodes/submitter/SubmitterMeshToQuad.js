@@ -35,7 +35,7 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * @class SubmitterMeshToQuad
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
- * @since 4.NEXT
+ * @since 4.2.0
  * @extends Phaser.Renderer.WebGL.RenderNodes.SubmitterQuad
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.SubmitterQuadConfig} [config] - The configuration object for this RenderNode.
@@ -54,7 +54,7 @@ var SubmitterMeshToQuad = new Class({
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterMeshToQuad#_tempPoint
          * @type {Phaser.Math.Vector2}
-         * @since 4.NEXT
+         * @since 4.2.0
          * @private
          */
         this._tempPoint = new Vector2();
@@ -87,7 +87,7 @@ var SubmitterMeshToQuad = new Class({
      * map texture and rotation.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.SubmitterMeshToQuad#run
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - The parent matrix of the GameObject, if it is a nested game object.
@@ -163,7 +163,7 @@ var SubmitterMeshToQuad = new Class({
      * or a single triangle using a degenerate triangle to pad quad alignment.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.SubmitterMeshToQuad#_submitQuad
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {number} a - The index of the first vertex of the quad. This is the corner unique to the first triangle.
      * @param {number} b - The index of the second vertex of the quad. This is shared between triangles.
      * @param {number} c - The index of the third vertex of the quad. This is shared between triangles.

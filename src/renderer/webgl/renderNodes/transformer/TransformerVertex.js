@@ -65,7 +65,7 @@ var TransformerVertex = new Class({
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.TransformerVertex#_roundVertices
          * @type {boolean}
-         * @since 4.NEXT
+         * @since 4.2.0
          * @private
          */
         this._roundVertices = false;
@@ -114,7 +114,7 @@ var TransformerVertex = new Class({
      * single GameObject. This avoids rebuilding the matrix for every vertex.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.TransformerVertex#setupMatrix
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.GameObject} gameObject - The GameObject being rendered.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested.
@@ -161,7 +161,7 @@ var TransformerVertex = new Class({
      * rounding is required, the values are snapped to the nearest integer.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.TransformerVertex#transformVertex
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Math.Vector2} vertex - The vertex to transform.
      * @return {Phaser.Math.Vector2} The transformed vertex.
      */

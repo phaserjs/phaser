@@ -32,7 +32,7 @@ var Container = require('../container/Container');
  * @extends Phaser.GameObjects.Container
  * @memberof Phaser.GameObjects
  * @constructor
- * @since 4.NEXT
+ * @since 4.2.0
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
  * @param {number} x - The horizontal position of this Game Object in the world.
@@ -63,7 +63,7 @@ var CustomContext = new Class({
          *
          * @name Phaser.GameObjects.CustomContext#customContextCallback
          * @type {Phaser.Types.GameObjects.CustomContext.CustomContextCallback | null}
-         * @since 4.NEXT
+         * @since 4.2.0
          */
         this.customContextCallback = customContextCallback || null;
 
@@ -76,7 +76,7 @@ var CustomContext = new Class({
      * allowing you to modify the drawing context before it is used.
      *
      * @method Phaser.GameObjects.CustomContext#customContextRenderStep
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered in this call.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.

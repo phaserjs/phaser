@@ -14,7 +14,7 @@
  * extra compositing steps are necessary within other StencilModifier objects.
  *
  * @namespace Phaser.GameObjects.Components.StencilModifier
- * @since 4.NEXT
+ * @since 4.2.0
  */
 
 var StencilModifier = {
@@ -27,7 +27,7 @@ var StencilModifier = {
      * - 'clearRegion' - Clear a region of the stencil buffer.
      *
      * @name Phaser.GameObjects.Components.StencilModifier#stencilLayerMode
-     * @since 4.NEXT
+     * @since 4.2.0
      * @type {Phaser.Types.GameObjects.Stencil.StencilLayerMode}
      * @default 'addLayer'
      */
@@ -37,7 +37,7 @@ var StencilModifier = {
      * Whether to invert the stencil, using an extra draw call.
      *
      * @name Phaser.GameObjects.Components.StencilModifier#stencilInvert
-     * @since 4.NEXT
+     * @since 4.2.0
      * @type {boolean}
      * @default false
      */
@@ -48,7 +48,7 @@ var StencilModifier = {
      * This is usually set to `dither`, or the default game config setting.
      *
      * @name Phaser.GameObjects.Components.StencilModifier#stencilAlphaStrategy
-     * @since 4.NEXT
+     * @since 4.2.0
      * @type {Phaser.Types.Renderer.WebGL.AlphaStrategy}
      * @default 'dither'
      */
@@ -64,7 +64,7 @@ var StencilModifier = {
      * This will set `filtersForceComposite` to `true` during rendering.
      *
      * @name Phaser.GameObjects.Components.StencilModifier#stencilCompositeCheck
-     * @since 4.NEXT
+     * @since 4.2.0
      * @type {boolean|'auto'}
      * @default 'auto'
      */
@@ -76,7 +76,7 @@ var StencilModifier = {
      * Should be between 0 and 255, as the buffer is 8 bits.
      *
      * @name Phaser.GameObjects.Components.StencilModifier#stencilClearValue
-     * @since 4.NEXT
+     * @since 4.2.0
      * @type {number}
      * @default 0
      */
@@ -89,7 +89,7 @@ var StencilModifier = {
      * and you don't want to underflow from 0 to 255.
      *
      * @name Phaser.GameObjects.Components.StencilModifier#stencilValueWrap
-     * @since 4.NEXT
+     * @since 4.2.0
      * @type {boolean}
      * @default true
      */
@@ -103,7 +103,7 @@ var StencilModifier = {
      * for `hasStencilChildren`, and can affect stencil compositing.
      *
      * @name Phaser.GameObjects.Components.StencilModifier#isStencilModifier
-     * @since 4.NEXT
+     * @since 4.2.0
      * @type {boolean}
      * @readonly
      * @default true
@@ -121,7 +121,7 @@ var StencilModifier = {
      * Sets the alpha strategy to use when rendering the stencil.
      *
      * @method Phaser.GameObjects.Components.StencilModifier#setStencilAlphaStrategy
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Types.Renderer.WebGL.AlphaStrategy} stencilAlphaStrategy - The alpha strategy to use when rendering the stencil.
      * @returns {this} This Game Object instance.
      */
@@ -137,7 +137,7 @@ var StencilModifier = {
      * Should be between 0 and 255, as the buffer is 8 bits.
      *
      * @method Phaser.GameObjects.Components.StencilModifier#setStencilClearValue
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {number} stencilClearValue - The value to clear the stencil buffer to.
      * @returns {this} This Game Object instance.
      */
@@ -157,7 +157,7 @@ var StencilModifier = {
      * - `'auto'` - Automatically determine whether to composite the contents of the stencil to a framebuffer.
      *
      * @method Phaser.GameObjects.Components.StencilModifier#setStencilCompositeCheck
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {boolean|'auto'} stencilCompositeCheck - The check mode to use.
      * @returns {this} This Game Object instance.
      */
@@ -171,7 +171,7 @@ var StencilModifier = {
      * Sets whether to invert the stencil, using an extra draw call.
      *
      * @method Phaser.GameObjects.Components.StencilModifier#setStencilInvert
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {boolean} stencilInvert - Whether to invert the stencil.
      * @returns {this} This Game Object instance.
      */
@@ -191,7 +191,7 @@ var StencilModifier = {
      *   You can also use this to fill a region with a specific value.
      *
      * @method Phaser.GameObjects.Components.StencilModifier#setStencilLayerMode
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Types.GameObjects.Stencil.StencilLayerMode} stencilLayerMode - The mode which the Stencil should run in.
      * @returns {this} This Game Object instance.
      */
@@ -207,7 +207,7 @@ var StencilModifier = {
      * and you don't want to underflow from 0 to 255.
      *
      * @method Phaser.GameObjects.Components.StencilModifier#setStencilValueWrap
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {boolean} stencilValueWrap - Whether to wrap the value in the stencil buffer when it overflows or underflows.
      * @returns {this} This Game Object instance.
      */

@@ -13,7 +13,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * Note: This method will only be available if the Mesh2D Game Object has been built into Phaser.
  *
  * @method Phaser.GameObjects.GameObjectFactory#mesh2d
- * @since 4.NEXT
+ * @since 4.2.0
  *
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.

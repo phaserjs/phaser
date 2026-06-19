@@ -123,7 +123,7 @@ var BatchHandler = new Class({
          *
          * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandler#topology
          * @type {number}
-         * @since 4.NEXT
+         * @since 4.2.0
          */
         this.topology = config.topology || gl.TRIANGLE_STRIP;
 

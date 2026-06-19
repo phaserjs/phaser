@@ -319,7 +319,7 @@ var Tile = new Class({
          * @name Phaser.Tilemaps.Tile#tint2
          * @type {number}
          * @default 0x000000
-         * @since 4.NEXT
+         * @since 4.2.0
          */
         this.tint2 = 0x000000;
 

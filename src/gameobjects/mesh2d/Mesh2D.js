@@ -67,7 +67,7 @@ var Mesh2DRender = require('./Mesh2DRender');
  * @memberof Phaser.GameObjects
  * @webglonly
  * @constructor
- * @since 4.NEXT
+ * @since 4.2.0
  *
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
@@ -131,7 +131,7 @@ var Mesh2D = new Class({
          *
          * @name Phaser.GameObjects.Mesh2D#vertices
          * @type {number[]}
-         * @since 4.NEXT
+         * @since 4.2.0
          */
         this.vertices = vertices;
 
@@ -149,7 +149,7 @@ var Mesh2D = new Class({
          *
          * @name Phaser.GameObjects.Mesh2D#indices
          * @type {number[]}
-         * @since 4.NEXT
+         * @since 4.2.0
          */
         this.indices = indices;
 
@@ -171,7 +171,7 @@ var Mesh2D = new Class({
          *
          * @name Phaser.GameObjects.Mesh2D#indicesOrdered
          * @type {?number[]}
-         * @since 4.NEXT
+         * @since 4.2.0
          * @default null
          */
         this.indicesOrdered = null;
@@ -185,7 +185,7 @@ var Mesh2D = new Class({
          *
          * @name Phaser.GameObjects.Mesh2D#useOrderedIndices
          * @type {boolean}
-         * @since 4.NEXT
+         * @since 4.2.0
          * @default false
          */
         this.useOrderedIndices = false;
@@ -202,7 +202,7 @@ var Mesh2D = new Class({
          *
          * @name Phaser.GameObjects.Mesh2D#renderAsTriangles
          * @type {boolean}
-         * @since 4.NEXT
+         * @since 4.2.0
          * @default false
          */
         this.renderAsTriangles = false;
@@ -216,7 +216,7 @@ var Mesh2D = new Class({
          *
          * @name Phaser.GameObjects.Mesh2D#flipV
          * @type {boolean}
-         * @since 4.NEXT
+         * @since 4.2.0
          * @default false
          */
         this.flipV = !!flipV;
@@ -234,7 +234,7 @@ var Mesh2D = new Class({
      * @private
      * @webglOnly
      * @readonly
-     * @since 4.NEXT
+     * @since 4.2.0
      */
     _defaultRenderNodesMap: {
         get: function ()
@@ -295,7 +295,7 @@ var Mesh2D = new Class({
      * list.
      *
      * @method Phaser.GameObjects.Mesh2D#setUseOrderedIndices
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {boolean} [value=false] - Whether to use the ordered index list.
      * @returns {this} This Game Object instance.
      */
@@ -309,7 +309,7 @@ var Mesh2D = new Class({
      * Sets whether to render this mesh as individual triangles.
      *
      * @method Phaser.GameObjects.Mesh2D#setRenderAsTriangles
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {boolean} [value=false] - Whether to render the mesh as individual triangles.
      * @returns {this} This Game Object instance.
      */
@@ -331,7 +331,7 @@ var Mesh2D = new Class({
      * it when the topology is stable. The cost depends on the chosen strategy.
      *
      * @method Phaser.GameObjects.Mesh2D#buildOrderedIndices
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {number} [strategy=0] - The level of optimization to use.
      *
      * - `0`: Fast. Each triangle forms its own quad with a synthesized
@@ -389,7 +389,7 @@ var Mesh2D = new Class({
      * triangle. No edge detection is performed.
      *
      * @method Phaser.GameObjects.Mesh2D#_buildOrderedIndicesFast
-     * @since 4.NEXT
+     * @since 4.2.0
      * @private
      * @param {number[]} indices - The source index list.
      * @param {number} triCount - The number of triangles in the source list.
@@ -416,7 +416,7 @@ var Mesh2D = new Class({
      * otherwise the triangle is padded with a degenerate triangle.
      *
      * @method Phaser.GameObjects.Mesh2D#_buildOrderedIndicesNext
-     * @since 4.NEXT
+     * @since 4.2.0
      * @private
      * @param {number[]} indices - The source index list.
      * @param {number} triCount - The number of triangles in the source list.
@@ -472,7 +472,7 @@ var Mesh2D = new Class({
      * unconsumed triangle that shares an edge and texture page.
      *
      * @method Phaser.GameObjects.Mesh2D#_buildOrderedIndicesAll
-     * @since 4.NEXT
+     * @since 4.2.0
      * @private
      * @param {number[]} indices - The source index list.
      * @param {number} triCount - The number of triangles in the source list.
@@ -533,7 +533,7 @@ var Mesh2D = new Class({
      * Adds a triangle edge to the edge lookup used by strategy 2.
      *
      * @method Phaser.GameObjects.Mesh2D#_addEdge
-     * @since 4.NEXT
+     * @since 4.2.0
      * @private
      * @param {object} edgeMap - The edge lookup to add to.
      * @param {number} u - The first vertex of the edge.
@@ -560,7 +560,7 @@ var Mesh2D = new Class({
      * the partner consumed, and returns `true`.
      *
      * @method Phaser.GameObjects.Mesh2D#_matchEdge
-     * @since 4.NEXT
+     * @since 4.2.0
      * @private
      * @param {object} edgeMap - The edge lookup to search.
      * @param {boolean[]} consumed - The per-triangle consumed flags.
@@ -601,7 +601,7 @@ var Mesh2D = new Class({
      * exactly one edge.
      *
      * @method Phaser.GameObjects.Mesh2D#_sharedEdgeQuad
-     * @since 4.NEXT
+     * @since 4.2.0
      * @private
      * @param {number} a - The first vertex of the first triangle.
      * @param {number} b - The second vertex of the first triangle.
@@ -646,7 +646,7 @@ var Mesh2D = new Class({
      * Returns the canonical key for the edge between two vertices.
      *
      * @method Phaser.GameObjects.Mesh2D#_edgeKey
-     * @since 4.NEXT
+     * @since 4.2.0
      * @private
      * @param {number} u - The first vertex of the edge.
      * @param {number} v - The second vertex of the edge.
@@ -663,7 +663,7 @@ var Mesh2D = new Class({
      * `p, q, r` and `q, r, s`.
      *
      * @method Phaser.GameObjects.Mesh2D#_pushQuad
-     * @since 4.NEXT
+     * @since 4.2.0
      * @private
      * @param {number[]} ordered - The output list to append to.
      * @param {number} p - The corner unique to the first triangle.
@@ -685,7 +685,7 @@ var Mesh2D = new Class({
      * with a degenerate second triangle.
      *
      * @method Phaser.GameObjects.Mesh2D#_pushDegenerateQuad
-     * @since 4.NEXT
+     * @since 4.2.0
      * @private
      * @param {number[]} ordered - The output list to append to.
      * @param {number} a - The first vertex of the triangle.

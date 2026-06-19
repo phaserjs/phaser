@@ -1,6 +1,6 @@
 /**
  * @typedef {object} Phaser.Types.GameObjects.Stencil.StencilOptions
- * @since 4.NEXT
+ * @since 4.2.0
  *
  * @property {Phaser.Types.Renderer.WebGL.AlphaStrategy} [stencilAlphaStrategy='dither'] - The alpha strategy to use when rendering the stencil.
  * @property {number} [stencilClearValue=0] - The value to clear the stencil to, if the `stencilLayerMode` is `clear` or `clearRegion`. Must be between 0 and 255.

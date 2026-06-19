@@ -147,7 +147,7 @@ var Layer = require('../layer/Layer');
  * @extends Phaser.GameObjects.Components.StencilModifier
  * @memberof Phaser.GameObjects
  * @constructor
- * @since 4.NEXT
+ * @since 4.2.0
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
  * @param {number} x - The horizontal position of this Game Object in the world.
@@ -216,7 +216,7 @@ var Stencil = new Class({
      *
      * @method Phaser.GameObjects.Stencil#stencilRenderStep
      * @webglOnly
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered in this call.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
@@ -255,7 +255,7 @@ var Stencil = new Class({
      *
      * @method Phaser.GameObjects.Stencil#stencilRenderStepLayers
      * @webglOnly
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered in this call.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
@@ -329,7 +329,7 @@ var Stencil = new Class({
      *
      * @method Phaser.GameObjects.Stencil#stencilRenderStepClear
      * @webglOnly
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered in this call.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
@@ -355,7 +355,7 @@ var Stencil = new Class({
      *
      * @method Phaser.GameObjects.Stencil#stencilRenderStepClearRegion
      * @webglOnly
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered in this call.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
@@ -412,7 +412,7 @@ var Stencil = new Class({
      * This is a depth-first, succeed-fast search.
      *
      * @method Phaser.GameObjects.Stencil#hasStencilChildren
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to check.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera to check.
      * @returns {boolean} Whether the game object or any of its children has a stencil.

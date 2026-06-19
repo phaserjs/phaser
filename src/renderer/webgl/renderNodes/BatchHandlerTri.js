@@ -28,7 +28,7 @@ var getTint = Utils.getTintAppendFloatAlpha;
  * @class BatchHandlerTri
  * @memberof Phaser.Renderer.WebGL.RenderNodes
  * @constructor
- * @since 4.NEXT
+ * @since 4.2.0
  * @extends Phaser.Renderer.WebGL.RenderNodes.BatchHandlerQuad
  * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
  * @param {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig} [config] - The configuration object for this handler.
@@ -46,7 +46,7 @@ var BatchHandlerTri = new Class({
          * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTri#_tempPoint
          * @type {Phaser.Math.Vector2}
          * @private
-         * @since 4.NEXT
+         * @since 4.2.0
          */
         this._tempPoint = new Vector2();
     },
@@ -58,7 +58,7 @@ var BatchHandlerTri = new Class({
      *
      * @name Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTri#defaultConfig
      * @type {Phaser.Types.Renderer.WebGL.RenderNodes.BatchHandlerConfig}
-     * @since 4.NEXT
+     * @since 4.2.0
      */
     defaultConfig: Object.assign({}, BatchHandlerQuad.prototype.defaultConfig, {
         name: 'BatchHandlerTri',
@@ -76,7 +76,7 @@ var BatchHandlerTri = new Class({
      * so the indices are simply sequential.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTri#_generateElementIndices
-     * @since 4.NEXT
+     * @since 4.2.0
      * @private
      * @param {number} instances - The number of instances to define.
      * @return {ArrayBuffer} The index buffer data.
@@ -108,7 +108,7 @@ var BatchHandlerTri = new Class({
      * call signature differs from the standard quad batch handlers.
      *
      * @method Phaser.Renderer.WebGL.RenderNodes.BatchHandlerTri#batchTriangles
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.Mesh2D} gameObject - The Mesh2D Game Object being rendered.
      * @param {Phaser.GameObjects.Components.TransformMatrix | undefined} parentMatrix - The parent matrix of the Game Object, if it is nested.

@@ -41,7 +41,7 @@ var Render = require('./StencilReferenceRender');
  * @extends Phaser.GameObjects.Components.Visible
  * @memberof Phaser.GameObjects
  * @constructor
- * @since 4.NEXT
+ * @since 4.2.0
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
  * @param {Phaser.GameObjects.Stencil} targetStencil - The Stencil to use as a reference.
@@ -64,7 +64,7 @@ var StencilReference = new Class({
          *
          * @name Phaser.GameObjects.StencilReference#targetStencil
          * @type {Phaser.GameObjects.Stencil}
-         * @since 4.NEXT
+         * @since 4.2.0
          */
         this.targetStencil = targetStencil;
 
@@ -112,7 +112,7 @@ var StencilReference = new Class({
      *
      * @name Phaser.GameObjects.StencilReference#blendMode
      * @type {number}
-     * @since 4.NEXT
+     * @since 4.2.0
      * @readonly
      * @default Phaser.BlendModes.SKIP_CHECK
      */
@@ -128,7 +128,7 @@ var StencilReference = new Class({
     /**
      * Pre-destroy callback.
      * @method Phaser.GameObjects.StencilReference#preDestroy
-     * @since 4.NEXT
+     * @since 4.2.0
      */
     preDestroy: function()
     {

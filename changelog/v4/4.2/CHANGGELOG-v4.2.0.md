@@ -1,6 +1,6 @@
 # Phaser 4 Changelog
 
-## Version 4.NEXT
+## Version 4.2.0 - Giedi - 19th June 2026
 
 ### New Features
 

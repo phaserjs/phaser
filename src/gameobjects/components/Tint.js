@@ -74,7 +74,7 @@ var Tint = {
      * @name Phaser.GameObjects.Components.Tint#tint2TopLeft
      * @type {number}
      * @default 0x000000
-     * @since 4.NEXT
+     * @since 4.2.0
      */
     tint2TopLeft: 0x000000,
 
@@ -87,7 +87,7 @@ var Tint = {
      * @name Phaser.GameObjects.Components.Tint#tint2TopRight
      * @type {number}
      * @default 0x000000
-     * @since 4.NEXT
+     * @since 4.2.0
      */
     tint2TopRight: 0x000000,
 
@@ -100,7 +100,7 @@ var Tint = {
      * @name Phaser.GameObjects.Components.Tint#tint2BottomLeft
      * @type {number}
      * @default 0x000000
-     * @since 4.NEXT
+     * @since 4.2.0
      */
     tint2BottomLeft: 0x000000,
 
@@ -113,7 +113,7 @@ var Tint = {
      * @name Phaser.GameObjects.Components.Tint#tint2BottomRight
      * @type {number}
      * @default 0x000000
-     * @since 4.NEXT
+     * @since 4.2.0
     */
     tint2BottomRight: 0x000000,
 
@@ -217,7 +217,7 @@ var Tint = {
      *
      * @method Phaser.GameObjects.Components.Tint#setTint2
      * @webglOnly
-     * @since 4.NEXT
+     * @since 4.2.0
      *
      * @param {number} [topLeft=0xffffff] - The secondary tint being applied to the top-left of the Game Object. If no other values are given this value is applied evenly, tinting the whole Game Object.
      * @param {number} [topRight] - The secondary tint being applied to the top-right of the Game Object.

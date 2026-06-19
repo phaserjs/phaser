@@ -408,7 +408,7 @@ var TilemapLayer = new Class({
      *
      * @method Phaser.Tilemaps.TilemapLayer#setTint2
      * @webglOnly
-     * @since 4.NEXT
+     * @since 4.2.0
      *
      * @param {number} [tint2=0x000000] - The secondary tint color being applied to each tile within the region. Given as a hex value, i.e. `0xff0000` for red. Set to black (`0x000000`) to reset the secondary tint.
      * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area to search.

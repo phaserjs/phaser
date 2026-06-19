@@ -116,7 +116,7 @@ var DrawingContext = new Class({
          * @name Phaser.Renderer.WebGL.DrawingContext#alphaStrategy
          * @type {Phaser.Types.Renderer.WebGL.AlphaStrategy}
          * @default 'keep'
-         * @since 4.NEXT
+         * @since 4.2.0
          */
         this.alphaStrategy = options.alphaStrategy || renderer.config.alphaStrategy;
 
@@ -419,7 +419,7 @@ var DrawingContext = new Class({
      * Set the alpha strategy for the DrawingContext.
      *
      * @method Phaser.Renderer.WebGL.DrawingContext#setAlphaStrategy
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Types.Renderer.WebGL.AlphaStrategy} alphaStrategy - The alpha strategy to use when rendering.
      */
     setAlphaStrategy: function (alphaStrategy)
@@ -517,7 +517,7 @@ var DrawingContext = new Class({
      * Set the color writemask for the DrawingContext.
      *
      * @method Phaser.Renderer.WebGL.DrawingContext#setColorWritemask
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {boolean} r - Whether to write the red channel.
      * @param {boolean} g - Whether to write the green channel.
      * @param {boolean} b - Whether to write the blue channel.
@@ -562,7 +562,7 @@ var DrawingContext = new Class({
      * Set the stencil parameters for the DrawingContext.
      *
      * @method Phaser.Renderer.WebGL.DrawingContext#setStencil
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {GLboolean} [enabled=true] - Whether the stencil test is enabled.
      * @param {GLenum} [func=GL_EQUAL] - The stencil comparison function used to compare the reference value against the current stencil buffer value.
      * @param {GLint} [funcRef=0] - The reference value against which the stencil buffer value is compared during the stencil test.

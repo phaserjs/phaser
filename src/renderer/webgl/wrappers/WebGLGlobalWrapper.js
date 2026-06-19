@@ -851,7 +851,7 @@ var WebGLGlobalWrapper = new Class({
      * Updates the stencil write mask state.
      *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLGlobalWrapper#updateStencilWriteMask
-     * @since 4.NEXT
+     * @since 4.2.0
      * @param {Phaser.Types.Renderer.WebGL.WebGLGlobalParameters} state - The state to set.
      * @param {boolean} [force=false] - If `true`, the state will be set regardless of the current state.
      */

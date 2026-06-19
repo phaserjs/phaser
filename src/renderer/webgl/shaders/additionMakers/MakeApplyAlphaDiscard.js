@@ -18,7 +18,7 @@ var ApplyAlphaDiscard = require('../ApplyAlphaDiscard-glsl');
  * Disable this addition to just keep the fragment color as is.
  *
  * @function Phaser.Renderer.WebGL.ShaderAdditionMakers.MakeApplyAlphaDiscard
- * @since 4.NEXT
+ * @since 4.2.0
  * @param {boolean} [disable=false] - Whether to disable the shader addition on creation.
  * @param {boolean} [dither=false] - Whether to use a dithering strategy to discard fragments.
  * @param {number} [threshold] - The threshold value to use when using a thresholding strategy to discard fragments. If defined, and dither is false, the threshold will be used to discard fragments.

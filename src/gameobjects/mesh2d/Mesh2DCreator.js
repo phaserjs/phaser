@@ -15,7 +15,7 @@ var Mesh2D = require('./Mesh2D');
  * Note: This method will only be available if the Mesh2D Game Object has been built into Phaser.
  *
  * @method Phaser.GameObjects.GameObjectCreator#mesh2d
- * @since 4.NEXT
+ * @since 4.2.0
  *
  * @param {Phaser.Types.GameObjects.GameObjectConfig} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.

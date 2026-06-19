@@ -862,7 +862,7 @@ var TimeStep = new Class({
      * If you just want a constant limit, use the Game Config `fps: { limit: 30 }` value instead.
      *
      * @method Phaser.Core.TimeStep#setFPSLimit
-     * @since 4.NEXT
+     * @since 4.2.0
      *
      * @param {number} limit - The FPS limit to set. Set to 0 to remove the FPS limit.
      *

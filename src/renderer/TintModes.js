@@ -94,7 +94,7 @@ module.exports = {
      * @name Phaser.TintModes.MULTIPLY_TWO
      * @type {number}
      * @const
-     * @since 4.NEXT
+     * @since 4.2.0
      */
     MULTIPLY_TWO: 7
 };

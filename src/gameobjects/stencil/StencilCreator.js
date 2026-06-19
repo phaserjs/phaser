@@ -16,7 +16,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * Note: This method will only be available if the Stencil Game Object has been built into Phaser.
  *
  * @method Phaser.GameObjects.GameObjectCreator#stencil
- * @since 4.NEXT
+ * @since 4.2.0
  *
  * @param {Phaser.Types.GameObjects.Stencil.StencilConfig} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
