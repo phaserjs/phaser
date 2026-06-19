@@ -287,10 +287,26 @@ var Blitter = new Class({
      *
      * @method Phaser.GameObjects.Blitter#clear
      * @since 3.0.0
+     *
+     * @param {boolean} [destroyBobs=false] - Should the Bobs be destroyed as well? If `false` they will just be removed from the Blitter.
      */
-    clear: function ()
+    clear: function (destroyBobs)
     {
-        this.children.removeAll();
+        if (destroyBobs)
+        {
+            var children = this.children.list;
+            var i = children.length;
+
+            while (i--)
+            {
+                children[i].destroy();
+            }
+        }
+        else
+        {
+            this.children.removeAll();
+        }
+
         this.dirty = true;
     },
 
@@ -303,6 +319,8 @@ var Blitter = new Class({
      */
     preDestroy: function ()
     {
+        this.clear(true);
+
         this.children.destroy();
 
         this.renderList = [];
