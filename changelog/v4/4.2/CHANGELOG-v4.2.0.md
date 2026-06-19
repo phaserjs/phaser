@@ -78,3 +78,5 @@ Thanks to @FSDevelop for adding this feature.
 - `DrawingContext` no longer attempts to unbind textures based on the game canvas, which cannot exist and just wastes time.
 - A Blitter will now call `destroy` on its Bob Game Objects as part of its own destroy process. Fix #7292 (thanks @samme)
 - Fixed a bug where the Line `width` and `height` values were not being updated after a call to `setTo()`. Fix #7270 (thanks @samme)
+- `Phaser.Math.Pow2` now exports `GetPowerOfTwo`, `IsSizePowerOfTwo` and `IsValuePowerOfTwo`. Fix #7309 (thanks @Visualizeit
+)
