@@ -74,12 +74,14 @@ var SubmitterMeshToQuad = new Class({
 
     /**
      * Processes the given GameObject and submits mesh vertex data to the appropriate
-     * batch handler for rendering. This method iterates over the mesh indices and
-     * vertices, checking for shared edges between triangles to combine them into quads.
-     * If no shared edge is found, the triangle is submitted as a degenerate. The
-     * method then caches the last triangle and continues iterating until all triangles
-     * are processed. If a cached triangle remains at the end, it is submitted as a
-     * degenerate.
+     * batch handler for rendering.
+     *
+     * If the mesh has a prebuilt ordered index list (`Mesh2D#useOrderedIndices` is `true`), it is used directly.
+     *
+     * Otherwise, the method submits each triangle as a quad,
+     * synthesizing a degenerate triangle for the other half of the quad.
+     * This is inefficient and should be avoided,
+     * either by using the ordered index list, or by using the `BatchHandlerTri` render node.
      *
      * The method also sets the render options for the GameObject, including the normal
      * map texture and rotation.
@@ -108,6 +110,8 @@ var SubmitterMeshToQuad = new Class({
         // `_submitQuad` can transform each vertex cheaply.
         transformerNode.setupMatrix(drawingContext, gameObject, parentMatrix);
 
+        var step = 4;
+
         // If the game object has a prebuilt ordered index list, consume it
         // directly. It is arranged into quad-forming pairs of triangles, so we
         // can submit quads without searching for shared edges.
@@ -117,7 +121,7 @@ var SubmitterMeshToQuad = new Class({
 
             // Each quad is a pair of triangles (8 values):
             // p, q, r, page (first triangle) and q, r, s, page (second).
-            for (var o = 0; o < ordered.length; o += 8)
+            for (var o = 0; o < ordered.length; o += step * 2)
             {
                 this._submitQuad(
                     ordered[o],
@@ -134,162 +138,21 @@ var SubmitterMeshToQuad = new Class({
             return;
         }
 
-        var cached = false;
-        var triCount = gameObject.indices.length / 4;
-
-        // First triangle vertex cache.
-        var d, e, f, firstTexturePage;
-
-        for (var i = 0; i < triCount; i++)
+        // If the mesh does not have a prebuilt ordered index list,
+        // submit each triangle as a quad,
+        // synthesizing a degenerate triangle for the other half of the quad.
+        var indices = gameObject.indices;
+        for (var i = 0; i < indices.length; i += step)
         {
-            var index = i * 4;
-            var a = gameObject.indices[index];
-            var b = gameObject.indices[index + 1];
-            var c = gameObject.indices[index + 2];
-            var texturePage = gameObject.indices[index + 3];
-
-            // We could check for degenerate triangles,
-            // using either abc or the texture coordinates,
-            // but as we expect raw triangles, and there's no reason to define
-            // degenerate triangles except for purposeful topology, we don't.
-
-            if (!cached)
-            {
-                cached = true;
-
-                d = a;
-                e = b;
-                f = c;
-                firstTexturePage = texturePage;
-
-                continue;
-            }
-
-            // Compare with potential first half of quad.
-            // If the texture page is the same,
-            // and the triangles share any edge (as defined by abc and def),
-            // then we can submit a quad combining the triangles.
-            if (texturePage === firstTexturePage)
-            {
-                var sharedEdge = false;
-
-                // Whether vertices are the same.
-                var isAD = a === d;
-                var isAE = a === e;
-                var isAF = a === f;
-                var isBD = b === d;
-                var isBE = b === e;
-                var isBF = b === f;
-                var isCD = c === d;
-                var isCE = c === e;
-                var isCF = c === f;
-
-                // Shared quad.
-                var p, q, r, s;
-
-                // Possible combinations of shared edges.
-                if ((isAD && isBE) || (isAE && isBD))
-                {
-                    sharedEdge = true;
-                    p = c;
-                    q = a;
-                    r = b;
-                    s = f;
-                }
-                else if ((isAD && isBF) || (isAF && isBD))
-                {
-                    sharedEdge = true;
-                    p = c;
-                    q = a;
-                    r = b;
-                    s = e;
-                }
-                else if ((isAE && isBF) || (isAF && isBE))
-                {
-                    sharedEdge = true;
-                    p = c;
-                    q = a;
-                    r = b;
-                    s = d;
-                }
-                else if ((isAD && isCE) || (isAE && isCD))
-                {
-                    sharedEdge = true;
-                    p = b;
-                    q = a;
-                    r = c;
-                    s = f;
-                }
-                else if ((isAD && isCF) || (isAF && isCD))
-                {
-                    sharedEdge = true;
-                    p = b;
-                    q = a;
-                    r = c;
-                    s = e;
-                }
-                else if ((isAE && isCF) || (isAF && isCE))
-                {
-                    sharedEdge = true;
-                    p = b;
-                    q = a;
-                    r = c;
-                    s = d;
-                }
-                else if ((isBD && isCE) || (isBE && isCD))
-                {
-                    sharedEdge = true;
-                    p = a;
-                    q = b;
-                    r = c;
-                    s = f;
-                }
-                else if ((isBD && isCF) || (isBF && isCD))
-                {
-                    sharedEdge = true;
-                    p = a;
-                    q = b;
-                    r = c;
-                    s = e;
-                }
-                else if ((isBE && isCF) || (isBF && isCE))
-                {
-                    sharedEdge = true;
-                    p = a;
-                    q = b;
-                    r = c;
-                    s = d;
-                }
-
-                if (sharedEdge)
-                {
-                    this._submitQuad(p, q, r, s, texturePage, drawingContext, gameObject, parentMatrix, transformerNode, normalMap, normalMapRotation);
-
-                    cached = false;
-
-                    continue;
-                }
-            }
-
-            // The cached triangle cannot be linked with the current tri,
-            // so we submit it as a degenerate.
-            this._submitQuad(d, e, f, f, firstTexturePage, drawingContext, gameObject, parentMatrix, transformerNode, normalMap, normalMapRotation);
-
-            // Update the cached triangle.
-            d = a;
-            e = b;
-            f = c;
-            firstTexturePage = texturePage;
-            cached = true;
+            this._submitQuad(
+                indices[i],
+                indices[i + 1],
+                indices[i + 2],
+                indices[i + 2],
+                indices[i + 3],
+                drawingContext, gameObject, parentMatrix, transformerNode, normalMap, normalMapRotation
+            );
         }
-
-        if (cached)
-        {
-            // We have a cached triangle, but it's not part of a quad.
-            // Submit it as a degenerate.
-            this._submitQuad(d, e, f, f, firstTexturePage, drawingContext, gameObject, parentMatrix, transformerNode, normalMap, normalMapRotation);
-        }
-
         this.onRunEnd(drawingContext);
     },
 

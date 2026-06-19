@@ -23,13 +23,37 @@ var Mesh2DRender = require('./Mesh2DRender');
  *
  * Because the triangles define their own texture coordinates,
  * Mesh2D does not directly use frame data from the texture.
- * However, it can copy a frame as a pair of triangles for convenience.
+ * You should set up your own texture coordinates,
+ * either by hand or using a texture atlas.
  *
- * The Mesh2D game object batches together with quads from game objects
+ * The Mesh2D game object can batch together with quads from game objects
  * like Image, Sprite, and Text.
- * It uses render nodes which attempt to combine triangles into quads,
- * or inserts degenerate triangles to treat single triangles as quads.
- * You must take care to arrange triangles to take advantage of this system.
+ * It supports several rendering strategies, and it's important to use the correct one.
+ *
+ * By default, it does not combine triangles into quads.
+ * Each triangle is rendered as a single quad.
+ * This is inefficient, so consider switching to one of the other strategies.
+ *
+ * Use the `buildOrderedIndices` method to precompute an optimized index list,
+ * which arranges triangles into quad-forming pairs,
+ * synthesizing degenerate triangles where a triangle has no edge-sharing partner.
+ * You choose the optimization strategy (`0` fast, `1` medium, `2` high), paying the cost once when the topology is stable.
+ * Use `useOrderedIndices` (and `setUseOrderedIndices`) to toggle between the ordered and unordered lists without rebuilding.
+ * This strategy is best for static topology,  where the triangles do not change.
+ * (The vertices can change, but the triangles do not.)
+ *
+ * Use the `renderAsTriangles` method to render the mesh as individual triangles.
+ * This is suitable for dynamic topology that cannot be optimized into quads ahead of time.
+ * However, it uses a separate render node designed for textured triangles,
+ * so it doesn't batch with quads.
+ * This strategy is best for dynamic topology, where the arrangement of
+ * triangles itself changes frequently.
+ *
+ * Prefer the ordered index list strategy where possible.
+ * It needs to do less work at render time.
+ *
+ * If you can guarantee that the index list is already ordered,
+ * you can set `useOrderedIndices` to `true` and generate `indicesOrdered` yourself.
  *
  * Mesh2D supports lighting. You should be careful not to distort
  * the mesh too far, or normal maps will look weird.
