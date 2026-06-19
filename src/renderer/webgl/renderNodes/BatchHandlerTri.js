@@ -111,7 +111,7 @@ var BatchHandlerTri = new Class({
      * @since 4.NEXT
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.Mesh2D} gameObject - The Mesh2D Game Object being rendered.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - The parent matrix of the Game Object, if it is nested.
+     * @param {Phaser.GameObjects.Components.TransformMatrix | undefined} parentMatrix - The parent matrix of the Game Object, if it is nested.
      * @param {Phaser.Renderer.WebGL.RenderNodes.TransformerVertex} transformerNode - The transformer node used to transform each vertex into screen space.
      * @param {number[]} vertices - The vertex data, as a sequence of `x, y, u, v` with a step of 4.
      * @param {number[]} indices - The index data, as a sequence of `a, b, c, page` with a step of 4.

@@ -103,6 +103,7 @@ export class Parser {
                 case 'Phaser.GameObjects.Components.RenderSteps':
                 case 'Phaser.GameObjects.Components.ScrollFactor':
                 case 'Phaser.GameObjects.Components.Size':
+                case 'Phaser.GameObjects.Components.StencilModifier':
                 case 'Phaser.GameObjects.Components.Texture':
                 case 'Phaser.GameObjects.Components.TextureCrop':
                 case 'Phaser.GameObjects.Components.Tint':

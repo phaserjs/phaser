@@ -81,12 +81,14 @@ var CustomContext = new Class({
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object being rendered in this call.
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested
-     * @param {number} renderStep - The index of this function in the Game Object's list of render processes. Used to support multiple rendering functions.
+     * @param {number} [renderStep] - The index of this function in the Game Object's list of render processes. Used to support multiple rendering functions.
      * @param {Phaser.GameObjects.GameObject[]} [displayList] - The display list which is currently being rendered.
      * @param {number} [displayListIndex] - The index of the Game Object within the display list.
      */
     customContextRenderStep: function (renderer, gameObject, drawingContext, parentMatrix, renderStep, displayList, displayListIndex)
     {
+        if (renderStep === undefined) { renderStep = 0; }
+
         if (!gameObject.customContextCallback)
         {
             gameObject.renderWebGLStep(
