@@ -53,7 +53,7 @@ var FillCamera = new Class({
      * @method Phaser.Renderer.WebGL.RenderNodes.FillCamera#run
      * @since 4.0.0
      * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
-     * @param {number} color - The color to fill the camera with.
+     * @param {number} color - The color to fill the camera with. Note, this must be a 32-bit ARGB integer.
      * @param {boolean} [isFramebufferCamera] - Is this camera rendering to a framebuffer? If so, the camera position will not be applied, on the assumption that the camera position will be used to position the framebuffer in the external context.
      */
     run: function (drawingContext, color, isFramebufferCamera)

@@ -37,7 +37,7 @@ var WebGLStencilParametersFactory = {
     * @param {GLenum} [opZfail=GL_KEEP] - The operation to perform if the stencil test passes but the depth test fails.
     * @param {GLenum} [opZpass=GL_KEEP] - The operation to perform if the stencil test passes and the depth test passes or is disabled.
     * @param {GLint} [clear=0] - The value to clear the stencil buffer to.
-    * @param {GLuint} [writeMask=0x00] - The mask applied to the stencil buffer value when it is written. Set to 0 to prevent writing. Set to 0xFF to allow full writing.
+    * @param {GLuint} [writeMask=0xFF] - The mask applied to the stencil buffer value when it is written. Set to 0 to prevent writing. Set to 0xFF to allow full writing.
     *
     * @return {Phaser.Types.Renderer.WebGL.WebGLStencilParameters} The created WebGLStencilParameters.
     */
@@ -52,7 +52,7 @@ var WebGLStencilParametersFactory = {
         if (opZfail === undefined) { opZfail = gl.KEEP; }
         if (opZpass === undefined) { opZpass = gl.KEEP; }
         if (clear === undefined) { clear = 0; }
-        if (writeMask === undefined) { writeMask = 0x00; }
+        if (writeMask === undefined) { writeMask = 0xFF; }
         var parameters = {
             enabled: enabled,
             func: {

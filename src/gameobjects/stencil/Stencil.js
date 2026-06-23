@@ -297,7 +297,7 @@ var Stencil = new Class({
         // Invert the stencil area if needed.
         if (gameObject.stencilInvert)
         {
-            renderer.renderNodes.getNode('FillCamera').run(currentContext, 0x000000, drawingContext.useCanvas);
+            renderer.renderNodes.getNode('FillCamera').run(currentContext, 0xff000000, drawingContext.useCanvas);
 
             currentContext = currentContext.getClone();
             currentContext.use();
