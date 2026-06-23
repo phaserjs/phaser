@@ -652,6 +652,11 @@ var InputPlugin = new Class({
 
             var pointer = pointers[i];
 
+            if (!pointer.active)
+            {
+                continue;
+            }
+
             //  Always reset this array
             this._tempZones = [];
 
