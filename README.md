@@ -37,15 +37,15 @@ import Phaser from 'phaser';
 [Phaser is on jsDelivr](https://www.jsdelivr.com/package/npm/phaser) which is a "super-fast CDN for developers". Include _either_ of the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@4.2.0/dist/phaser.js"></script>
-<script src="//cdn.jsdelivr.net/npm/phaser@4.2.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@4.2.1/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@4.2.1/dist/phaser.min.js"></script>
 ```
 
 It is also available from Cloudflare's [cdnjs](https://cdnjs.com/libraries/phaser):
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/4.2.0/phaser.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/4.2.0/phaser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/4.2.1/phaser.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/4.2.1/phaser.min.js"></script>
 ```
 
 ## Create Phaser Game App
