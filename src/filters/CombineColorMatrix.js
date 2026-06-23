@@ -7,6 +7,7 @@
 var Class = require('../utils/Class');
 var Controller = require('./Controller');
 var ColorMatrix = require('../display/ColorMatrix');
+var Texture = require('../textures/Texture');
 
 /**
  * @classdesc
@@ -119,7 +120,7 @@ var CombineColorMatrix = new Class({
      */
     setTexture: function (texture)
     {
-        var phaserTexture = texture instanceof Phaser.Textures.Texture ? texture : this.camera.scene.sys.textures.getFrame(texture);
+        var phaserTexture = texture instanceof Texture ? texture : this.camera.scene.sys.textures.getFrame(texture);
 
         if (phaserTexture)
         {

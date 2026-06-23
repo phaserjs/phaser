@@ -7,3 +7,4 @@
 - `Stencil` option `stencilInvert` works correctly (an alpha bug prevented it from having the intended effect)
 - Framebuffers now correctly clear stencil on use
   - The global stencil settings defaulted to deactivating the stencil write mask, so it couldn't actually run the `clear` process correctly. Write mask is now enabled by default, but is never triggered because default stencil operations keep existing values.
+- Remove inline access of Phaser namespace from `CombineColorMatrix`, `ImageLight`, and `Texture`. These would break in the ESM build. Thanks @scobo!

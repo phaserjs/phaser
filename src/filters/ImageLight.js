@@ -8,6 +8,7 @@ var Class = require('../utils/Class');
 var Controller = require('./Controller');
 var Matrix4 = require('../math/Matrix4');
 var TransformMatrix = require('../gameobjects/components/TransformMatrix');
+var Texture = require('../textures/Texture');
 
 /**
  * @classdesc
@@ -169,7 +170,7 @@ var ImageLight = new Class({
      */
     setEnvironmentMap: function (texture)
     {
-        var phaserTexture = texture instanceof Phaser.Textures.Texture ? texture : this.camera.scene.sys.textures.getFrame(texture);
+        var phaserTexture = texture instanceof Texture ? texture : this.camera.scene.sys.textures.getFrame(texture);
 
         if (phaserTexture)
         {
@@ -190,7 +191,7 @@ var ImageLight = new Class({
      */
     setNormalMap: function (texture)
     {
-        var phaserTexture = texture instanceof Phaser.Textures.Texture ? texture : this.camera.scene.sys.textures.getFrame(texture);
+        var phaserTexture = texture instanceof Texture ? texture : this.camera.scene.sys.textures.getFrame(texture);
 
         if (phaserTexture)
         {
