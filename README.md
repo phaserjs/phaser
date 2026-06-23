@@ -199,6 +199,7 @@ We've also included a dedicated [v3 to v4 migration skill](skills/v3-to-v4-migra
 
 We meticulously keep track of new features, updates and bug fixes in our change logs. Each version of Phaser has its own change log:
 
+* [v4.2.1 Change Log](changelog/v4/4.2.1/CHANGELOG-v4.2.1.md)
 * [v4.2.0 Change Log](changelog/v4/4.2/CHANGELOG-v4.2.0.md)
 * [v4.1.0 Change Log](changelog/v4/4.1/CHANGELOG-v4.1.0.md)
 * [v4.0.0 Change Log](changelog/v4/4.0/CHANGELOG-v4.0.0.md)
