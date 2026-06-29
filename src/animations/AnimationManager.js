@@ -806,7 +806,7 @@ var AnimationManager = new Class({
      *
      * @param {string} key - The key of the Animation to retrieve.
      *
-     * @return {Phaser.Animations.Animation} The Animation.
+     * @return {(Phaser.Animations.Animation|undefined)} The Animation or `undefined`.
      */
     get: function (key)
     {
