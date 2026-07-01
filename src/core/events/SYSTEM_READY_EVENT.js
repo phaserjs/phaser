@@ -11,7 +11,7 @@
  * This event is dispatched just once by the Game instance.
  *
  * @event Phaser.Core.Events#SYSTEM_READY
- * @type {string}
+ * @type {'systemready'}
  * @since 3.70.0
  *
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.

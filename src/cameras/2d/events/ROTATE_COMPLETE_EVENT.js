@@ -22,7 +22,7 @@
  * ```
  *
  * @event Phaser.Cameras.Scene2D.Events#ROTATE_COMPLETE
- * @type {string}
+ * @type {'camerarotatecomplete'}
  * @since 3.23.0
  *
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.

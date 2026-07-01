@@ -12,7 +12,7 @@
  * instance, which tells the Game to carry on booting.
  *
  * @event Phaser.Textures.Events#READY
- * @type {string}
+ * @type {'ready'}
  * @since 3.16.1
  */
 module.exports = 'ready';

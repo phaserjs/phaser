@@ -20,7 +20,7 @@
  * If you wish to know when the final particle is killed, see the `COMPLETE` event.
  *
  * @event Phaser.GameObjects.Particles.Events#STOP
- * @type {string}
+ * @type {'stop'}
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - A reference to the Particle Emitter that just completed.

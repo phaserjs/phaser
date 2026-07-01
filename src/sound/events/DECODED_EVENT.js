@@ -17,7 +17,7 @@
  * ```
  *
  * @event Phaser.Sound.Events#DECODED
- * @type {string}
+ * @type {'decoded'}
  * @since 3.18.0
  *
  * @param {string} key - The key of the audio file that was decoded and added to the audio cache.

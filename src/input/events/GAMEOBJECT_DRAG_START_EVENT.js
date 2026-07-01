@@ -19,7 +19,7 @@
  * For example, `gameObject.input.dragStartX`, `dragStartY` and so on.
  *
  * @event Phaser.Input.Events#GAMEOBJECT_DRAG_START
- * @type {string}
+ * @type {'dragstart'}
  * @since 3.0.0
  *
  * @param {Phaser.Input.Pointer} pointer - The Pointer responsible for triggering this event.

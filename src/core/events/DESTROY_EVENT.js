@@ -12,7 +12,7 @@
  * Custom plugins and game code should also do the same.
  *
  * @event Phaser.Core.Events#DESTROY
- * @type {string}
+ * @type {'destroy'}
  * @since 3.0.0
  */
 module.exports = 'destroy';

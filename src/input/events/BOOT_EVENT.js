@@ -10,7 +10,7 @@
  * This internal event is dispatched by the Input Plugin when it boots, signalling to all of its systems to create themselves.
  *
  * @event Phaser.Input.Events#BOOT
- * @type {string}
+ * @type {'boot'}
  * @since 3.0.0
  */
 module.exports = 'boot';

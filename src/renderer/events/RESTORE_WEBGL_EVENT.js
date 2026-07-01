@@ -25,7 +25,7 @@
  * re-creating any resources of your own.
  *
  * @event Phaser.Renderer.Events#RESTORE_WEBGL
- * @type {string}
+ * @type {'restorewebgl'}
  * @since 3.80.0
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - the renderer that owns the WebGL context

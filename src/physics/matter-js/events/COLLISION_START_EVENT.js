@@ -22,7 +22,7 @@
  * Listen to it from a Scene using: `this.matter.world.on('collisionstart', listener)`.
  *
  * @event Phaser.Physics.Matter.Events#COLLISION_START
- * @type {string}
+ * @type {'collisionstart'}
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Matter.Events.CollisionStartEvent} event - The Collision Event object.

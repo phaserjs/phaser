@@ -14,7 +14,7 @@
  * Listen for it from a Video Game Object instance using `Video.on('unsupported', listener)`.
  *
  * @event Phaser.GameObjects.Events#VIDEO_UNSUPPORTED
- * @type {string}
+ * @type {'unsupported'}
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.Video} video - The Video Game Object which started playback.

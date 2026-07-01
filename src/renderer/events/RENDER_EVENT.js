@@ -12,7 +12,7 @@
  * It is dispatched before any of the children in the Scene have been rendered.
  *
  * @event Phaser.Renderer.Events#RENDER
- * @type {string}
+ * @type {'render'}
  * @since 3.50.0
  *
  * @param {Phaser.Scene} scene - The Scene being rendered.

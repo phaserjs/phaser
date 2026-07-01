@@ -13,7 +13,7 @@
  * Listen to it from a Scene using: `this.load.on('complete', listener)`.
  *
  * @event Phaser.Loader.Events#COMPLETE
- * @type {string}
+ * @type {'complete'}
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.

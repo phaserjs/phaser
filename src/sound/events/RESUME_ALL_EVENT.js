@@ -14,7 +14,7 @@
  * Listen to it from a Scene using: `this.sound.on('resumeall', listener)`.
  *
  * @event Phaser.Sound.Events#RESUME_ALL
- * @type {string}
+ * @type {'resumeall'}
  * @since 3.0.0
  *
  * @param {Phaser.Sound.BaseSoundManager} soundManager - A reference to the sound manager that emitted the event.

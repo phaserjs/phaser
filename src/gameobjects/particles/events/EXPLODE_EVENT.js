@@ -12,7 +12,7 @@
  * Listen for it on a Particle Emitter instance using `ParticleEmitter.on('explode', listener)`.
  *
  * @event Phaser.GameObjects.Particles.Events#EXPLODE
- * @type {string}
+ * @type {'explode'}
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - A reference to the Particle Emitter that just completed.

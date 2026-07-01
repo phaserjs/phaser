@@ -26,7 +26,7 @@
  * the propagation of this event.
  *
  * @event Phaser.Input.Events#GAMEOBJECT_WHEEL
- * @type {string}
+ * @type {'gameobjectwheel'}
  * @since 3.18.0
  *
  * @param {Phaser.Input.Pointer} pointer - The Pointer responsible for triggering this event.

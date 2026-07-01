@@ -11,7 +11,7 @@
  * Hook into it from plugins or systems that need to do things before the render starts.
  *
  * @event Phaser.Core.Events#POST_STEP
- * @type {string}
+ * @type {'poststep'}
  * @since 3.0.0
  *
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.

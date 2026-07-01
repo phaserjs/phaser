@@ -12,7 +12,7 @@
  * tab, or if they simply remove focus from the browser to another app.
  *
  * @event Phaser.Core.Events#BLUR
- * @type {string}
+ * @type {'blur'}
  * @since 3.0.0
  */
 module.exports = 'blur';

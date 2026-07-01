@@ -15,7 +15,7 @@
  * your game should account for in its own code, should the pause be an issue (i.e. for multiplayer games)
  *
  * @event Phaser.Core.Events#HIDDEN
- * @type {string}
+ * @type {'hidden'}
  * @since 3.0.0
  */
 module.exports = 'hidden';

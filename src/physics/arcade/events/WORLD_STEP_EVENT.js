@@ -15,7 +15,7 @@
  * Listen to it from a Scene using: `this.physics.world.on('worldstep', listener)`.
  *
  * @event Phaser.Physics.Arcade.Events#WORLD_STEP
- * @type {string}
+ * @type {'worldstep'}
  * @since 3.18.0
  *
  * @param {number} delta - The delta time amount of this step, in seconds.

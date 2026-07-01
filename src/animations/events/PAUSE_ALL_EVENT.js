@@ -13,7 +13,7 @@
  * that the game has paused as well.
  *
  * @event Phaser.Animations.Events#PAUSE_ALL
- * @type {string}
+ * @type {'pauseall'}
  * @since 3.0.0
  */
 module.exports = 'pauseall';

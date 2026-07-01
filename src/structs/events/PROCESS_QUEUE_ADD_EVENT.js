@@ -14,7 +14,7 @@
  * In that instance, listen to this event from within a Scene using: `this.sys.updateList.on('add', listener)`.
  *
  * @event Phaser.Structs.Events#PROCESS_QUEUE_ADD
- * @type {string}
+ * @type {'add'}
  * @since 3.20.0
  *
  * @param {*} item - The item that was added to the Process Queue.

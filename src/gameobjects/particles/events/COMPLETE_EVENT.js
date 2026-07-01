@@ -14,7 +14,7 @@
  * Listen for it on a Particle Emitter instance using `ParticleEmitter.on('complete', listener)`.
  *
  * @event Phaser.GameObjects.Particles.Events#COMPLETE
- * @type {string}
+ * @type {'complete'}
  * @since 3.60.0
  *
  * @param {Phaser.GameObjects.Particles.ParticleEmitter} emitter - A reference to the Particle Emitter that just completed.

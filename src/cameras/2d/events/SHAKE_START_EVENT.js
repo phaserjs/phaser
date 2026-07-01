@@ -22,7 +22,7 @@
  * ```
  *
  * @event Phaser.Cameras.Scene2D.Events#SHAKE_START
- * @type {string}
+ * @type {'camerashakestart'}
  * @since 3.3.0
  *
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.

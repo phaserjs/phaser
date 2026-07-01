@@ -13,7 +13,7 @@
  * the removal of a data item on a Game Object you would use: `sprite.on('removedata', listener)`.
  *
  * @event Phaser.Data.Events#REMOVE_DATA
- * @type {string}
+ * @type {'removedata'}
  * @since 3.0.0
  *
  * @param {any} parent - A reference to the object that owns the instance of the Data Manager responsible for this event.

@@ -20,7 +20,7 @@
  * The primary consumer of this event is batch render nodes.
  *
  * @event Phaser.Renderer.Events#SET_PARALLEL_TEXTURE_UNITS
- * @type {string}
+ * @type {'setparalleltextureunits'}
  * @since 4.0.0
  *
  * @param {number} units - The number of texture units advised.
