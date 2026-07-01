@@ -349,10 +349,10 @@ var RandomDataGenerator = new Class({
      * @since 3.0.0
      *
      * @generic T
-     * @genericUse {T[]} - [array]
+     * @genericUse {ArrayLike<T>} - [array]
      * @genericUse {T} - [$return]
      *
-     * @param {T[]} array - The array to pick a random element from.
+     * @param {ArrayLike<T>} array - The array (or array-like object) to pick a random element from.
      *
      * @return {T} A random member of the array.
      */
@@ -370,6 +370,8 @@ var RandomDataGenerator = new Class({
      *
      * @return {number} -1 or +1.
      */
+    // NB: Catharsis (the underlying parser used by JSDoc) does not support parsing negative numbers inside types.
+    // Moreover, the `jsdoc` package used for typegen is (effectively) unmaintained, preventing us from typing this as `-1 | 1`.
     sign: function ()
     {
         return this.pick(this.signs);
@@ -382,10 +384,10 @@ var RandomDataGenerator = new Class({
      * @since 3.0.0
      *
      * @generic T
-     * @genericUse {T[]} - [array]
+     * @genericUse {ArrayLike<T>} - [array]
      * @genericUse {T} - [$return]
      *
-     * @param {T[]} array - The array to pick a random element from.
+     * @param {ArrayLike<T>} array - The array (or array-like object) to pick a random element from.
      *
      * @return {T} A random member of the array.
      */
