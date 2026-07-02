@@ -87,11 +87,10 @@ var PhysicsGroup = new Class({
         }
         else
         {
-            // config is not defined and children is not a plain object nor an array of plain objects
-            config = {
-                internalCreateCallback: this.createCallbackHandler,
-                internalRemoveCallback: this.removeCallbackHandler
-            };
+            // children is not a plain object nor an array of plain objects
+            config = config || {};
+            config.internalCreateCallback = this.createCallbackHandler;
+            config.internalRemoveCallback = this.removeCallbackHandler;
         }
 
         /**
