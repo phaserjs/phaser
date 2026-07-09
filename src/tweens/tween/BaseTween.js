@@ -548,13 +548,13 @@ var BaseTween = new Class({
      */
     updateStartCountdown: function (delta)
     {
-        this.countdown -= delta;
+        this.startDelay -= delta;
 
-        if (this.countdown <= 0)
+        if (this.startDelay <= 0)
         {
-            this.hasStarted = true;
-
             this.setActiveState();
+            
+            this.hasStarted = true;
 
             this.dispatchEvent(Events.TWEEN_START, 'onStart');
 

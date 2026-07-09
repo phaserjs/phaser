@@ -684,17 +684,7 @@ var Tween = new Class({
         }
         else if (!this.hasStarted)
         {
-            this.startDelay -= delta;
-
-            if (this.startDelay <= 0)
-            {
-                this.hasStarted = true;
-
-                this.dispatchEvent(Events.TWEEN_START, 'onStart');
-
-                //  Reset the delta so we always start progress from zero
-                delta = 0;
-            }
+            delta = this.updateStartCountdown(delta);
         }
 
         var stillRunning = false;
