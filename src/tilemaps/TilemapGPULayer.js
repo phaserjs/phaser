@@ -217,6 +217,19 @@ var TilemapGPULayer = new Class({
                 {
                     index |= 0x20000000;
                 }
+
+                // Encode the tile rotation as a 0-3 quadrant (0, 90, 180, 270
+                // degrees) in bits 24-25. Tiled stores 90-degree rotations via
+                // the anti-diagonal flip flag, which the parser resolves into
+                // `tile.rotation`; without this the shader would render rotated
+                // tiles (e.g. arrows built by rotating a base tile) unrotated.
+                var rotQuad = Math.round(tile.rotation / (Math.PI / 2)) % 4;
+                if (rotQuad < 0)
+                {
+                    rotQuad += 4;
+                }
+                index |= rotQuad << 24;
+
                 if (tile.index === -1)
                 {
                     // Set the fourth bit to 1 to indicate an empty tile.
