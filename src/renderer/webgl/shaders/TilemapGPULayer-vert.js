@@ -21,7 +21,7 @@ module.exports = [
     '{',
     '    gl_Position = uProjectionMatrix * vec4(inPosition, 1.0, 1.0);',
     '    outTexCoord = inTexCoord;',
-    '    outTileStride = uTileWidthHeightMarginSpacing.xy + uTileWidthHeightMarginSpacing.zz;',
+    '    outTileStride = uTileWidthHeightMarginSpacing.xy + uTileWidthHeightMarginSpacing.ww;',
     '    #pragma phaserTemplate(vertexProcess)',
     '}',
 ].join('\n');
