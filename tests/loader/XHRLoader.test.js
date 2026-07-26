@@ -1,3 +1,4 @@
+var File = require('../../src/loader/File');
 var XHRLoader = require('../../src/loader/XHRLoader');
 
 describe('Phaser.Loader.XHRLoader', function ()
@@ -75,6 +76,29 @@ describe('Phaser.Loader.XHRLoader', function ()
         };
     }
 
+    function makeActualFile (globalSettings, xhrSettings)
+    {
+        var loader = {
+            prefix: '',
+            path: '',
+            baseURL: '',
+            maxRetries: 2,
+            xhr: globalSettings
+        };
+        var fileConfig = {
+            type: 'image',
+            key: 'image',
+            url: 'image.png'
+        };
+
+        if (xhrSettings !== undefined)
+        {
+            fileConfig.xhrSettings = xhrSettings;
+        }
+
+        return new File(loader, fileConfig);
+    }
+
     beforeEach(function ()
     {
         mockXHR = makeMockXHR();
@@ -134,6 +158,126 @@ describe('Phaser.Loader.XHRLoader', function ()
 
             expect(mockXHR.open.mock.calls[0][3]).toBe('testuser');
             expect(mockXHR.open.mock.calls[0][4]).toBe('testpass');
+        });
+
+        it('should pass global credentials for a File with omitted credentials', function ()
+        {
+            var globalSettings = makeGlobalXHRSettings();
+
+            globalSettings.user = 'globaluser';
+            globalSettings.password = 'globalpass';
+
+            var file = makeActualFile(globalSettings);
+
+            file.load();
+
+            expect(mockXHR.open).toHaveBeenCalledOnce();
+            expect(mockXHR.open).toHaveBeenCalledWith('GET', 'image.png', true, 'globaluser', 'globalpass');
+        });
+
+        it('should pass empty credentials when File and Loader credentials are omitted', function ()
+        {
+            var globalSettings = makeGlobalXHRSettings();
+            var file = makeActualFile(globalSettings);
+
+            file.load();
+
+            expect(mockXHR.open).toHaveBeenCalledOnce();
+            expect(mockXHR.open).toHaveBeenCalledWith('GET', 'image.png', true, '', '');
+        });
+
+        it('should preserve global credentials with unrelated File xhr settings', function ()
+        {
+            var globalSettings = makeGlobalXHRSettings();
+
+            globalSettings.user = 'globaluser';
+            globalSettings.password = 'globalpass';
+
+            var file = makeActualFile(globalSettings, { timeout: 5000 });
+
+            file.load();
+
+            expect(mockXHR.open).toHaveBeenCalledOnce();
+            expect(mockXHR.open).toHaveBeenCalledWith('GET', 'image.png', true, 'globaluser', 'globalpass');
+            expect(mockXHR.timeout).toBe(5000);
+        });
+
+        it('should allow explicit empty File credentials to clear global credentials', function ()
+        {
+            var globalSettings = makeGlobalXHRSettings();
+
+            globalSettings.user = 'globaluser';
+            globalSettings.password = 'globalpass';
+
+            var file = makeActualFile(globalSettings, { user: '', password: '' });
+
+            file.load();
+
+            expect(mockXHR.open).toHaveBeenCalledOnce();
+            expect(mockXHR.open).toHaveBeenCalledWith('GET', 'image.png', true, '', '');
+        });
+
+        it('should allow an empty File user to clear only the global user', function ()
+        {
+            var globalSettings = makeGlobalXHRSettings();
+
+            globalSettings.user = 'globaluser';
+            globalSettings.password = 'globalpass';
+
+            var file = makeActualFile(globalSettings, { user: '' });
+
+            file.load();
+
+            expect(mockXHR.open).toHaveBeenCalledOnce();
+            expect(mockXHR.open).toHaveBeenCalledWith('GET', 'image.png', true, '', 'globalpass');
+        });
+
+        it('should allow an empty File password to clear only the global password', function ()
+        {
+            var globalSettings = makeGlobalXHRSettings();
+
+            globalSettings.user = 'globaluser';
+            globalSettings.password = 'globalpass';
+
+            var file = makeActualFile(globalSettings, { password: '' });
+
+            file.load();
+
+            expect(mockXHR.open).toHaveBeenCalledOnce();
+            expect(mockXHR.open).toHaveBeenCalledWith('GET', 'image.png', true, 'globaluser', '');
+        });
+
+        it('should allow explicit File credentials to override global credentials', function ()
+        {
+            var globalSettings = makeGlobalXHRSettings();
+
+            globalSettings.user = 'globaluser';
+            globalSettings.password = 'globalpass';
+
+            var file = makeActualFile(globalSettings, { user: 'fileuser', password: 'filepass' });
+
+            file.load();
+
+            expect(mockXHR.open).toHaveBeenCalledOnce();
+            expect(mockXHR.open).toHaveBeenCalledWith('GET', 'image.png', true, 'fileuser', 'filepass');
+        });
+
+        it('should inherit omitted File credentials independently', function ()
+        {
+            var globalSettings = makeGlobalXHRSettings();
+
+            globalSettings.user = 'globaluser';
+            globalSettings.password = 'globalpass';
+
+            var userFile = makeActualFile(globalSettings, { user: 'fileuser' });
+            var passwordFile = makeActualFile(globalSettings, { password: 'filepass' });
+
+            userFile.load();
+            passwordFile.load();
+
+            expect(mockXHR.open).toHaveBeenCalledTimes(2);
+            expect(mockXHR.open.mock.calls[0]).toEqual([ 'GET', 'image.png', true, 'fileuser', 'globalpass' ]);
+            expect(mockXHR.open.mock.calls[1]).toEqual([ 'GET', 'image.png', true, 'globaluser', 'filepass' ]);
         });
 
         it('should set xhr.responseType from file xhrSettings', function ()
