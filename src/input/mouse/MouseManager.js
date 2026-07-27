@@ -533,6 +533,7 @@ var MouseManager = new Class({
         target.removeEventListener('mouseup', this.onMouseUp);
         target.removeEventListener('mouseover', this.onMouseOver);
         target.removeEventListener('mouseout', this.onMouseOut);
+        target.removeEventListener('wheel', this.onMouseWheel);
 
         if (window)
         {
