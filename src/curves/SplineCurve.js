@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,13 @@ var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
- * Create a smooth 2d spline curve from a series of points.
+ * A Spline Curve is a smooth curve that passes through a series of control points, using Catmull-Rom
+ * interpolation to produce a natural-looking path. Unlike a Bezier curve, every control point is
+ * visited exactly, making it easy to define a precise route for objects to follow.
+ *
+ * Use a Spline Curve when you need a smooth path through multiple waypoints, such as a camera
+ * dolly track, a projectile flight path, or a patrol route for a game character. Points can be
+ * added at construction time or incrementally via `addPoint` and `addPoints`.
  *
  * @class Spline
  * @extends Phaser.Curves.Curve
@@ -54,7 +60,7 @@ var SplineCurve = new Class({
      * @method Phaser.Curves.Spline#addPoints
      * @since 3.0.0
      *
-     * @param {(Phaser.Math.Vector2[]|number[]|number[][])} points - The points that configure the curve.
+     * @param {(Phaser.Math.Vector2[]|number[]|number[][])} points - The points to add. Accepts an array of `Vector2` objects, a flat array of interleaved `x, y` number pairs, or an array of two-element `[x, y]` number arrays.
      *
      * @return {this} This curve object.
      */
@@ -94,8 +100,8 @@ var SplineCurve = new Class({
      * @method Phaser.Curves.Spline#addPoint
      * @since 3.0.0
      *
-     * @param {number} x - The x coordinate of this curve
-     * @param {number} y - The y coordinate of this curve
+     * @param {number} x - The x coordinate of the point to add.
+     * @param {number} y - The y coordinate of the point to add.
      *
      * @return {Phaser.Math.Vector2} The new Vector2 added to the curve
      */
@@ -128,12 +134,12 @@ var SplineCurve = new Class({
     },
 
     /**
-     * Get the resolution of the curve.
+     * Returns the resolution of this curve, which is the number of points used to approximate it per segment. For a Spline, this scales with the number of points and the requested divisions.
      *
      * @method Phaser.Curves.Spline#getResolution
      * @since 3.0.0
      *
-     * @param {number} divisions - Optional divisions value.
+     * @param {number} divisions - The number of divisions per segment used when approximating the curve.
      *
      * @return {number} The curve resolution.
      */

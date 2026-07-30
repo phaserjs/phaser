@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -32,6 +32,10 @@ var Smooth = require('../../../geom/polygon/Smooth');
  *
  * By default the `x` and `y` coordinates of this Shape refer to the center of it. However, depending
  * on the coordinates of the points provided, the final shape may be rendered offset from its origin.
+ *
+ * Note: The method `getBounds` will return incorrect bounds if any of the points in the Polygon are negative.
+ * If this is the case, please use the function `Phaser.Geom.Polygon.GetAABB(polygon.geom)` instead and then
+ * adjust the returned Rectangle position accordingly.
  *
  * @class Polygon
  * @extends Phaser.GameObjects.Shape
@@ -107,7 +111,7 @@ var Polygon = new Class({
      * The points can be set from a variety of formats:
      *
      * - A string containing paired values separated by a single space: `'40 0 40 20 100 20 100 80 40 80 40 100 0 50'`
-     * - An array of Point objects: `[new Phaser.Point(x1, y1), ...]`
+     * - An array of Point or Vector2 objects: `[new Phaser.Math.Vector2(x1, y1), ...]`
      * - An array of objects with public x/y properties: `[obj1, obj2, ...]`
      * - An array of paired numbers that represent point coordinates: `[x1,y1, x2,y2, ...]`
      * - An array of arrays with two elements representing x/y coordinates: `[[x1, y1], [x2, y2], ...]`

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -65,7 +65,7 @@ var IsoTriangle = new Class({
         Shape.call(this, scene, 'IsoTriangle', null);
 
         /**
-         * The projection level of the iso box. Change this to change the 'angle' at which you are looking at the box.
+         * The projection level of the iso triangle. Change this to change the 'angle' at which you are looking at the pyramid.
          *
          * @name Phaser.GameObjects.IsoTriangle#projection
          * @type {number}
@@ -102,7 +102,7 @@ var IsoTriangle = new Class({
         this.fillRight = fillRight;
 
         /**
-         * Controls if the top-face of the iso triangle be rendered.
+         * Controls whether the top face of the iso triangle will be rendered.
          *
          * @name Phaser.GameObjects.IsoTriangle#showTop
          * @type {boolean}
@@ -112,7 +112,7 @@ var IsoTriangle = new Class({
         this.showTop = true;
 
         /**
-         * Controls if the left-face of the iso triangle be rendered.
+         * Controls whether the left face of the iso triangle will be rendered.
          *
          * @name Phaser.GameObjects.IsoTriangle#showLeft
          * @type {boolean}
@@ -122,7 +122,7 @@ var IsoTriangle = new Class({
         this.showLeft = true;
 
         /**
-         * Controls if the right-face of the iso triangle be rendered.
+         * Controls whether the right face of the iso triangle will be rendered.
          *
          * @name Phaser.GameObjects.IsoTriangle#showRight
          * @type {boolean}
@@ -132,7 +132,7 @@ var IsoTriangle = new Class({
         this.showRight = true;
 
         /**
-         * Sets if the iso triangle will be rendered upside down or not.
+         * Indicates whether the iso triangle is rendered upside down.
          *
          * @name Phaser.GameObjects.IsoTriangle#isReversed
          * @type {boolean}
@@ -174,7 +174,7 @@ var IsoTriangle = new Class({
      * @method Phaser.GameObjects.IsoTriangle#setReversed
      * @since 3.13.0
      *
-     * @param {boolean} reversed - Sets if the iso triangle will be rendered upside down or not.
+     * @param {boolean} reversed - Whether to render the iso triangle upside down.
      *
      * @return {this} This Game Object instance.
      */

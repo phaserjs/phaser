@@ -49,7 +49,7 @@ var Common = require('../core/Common');
         var initialPointA = constraint.bodyA ? Vector.add(constraint.bodyA.position, constraint.pointA) : constraint.pointA,
             initialPointB = constraint.bodyB ? Vector.add(constraint.bodyB.position, constraint.pointB) : constraint.pointB,
             length = Vector.magnitude(Vector.sub(initialPointA, initialPointB));
-    
+
         constraint.length = typeof constraint.length !== 'undefined' ? constraint.length : length;
 
         // option defaults
@@ -162,7 +162,7 @@ var Common = require('../core/Common');
             Vector.rotate(pointA, bodyA.angle - constraint.angleA, pointA);
             constraint.angleA = bodyA.angle;
         }
-        
+
         // update reference angle
         if (bodyB && !bodyB.isStatic) {
             Vector.rotate(pointB, bodyB.angle - constraint.angleB, pointB);
@@ -189,7 +189,7 @@ var Common = require('../core/Common');
         // solve distance constraint with Gauss-Siedel method
         var difference = (currentLength - constraint.length) / currentLength,
             isRigid = constraint.stiffness >= 1 || constraint.length === 0,
-            stiffness = isRigid ? constraint.stiffness * timeScale 
+            stiffness = isRigid ? constraint.stiffness * timeScale
                 : constraint.stiffness * timeScale * timeScale,
             damping = constraint.damping * timeScale,
             force = Vector.mult(delta, difference * stiffness),
@@ -243,7 +243,7 @@ var Common = require('../core/Common');
             // keep track of applied impulses for post solving
             bodyB.constraintImpulse.x += force.x * share;
             bodyB.constraintImpulse.y += force.y * share;
-            
+
             // apply forces
             bodyB.position.x += force.x * share;
             bodyB.position.y += force.y * share;
@@ -282,7 +282,7 @@ var Common = require('../core/Common');
             // update geometry and reset
             for (var j = 0; j < body.parts.length; j++) {
                 var part = body.parts[j];
-                
+
                 Vertices.translate(part.vertices, impulse);
 
                 if (j > 0) {
@@ -312,13 +312,13 @@ var Common = require('../core/Common');
      * Returns the world-space position of `constraint.pointA`, accounting for `constraint.bodyA`.
      * @method pointAWorld
      * @param {constraint} constraint
-     * @returns {vector} the world-space position
+     * @return {vector} the world-space position
      */
     Constraint.pointAWorld = function(constraint) {
         return {
-            x: (constraint.bodyA ? constraint.bodyA.position.x : 0) 
+            x: (constraint.bodyA ? constraint.bodyA.position.x : 0)
                 + (constraint.pointA ? constraint.pointA.x : 0),
-            y: (constraint.bodyA ? constraint.bodyA.position.y : 0) 
+            y: (constraint.bodyA ? constraint.bodyA.position.y : 0)
                 + (constraint.pointA ? constraint.pointA.y : 0)
         };
     };
@@ -327,36 +327,36 @@ var Common = require('../core/Common');
      * Returns the world-space position of `constraint.pointB`, accounting for `constraint.bodyB`.
      * @method pointBWorld
      * @param {constraint} constraint
-     * @returns {vector} the world-space position
+     * @return {vector} the world-space position
      */
     Constraint.pointBWorld = function(constraint) {
         return {
-            x: (constraint.bodyB ? constraint.bodyB.position.x : 0) 
+            x: (constraint.bodyB ? constraint.bodyB.position.x : 0)
                 + (constraint.pointB ? constraint.pointB.x : 0),
-            y: (constraint.bodyB ? constraint.bodyB.position.y : 0) 
+            y: (constraint.bodyB ? constraint.bodyB.position.y : 0)
                 + (constraint.pointB ? constraint.pointB.y : 0)
         };
     };
 
     /**
-     * Returns the current length of the constraint. 
+     * Returns the current length of the constraint.
      * This is the distance between both of the constraint's end points.
      * See `constraint.length` for the target rest length.
      * @method currentLength
      * @param {constraint} constraint
-     * @returns {number} the current length
+     * @return {number} the current length
      */
     Constraint.currentLength = function(constraint) {
-        var pointAX = (constraint.bodyA ? constraint.bodyA.position.x : 0) 
+        var pointAX = (constraint.bodyA ? constraint.bodyA.position.x : 0)
             + (constraint.pointA ? constraint.pointA.x : 0);
 
-        var pointAY = (constraint.bodyA ? constraint.bodyA.position.y : 0) 
+        var pointAY = (constraint.bodyA ? constraint.bodyA.position.y : 0)
             + (constraint.pointA ? constraint.pointA.y : 0);
 
-        var pointBX = (constraint.bodyB ? constraint.bodyB.position.x : 0) 
+        var pointBX = (constraint.bodyB ? constraint.bodyB.position.x : 0)
             + (constraint.pointB ? constraint.pointB.x : 0);
-            
-        var pointBY = (constraint.bodyB ? constraint.bodyB.position.y : 0) 
+
+        var pointBY = (constraint.bodyB ? constraint.bodyB.position.y : 0)
             + (constraint.pointB ? constraint.pointB.y : 0);
 
         var deltaX = pointAX - pointBX;
@@ -428,7 +428,7 @@ var Common = require('../core/Common');
      */
 
     /**
-     * A `String` that defines the constraint rendering type. 
+     * A `String` that defines the constraint rendering type.
      * The possible values are 'line', 'pin', 'spring'.
      * An appropriate render type will be automatically chosen unless one is given in options.
      *
@@ -488,7 +488,7 @@ var Common = require('../core/Common');
      */
 
     /**
-     * A `Number` that specifies the damping of the constraint, 
+     * A `Number` that specifies the damping of the constraint,
      * i.e. the amount of resistance applied to each body based on their velocities to limit the amount of oscillation.
      * Damping will only be apparent when the constraint also has a very low `stiffness`.
      * A value of `0.1` means the constraint will apply heavy damping, resulting in little to no oscillation.
@@ -500,7 +500,7 @@ var Common = require('../core/Common');
      */
 
     /**
-     * A `Number` that specifies the target resting length of the constraint. 
+     * A `Number` that specifies the target resting length of the constraint.
      * It is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`.
      *
      * @property length

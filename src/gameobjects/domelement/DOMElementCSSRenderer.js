@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -33,6 +33,12 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
+    if (camera.camera)
+    {
+        // `camera` is really a DrawingContext object, used in WebGL rendering.
+        camera = camera.camera;
+    }
+
     var style = src.node.style;
     var settings = src.scene.sys.settings;
 
@@ -55,49 +61,39 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
     var srcMatrix = tempMatrix2;
     var calcMatrix = tempMatrix3;
 
-    var dx = 0;
-    var dy = 0;
+    var dx = src.width * src.originX;
+    var dy = src.height * src.originY;
 
     var tx = '0%';
     var ty = '0%';
 
+    camMatrix.copyWithScrollFactorFrom(
+        camera.matrix,
+        camera.scrollX, camera.scrollY,
+        src.scrollFactorX, src.scrollFactorY
+    );
+
     if (parentMatrix)
     {
-        dx = (src.width * src.scaleX) * src.originX;
-        dy = (src.height * src.scaleY) * src.originY;
-
-        srcMatrix.applyITRS(src.x - dx, src.y - dy, src.rotation, src.scaleX, src.scaleY);
-
-        camMatrix.copyFrom(camera.matrix);
-
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        srcMatrix.e = src.x - dx;
-        srcMatrix.f = src.y - dy;
-
-        //  Multiply by the src matrix, store result in calcMatrix
-        camMatrix.multiply(srcMatrix, calcMatrix);
+        camMatrix.multiply(parentMatrix);
+        dx *= src.scaleX;
+        dy *= src.scaleY;
     }
     else
     {
-        dx = (src.width) * src.originX;
-        dy = (src.height) * src.originY;
-
-        srcMatrix.applyITRS(src.x - dx, src.y - dy, src.rotation, src.scaleX, src.scaleY);
-
-        camMatrix.copyFrom(camera.matrix);
-
         tx = (100 * src.originX) + '%';
         ty = (100 * src.originY) + '%';
-
-        srcMatrix.e -= camera.scrollX * src.scrollFactorX;
-        srcMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the src matrix, store result in calcMatrix
-        camMatrix.multiply(srcMatrix, calcMatrix);
     }
+
+    camMatrix.translate(-dx, -dy);
+
+    srcMatrix.applyITRS(
+        src.x, src.y,
+        src.rotation,
+        src.scaleX, src.scaleY
+    );
+
+    camMatrix.multiply(srcMatrix, calcMatrix);
 
     if (!src.transformOnly)
     {

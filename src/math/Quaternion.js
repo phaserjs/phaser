@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -26,7 +26,11 @@ var tmpMat3 = new Matrix3();
 
 /**
  * @classdesc
- * A quaternion.
+ * A quaternion representing a rotation in 3D space. Quaternions avoid gimbal lock
+ * and provide smooth interpolation between orientations. The quaternion is stored as
+ * four components (x, y, z, w). Use the `identity` method to reset to the identity
+ * quaternion (0, 0, 0, 1), which represents no rotation. Commonly used with Matrix4
+ * for 3D transformations in WebGL rendering.
  *
  * @class Quaternion
  * @memberof Phaser.Math
@@ -79,7 +83,7 @@ var Quaternion = new Class({
          *
          * @name Phaser.Math.Quaternion#_w
          * @type {number}
-         * @default 0
+         * @default 1
          * @private
          * @since 3.50.0
          */
@@ -344,7 +348,8 @@ var Quaternion = new Class({
     },
 
     /**
-     * Normalize this Quaternion.
+     * Normalizes this Quaternion, scaling it to unit length. If the Quaternion has
+     * zero length, no change is made.
      *
      * @method Phaser.Math.Quaternion#normalize
      * @since 3.0.0
@@ -418,13 +423,15 @@ var Quaternion = new Class({
     },
 
     /**
-     * Rotates this Quaternion based on the two given vectors.
+     * Sets this Quaternion to represent the shortest arc rotation from unit vector `a`
+     * to unit vector `b`. This is the minimum rotation needed to align `a` with `b`.
+     * Both vectors must be normalized before calling this method.
      *
      * @method Phaser.Math.Quaternion#rotationTo
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector3} a - The transform rotation vector.
-     * @param {Phaser.Math.Vector3} b - The target rotation vector.
+     * @param {Phaser.Math.Vector3} a - The starting unit vector.
+     * @param {Phaser.Math.Vector3} b - The target unit vector.
      *
      * @return {Phaser.Math.Quaternion} This Quaternion.
      */
@@ -462,14 +469,16 @@ var Quaternion = new Class({
     },
 
     /**
-     * Set the axes of this Quaternion.
+     * Sets this Quaternion from the given view, right, and up axis vectors. The three
+     * vectors are written into a temporary Matrix3, which is then converted to a
+     * normalized quaternion. All three vectors should be mutually orthogonal unit vectors.
      *
      * @method Phaser.Math.Quaternion#setAxes
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector3} view - The view axis.
+     * @param {Phaser.Math.Vector3} view - The view (forward) axis.
      * @param {Phaser.Math.Vector3} right - The right axis.
-     * @param {Phaser.Math.Vector3} up - The upwards axis.
+     * @param {Phaser.Math.Vector3} up - The up axis.
      *
      * @return {Phaser.Math.Quaternion} This Quaternion.
      */
@@ -493,7 +502,8 @@ var Quaternion = new Class({
     },
 
     /**
-     * Reset this Matrix to an identity (default) Quaternion.
+     * Resets this Quaternion to the identity quaternion (0, 0, 0, 1), which represents
+     * no rotation.
      *
      * @method Phaser.Math.Quaternion#identity
      * @since 3.0.0
@@ -506,13 +516,14 @@ var Quaternion = new Class({
     },
 
     /**
-     * Set the axis angle of this Quaternion.
+     * Sets this Quaternion to represent a rotation of `rad` radians around the given
+     * normalized axis vector.
      *
      * @method Phaser.Math.Quaternion#setAxisAngle
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector3} axis - The axis.
-     * @param {number} rad - The angle in radians.
+     * @param {Phaser.Math.Vector3} axis - The normalized axis vector around which to rotate.
+     * @param {number} rad - The rotation angle in radians.
      *
      * @return {Phaser.Math.Quaternion} This Quaternion.
      */
@@ -561,13 +572,16 @@ var Quaternion = new Class({
     },
 
     /**
-     * Smoothly linearly interpolate this Quaternion towards the given Quaternion or Vector.
+     * Performs a spherical linear interpolation (slerp) between this Quaternion and
+     * the given Quaternion or Vector. Unlike `lerp`, slerp interpolates along the
+     * shortest arc on the unit sphere, maintaining constant angular velocity and
+     * producing smooth, natural-looking rotations.
      *
      * @method Phaser.Math.Quaternion#slerp
      * @since 3.0.0
      *
      * @param {(Phaser.Math.Quaternion|Phaser.Math.Vector4)} b - The Quaternion or Vector to interpolate towards.
-     * @param {number} t - The percentage of interpolation.
+     * @param {number} t - The interpolation factor, typically in the range [0, 1].
      *
      * @return {Phaser.Math.Quaternion} This Quaternion.
      */
@@ -624,7 +638,9 @@ var Quaternion = new Class({
     },
 
     /**
-     * Invert this Quaternion.
+     * Calculates the multiplicative inverse of this Quaternion and sets the result.
+     * The inverse undoes the rotation represented by this Quaternion. If the Quaternion
+     * has zero length, no change is made.
      *
      * @method Phaser.Math.Quaternion#invert
      * @since 3.0.0
@@ -650,9 +666,9 @@ var Quaternion = new Class({
     },
 
     /**
-     * Convert this Quaternion into its conjugate.
-     *
-     * Sets the x, y and z components.
+     * Converts this Quaternion to its conjugate by negating the x, y, and z components
+     * while leaving w unchanged. For a unit quaternion, the conjugate is equivalent to
+     * the inverse and represents the opposite rotation.
      *
      * @method Phaser.Math.Quaternion#conjugate
      * @since 3.0.0
@@ -761,9 +777,9 @@ var Quaternion = new Class({
     },
 
     /**
-     * Create a unit (or rotation) Quaternion from its x, y, and z components.
-     *
-     * Sets the w component.
+     * Calculates and sets the w component of this Quaternion based on the current x, y,
+     * and z components, so that the Quaternion has unit length. Assumes the x, y, and z
+     * values are already known and that their combined squared length does not exceed 1.
      *
      * @method Phaser.Math.Quaternion#calculateW
      * @since 3.0.0
@@ -782,12 +798,14 @@ var Quaternion = new Class({
     },
 
     /**
-     * Set this Quaternion from the given Euler, based on Euler order.
+     * Sets this Quaternion from the given Euler object. The conversion respects the
+     * Euler's rotation order (e.g., 'XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY'),
+     * producing the equivalent quaternion rotation.
      *
      * @method Phaser.Math.Quaternion#setFromEuler
      * @since 3.50.0
      *
-     * @param {Phaser.Math.Euler} euler - The Euler to convert from.
+     * @param {Phaser.Math.Euler} euler - The Euler object to convert from.
      * @param {boolean} [update=true] - Run the `onChangeCallback`?
      *
      * @return {Phaser.Math.Quaternion} This Quaternion.
@@ -966,12 +984,14 @@ var Quaternion = new Class({
     },
 
     /**
-     * Convert the given Matrix into this Quaternion.
+     * Sets this Quaternion from the rotation represented by the given Matrix3, using
+     * the algorithm from Ken Shoemake's 1987 SIGGRAPH article "Quaternion Calculus and
+     * Fast Animation".
      *
      * @method Phaser.Math.Quaternion#fromMat3
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix3} mat - The Matrix to convert from.
+     * @param {Phaser.Math.Matrix3} mat - The Matrix3 to convert from.
      *
      * @return {Phaser.Math.Quaternion} This Quaternion.
      */

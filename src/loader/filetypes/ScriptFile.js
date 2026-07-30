@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
- * A single Script File suitable for loading by the Loader.
+ * A single Script File suitable for loading by the Loader. It fetches an external JavaScript file via XHR and,
+ * once loaded, injects it into the document as a `<script>` element appended to `document.head`, causing its
+ * code to execute immediately. Both classic scripts and ES modules are supported via the `type` parameter.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#script method and are not typically created directly.
  *
@@ -70,8 +72,10 @@ var ScriptFile = new Class({
     },
 
     /**
-     * Called automatically by Loader.nextFile.
-     * This method controls what extra work this File does with its loaded data.
+     * Called automatically by Loader.nextFile once the file has finished loading via XHR.
+     * Creates a `<script>` element, sets its `text` content to the raw response text of the loaded file,
+     * and appends it to `document.head`, which causes the script to execute immediately. The file state
+     * is then set to complete.
      *
      * @method Phaser.Loader.FileTypes.ScriptFile#onProcess
      * @since 3.7.0

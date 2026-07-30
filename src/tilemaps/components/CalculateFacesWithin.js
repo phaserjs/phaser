@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,9 +8,14 @@ var GetTileAt = require('./GetTileAt');
 var GetTilesWithin = require('./GetTilesWithin');
 
 /**
- * Calculates interesting faces within the rectangular area specified (in tile coordinates) of the
- * layer. Interesting faces are used internally for optimizing collisions against tiles. This method
- * is mostly used internally.
+ * Calculates the interesting faces for all collidable tiles within the rectangular area specified
+ * (in tile coordinates) of the layer. An "interesting face" is an exposed edge of a collidable tile
+ * — specifically, any face that is not shared with another collidable tile adjacent to it. For
+ * example, if two collidable tiles sit side by side, the shared edge between them is not an
+ * interesting face because a physics body moving between them would never collide with it. Only
+ * interesting faces are tested during collision resolution, which avoids the internal-edge problem
+ * and keeps collision checks efficient. This function is called automatically when tiles are placed
+ * or removed, and is mostly used internally by the tilemap system.
  *
  * @function Phaser.Tilemaps.Components.CalculateFacesWithin
  * @since 3.0.0

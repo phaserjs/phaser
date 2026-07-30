@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -146,7 +146,7 @@ var SmoothedKeyControl = new Class({
         this.maxZoom = GetValue(config, 'maxZoom', 1000);
 
         /**
-         * The horizontal acceleration the camera will move.
+         * The horizontal acceleration applied to the camera's movement when a directional key is held down.
          *
          * @name Phaser.Cameras.Controls.SmoothedKeyControl#accelX
          * @type {number}
@@ -156,7 +156,7 @@ var SmoothedKeyControl = new Class({
         this.accelX = 0;
 
         /**
-         * The vertical acceleration the camera will move.
+         * The vertical acceleration applied to the camera's movement when a directional key is held down.
          *
          * @name Phaser.Cameras.Controls.SmoothedKeyControl#accelY
          * @type {number}
@@ -212,7 +212,7 @@ var SmoothedKeyControl = new Class({
         }
 
         /**
-         * The maximum horizontal speed the camera will move.
+         * The maximum horizontal speed the camera can reach.
          *
          * @name Phaser.Cameras.Controls.SmoothedKeyControl#maxSpeedX
          * @type {number}
@@ -222,7 +222,7 @@ var SmoothedKeyControl = new Class({
         this.maxSpeedX = 0;
 
         /**
-         * The maximum vertical speed the camera will move.
+         * The maximum vertical speed the camera can reach.
          *
          * @name Phaser.Cameras.Controls.SmoothedKeyControl#maxSpeedY
          * @type {number}

@@ -1,6 +1,12 @@
-#define SHADER_NAME PHASER_POINTLIGHT_FS
+#pragma phaserTemplate(shaderName)
+
+#pragma phaserTemplate(extensions)
+
+#pragma phaserTemplate(features)
 
 precision mediump float;
+
+#pragma phaserTemplate(fragmentDefine)
 
 uniform vec2 uResolution;
 uniform float uCameraZoom;
@@ -9,6 +15,10 @@ varying vec4 lightPosition;
 varying vec4 lightColor;
 varying float lightRadius;
 varying float lightAttenuation;
+
+#pragma phaserTemplate(outVariables)
+
+#pragma phaserTemplate(fragmentHeader)
 
 void main ()
 {
@@ -21,6 +31,8 @@ void main ()
     float intensity = smoothstep(0.0, 1.0, radius * lightAttenuation);
 
     vec4 color = vec4(intensity, intensity, intensity, 0.0) * lightColor;
+
+    #pragma phaserTemplate(fragmentProcess)
 
     gl_FragColor = vec4(color.rgb * lightColor.a, color.a);
 }

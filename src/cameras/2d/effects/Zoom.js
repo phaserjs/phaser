@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,13 @@ var Events = require('../events');
  * @classdesc
  * A Camera Zoom effect.
  *
- * This effect will zoom the Camera to the given scale, over the duration and with the ease specified.
+ * This effect smoothly animates a Camera's zoom level from its current value to a target zoom value over a
+ * specified duration. Use it to create cinematic zoom-in or zoom-out transitions, focus the player's
+ * attention on a point of interest, or produce dramatic effects such as a slow zoom during a cutscene.
+ *
+ * The effect integrates with Phaser's easing system, allowing any of the built-in easing functions (or a
+ * custom one) to control the interpolation curve. It is accessed via `Camera.zoomTo` rather than being
+ * instantiated directly.
  *
  * The effect will dispatch several events on the Camera itself and you can also specify an `onUpdate` callback,
  * which is invoked each frame for the duration of the effect if required.
@@ -64,7 +70,7 @@ var Zoom = new Class({
         this.duration = 0;
 
         /**
-         * The starting zoom value;
+         * The starting zoom value.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Zoom#source
          * @type {number}

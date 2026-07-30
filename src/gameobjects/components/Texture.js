@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,13 @@ var Frame = require('../../textures/Frame');
 var _FLAG = 8; // 1000
 
 /**
- * Provides methods used for getting and setting the texture of a Game Object.
+ * Provides methods used for setting the texture and frame of a Game Object.
+ *
+ * This component is mixed in to Game Objects that support texture-based rendering,
+ * such as Sprites and Images. It allows a Game Object to reference a texture stored
+ * in the Texture Manager by key, and optionally a specific frame within that texture,
+ * as used with texture atlases and sprite sheets. Changing the texture or frame will
+ * automatically update the Game Object's size and origin to match.
  *
  * @namespace Phaser.GameObjects.Components.Texture
  * @since 3.0.0

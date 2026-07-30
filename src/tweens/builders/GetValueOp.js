@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -65,7 +65,7 @@ function hasGetters (def)
  * @param {string} key - The name of the property to modify.
  * @param {*} propertyValue - The ending value of the property, as described above.
  *
- * @return {function} An array of functions, `getActive`, `getStart` and `getEnd`, which return the starting and the ending value of the property based on the provided value.
+ * @return {function} An object containing `getActive`, `getStart`, and `getEnd` functions, which return the active, starting, and ending values of the property based on the provided value.
  */
 var GetValueOp = function (key, propertyValue)
 {

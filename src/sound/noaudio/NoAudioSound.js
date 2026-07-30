@@ -1,7 +1,7 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -281,6 +281,8 @@ var NoAudioSound = new Class({
     },
 
     /**
+     * Adds a marker to this sound. Markers allow you to define sections within a sound clip and play them back independently.
+     *
      * @method Phaser.Sound.NoAudioSound#addMarker
      * @since 3.0.0
      *
@@ -291,6 +293,8 @@ var NoAudioSound = new Class({
     addMarker: returnFalse,
 
     /**
+     * Updates the values of an existing marker in this sound.
+     *
      * @method Phaser.Sound.NoAudioSound#updateMarker
      * @since 3.0.0
      *
@@ -301,6 +305,8 @@ var NoAudioSound = new Class({
     updateMarker: returnFalse,
 
     /**
+     * Removes a marker from this sound by name.
+     *
      * @method Phaser.Sound.NoAudioSound#removeMarker
      * @since 3.0.0
      *
@@ -311,6 +317,8 @@ var NoAudioSound = new Class({
     removeMarker: returnNull,
 
     /**
+     * Plays this sound, or a specific marker within it. An optional config object can override default playback settings for this call.
+     *
      * @method Phaser.Sound.NoAudioSound#play
      * @since 3.0.0
      *
@@ -322,6 +330,8 @@ var NoAudioSound = new Class({
     play: returnFalse,
 
     /**
+     * Pauses this sound.
+     *
      * @method Phaser.Sound.NoAudioSound#pause
      * @since 3.0.0
      *
@@ -367,7 +377,7 @@ var NoAudioSound = new Class({
      * @method Phaser.Sound.NoAudioSound#setVolume
      * @since 3.4.0
      *
-     * @param {number} value - The volume of the sound.
+     * @param {number} value - The volume of the sound, between 0 (silence) and 1 (full volume).
      *
      * @return {this} This Sound instance.
      */
@@ -382,7 +392,7 @@ var NoAudioSound = new Class({
      * @method Phaser.Sound.NoAudioSound#setRate
      * @since 3.3.0
      *
-     * @param {number} value - The playback rate at of this Sound.
+     * @param {number} value - The playback rate of this Sound.
      *
      * @return {this} This Sound instance.
      */
@@ -407,7 +417,7 @@ var NoAudioSound = new Class({
      * @method Phaser.Sound.NoAudioSound#setSeek
      * @since 3.4.0
      *
-     * @param {number} value - The point in the sound to seek to.
+     * @param {number} value - The point in the sound to seek to, in seconds.
      *
      * @return {this} This Sound instance.
      */

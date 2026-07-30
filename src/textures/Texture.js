@@ -1,10 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../utils/Class');
+var FilterMode = require('./const');
 var Frame = require('./Frame');
 var TextureSource = require('./TextureSource');
 
@@ -32,7 +33,7 @@ var TEXTURE_MISSING_ERROR = 'Texture "%s" has no frame "%s"';
  *
  * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
  * @param {string} key - The unique string-based key of this Texture.
- * @param {(HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[])} source - An array of sources that are used to create the texture. Usually Images, but can also be a Canvas.
+ * @param {(HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]|Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper)} source - An array of sources that are used to create the texture. Usually Images, but can also be a Canvas.
  * @param {number} [width] - The width of the Texture. This is optional and automatically derived from the source images.
  * @param {number} [height] - The height of the Texture. This is optional and automatically derived from the source images.
  */
@@ -96,7 +97,7 @@ var Texture = new Class({
 
         /**
          * Any additional data that was set in the source JSON (if any),
-         * or any extra data you'd like to store relating to this texture
+         * or any extra data you'd like to store relating to this texture.
          *
          * @name Phaser.Textures.Texture#customData
          * @type {object}
@@ -125,6 +126,20 @@ var Texture = new Class({
          * @since 3.0.0
          */
         this.frameTotal = 0;
+
+        /**
+         * Controls whether shaders using this texture should apply smooth interpolation
+         * when rendering pixel art. When enabled, the renderer uses shader-based smoothing
+         * to reduce the jagged appearance of upscaled pixel art. This relies on shader support.
+         *
+         * If `null`, the game default will be used.
+         *
+         * @name Phaser.Textures.Texture#smoothPixelArt
+         * @type {?boolean}
+         * @default null
+         * @since 4.0.0
+         */
+        this.smoothPixelArt = null;
 
         //  Load the Sources
         for (var i = 0; i < source.length; i++)
@@ -317,6 +332,61 @@ var Texture = new Class({
     },
 
     /**
+     * Based on the given Texture Source Index, this method will get all of the Frames using
+     * that source and then work out the bounds that they encompass, returning them in an object.
+     *
+     * This is useful if this Texture is, for example, a sprite sheet within an Atlas, and you
+     * need to know the total bounds of the sprite sheet.
+     *
+     * @method Phaser.Textures.Texture#getFrameBounds
+     * @since 3.80.0
+     *
+     * @param {number} [sourceIndex=0] - The index of the TextureSource to get the Frame bounds from.
+     *
+     * @return {Phaser.Types.Math.RectangleLike} An object containing the bounds of the Frames using the given Texture Source Index.
+     */
+    getFrameBounds: function (sourceIndex)
+    {
+        if (sourceIndex === undefined) { sourceIndex = 0; }
+
+        var frames = this.getFramesFromTextureSource(sourceIndex, true);
+
+        var baseFrame = frames[0];
+
+        var minX = baseFrame.cutX;
+        var minY = baseFrame.cutY;
+        var maxX = baseFrame.cutX + baseFrame.cutWidth;
+        var maxY = baseFrame.cutY + baseFrame.cutHeight;
+
+        for (var i = 1; i < frames.length - 1; i++)
+        {
+            var frame = frames[i];
+
+            if (frame.cutX < minX)
+            {
+                minX = frame.cutX;
+            }
+
+            if (frame.cutY < minY)
+            {
+                minY = frame.cutY;
+            }
+
+            if (frame.cutX + frame.cutWidth > maxX)
+            {
+                maxX = frame.cutX + frame.cutWidth;
+            }
+
+            if (frame.cutY + frame.cutHeight > maxY)
+            {
+                maxY = frame.cutY + frame.cutHeight;
+            }
+        }
+
+        return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+    },
+
+    /**
      * Returns an array with all of the names of the Frames in this Texture.
      *
      * Useful if you want to randomly assign a Frame to a Game Object, as you can
@@ -419,28 +489,102 @@ var Texture = new Class({
     },
 
     /**
+     * Set the source data for this Texture.
+     * By default, this will update any existing sources,
+     * effectively overwriting them.
+     *
+     * It's advisable to only swap between textures of the same size,
+     * as the dimensions of game objects are often derived from texture size
+     * and might change in unexpected ways if they don't match.
+     *
+     * Any related `dataSource` members must be updated.
+     * See {@link Phaser.Textures.Texture#setDataSource}.
+     *
+     * @method Phaser.Textures.Texture#setSource
+     * @since 4.0.0
+     *
+     * @param {(Phaser.Textures.TextureSource | Phaser.Types.Textures.TextureSource | Phaser.Textures.TextureSource[] | Phaser.Types.Textures.TextureSource[])} data - The source image data.
+     * @param {number} [startIndex=0] - The index of the first source to update. If there are multiple data elements, they will be applied to subsequent indices.
+     * @param {boolean} [renew=false] - Whether to destroy the existing source and create a new one, if a source is already in the array at an index.
+     * @param {number} [width] - Width to use, if not available from the data (e.g. using a Uint8Array)
+     * @param {number} [height] - Height to use, if not available from the data (e.g. using a Uint8Array)
+     */
+    setSource: function (data, startIndex, renew, width, height)
+    {
+        if (startIndex === undefined) { startIndex = 0; }
+        if (renew === undefined) { renew = false; }
+        if (!Array.isArray(data))
+        {
+            data = [ data ];
+        }
+        for (var i = 0; i < data.length; i++)
+        {
+            var index = i + startIndex;
+            var datum = data[i];
+            if (datum instanceof TextureSource)
+            {
+                datum = datum.source;
+            }
+            var source = this.source[index];
+            var w = datum.naturalWidth || datum.videoWidth || datum.width || source.width || width || 0;
+            var h = datum.naturalHeight || datum.videoHeight || datum.height || source.height || height || 0;
+
+            if (source)
+            {
+                if (!renew)
+                {
+                    source.updateSource(datum);
+                    continue;
+                }
+                source.destroy();
+            }
+            this.source[index] = new TextureSource(this, datum, w, h);
+        }
+    },
+
+    /**
      * Adds a data source image to this Texture.
      *
      * An example of a data source image would be a normal map, where all of the Frames for this Texture
      * equally apply to the normal map.
      *
-     * @method Phaser.Textures.Texture#setDataSource
-     * @since 3.0.0
+     * There can only be one data source per 'regular' source entry.
      *
-     * @param {(HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[])} data - The source image.
+     * @method Phaser.Textures.Texture#setDataSource
+     * @since 4.0.0
+     *
+     * @param {Phaser.Types.Textures.TextureSource | Phaser.Types.Textures.TextureSource[]} data - The source image data.
+     * @param {number} [startIndex=0] - The index of the first source to update. If there are multiple data elements, they will be applied to subsequent indices.
+     * @param {boolean} [renew=false] - Whether to destroy the existing source and create a new one, if a source is already in the array at an index.
+     * @param {number} [width] - Width to use, if not available from the data (e.g. using a Uint8Array)
+     * @param {number} [height] - Height to use, if not available from the data (e.g. using a Uint8Array)
      */
-    setDataSource: function (data)
+    setDataSource: function (data, startIndex, renew, width, height)
     {
+        if (startIndex === undefined) { startIndex = 0; }
+        if (renew === undefined) { renew = false; }
         if (!Array.isArray(data))
         {
             data = [ data ];
         }
-
         for (var i = 0; i < data.length; i++)
         {
-            var source = this.source[i];
+            var index = i + startIndex;
+            var datum = data[i];
+            var source = this.dataSource[index];
+            var w = datum.naturalWidth || datum.videoWidth || datum.width || source.width || width || 0;
+            var h = datum.naturalHeight || datum.videoHeight || datum.height || source.height || height || 0;
 
-            this.dataSource.push(new TextureSource(this, data[i], source.width, source.height));
+            if (source)
+            {
+                if (!renew)
+                {
+                    source.updateSource(datum);
+                    continue;
+                }
+                source.destroy();
+            }
+            this.dataSource[index] = new TextureSource(this, datum, w, h);
         }
     },
 
@@ -470,6 +614,63 @@ var Texture = new Class({
         for (i = 0; i < this.dataSource.length; i++)
         {
             this.dataSource[i].setFilter(filterMode);
+        }
+    },
+
+    /**
+     * Set the `smoothPixelArt` property for this Texture.
+     * If `true`, it will also run `setFilter(Phaser.Textures.FilterMode.LINEAR)`
+     * to enable the necessary linear filtering.
+     * If `false`, it will not change the filter mode, as it doesn't know
+     * the previous state, nor is it necessary to change it.
+     *
+     * @method Phaser.Textures.Texture#setSmoothPixelArt
+     * @since 4.0.0
+     * @param {boolean|null} value - Set to `true` to enable smooth pixel art interpolation and apply LINEAR filtering. Set to `false` to disable smooth interpolation without changing the filter mode. Set to `null` to use the game's default setting.
+     */
+    setSmoothPixelArt: function (value)
+    {
+        this.smoothPixelArt = value;
+
+        if (value)
+        {
+            this.setFilter(FilterMode.LINEAR);
+        }
+    },
+
+    /**
+     * Set the wrap mode for this Texture.
+     *
+     * This is only available for WebGL.
+     *
+     * The wrap mode can be one of the following:
+     *
+     * - Phaser.Textures.WrapMode.CLAMP_TO_EDGE
+     * - Phaser.Textures.WrapMode.REPEAT
+     * - Phaser.Textures.WrapMode.MIRRORED_REPEAT
+     *
+     * Note that only CLAMP_TO_EDGE is supported for non-power of two textures.
+     * If another wrap mode is specified for such a texture, it will be ignored.
+     *
+     * @method Phaser.Textures.Texture#setWrap
+     * @since 4.0.0
+     * @webglonly
+     *
+     * @param {Phaser.Textures.WrapMode} wrapModeS - The wrap mode for the S (horizontal) axis.
+     * @param {Phaser.Textures.WrapMode} [wrapModeT] - The wrap mode for the T (vertical) axis.
+     */
+    setWrap: function (wrapModeS, wrapModeT)
+    {
+        if (wrapModeT === undefined) { wrapModeT = wrapModeS; }
+
+        for (var i = 0; i < this.source.length; i++)
+        {
+            this.source[i].setWrap(wrapModeS, wrapModeT);
+        }
+
+        for (i = 0; i < this.dataSource.length; i++)
+        {
+            this.dataSource[i].setWrap(wrapModeS, wrapModeT);
         }
     },
 

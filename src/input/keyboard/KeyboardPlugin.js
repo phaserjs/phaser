@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -391,7 +391,7 @@ var KeyboardPlugin = new Class({
     },
 
     /**
-     * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also Space Bar and shift.
+     * Creates and returns an object containing 6 hotkeys for Up, Down, Left and Right, and also Space Bar and Shift.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#createCursorKeys
      * @since 3.10.0
@@ -608,7 +608,7 @@ var KeyboardPlugin = new Class({
      * @since 3.24.0
      *
      * @param {boolean} [destroy=false] - Call `Key.destroy` on each removed Key object?
-     * @param {boolean} [removeCapture=false] - Remove all key captures for Key objects owened by this plugin?
+     * @param {boolean} [removeCapture=false] - Remove all key captures for Key objects owned by this plugin?
      *
      * @return {this} This KeyboardPlugin object.
      */

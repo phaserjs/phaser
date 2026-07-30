@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,26 +8,28 @@ var MATH = require('../../math');
 var GetValue = require('./GetValue');
 
 /**
- * Retrieves a value from an object. Allows for more advanced selection options, including:
+ * Retrieves a value from an object. Extends `GetValue` with support for dynamic and randomized
+ * value types, making it useful for configuration objects where values may be fixed, procedural,
+ * or randomly selected at the point of use (for example, particle emitter configs or group configs).
  *
- * Allowed types:
+ * The following value types are supported for the retrieved property:
  *
- * Implicit
+ * Explicit value:
  * {
  *     x: 4
  * }
  *
- * From function
+ * Function — invoked with the property key as its argument; its return value is used:
  * {
- *     x: function ()
+ *     x: function (key) { return 4; }
  * }
  *
- * Randomly pick one element from the array
+ * Array — one element is picked at random from the array:
  * {
  *     x: [a, b, c, d, e, f]
  * }
  *
- * Random integer between min and max:
+ * Random integer between min and max (inclusive):
  * {
  *     x: { randInt: [min, max] }
  * }

@@ -1,6 +1,9 @@
 module.exports = [
-    '#define SHADER_NAME PHASER_POINTLIGHT_VS',
+    '#pragma phaserTemplate(shaderName)',
+    '#pragma phaserTemplate(extensions)',
+    '#pragma phaserTemplate(features)',
     'precision mediump float;',
+    '#pragma phaserTemplate(vertexDefine)',
     'uniform mat4 uProjectionMatrix;',
     'attribute vec2 inPosition;',
     'attribute vec2 inLightPosition;',
@@ -11,6 +14,8 @@ module.exports = [
     'varying vec4 lightColor;',
     'varying float lightRadius;',
     'varying float lightAttenuation;',
+    '#pragma phaserTemplate(outVariables)',
+    '#pragma phaserTemplate(vertexHeader)',
     'void main ()',
     '{',
     '    lightColor = inLightColor;',
@@ -18,5 +23,6 @@ module.exports = [
     '    lightAttenuation = inLightAttenuation;',
     '    lightPosition = uProjectionMatrix * vec4(inLightPosition, 1.0, 1.0);',
     '    gl_Position = uProjectionMatrix * vec4(inPosition, 1.0, 1.0);',
+    '    #pragma phaserTemplate(vertexProcess)',
     '}',
 ].join('\n');

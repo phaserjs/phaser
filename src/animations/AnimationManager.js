@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18,13 +18,19 @@ var Pad = require('../utils/string/Pad');
 
 /**
  * @classdesc
- * The Animation Manager.
+ * The Animation Manager is a global system responsible for defining, storing, and managing all
+ * animations in your Phaser game. It is a singleton owned by the Game instance, meaning it persists
+ * across all Scenes and is not tied to any single Scene's lifecycle.
  *
- * Animations are managed by the global Animation Manager. This is a singleton class that is
- * responsible for creating and delivering animations and their corresponding data to all Game Objects.
- * Unlike plugins it is owned by the Game instance, not the Scene.
+ * You create animations once via `this.anims.create()` (or `this.anims.createFromAseprite()` for
+ * Aseprite exports), and those animations are then available to every Sprite or Game Object that has
+ * an Animation Component, across every Scene.
  *
- * Sprites and other Game Objects get the data they need from the AnimationManager.
+ * The Animation Manager handles frame sequencing, timing, and playback configuration. Individual
+ * Game Objects each maintain their own playback state (current frame, repeat count, etc.) via their
+ * AnimationState component, but the frame data and timing definitions live here.
+ *
+ * You can access the Animation Manager from any Scene via `this.anims`.
  *
  * @class AnimationManager
  * @extends Phaser.Events.EventEmitter
@@ -241,7 +247,7 @@ var AnimationManager = new Class({
     /**
      * Returns the mix delay between two animations.
      *
-     * If no mix has been set-up, this method will return zero.
+     * If no mix has been set up, this method will return zero.
      *
      * If you wish to create, or update, a new mix, call the `addMix` method.
      * If you wish to remove a mix, call the `removeMix` method.
@@ -450,14 +456,6 @@ var AnimationManager = new Class({
                             totalDuration += frameDuration;
                         }
                     }
-
-                    // Fix duration to play nice with how the next tick is calculated.
-                    var msPerFrame = totalDuration / animFrames.length;
-
-                    animFrames.forEach(function (entry)
-                    {
-                        entry.duration -= msPerFrame;
-                    });
 
                     if (direction === 'reverse')
                     {
@@ -799,14 +797,16 @@ var AnimationManager = new Class({
     },
 
     /**
-     * Get an Animation.
+     * Retrieves an Animation from the Animation Manager by its key.
+     *
+     * Returns `undefined` if no Animation with the given key exists.
      *
      * @method Phaser.Animations.AnimationManager#get
      * @since 3.0.0
      *
      * @param {string} key - The key of the Animation to retrieve.
      *
-     * @return {Phaser.Animations.Animation} The Animation.
+     * @return {(Phaser.Animations.Animation|undefined)} The Animation or `undefined`.
      */
     get: function (key)
     {
@@ -854,7 +854,9 @@ var AnimationManager = new Class({
     },
 
     /**
-     * Pause all animations.
+     * Pauses all animations in the Animation Manager by setting the `paused` flag to `true`.
+     * This affects all Game Objects that are playing animations globally. Has no effect if
+     * the Animation Manager is already paused.
      *
      * @method Phaser.Animations.AnimationManager#pauseAll
      * @fires Phaser.Animations.Events#PAUSE_ALL
@@ -935,7 +937,7 @@ var AnimationManager = new Class({
      * @param {(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)} key - The string-based key of the animation to play, or an Animation instance, or a `PlayAnimationConfig` object.
      * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]} children - An array of Game Objects to play the animation on. They must have an Animation Component.
      * @param {number} stagger - The amount of time, in milliseconds, to offset each play time by. If a negative value is given, it's applied to the children in reverse order.
-     * @param {boolean} [staggerFirst=true] -Should the first child be staggered as well?
+     * @param {boolean} [staggerFirst=true] - Should the first child be staggered as well?
      *
      * @return {this} This Animation Manager.
      */
@@ -997,7 +999,8 @@ var AnimationManager = new Class({
     },
 
     /**
-     * Resume all paused animations.
+     * Resumes all paused animations in the Animation Manager by setting the `paused` flag to `false`.
+     * Has no effect if the Animation Manager is not currently paused.
      *
      * @method Phaser.Animations.AnimationManager#resumeAll
      * @fires Phaser.Animations.Events#RESUME_ALL
@@ -1019,7 +1022,7 @@ var AnimationManager = new Class({
 
     /**
      * Returns the Animation data as JavaScript object based on the given key.
-     * Or, if not key is defined, it will return the data of all animations as array of objects.
+     * Or, if no key is defined, it will return the data of all animations as array of objects.
      *
      * @method Phaser.Animations.AnimationManager#toJSON
      * @since 3.0.0

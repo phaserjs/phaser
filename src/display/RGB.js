@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,8 +9,11 @@ var NOOP = require('../utils/NOOP');
 
 /**
  * @classdesc
- * The RGB class holds a single color value and allows for easy modification and reading of it,
- * with optional on-change callback notification and a dirty flag.
+ * The RGB class holds a single color value expressed as normalized red, green, and blue
+ * components, each in the range 0 to 1. It is used internally by WebGL pipelines and other
+ * Phaser systems that need to track color state efficiently. Changes to any component
+ * automatically set the `dirty` flag and invoke an optional `onChangeCallback`, making it
+ * straightforward to react to color mutations without manual polling.
  *
  * @class RGB
  * @memberof Phaser.Display
@@ -40,7 +43,8 @@ var RGB = new Class({
         /**
          * This callback will be invoked each time one of the RGB color values change.
          *
-         * The callback is sent the new color values as the parameters.
+         * The callback receives the red, green, and blue values as three separate numeric
+         * arguments, each in the range 0 to 1.
          *
          * @name Phaser.Display.RGB#onChangeCallback
          * @type {function}
@@ -127,7 +131,7 @@ var RGB = new Class({
      * The red color value. Between 0 and 1.
      *
      * Changing this property will flag this RGB object as being dirty
-     * and invoke the `onChangeCallback` , if set.
+     * and invoke the `onChangeCallback`, if set.
      *
      * @name Phaser.Display.RGB#r
      * @type {number}
@@ -152,7 +156,7 @@ var RGB = new Class({
      * The green color value. Between 0 and 1.
      *
      * Changing this property will flag this RGB object as being dirty
-     * and invoke the `onChangeCallback` , if set.
+     * and invoke the `onChangeCallback`, if set.
      *
      * @name Phaser.Display.RGB#g
      * @type {number}
@@ -177,7 +181,7 @@ var RGB = new Class({
      * The blue color value. Between 0 and 1.
      *
      * Changing this property will flag this RGB object as being dirty
-     * and invoke the `onChangeCallback` , if set.
+     * and invoke the `onChangeCallback`, if set.
      *
      * @name Phaser.Display.RGB#b
      * @type {number}
@@ -199,7 +203,8 @@ var RGB = new Class({
     },
 
     /**
-     * Nulls any external references this object contains.
+     * Destroys this RGB instance by nulling the `onChangeCallback` reference,
+     * releasing any external listener held by this object.
      *
      * @method Phaser.Display.RGB#destroy
      * @since 3.50.0

@@ -1,20 +1,22 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Vector2 = require('../../math/Vector2');
 
 /**
- * Gets the corners of the Tile as an array of Vector2s.
+ * Gets the four corners of a tile, given its tile-space coordinates, as an array of world-space
+ * Vector2 positions. The returned positions account for the layer's world position, scale, and
+ * the camera's scroll offset, and are ordered: top-left, top-right, bottom-right, bottom-left.
  *
  * @function Phaser.Tilemaps.Components.GetTileCorners
  * @since 3.60.0
  *
  * @param {number} tileX - The x coordinate, in tiles, not pixels.
  * @param {number} tileY - The y coordinate, in tiles, not pixels.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile index from the world values.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera whose scroll offset is used when calculating the world-space position of the tile corners.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {Phaser.Math.Vector2[]} An array of Vector2s corresponding to the world XY location of each tile corner.

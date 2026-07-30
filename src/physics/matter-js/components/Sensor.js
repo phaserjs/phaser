@@ -1,11 +1,15 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Enables a Matter-enabled Game Object to be a sensor. Should be used as a mixin and not directly.
+ * Provides methods for toggling the sensor state of a Matter.js physics body on a Game Object.
+ * A sensor body participates in collision detection and fires collision events, but does not
+ * physically react to or push other bodies. This makes sensors ideal for trigger zones, pickup
+ * areas, or any situation where you need to detect overlap without causing a physical response.
+ * This component is intended to be used as a mixin and not instantiated directly.
  *
  * @namespace Phaser.Physics.Matter.Components.Sensor
  * @since 3.0.0
@@ -14,7 +18,7 @@ var Sensor = {
 
     /**
      * Set the body belonging to this Game Object to be a sensor.
-     * Sensors trigger collision events, but don't react with colliding body physically.
+     * Sensors trigger collision events, but don't physically react to or push colliding bodies.
      *
      * @method Phaser.Physics.Matter.Components.Sensor#setSensor
      * @since 3.0.0

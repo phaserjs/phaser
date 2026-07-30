@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,15 +9,22 @@ var Color = require('../../display/color/Color');
 var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
- * Takes a snapshot of an area from the current frame displayed by a canvas.
+ * Takes a snapshot of the current frame displayed by a canvas. Depending on the
+ * configuration, this can operate in one of three modes: single-pixel color sampling,
+ * partial area capture, or full canvas capture.
  *
- * This is then copied to an Image object. When this loads, the results are sent
- * to the callback provided in the Snapshot Configuration object.
+ * In pixel mode, the color at the given (x, y) coordinate is read and the callback
+ * is invoked immediately with a `Phaser.Display.Color` object.
+ *
+ * In area or full capture mode, the relevant region is encoded as a data URL and
+ * assigned to a new Image object. Once the image has loaded, the callback provided
+ * in the Snapshot Configuration object is invoked with the Image as its argument.
+ * If the image fails to load, the callback is still invoked but with no argument.
  *
  * @function Phaser.Renderer.Snapshot.Canvas
  * @since 3.0.0
  *
- * @param {HTMLCanvasElement} sourceCanvas - The canvas to take a snapshot of.
+ * @param {HTMLCanvasElement} canvas - The canvas to take a snapshot of.
  * @param {Phaser.Types.Renderer.Snapshot.SnapshotState} config - The snapshot configuration object.
  */
 var CanvasSnapshot = function (canvas, config)

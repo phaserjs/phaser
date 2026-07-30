@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,12 +13,15 @@ var GetValue = require('../utils/object/GetValue');
 var IsPlainObject = require('../utils/object/IsPlainObject');
 var NOOP = require('../utils/NOOP');
 var PhaserMath = require('../math/');
-var PIPELINE_CONST = require('../renderer/webgl/pipelines/const');
 var ValueToColor = require('../display/color/ValueToColor');
 
 /**
  * @classdesc
  * The active game configuration settings, parsed from a {@link Phaser.Types.Core.GameConfig} object.
+ * This class takes the raw configuration object passed to `new Phaser.Game()` and resolves all
+ * values, applying defaults where properties are not specified. The resulting Config instance is
+ * read-only and available via `game.config`. It controls fundamental aspects of the game including
+ * canvas dimensions, renderer type, physics settings, audio configuration, and plugin loading.
  *
  * @class Config
  * @memberof Phaser.Core
@@ -38,11 +41,9 @@ var Config = new Class({
         if (config === undefined) { config = {}; }
 
         var defaultBannerColor = [
-            '#ff0000',
-            '#ffff00',
-            '#00ff00',
-            '#00ffff',
-            '#000000'
+            '#000814',
+            '#001d3d',
+            '#003566'
         ];
 
         var defaultBannerTextColor = '#ffffff';
@@ -122,6 +123,16 @@ var Config = new Class({
         this.maxHeight = GetValue(scaleConfig, 'max.height', 0, config);
 
         /**
+         * @const {number} Phaser.Core.Config#snapWidth - The horizontal amount to snap the canvas by when the Scale Manager is resizing. A value of zero means no snapping.
+         */
+        this.snapWidth = GetValue(scaleConfig, 'snap.width', 0, config);
+
+        /**
+         * @const {number} Phaser.Core.Config#snapHeight - The vertical amount to snap the canvas by when the Scale Manager is resizing. A value of zero means no snapping.
+         */
+        this.snapHeight = GetValue(scaleConfig, 'snap.height', 0, config);
+
+        /**
          * @const {number} Phaser.Core.Config#renderType - Force Phaser to use a specific renderer. Can be `CONST.CANVAS`, `CONST.WEBGL`, `CONST.HEADLESS` or `CONST.AUTO` (default)
          */
         this.renderType = GetValue(config, 'type', CONST.AUTO);
@@ -166,7 +177,7 @@ var Config = new Class({
         /**
          * @const {string} Phaser.Core.Config#gameURL - The URL of the game.
          */
-        this.gameURL = GetValue(config, 'url', 'https://phaser.io');
+        this.gameURL = GetValue(config, 'url', 'https://phaser.io/' + CONST.LOG_VERSION);
 
         /**
          * @const {string} Phaser.Core.Config#gameVersion - The version of the game.
@@ -302,7 +313,7 @@ var Config = new Class({
         //  If you do: { banner: false } it won't display any banner at all
 
         /**
-         * @const {boolean} Phaser.Core.Config#hideBanner - Don't write the banner line to the console.log.
+         * @const {boolean} Phaser.Core.Config#hideBanner - Don't write the banner line to the console.log. See `Phaser.Types.Core.BannerConfig` for details of this object.
          */
         this.hideBanner = (GetValue(config, 'banner', null) === false);
 
@@ -336,19 +347,9 @@ var Config = new Class({
         var renderConfig = GetValue(config, 'render', null);
 
         /**
-         * @const {Phaser.Types.Core.PipelineConfig} Phaser.Core.Config#pipeline - An object mapping WebGL names to WebGLPipeline classes. These should be class constructors, not instances.
+         * @const {boolean} Phaser.Core.Config#autoMobileTextures - If iOS or Android detected, automatically restrict WebGL to use 1 texture per batch. This can help performance on some devices.
          */
-        this.pipeline = GetValue(renderConfig, 'pipeline', null, config);
-
-        /**
-         * @const {boolean} Phaser.Core.Config#autoMobilePipeline - Automatically enable the Mobile Pipeline if iOS or Android detected?
-         */
-        this.autoMobilePipeline = GetValue(renderConfig, 'autoMobilePipeline', true, config);
-
-        /**
-         * @const {string} Phaser.Core.Config#defaultPipeline - The WebGL Pipeline that Game Objects will use by default. Set to 'MultiPipeline' as standard. See also 'autoMobilePipeline'.
-         */
-        this.defaultPipeline = GetValue(renderConfig, 'defaultPipeline', PIPELINE_CONST.MULTI_PIPELINE, config);
+        this.autoMobileTextures = GetValue(renderConfig, 'autoMobileTextures', true, config);
 
         /**
          * @const {boolean} Phaser.Core.Config#antialias - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
@@ -366,6 +367,11 @@ var Config = new Class({
         this.mipmapFilter = GetValue(renderConfig, 'mipmapFilter', '', config);
 
         /**
+         * @const {boolean} Phaser.Core.Config#mipmapRegeneration -  - Whether to regenerate mipmaps for framebuffers. If this is false, framebuffers will not use mipmaps. If this is true, framebuffers will use the `mipmapFilter` setting, and regenerate mipmaps if redrawn. This affects filters and DynamicTextures. Mipmap generation is expensive (10 microseconds or more per texture), so be careful with this setting.
+         */
+        this.mipmapRegeneration = GetValue(renderConfig, 'mipmapRegeneration', false, config);
+
+        /**
          * @const {boolean} Phaser.Core.Config#desynchronized - When set to `true` it will create a desynchronized context for both 2D and WebGL. See https://developers.google.com/web/updates/2019/05/desynchronized for details.
          */
         this.desynchronized = GetValue(renderConfig, 'desynchronized', false, config);
@@ -376,9 +382,19 @@ var Config = new Class({
         this.roundPixels = GetValue(renderConfig, 'roundPixels', false, config);
 
         /**
-         * @const {boolean} Phaser.Core.Config#pixelArt - Prevent pixel art from becoming blurred when scaled. It will remain crisp (tells the WebGL renderer to automatically create textures using a linear filter mode).
+         * @const {boolean} Phaser.Core.Config#selfShadow - On textured objects with lighting, this enables self-shadowing based on the diffuse map.
          */
-        this.pixelArt = GetValue(renderConfig, 'pixelArt', this.zoom !== 1, config);
+        this.selfShadow = GetValue(renderConfig, 'selfShadow', false, config);
+
+        /**
+         * @const {number} Phaser.Core.Config#pathDetailThreshold - Threshold for combining points into a single path in the WebGL renderer for Graphics objects. This can be overridden at the Graphics object level.
+         */
+        this.pathDetailThreshold = GetValue(renderConfig, 'pathDetailThreshold', 1, config);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#pixelArt - Prevent pixel art from becoming blurred when scaled. It will remain crisp (tells the WebGL renderer to automatically create textures using a nearest-neighbor filter mode). When enabled, this also sets `antialias` and `antialiasGL` to `false` and `roundPixels` to `true`.
+         */
+        this.pixelArt = GetValue(renderConfig, 'pixelArt', false, config);
 
         if (this.pixelArt)
         {
@@ -388,9 +404,36 @@ var Config = new Class({
         }
 
         /**
+         * @const {boolean} Phaser.Core.Config#smoothPixelArt - WebGL only. Sets `antialias` to true and `pixelArt` to false. Texture-based Game Objects use special shader setting that preserve blocky pixels, but smooth the edges between the pixels. This is only visible when objects are scaled up; otherwise, `antialias` is simpler.
+         */
+        this.smoothPixelArt = GetValue(renderConfig, 'smoothPixelArt', false, config);
+
+        if (this.smoothPixelArt)
+        {
+            this.antialias = true;
+            this.antialiasGL = true;
+            this.pixelArt = false;
+        }
+
+        /**
          * @const {boolean} Phaser.Core.Config#transparent - Whether the game canvas will have a transparent background.
          */
         this.transparent = GetValue(renderConfig, 'transparent', false, config);
+
+        /**
+         * @const {'keep'|'dither'|number} Phaser.Core.Config#alphaStrategy - The default alpha strategy to use when rendering transparent objects with compatible shaders. Strategies other than `keep` will discard fragments instead of turning them transparent, which creates a very grainy look.
+         */
+        this.alphaStrategy = GetValue(renderConfig, 'alphaStrategy', 'keep', config);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#stencil - Whether to enable stencil testing. Disabling this will prevent creation of stencil buffers, which can save framebuffer memory. Disabling stencil prevents the use of stencil-based rendering.
+         */
+        this.stencil = GetValue(renderConfig, 'stencil', true, config);
+
+        /**
+         * @const {'keep'|'dither'|number} Phaser.Core.Config#stencilAlphaStrategy - The default alpha strategy to use when rendering stencils. Keeping transparent pixels still creates opaque stencil, which is usually not what you want.
+         */
+        this.stencilAlphaStrategy = GetValue(renderConfig, 'stencilAlphaStrategy', 'dither', config);
 
         /**
          * @const {boolean} Phaser.Core.Config#clearBeforeRender - Whether the game canvas will be cleared between each rendering frame. You can disable this if you have a full-screen background image or game object.
@@ -408,6 +451,11 @@ var Config = new Class({
         this.premultipliedAlpha = GetValue(renderConfig, 'premultipliedAlpha', true, config);
 
         /**
+         * @const {boolean} Phaser.Core.Config#skipUnreadyShaders - Avert stuttering during shader compilation, by enabling parallel shader compilation, where supported. Objects which request a shader that is not yet ready will not be drawn. This prevents stutter, but may cause "pop-in" of objects unless you use a pre-touch strategy.
+         */
+        this.skipUnreadyShaders = GetValue(renderConfig, 'skipUnreadyShaders', false, config);
+
+        /**
          * @const {boolean} Phaser.Core.Config#failIfMajorPerformanceCaveat - Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
          */
         this.failIfMajorPerformanceCaveat = GetValue(renderConfig, 'failIfMajorPerformanceCaveat', false, config);
@@ -420,7 +468,7 @@ var Config = new Class({
         /**
          * @const {number} Phaser.Core.Config#batchSize - The default WebGL Batch size. Represents the number of _quads_ that can be added to a single batch.
          */
-        this.batchSize = GetValue(renderConfig, 'batchSize', 4096, config);
+        this.batchSize = GetValue(renderConfig, 'batchSize', 16384, config);
 
         /**
          * @const {number} Phaser.Core.Config#maxTextures - When in WebGL mode, this sets the maximum number of GPU Textures to use. The default, -1, will use all available units. The WebGL1 spec says all browsers should provide a minimum of 8.
@@ -431,6 +479,11 @@ var Config = new Class({
          * @const {number} Phaser.Core.Config#maxLights - The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
          */
         this.maxLights = GetValue(renderConfig, 'maxLights', 10, config);
+
+        /**
+         * @const {Object<Phaser.Types.Core.RenderNodesConfig>} Phaser.Core.Config#renderNodes - A map of custom Render Nodes to be added to the WebGL Renderer. The values will be added to the RenderNodeManager, using the keys as the names.
+         */
+        this.renderNodes = GetValue(renderConfig, 'renderNodes', {}, config);
 
         var bgc = GetValue(config, 'backgroundColor', 0);
 
@@ -461,7 +514,7 @@ var Config = new Class({
         this.physics = GetValue(config, 'physics', {});
 
         /**
-         * @const {(boolean|string)} Phaser.Core.Config#defaultPhysicsSystem - The default physics system. It will be started for each scene. Either 'arcade', 'impact' or 'matter'.
+         * @const {(boolean|string)} Phaser.Core.Config#defaultPhysicsSystem - The default physics system. It will be started for each scene. Either 'arcade' or 'matter'.
          */
         this.defaultPhysicsSystem = GetValue(this.physics, 'default', false);
 
@@ -476,7 +529,7 @@ var Config = new Class({
         this.loaderPath = GetValue(config, 'loader.path', '');
 
         /**
-         * @const {number} Phaser.Core.Config#loaderMaxParallelDownloads - Maximum parallel downloads allowed for resources (Default to 32).
+         * @const {number} Phaser.Core.Config#loaderMaxParallelDownloads - The maximum number of files the Loader will attempt to download in parallel. Defaults to 32, or 6 on Android where parallel connections are more constrained.
          */
         this.loaderMaxParallelDownloads = GetValue(config, 'loader.maxParallelDownloads', (Device.os.android) ? 6 : 32);
 
@@ -511,6 +564,11 @@ var Config = new Class({
         this.loaderTimeout = GetValue(config, 'loader.timeout', 0);
 
         /**
+         * @const {number} Phaser.Core.Config#loaderMaxRetries - The number of times to retry a file load if it fails.
+         */
+        this.loaderMaxRetries = GetValue(config, 'loader.maxRetries', 2);
+
+        /**
          * @const {boolean} Phaser.Core.Config#loaderWithCredentials - Optional XHR withCredentials value.
          */
         this.loaderWithCredentials = GetValue(config, 'loader.withCredentials', false);
@@ -529,14 +587,14 @@ var Config = new Class({
         this.loaderLocalScheme = GetValue(config, 'loader.localScheme', [ 'file://', 'capacitor://' ]);
 
         /**
-         * @const {number} Phaser.Core.Config#glowFXQuality - The quality of the Glow FX (defaults to 0.1)
+         * @const {number} Phaser.Core.Config#glowQuality - The quality of the Glow filter (defaults to 10)
          */
-        this.glowFXQuality = GetValue(config, 'fx.glow.quality', 0.1);
+        this.glowQuality = GetValue(config, 'filters.glow.quality', 10);
 
         /**
-         * @const {number} Phaser.Core.Config#glowFXDistance - The distance of the Glow FX (defaults to 10)
+         * @const {number} Phaser.Core.Config#glowDistance - The distance of the Glow filter (defaults to 10)
          */
-        this.glowFXDistance = GetValue(config, 'fx.glow.distance', 10);
+        this.glowDistance = GetValue(config, 'filters.glow.distance', 10);
 
         /*
          * Allows `plugins` property to either be an array, in which case it just replaces
@@ -611,7 +669,7 @@ var Config = new Class({
         this.missingImage = GetValue(config, 'images.missing', pngPrefix + 'CAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==');
 
         /**
-         * @const {string} Phaser.Core.Config#whiteImage - A base64 encoded PNG that will be used as the default texture when a texture is assigned that is white or not loaded.
+         * @const {string} Phaser.Core.Config#whiteImage - A base64 encoded PNG used as the default solid white texture. This small 4x4 white image is used internally by Phaser for colored Game Objects and tinting.
          */
         this.whiteImage = GetValue(config, 'images.white', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABdJREFUeNpi/P//PwMMMDEgAdwcgAADAJZuAwXJYZOzAAAAAElFTkSuQmCC');
 

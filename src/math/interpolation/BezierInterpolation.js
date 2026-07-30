@@ -1,13 +1,16 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Bernstein = require('../Bernstein');
 
 /**
- * A bezier interpolation method.
+ * Performs a generalized Bezier interpolation over an arbitrary number of control points.
+ * The `v` array provides the control point values and `k` (0 to 1) determines the position
+ * along the curve. Unlike CubicBezierInterpolation which uses exactly 4 points, this
+ * supports any number.
  *
  * @function Phaser.Math.Interpolation.Bezier
  * @since 3.0.0

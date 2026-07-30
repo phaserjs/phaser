@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,18 @@ var tempZone = new Zone({ sys: { queueDepthSort: NOOP, events: { once: NOOP } } 
 
 /**
  * Takes an array of Game Objects, or any objects that have public `x` and `y` properties,
- * and then aligns them based on the grid configuration given to this action.
+ * and positions them in a grid layout based on the configuration provided.
+ *
+ * The grid is defined by a `width` (number of columns) and/or `height` (number of rows).
+ * Each cell in the grid has a size defined by `cellWidth` and `cellHeight`, in pixels.
+ * Items are placed into cells starting from the top-left origin (`x`, `y`) and filling
+ * left-to-right, top-to-bottom by default. If only `width` is set to -1, items are laid
+ * out in a single horizontal row. If only `height` is set to -1, items are laid out in a
+ * single vertical column. When both `width` and `height` are set, the grid fills
+ * row-by-row, stopping early if the grid is full before all items have been placed.
+ *
+ * The `position` option controls how each item is aligned within its cell, using one of
+ * the `Phaser.Display.Align` constants such as `CENTER` or `TOP_LEFT`.
  *
  * @function Phaser.Actions.GridAlign
  * @since 3.0.0

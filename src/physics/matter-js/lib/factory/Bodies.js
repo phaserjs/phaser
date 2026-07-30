@@ -69,6 +69,9 @@ var Vector = require('../geometry/Vector');
     Bodies.trapezoid = function(x, y, width, height, slope, options) {
         options = options || {};
 
+        if (slope >= 1) {
+            Common.warn('Bodies.trapezoid: slope parameter must be < 1.');
+        }
         slope *= 0.5;
         var roof = (1 - (slope * 2)) * width;
 

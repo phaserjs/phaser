@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,12 @@ var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
- * A LineCurve is a "curve" comprising exactly two points (a line segment).
+ * A LineCurve is a straight line segment defined by exactly two endpoints. Despite being called a
+ * "curve", it implements the full `Phaser.Curves.Curve` interface, meaning it can be used anywhere
+ * a curve is expected — for example, as part of a `Phaser.Curves.Path` or as a motion path for a
+ * Tween. Because the line is perfectly straight, arc length calculations are exact and efficient,
+ * making LineCurve the most performant curve type. You can construct one from two `Vector2` points
+ * or from a flat array of four numbers `[x0, y0, x1, y1]`.
  *
  * @class Line
  * @extends Phaser.Curves.Curve
@@ -112,7 +117,7 @@ var LineCurve = new Class({
     },
 
     /**
-     * Gets the resolution of the line.
+     * Returns the resolution of this curve. For a LineCurve the resolution is equal to the number of divisions requested, defaulting to 1 if none are provided.
      *
      * @method Phaser.Curves.Line#getResolution
      * @since 3.0.0
@@ -129,7 +134,7 @@ var LineCurve = new Class({
     },
 
     /**
-     * Get point at relative position in curve according to length.
+     * Gets a point at a relative position along the line, where 0 is the start point and 1 is the end point.
      *
      * @method Phaser.Curves.Line#getPoint
      * @since 3.0.0
@@ -198,7 +203,10 @@ var LineCurve = new Class({
     },
 
     /**
-     * Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant.
+     * Converts a distance-based position along the line into a normalized `t` value in the range 0 to 1.
+     * If a `distance` is provided, the returned `t` represents that distance clamped to the line's total length.
+     * If no distance is given, `u` is returned directly. This override exists because a straight line has
+     * uniform arc length, so no iterative re-parameterization is needed.
      *
      * @method Phaser.Curves.Line#getUtoTmapping
      * @since 3.0.0

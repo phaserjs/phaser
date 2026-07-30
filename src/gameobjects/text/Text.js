@@ -1,11 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var AddToDOM = require('../../dom/AddToDOM');
 var CanvasPool = require('../../display/canvas/CanvasPool');
+var DefaultImageNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultImageNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
@@ -14,6 +15,7 @@ var GetValue = require('../../utils/object/GetValue');
 var RemoveFromDOM = require('../../dom/RemoveFromDOM');
 var TextRender = require('./TextRender');
 var TextStyle = require('./TextStyle');
+var UUID = require('../../utils/string/UUID');
 
 /**
  * @classdesc
@@ -41,7 +43,7 @@ var TextStyle = require('./TextStyle');
  *
  * You can only display fonts that are currently loaded and available to the browser: therefore fonts must
  * be pre-loaded. Phaser does not do this for you, so you will require the use of a 3rd party font loader,
- * or have the fonts ready available in the CSS on the page in which your Phaser game resides.
+ * or have the fonts readily available in the CSS on the page in which your Phaser game resides.
  *
  * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts
  * across mobile browsers.
@@ -67,8 +69,7 @@ var TextStyle = require('./TextStyle');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
@@ -94,10 +95,10 @@ var Text = new Class({
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Tint,
         Components.Transform,
@@ -125,8 +126,7 @@ var Text = new Class({
 
         this.setPosition(x, y);
         this.setOrigin(0, 0);
-        this.initPipeline();
-        this.initPostPipeline(true);
+        this.initRenderNodes(this._defaultRenderNodesMap);
 
         /**
          * The canvas element that the text is rendered to.
@@ -144,7 +144,7 @@ var Text = new Class({
          * @type {CanvasRenderingContext2D}
          * @since 3.0.0
          */
-        this.context = this.canvas.getContext('2d', { willReadFrequently: true });
+        this.context;
 
         /**
          * The Text Style object.
@@ -261,8 +261,21 @@ var Text = new Class({
          */
         this._crop = this.resetCropObject();
 
+        /**
+         * The internal unique key to refer to the texture in the TextureManager.
+         *
+         * @name Phaser.GameObjects.Text#_textureKey
+         * @type {string}
+         * @private
+         * @since 3.80.0
+         */
+        this._textureKey = UUID();
+
         //  Create a Texture for this Text object
-        this.texture = scene.sys.textures.addCanvas(null, this.canvas, true);
+        this.texture = scene.sys.textures.addCanvas(this._textureKey, this.canvas);
+
+        //  Set the context to be the CanvasTexture context
+        this.context = this.texture.context;
 
         //  Get the frame
         this.frame = this.texture.get();
@@ -291,6 +304,28 @@ var Text = new Class({
         {
             this.setLineSpacing(style.lineSpacing);
         }
+
+        if (style && style.letterSpacing)
+        {
+            this.setLetterSpacing(style.letterSpacing);
+        }
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.Text#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultImageNodes;
+        }
     },
 
     /**
@@ -303,6 +338,8 @@ var Text = new Class({
     {
         if (!this.style.rtl)
         {
+            this.canvas.dir = 'ltr';
+            this.context.direction = 'ltr';
             return;
         }
 
@@ -326,8 +363,10 @@ var Text = new Class({
     },
 
     /**
-     * Greedy wrapping algorithm that will wrap words as the line grows longer than its horizontal
-     * bounds.
+     * Applies word wrapping to the given text and returns the result. If a custom word wrap
+     * callback has been set, it will be invoked. Otherwise, the advanced or basic word wrap
+     * algorithm will be used, depending on the style configuration. If no word wrap settings
+     * are active, the original text is returned unchanged.
      *
      * @method Phaser.GameObjects.Text#runWordWrap
      * @since 3.0.0
@@ -403,7 +442,8 @@ var Text = new Class({
             line = line.replace(/^ *|\s*$/gi, '');
 
             // If entire line is less than wordWrapWidth append the entire line and exit early
-            var lineWidth = context.measureText(line).width;
+            var lineLetterSpacingWidth = line.length * this.letterSpacing;
+            var lineWidth = context.measureText(line).width + lineLetterSpacingWidth;
 
             if (lineWidth < wordWrapWidth)
             {
@@ -421,7 +461,8 @@ var Text = new Class({
             {
                 var word = words[j];
                 var wordWithSpace = word + ' ';
-                var wordWidth = context.measureText(wordWithSpace).width;
+                var letterSpacingWidth = wordWithSpace.length * this.letterSpacing;
+                var wordWidth = context.measureText(wordWithSpace).width + letterSpacingWidth;
 
                 if (wordWidth > currentLineWidth)
                 {
@@ -434,7 +475,8 @@ var Text = new Class({
                         while (newWord.length)
                         {
                             newWord = newWord.slice(0, -1);
-                            wordWidth = context.measureText(newWord).width;
+                            var newLetterSpacingWidth = newWord.length * this.letterSpacing;
+                            wordWidth = context.measureText(newWord).width + newLetterSpacingWidth;
 
                             if (wordWidth <= currentLineWidth)
                             {
@@ -468,7 +510,6 @@ var Text = new Class({
                     lines.splice(i + 1, 0, remainder);
 
                     linesCount = lines.length;
-
                     break; // Processing on this line
 
                     // Append word with space to output
@@ -519,7 +560,8 @@ var Text = new Class({
             for (var j = 0; j <= lastWordIndex; j++)
             {
                 var word = words[j];
-                var wordWidth = context.measureText(word).width;
+                var letterSpacingWidth = word.length * this.letterSpacing;
+                var wordWidth = context.measureText(word).width + letterSpacingWidth;
                 var wordWidthWithSpace = wordWidth;
 
                 if (j < lastWordIndex)
@@ -724,14 +766,14 @@ var Text = new Class({
      * special characters:
      *
      * ```javascript
-     * Text.setFont('"Press Start 2P"');
+     * Text.setFontFamily('"Press Start 2P"');
      * ```
      *
      * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
      * quoted properly, too:
      *
      * ```javascript
-     * Text.setFont('Georgia, "Goudy Bookletter 1911", Times, serif');
+     * Text.setFontFamily('Georgia, "Goudy Bookletter 1911", Times, serif');
      * ```
      *
      * @method Phaser.GameObjects.Text#setFontFamily
@@ -822,7 +864,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setFill
      * @since 3.0.0
      *
-     * @param {(string|any)} color - The text fill style. Can be any valid CanvasRenderingContext `fillStyle` value.
+     * @param {(string|CanvasGradient|CanvasPattern)} color - The text fill style. Can be any valid CanvasRenderingContext `fillStyle` value.
      *
      * @return {this} This Text object.
      */
@@ -837,7 +879,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setColor
      * @since 3.0.0
      *
-     * @param {string} color - The text fill color.
+     * @param {(string|CanvasGradient|CanvasPattern)} color - The text fill color.
      *
      * @return {this} This Text object.
      */
@@ -852,7 +894,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setStroke
      * @since 3.0.0
      *
-     * @param {string} color - The stroke color.
+     * @param {(string|CanvasGradient|CanvasPattern)} color - The stroke color.
      * @param {number} thickness - The stroke thickness.
      *
      * @return {this} This Text object.
@@ -964,7 +1006,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#setWordWrapWidth
      * @since 3.0.0
      *
-     * @param {?number} width - The maximum width of a line in pixels. Set to null to remove wrapping.
+     * @param {number | null} width - The maximum width of a line in pixels. Set to null to remove wrapping.
      * @param {boolean} [useAdvancedWrap=false] - Whether or not to use the advanced wrapping
      * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
      * spaces and whitespace are left as is.
@@ -1015,20 +1057,17 @@ var Text = new Class({
     },
 
     /**
-     * Set the resolution used by this Text object.
+     * Set the resolution of the Texture used by this Text object.
      *
-     * By default it will be set to match the resolution set in the Game Config,
-     * but you can override it via this method, or by specifying it in the Text style configuration object.
+     * Setting resolution above 1 is useful only if you're scaling up this Text object (or an ancestor) or zooming a Camera on it.
+     * Otherwise, any extra detail in the Texture would just be lost during rendering.
      *
-     * It allows for much clearer text on High DPI devices, at the cost of memory because it uses larger
-     * internal Canvas textures for the Text.
-     *
-     * Therefore, please use with caution, as the more high res Text you have, the more memory it uses.
+     * Please use with caution, as the more high-resolution Text you have, the more memory it uses.
      *
      * @method Phaser.GameObjects.Text#setResolution
      * @since 3.12.0
      *
-     * @param {number} value - The resolution for this Text object to use.
+     * @param {number} value - The resolution for this Text object to use, relative to 1.
      *
      * @return {this} This Text object.
      */
@@ -1070,7 +1109,7 @@ var Text = new Class({
      * need to display large quantities of characters with fine control over the letter spacing.
      *
      * @method Phaser.GameObjects.Text#setLetterSpacing
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {number} value - The amount to add to the letter width. Set to zero to disable.
      *
@@ -1084,11 +1123,12 @@ var Text = new Class({
     },
 
     /**
-     * Set the text padding.
+     * Sets the padding applied around the text content when calculating the canvas size.
      *
-     * 'left' can be an object.
-     *
-     * If only 'left' and 'top' are given they are treated as 'x' and 'y'.
+     * The first argument can be either a number or a padding configuration object. When a number
+     * is given, it is applied to all four sides unless the other arguments override them. When an
+     * object is given, you can specify `left`, `right`, `top`, and `bottom` individually, or use
+     * `x` to set both left and right simultaneously, and `y` to set both top and bottom.
      *
      * @method Phaser.GameObjects.Text#setPadding
      * @since 3.0.0
@@ -1168,7 +1208,7 @@ var Text = new Class({
      * Render text from right-to-left or left-to-right.
      *
      * @method Phaser.GameObjects.Text#setRTL
-     * @since 3.61.0
+     * @since 3.70.0
      *
      * @param {boolean} [rtl=true] - Set to `true` to render from right-to-left.
      *
@@ -1214,7 +1254,12 @@ var Text = new Class({
     },
 
     /**
-     * Update the displayed text.
+     * Recalculates and re-renders the text content onto the internal canvas. This is called
+     * automatically whenever the text string or any style property changes. It handles word
+     * wrapping, text sizing, multi-line layout, alignment, shadows, stroke, and letter spacing.
+     * If the renderer is WebGL, the updated canvas is re-uploaded to the GPU as a new texture.
+     * You should call this manually only if you have updated `lineSpacing` or `letterSpacing`
+     * directly without using their corresponding setter methods.
      *
      * @method Phaser.GameObjects.Text#updateText
      * @since 3.0.0
@@ -1291,6 +1336,13 @@ var Text = new Class({
             canvas.height = h;
 
             this.frame.setSize(w, h);
+
+            // Resizing the canvas changes the size of the texture source.
+            // Because this is a dedicated texture for this Text object,
+            // we know this is a simple resize.
+            this.frame.source.updateSize(w, h);
+            this.frame.source.resolution = resolution;
+            this.frame.updateUVs();
 
             //  Because resizing the canvas resets the context
             style.syncFont(canvas, context);
@@ -1380,7 +1432,11 @@ var Text = new Class({
                 linePositionY = Math.round(linePositionY);
             }
 
-            if (style.strokeThickness)
+            var letterSpacing = this.letterSpacing;
+
+            // Apply stroke to the whole line only if there's no custom letter spacing
+
+            if (style.strokeThickness && letterSpacing === 0)
             {
                 style.syncShadow(context, style.shadowStroke);
 
@@ -1393,8 +1449,6 @@ var Text = new Class({
 
                 // Looping fillText could be an expensive operation, we should ignore it if it is not needed
 
-                var letterSpacing = this.letterSpacing;
-
                 if (letterSpacing !== 0)
                 {
                     var charPositionX = 0;
@@ -1404,6 +1458,15 @@ var Text = new Class({
                     //  Draw text letter by letter
                     for (var l = 0; l < line.length; l++)
                     {
+                        if (style.strokeThickness)
+                        {
+                            style.syncShadow(context, style.shadowStroke);
+
+                            context.strokeText(line[l], linePositionX + charPositionX, linePositionY);
+
+                            style.syncShadow(context, style.shadowFill);
+                        }
+
                         context.fillText(line[l], linePositionX + charPositionX, linePositionY);
 
                         charPositionX += context.measureText(line[l]).width + letterSpacing;
@@ -1422,12 +1485,9 @@ var Text = new Class({
         {
             this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture, true);
 
-            this.frame.glTexture = this.frame.source.glTexture;
-
             if (typeof WEBGL_DEBUG)
             {
-                // eslint-disable-next-line camelcase
-                this.frame.glTexture.__SPECTOR_Metadata = { textureKey: 'Text Game Object' };
+                this.frame.glTexture.spectorMetadata = { textureKey: 'Text Game Object' };
             }
         }
 
@@ -1520,7 +1580,12 @@ var Text = new Class({
 
         CanvasPool.remove(this.canvas);
 
-        this.texture.destroy();
+        var texture = this.texture;
+
+        if (texture)
+        {
+            texture.destroy();
+        }
     }
 
     /**

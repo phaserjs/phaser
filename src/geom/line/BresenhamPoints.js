@@ -1,11 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Using Bresenham's line algorithm this will return an array of all coordinates on this line.
+ * Using Bresenham's line algorithm this will return an array of all coordinates on the given line.
  *
  * The `start` and `end` points are rounded before this runs as the algorithm works on integers.
  *
@@ -13,7 +13,7 @@
  * @since 3.0.0
  *
  * @param {Phaser.Geom.Line} line - The line.
- * @param {number} [stepRate=1] - The optional step rate for the points on the line.
+ * @param {number} [stepRate=1] - Controls how densely the points are sampled along the line. A value of 1 returns every integer coordinate; a value of 2 returns every other coordinate, and so on.
  * @param {Phaser.Types.Math.Vector2Like[]} [results] - An optional array to push the resulting coordinates into.
  *
  * @return {Phaser.Types.Math.Vector2Like[]} The array of coordinates on the line.

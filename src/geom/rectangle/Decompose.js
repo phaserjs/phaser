@@ -1,12 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Create an array of points for each corner of a Rectangle
- * If an array is specified, each point object will be added to the end of the array, otherwise a new array will be created.
+ * Creates an array of plain `{x, y}` point objects for each of the four corners of a Rectangle, in the order: top-left, top-right, bottom-right, bottom-left.
+ * If an output array is provided, each point object will be pushed to the end of it, otherwise a new array will be created and returned.
  *
  * @function Phaser.Geom.Rectangle.Decompose
  * @since 3.0.0

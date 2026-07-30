@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,13 @@ var BlendModes = require('../../renderer/BlendModes');
 
 /**
  * Provides methods used for setting the blend mode of a Game Object.
- * Should be applied as a mixin and not used directly.
+ * Blend modes control how a Game Object is composited onto the display when rendered.
+ * They determine how the pixels of the object are blended with the pixels already on screen,
+ * enabling effects such as additive lighting, screen blending, and erasing.
+ *
+ * This component is designed to be applied as a mixin to Game Objects and should not be
+ * used directly. Any Game Object that mixes in this component gains the `blendMode` property
+ * and the `setBlendMode` method.
  *
  * @namespace Phaser.GameObjects.Components.BlendMode
  * @since 3.0.0
@@ -46,7 +52,7 @@ var BlendMode = {
      *
      * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
      * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
-     * reasons try to be careful about the construction of your Scene and the frequency of which blend modes
+     * reasons try to be careful about the construction of your Scene and the frequency with which blend modes
      * are used.
      *
      * @name Phaser.GameObjects.Components.BlendMode#blendMode
@@ -96,7 +102,7 @@ var BlendMode = {
      *
      * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
      * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
-     * reasons try to be careful about the construction of your Scene and the frequency in which blend modes
+     * reasons try to be careful about the construction of your Scene and the frequency with which blend modes
      * are used.
      *
      * @method Phaser.GameObjects.Components.BlendMode#setBlendMode

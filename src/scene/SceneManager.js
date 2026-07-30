@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -181,6 +181,7 @@ var SceneManager = new Class({
      *
      * @method Phaser.Scenes.SceneManager#bootQueue
      * @private
+     * @fires Phaser.Core.Events#SYSTEM_READY
      * @since 3.2.0
      */
     bootQueue: function ()
@@ -192,6 +193,8 @@ var SceneManager = new Class({
 
         //  Create the system Scene
         this.systemScene = this.createSceneFromInstance('__SYSTEM', new Scene());
+
+        this.game.events.emit(GameEvents.SYSTEM_READY, this.systemScene, this);
 
         var i;
         var entry;
@@ -263,7 +266,10 @@ var SceneManager = new Class({
     },
 
     /**
-     * Process the Scene operations queue.
+     * Processes any pending Scene additions from the `_pending` list and executes any queued
+     * Scene operations from the `_queue` list, such as start, stop, sleep, wake, and ordering
+     * changes. This method is called automatically at the start of each game step and should
+     * not be called directly.
      *
      * @method Phaser.Scenes.SceneManager#processQueue
      * @since 3.0.0
@@ -307,7 +313,7 @@ var SceneManager = new Class({
         {
             entry = this._queue[i];
 
-            this[entry.op](entry.keyA, entry.keyB);
+            this[entry.op](entry.keyA, entry.keyB, entry.data);
         }
 
         this._queue.length = 0;
@@ -407,7 +413,7 @@ var SceneManager = new Class({
     /**
      * Removes a Scene from the SceneManager.
      *
-     * The Scene is removed from the local scenes array, it's key is cleared from the keys
+     * The Scene is removed from the local scenes array, its key is cleared from the keys
      * cache and Scene.Systems.destroy is then called on it.
      *
      * If the SceneManager is processing the Scenes when this method is called it will
@@ -424,33 +430,31 @@ var SceneManager = new Class({
     {
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'remove', keyA: key, keyB: null });
+            return this.queueOp('remove', key);
         }
-        else
+
+        var sceneToRemove = this.getScene(key);
+
+        if (!sceneToRemove || sceneToRemove.sys.isTransitioning())
         {
-            var sceneToRemove = this.getScene(key);
+            return this;
+        }
 
-            if (!sceneToRemove || sceneToRemove.sys.isTransitioning())
+        var index = this.scenes.indexOf(sceneToRemove);
+        var sceneKey = sceneToRemove.sys.settings.key;
+
+        if (index > -1)
+        {
+            delete this.keys[sceneKey];
+            this.scenes.splice(index, 1);
+
+            if (this._start.indexOf(sceneKey) > -1)
             {
-                return this;
+                index = this._start.indexOf(sceneKey);
+                this._start.splice(index, 1);
             }
 
-            var index = this.scenes.indexOf(sceneToRemove);
-            var sceneKey = sceneToRemove.sys.settings.key;
-
-            if (index > -1)
-            {
-                delete this.keys[sceneKey];
-                this.scenes.splice(index, 1);
-
-                if (this._start.indexOf(sceneKey) > -1)
-                {
-                    index = this._start.indexOf(sceneKey);
-                    this._start.splice(index, 1);
-                }
-
-                sceneToRemove.sys.destroy();
-            }
+            sceneToRemove.sys.destroy();
         }
 
         return this;
@@ -525,13 +529,6 @@ var SceneManager = new Class({
      */
     loadComplete: function (loader)
     {
-        //  TODO - Remove. This should *not* be handled here
-        //  Try to unlock HTML5 sounds every time any loader completes
-        if (this.game.sound && this.game.sound.onBlurPausedSounds)
-        {
-            this.game.sound.unlock();
-        }
-
         this.create(loader.scene);
     },
 
@@ -555,8 +552,8 @@ var SceneManager = new Class({
      * @method Phaser.Scenes.SceneManager#update
      * @since 3.0.0
      *
-     * @param {number} time - Time elapsed.
-     * @param {number} delta - Delta time from the last update.
+     * @param {number} time - The current game timestamp, in milliseconds.
+     * @param {number} delta - The delta time, in milliseconds, elapsed since the last game step.
      */
     update: function (time, delta)
     {
@@ -574,7 +571,7 @@ var SceneManager = new Class({
                 sys.step(time, delta);
             }
 
-            if (sys.scenePlugin._target)
+            if (sys.scenePlugin && sys.scenePlugin._target)
             {
                 sys.scenePlugin.step(time, delta);
             }
@@ -676,7 +673,7 @@ var SceneManager = new Class({
 
             if (this.keys.hasOwnProperty(key))
             {
-                throw new Error('Cannot add a Scene with duplicate key: ' + key);
+                throw new Error('Cannot add Scene with duplicate key: ' + key);
             }
 
             return this.createSceneFromInstance(key, newScene);
@@ -835,7 +832,7 @@ var SceneManager = new Class({
 
         if (this.keys.hasOwnProperty(key))
         {
-            throw new Error('Cannot add a Scene with duplicate key: ' + key);
+            throw new Error('Cannot add Scene with duplicate key: ' + key);
         }
         else
         {
@@ -853,6 +850,7 @@ var SceneManager = new Class({
      * @since 3.16.0
      *
      * @generic {Phaser.Scene[]} T - [$return]
+     * @genericUse {T} - [$return]
      *
      * @param {boolean} [isActive=true] - Only include Scene's that are currently active?
      * @param {boolean} [inReverse=false] - Return the array of Scenes in reverse?
@@ -1211,7 +1209,7 @@ var SceneManager = new Class({
 
         if (!scene)
         {
-            console.warn('Scene not found for key: ' + key);
+            console.warn('Scene key not found: ' + key);
             return this;
         }
 
@@ -1309,7 +1307,7 @@ var SceneManager = new Class({
     },
 
     /**
-     * Sleeps one one Scene and starts the other.
+     * Sleeps one Scene and starts the other.
      *
      * @method Phaser.Scenes.SceneManager#switch
      * @since 3.0.0
@@ -1319,10 +1317,11 @@ var SceneManager = new Class({
      *
      * @param {(string|Phaser.Scene)} from - The Scene to sleep.
      * @param {(string|Phaser.Scene)} to - The Scene to start.
+     * @param {object} [data] - Optional data object to pass to `Scene.Settings` and `Scene.init`, and `Scene.create`. It is only passed when the scene starts for the first time.
      *
      * @return {this} This Scene Manager instance.
      */
-    switch: function (from, to)
+    switch: function (from, to, data)
     {
         var sceneA = this.getScene(from);
         var sceneB = this.getScene(to);
@@ -1333,11 +1332,11 @@ var SceneManager = new Class({
 
             if (this.isSleeping(to))
             {
-                this.wake(to);
+                this.wake(to, data);
             }
             else
             {
-                this.start(to);
+                this.start(to, data);
             }
         }
 
@@ -1401,19 +1400,18 @@ var SceneManager = new Class({
     {
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'bringToTop', keyA: key, keyB: null });
+            return this.queueOp('bringToTop', key);
         }
-        else
+
+        var index = this.getIndex(key);
+        var scenes = this.scenes;
+
+        if (index !== -1 && index < scenes.length)
         {
-            var index = this.getIndex(key);
+            var scene = this.getScene(key);
 
-            if (index !== -1 && index < this.scenes.length)
-            {
-                var scene = this.getScene(key);
-
-                this.scenes.splice(index, 1);
-                this.scenes.push(scene);
-            }
+            scenes.splice(index, 1);
+            scenes.push(scene);
         }
 
         return this;
@@ -1438,19 +1436,17 @@ var SceneManager = new Class({
     {
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'sendToBack', keyA: key, keyB: null });
+            return this.queueOp('sendToBack', key);
         }
-        else
+
+        var index = this.getIndex(key);
+
+        if (index !== -1 && index > 0)
         {
-            var index = this.getIndex(key);
+            var scene = this.getScene(key);
 
-            if (index !== -1 && index > 0)
-            {
-                var scene = this.getScene(key);
-
-                this.scenes.splice(index, 1);
-                this.scenes.unshift(scene);
-            }
+            this.scenes.splice(index, 1);
+            this.scenes.unshift(scene);
         }
 
         return this;
@@ -1473,21 +1469,19 @@ var SceneManager = new Class({
     {
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'moveDown', keyA: key, keyB: null });
+            return this.queueOp('moveDown', key);
         }
-        else
+
+        var indexA = this.getIndex(key);
+
+        if (indexA > 0)
         {
-            var indexA = this.getIndex(key);
+            var indexB = indexA - 1;
+            var sceneA = this.getScene(key);
+            var sceneB = this.getAt(indexB);
 
-            if (indexA > 0)
-            {
-                var indexB = indexA - 1;
-                var sceneA = this.getScene(key);
-                var sceneB = this.getAt(indexB);
-
-                this.scenes[indexA] = sceneB;
-                this.scenes[indexB] = sceneA;
-            }
+            this.scenes[indexA] = sceneB;
+            this.scenes[indexB] = sceneA;
         }
 
         return this;
@@ -1510,21 +1504,19 @@ var SceneManager = new Class({
     {
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'moveUp', keyA: key, keyB: null });
+            return this.queueOp('moveUp', key);
         }
-        else
+
+        var indexA = this.getIndex(key);
+
+        if (indexA < this.scenes.length - 1)
         {
-            var indexA = this.getIndex(key);
+            var indexB = indexA + 1;
+            var sceneA = this.getScene(key);
+            var sceneB = this.getAt(indexB);
 
-            if (indexA < this.scenes.length - 1)
-            {
-                var indexB = indexA + 1;
-                var sceneA = this.getScene(key);
-                var sceneB = this.getAt(indexB);
-
-                this.scenes[indexA] = sceneB;
-                this.scenes[indexB] = sceneA;
-            }
+            this.scenes[indexA] = sceneB;
+            this.scenes[indexB] = sceneA;
         }
 
         return this;
@@ -1532,6 +1524,7 @@ var SceneManager = new Class({
 
     /**
      * Moves a Scene so it is immediately above another Scene in the Scenes list.
+     * If the Scene is already above the other, it isn't moved.
      *
      * This means it will render over the top of the other Scene.
      *
@@ -1555,23 +1548,21 @@ var SceneManager = new Class({
 
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'moveAbove', keyA: keyA, keyB: keyB });
+            return this.queueOp('moveAbove', keyA, keyB);
         }
-        else
+
+        var indexA = this.getIndex(keyA);
+        var indexB = this.getIndex(keyB);
+
+        if (indexA !== -1 && indexB !== -1 && indexB < indexA)
         {
-            var indexA = this.getIndex(keyA);
-            var indexB = this.getIndex(keyB);
+            var tempScene = this.getAt(indexB);
 
-            if (indexA !== -1 && indexB !== -1 && indexB < indexA)
-            {
-                var tempScene = this.getAt(indexB);
+            //  Remove
+            this.scenes.splice(indexB, 1);
 
-                //  Remove
-                this.scenes.splice(indexB, 1);
-
-                //  Add in new location
-                this.scenes.splice(indexA + (indexB > indexA), 0, tempScene);
-            }
+            //  Add in new location
+            this.scenes.splice(indexA + (indexB > indexA), 0, tempScene);
         }
 
         return this;
@@ -1579,6 +1570,7 @@ var SceneManager = new Class({
 
     /**
      * Moves a Scene so it is immediately below another Scene in the Scenes list.
+     * If the Scene is already below the other, it isn't moved.
      *
      * This means it will render behind the other Scene.
      *
@@ -1602,29 +1594,27 @@ var SceneManager = new Class({
 
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'moveBelow', keyA: keyA, keyB: keyB });
+            return this.queueOp('moveBelow', keyA, keyB);
         }
-        else
+
+        var indexA = this.getIndex(keyA);
+        var indexB = this.getIndex(keyB);
+
+        if (indexA !== -1 && indexB !== -1 && indexB > indexA)
         {
-            var indexA = this.getIndex(keyA);
-            var indexB = this.getIndex(keyB);
+            var tempScene = this.getAt(indexB);
 
-            if (indexA !== -1 && indexB !== -1 && indexB > indexA)
+            //  Remove
+            this.scenes.splice(indexB, 1);
+
+            if (indexA === 0)
             {
-                var tempScene = this.getAt(indexB);
-
-                //  Remove
-                this.scenes.splice(indexB, 1);
-
-                if (indexA === 0)
-                {
-                    this.scenes.unshift(tempScene);
-                }
-                else
-                {
-                    //  Add in new location
-                    this.scenes.splice(indexA - (indexB < indexA), 0, tempScene);
-                }
+                this.scenes.unshift(tempScene);
+            }
+            else
+            {
+                //  Add in new location
+                this.scenes.splice(indexA - (indexB < indexA), 0, tempScene);
             }
         }
 
@@ -1641,12 +1631,13 @@ var SceneManager = new Class({
      * @param {string} op - The operation to perform.
      * @param {(string|Phaser.Scene)} keyA - Scene A.
      * @param {(any|string|Phaser.Scene)} [keyB] - Scene B, or a data object.
+     * @param {any} [data] - Optional data object to pass.
      *
      * @return {this} This Scene Manager instance.
      */
-    queueOp: function (op, keyA, keyB)
+    queueOp: function (op, keyA, keyB, data)
     {
-        this._queue.push({ op: op, keyA: keyA, keyB: keyB });
+        this._queue.push({ op: op, keyA: keyA, keyB: keyB, data: data });
 
         return this;
     },
@@ -1674,20 +1665,18 @@ var SceneManager = new Class({
 
         if (this.isProcessing)
         {
-            this._queue.push({ op: 'swapPosition', keyA: keyA, keyB: keyB });
+            return this.queueOp('swapPosition', keyA, keyB);
         }
-        else
+
+        var indexA = this.getIndex(keyA);
+        var indexB = this.getIndex(keyB);
+
+        if (indexA !== indexB && indexA !== -1 && indexB !== -1)
         {
-            var indexA = this.getIndex(keyA);
-            var indexB = this.getIndex(keyB);
+            var tempScene = this.getAt(indexA);
 
-            if (indexA !== indexB && indexA !== -1 && indexB !== -1)
-            {
-                var tempScene = this.getAt(indexA);
-
-                this.scenes[indexA] = this.scenes[indexB];
-                this.scenes[indexB] = tempScene;
-            }
+            this.scenes[indexA] = this.scenes[indexB];
+            this.scenes[indexB] = tempScene;
         }
 
         return this;

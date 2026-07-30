@@ -1,15 +1,15 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @author       samme <samme.npm@gmail.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Wrap = require('../math/Wrap');
 
 /**
- * Iterates through the given array and makes sure that each objects x and y
- * properties are wrapped to keep them contained within the given Rectangles
+ * Iterates through the given array and makes sure that each object's x and y
+ * properties are wrapped to keep them contained within the given Rectangle's
  * area.
  *
  * @function Phaser.Actions.WrapInRectangle

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,19 +17,19 @@ var CanvasPool = require('../display/canvas/CanvasPool');
  * @typedef {object} Phaser.Device.Features
  * @since 3.0.0
  *
- * @property {boolean} canvas - Is canvas available?
- * @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap.
- * @property {boolean} file - Is file available?
- * @property {boolean} fileSystem - Is fileSystem available?
- * @property {boolean} getUserMedia - Does the device support the getUserMedia API?
- * @property {boolean} littleEndian - Is the device big or little endian? (only detected if the browser supports TypedArrays)
- * @property {boolean} localStorage - Is localStorage available?
- * @property {boolean} pointerLock - Is Pointer Lock available?
- * @property {boolean} stableSort - Is Array.sort stable?
- * @property {boolean} support32bit - Does the device context support 32bit pixel manipulation using array buffer views?
- * @property {boolean} vibration - Does the device support the Vibration API?
- * @property {boolean} webGL - Is webGL available?
- * @property {boolean} worker - Is worker available?
+ * @property {boolean} canvas - Indicates whether the HTML5 Canvas API (CanvasRenderingContext2D) is available in this browser. Required for the Canvas renderer to function.
+ * @property {?boolean} canvasBitBltShift - True if canvas supports a 'copy' bitblt onto itself when the source and destination regions overlap. This is used for fast pixel copy operations. Will be `null` if it could not be determined, `false` on iOS and Safari where it is known not to work.
+ * @property {boolean} file - Indicates whether the File, FileReader, FileList, and Blob APIs are all available, enabling file reading operations within the browser.
+ * @property {boolean} fileSystem - Indicates whether the FileSystem API (requestFileSystem) is available, allowing sandboxed local file storage access.
+ * @property {boolean} getUserMedia - Indicates whether the getUserMedia API is available and functional. Used for accessing camera and microphone input. Note: older versions of Firefox (below 21) may report support but not actually work correctly.
+ * @property {boolean} littleEndian - Indicates whether the device uses little-endian byte ordering. Only detected if the browser supports TypedArrays. Will be `null` if endianness could not be determined.
+ * @property {boolean} localStorage - Indicates whether the Web Storage localStorage API is available for persisting key-value data between browser sessions.
+ * @property {boolean} pointerLock - Indicates whether the Pointer Lock API is available, which allows the mouse cursor to be hidden and locked to the game canvas for first-person style input.
+ * @property {boolean} stableSort - Indicates whether the browser's Array.sort implementation is stable, meaning equal elements retain their original relative order after sorting.
+ * @property {boolean} support32bit - Indicates whether the device supports 32-bit pixel manipulation of canvas image data using ArrayBuffer and typed array views (Uint8ClampedArray / Int32Array). Requires little-endian byte ordering.
+ * @property {boolean} vibration - Indicates whether the Vibration API is available, enabling haptic feedback on supported mobile devices.
+ * @property {boolean} webGL - Indicates whether WebGL is available in this browser. Required for the WebGL renderer to function.
+ * @property {boolean} worker - Indicates whether Web Workers are available, enabling background JavaScript execution on a separate thread.
  */
 var Features = {
 

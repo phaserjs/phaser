@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16,7 +16,7 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  * @function Phaser.Tilemaps.Components.SetCollisionByExclusion
  * @since 3.0.0
  *
- * @param {number[]} indexes - An array of the tile indexes to not be counted for collision.
+ * @param {number[]} indexes - An array of tile indexes to exclude from the collision update. Tiles with these indexes will not have their collision state changed.
  * @param {boolean} collides - If true it will enable collision. If false it will clear collision.
  * @param {boolean} recalculateFaces - Whether or not to recalculate the tile faces after the update.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.

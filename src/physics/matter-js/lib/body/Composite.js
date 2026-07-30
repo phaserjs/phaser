@@ -28,16 +28,17 @@ var Body = require('./Body');
      * @return {composite} A new composite
      */
     Composite.create = function(options) {
-        return Common.extend({ 
+        return Common.extend({
             id: Common.nextId(),
             type: 'composite',
             parent: null,
             isModified: false,
-            bodies: [], 
-            constraints: [], 
+            bodies: [],
+            constraints: [],
             composites: [],
             label: 'Composite',
             plugin: {},
+            wrapBounds: null,
             cache: {
                 allBodies: null,
                 allConstraints: null,
@@ -47,7 +48,7 @@ var Body = require('./Body');
     };
 
     /**
-     * Sets the composite's `isModified` flag. 
+     * Sets the composite's `isModified` flag.
      * If `updateParents` is true, all parents will be set (default: false).
      * If `updateChildren` is true, all children will be set (default: false).
      * @method setModified
@@ -193,7 +194,11 @@ var Body = require('./Body');
     Composite.removeComposite = function(compositeA, compositeB, deep) {
         var position = Common.indexOf(compositeA.composites, compositeB);
         if (position !== -1) {
+            var bodies = Composite.allBodies(compositeB);
             Composite.removeCompositeAt(compositeA, position);
+            for (var i = 0; i < bodies.length; i++) {
+                bodies[i].sleepCounter = 0;
+            }
         }
 
         if (deep) {
@@ -246,6 +251,7 @@ var Body = require('./Body');
         var position = Common.indexOf(composite.bodies, body);
         if (position !== -1) {
             Composite.removeBodyAt(composite, position);
+            body.sleepCounter = 0;
         }
 
         if (deep) {
@@ -337,7 +343,7 @@ var Body = require('./Body');
                 Composite.clear(composite.composites[i], keepStatic, true);
             }
         }
-        
+
         if (keepStatic) {
             composite.bodies = composite.bodies.filter(function(body) { return body.isStatic; });
         } else {
@@ -448,8 +454,8 @@ var Body = require('./Body');
         if (!objects)
             return null;
 
-        object = objects.filter(function(object) { 
-            return object.id.toString() === id.toString(); 
+        object = objects.filter(function(object) {
+            return object.id.toString() === id.toString();
         });
 
         return object.length === 0 ? null : object[0];
@@ -488,7 +494,7 @@ var Body = require('./Body');
     };
 
     /**
-     * Translates all children in the composite by a given vector relative to their current positions, 
+     * Translates all children in the composite by a given vector relative to their current positions,
      * without imparting any velocity.
      * @method translate
      * @param {composite} composite
@@ -522,7 +528,7 @@ var Body = require('./Body');
             var body = bodies[i],
                 dx = body.position.x - point.x,
                 dy = body.position.y - point.y;
-                
+
             Body.setPosition(body, {
                 x: point.x + (dx * cos - dy * sin),
                 y: point.y + (dx * sin + dy * cos)
@@ -550,7 +556,7 @@ var Body = require('./Body');
             var body = bodies[i],
                 dx = body.position.x - point.x,
                 dy = body.position.y - point.y;
-                
+
             Body.setPosition(body, {
                 x: point.x + dx * scaleX,
                 y: point.y + dy * scaleY
@@ -566,7 +572,7 @@ var Body = require('./Body');
      * Returns the union of the bounds of all of the composite's bodies.
      * @method bounds
      * @param {composite} composite The composite.
-     * @returns {bounds} The composite bounds.
+     * @return {bounds} The composite bounds.
      */
     Composite.bounds = function(composite) {
         var bodies = Composite.allBodies(composite),
@@ -578,6 +584,29 @@ var Body = require('./Body');
         }
 
         return Bounds.create(vertices);
+    };
+
+    /**
+     * Wraps the `composite` position such that it always stays within the given bounds.
+     * Upon crossing a boundary the composite will appear on the opposite side of the bounds,
+     * while maintaining its velocity.
+     * This is called automatically by the plugin.
+     * @function wrap
+     * @param {composite} composite The composite to wrap.
+     * @param {bounds} bounds The bounds to wrap the composite inside.
+     * @return {?Matter.Vector} The translation vector that was applied (only if wrapping was required).
+     */
+    Composite.wrap = function(composite, bounds) {
+        var translation = Bounds.wrap(
+          Composite.bounds(composite),
+          bounds
+        );
+
+        if (translation) {
+          Composite.translate(composite, translation);
+        }
+
+        return translation;
     };
 
     /*
@@ -708,6 +737,13 @@ var Body = require('./Body');
      * An object reserved for storing plugin-specific properties.
      *
      * @property plugin
+     * @type {}
+     */
+
+    /**
+     * An object storing axis-aligned bounding boxes (AABB).
+     *
+     * @property wrapBounds
      * @type {}
      */
 

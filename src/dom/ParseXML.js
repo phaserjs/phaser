@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,7 @@
  *
  * @param {string} data - The XML source stored in a string.
  *
- * @return {?(DOMParser|ActiveXObject)} The parsed XML data, or `null` if the data could not be parsed.
+ * @return {?XMLDocument} The parsed XML data, or `null` if the data could not be parsed.
  */
 var ParseXML = function (data)
 {

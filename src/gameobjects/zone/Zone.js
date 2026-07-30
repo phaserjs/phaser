@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,17 +15,15 @@ var RectangleContains = require('../../geom/rectangle/Contains');
 
 /**
  * @classdesc
- * A Zone Game Object.
+ * A Zone is a non-rendering rectangular Game Object that has a position and size but no texture.
+ * It never displays visually, but it does live on the display list and can be moved, scaled,
+ * and rotated like any other Game Object.
  *
- * A Zone is a non-rendering rectangular Game Object that has a position and size.
- * It has no texture and never displays, but does live on the display list and
- * can be moved, scaled and rotated like any other Game Object.
+ * Its primary use is for creating Drop Zones and Input Hit Areas. It provides helper methods for
+ * both circular and rectangular drop zones, and can also accept custom geometry shapes. Zones are
+ * also useful for object overlap checks, or as a base class for your own non-displaying Game Objects.
  *
- * Its primary use is for creating Drop Zones and Input Hit Areas and it has a couple of helper methods
- * specifically for this. It is also useful for object overlap checks, or as a base for your own
- * non-displaying Game Objects.
-
- * The default origin is 0.5, the center of the Zone, the same as with Game Objects.
+ * The default origin is 0.5, placing it at the center of the Zone, consistent with other Game Objects.
  *
  * @class Zone
  * @extends Phaser.GameObjects.GameObject
@@ -147,7 +145,8 @@ var Zone = new Class({
     },
 
     /**
-     * Sets the size of this Game Object.
+     * Sets the native (un-scaled) width and height of this Zone. Also updates the display origin
+     * and, by default, resizes any non-custom input hit area associated with this Zone.
      *
      * @method Phaser.GameObjects.Zone#setSize
      * @since 3.0.0
@@ -200,7 +199,7 @@ var Zone = new Class({
 
     /**
      * Sets this Zone to be a Circular Drop Zone.
-     * The circle is centered on this Zones `x` and `y` coordinates.
+     * The circle is centered on this Zone's `x` and `y` coordinates.
      *
      * @method Phaser.GameObjects.Zone#setCircleDropZone
      * @since 3.0.0
@@ -216,7 +215,7 @@ var Zone = new Class({
 
     /**
      * Sets this Zone to be a Rectangle Drop Zone.
-     * The rectangle is centered on this Zones `x` and `y` coordinates.
+     * The rectangle is centered on this Zone's `x` and `y` coordinates.
      *
      * @method Phaser.GameObjects.Zone#setRectangleDropZone
      * @since 3.0.0
@@ -232,7 +231,10 @@ var Zone = new Class({
     },
 
     /**
-     * Allows you to define your own Geometry shape to be used as a Drop Zone.
+     * Enables this Zone as an interactive Drop Zone by calling `setInteractive` with the given
+     * hit area shape and callback. You can pass any Phaser geometry shape, or a custom shape with
+     * a matching hit-test callback. If no arguments are provided, a Rectangle matching the size of
+     * this Zone will be used automatically. Has no effect if this Zone is already interactive.
      *
      * @method Phaser.GameObjects.Zone#setDropZone
      * @since 3.0.0
@@ -302,12 +304,11 @@ var Zone = new Class({
      *
      * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
      * @param {Phaser.GameObjects.Image} src - The Game Object being rendered in this call.
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
      */
-    renderWebGL: function (renderer, src, camera)
+    renderWebGL: function (renderer, src, drawingContext)
     {
-        camera.addToRenderList(src);
+        drawingContext.camera.addToRenderList(src);
     }
 
 });

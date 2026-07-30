@@ -1,7 +1,7 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,10 @@ var NOOP = require('../utils/NOOP');
 
 /**
  * @classdesc
- * Class containing all the shared state and behavior of a sound object, independent of the implementation.
+ * Base class containing all the shared state and behavior of a sound object, independent
+ * of the audio implementation (Web Audio or HTML5 Audio). Manages playback state (play,
+ * pause, stop, seek), looping, volume, rate, detune, markers for playing sub-sections
+ * of audio, and event emission for playback lifecycle changes.
  *
  * @class BaseSound
  * @extends Phaser.Events.EventEmitter
@@ -78,7 +81,7 @@ var BaseSound = new Class({
 
         /**
          * A property that holds the value of sound's actual playback rate,
-         * after its rate and detune values has been combined with global
+         * after its rate and detune values have been combined with global
          * rate and detune values.
          *
          * @name Phaser.Sound.BaseSound#totalRate
@@ -227,7 +230,7 @@ var BaseSound = new Class({
     },
 
     /**
-     * Updates previously added marker.
+     * Updates a previously added marker with new values from the provided marker object.
      *
      * @method Phaser.Sound.BaseSound#updateMarker
      * @since 3.0.0
@@ -476,6 +479,8 @@ var BaseSound = new Class({
         {
             return;
         }
+
+        this.stop();
 
         this.emit(Events.DESTROY, this);
 

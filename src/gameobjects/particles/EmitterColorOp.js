@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,12 +13,24 @@ var IntegerToRGB = require('../../display/color/IntegerToRGB');
 
 /**
  * @classdesc
- * This class is responsible for taking control over the color property
- * in the Particle class and managing its emission and updating functions.
+ * A specialized emitter op that manages the `color` property of a Particle over
+ * its lifetime. Unlike scalar emitter ops, `EmitterColorOp` accepts an array of
+ * hexadecimal color values (e.g. `[0xff0000, 0x00ff00, 0x0000ff]`) and smoothly
+ * interpolates between them as the particle ages, producing gradient color
+ * transitions from birth to death.
+ *
+ * The color array is decomposed into separate red, green, and blue component
+ * arrays on configuration, and a linear interpolation function is used each
+ * update step to recombine them into the current packed RGB color value.
+ *
+ * This class is created and managed automatically by the `ParticleEmitter` when
+ * a `color` property is present in the emitter configuration; you do not normally
+ * need to instantiate it directly.
  *
  * See the `ParticleEmitter` class for more details on emitter op configuration.
  *
  * @class EmitterColorOp
+ * @extends Phaser.GameObjects.Particles.EmitterOp
  * @memberof Phaser.GameObjects.Particles
  * @constructor
  * @since 3.60.0
@@ -80,7 +92,7 @@ var EmitterColorOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterColorOp#getMethod
      * @since 3.60.0
      *
-     * @return {number} A number between 0 and 9 which should be passed to `setMethods`.
+     * @return {number} Either `0` if no color property value is set, or `9` if a color array is configured. The result should be passed to `setMethods`.
      */
     getMethod: function ()
     {
@@ -88,7 +100,12 @@ var EmitterColorOp = new Class({
     },
 
     /**
-     * Sets the EmitterColorOp method values, if in use.
+     * Configures the emit and update callbacks for this color op based on the
+     * current `method` value. When a color array is present (method 9), it
+     * decomposes each packed hex color in `propertyValue` into separate red,
+     * green, and blue component arrays, sets up the linear easing and
+     * interpolation functions, and assigns the eased emit and update handlers.
+     * If no color value is set (method 0), the default no-op handlers are used.
      *
      * @method Phaser.GameObjects.Particles.EmitterColorOp#setMethods
      * @since 3.60.0
@@ -114,6 +131,10 @@ var EmitterColorOp = new Class({
             current = value[0];
 
             this.active = true;
+
+            this.r.length = 0;
+            this.g.length = 0;
+            this.b.length = 0;
 
             //  Populate the r,g,b arrays
             for (var i = 0; i < value.length; i++)
@@ -170,9 +191,9 @@ var EmitterColorOp = new Class({
     },
 
     /**
-     * An `onUpdate` callback that returns an eased value between the
-     * {@link Phaser.GameObjects.Particles.EmitterColorOp#start} and {@link Phaser.GameObjects.Particles.EmitterColorOp#end}
-     * range.
+     * An `onUpdate` callback that returns an interpolated packed RGB color value
+     * across the configured color array, based on the particle's current
+     * normalized lifetime.
      *
      * @method Phaser.GameObjects.Particles.EmitterColorOp#easeValueUpdate
      * @since 3.60.0

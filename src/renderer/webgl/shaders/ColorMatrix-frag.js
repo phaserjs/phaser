@@ -22,8 +22,8 @@ module.exports = [
     '    result.g = (uColorMatrix[5] * c.r) + (uColorMatrix[6] * c.g) + (uColorMatrix[7] * c.b) + (uColorMatrix[8] * c.a) + uColorMatrix[9];',
     '    result.b = (uColorMatrix[10] * c.r) + (uColorMatrix[11] * c.g) + (uColorMatrix[12] * c.b) + (uColorMatrix[13] * c.a) + uColorMatrix[14];',
     '    result.a = (uColorMatrix[15] * c.r) + (uColorMatrix[16] * c.g) + (uColorMatrix[17] * c.b) + (uColorMatrix[18] * c.a) + uColorMatrix[19];',
-    '    vec3 rgb = mix(c.rgb, result.rgb, uAlpha);',
-    '    rgb *= result.a;',
-    '    gl_FragColor = vec4(rgb, result.a);',
+    '    c.rgb *= c.a;',
+    '    result.rgb *= result.a;',
+    '    gl_FragColor = mix(c, result, uAlpha);',
     '}',
 ].join('\n');

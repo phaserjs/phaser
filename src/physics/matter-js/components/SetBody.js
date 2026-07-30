@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -21,9 +21,9 @@ var Vertices = require('../lib/geometry/Vertices');
 var SetBody = {
 
     /**
-     * Set this Game Objects Matter physics body to be a rectangle shape.
+     * Set this Game Object's Matter physics body to be a rectangle shape.
      *
-     * Calling this methods resets all previous properties you may have set on the body, including
+     * Calling this method resets all previous properties you may have set on the body, including
      * plugins, mass, friction, collision categories, etc. So be sure to re-apply these as needed.
      *
      * @method Phaser.Physics.Matter.Components.SetBody#setRectangle
@@ -41,9 +41,9 @@ var SetBody = {
     },
 
     /**
-     * Set this Game Objects Matter physics body to be a circle shape.
+     * Set this Game Object's Matter physics body to be a circle shape.
      *
-     * Calling this methods resets all previous properties you may have set on the body, including
+     * Calling this method resets all previous properties you may have set on the body, including
      * plugins, mass, friction, collision categories, etc. So be sure to re-apply these as needed.
      *
      * @method Phaser.Physics.Matter.Components.SetBody#setCircle
@@ -60,9 +60,9 @@ var SetBody = {
     },
 
     /**
-     * Set this Game Objects Matter physics body to be a polygon shape.
+     * Set this Game Object's Matter physics body to be a polygon shape.
      *
-     * Calling this methods resets all previous properties you may have set on the body, including
+     * Calling this method resets all previous properties you may have set on the body, including
      * plugins, mass, friction, collision categories, etc. So be sure to re-apply these as needed.
      *
      * @method Phaser.Physics.Matter.Components.SetBody#setPolygon
@@ -80,9 +80,9 @@ var SetBody = {
     },
 
     /**
-     * Set this Game Objects Matter physics body to be a trapezoid shape.
+     * Set this Game Object's Matter physics body to be a trapezoid shape.
      *
-     * Calling this methods resets all previous properties you may have set on the body, including
+     * Calling this method resets all previous properties you may have set on the body, including
      * plugins, mass, friction, collision categories, etc. So be sure to re-apply these as needed.
      *
      * @method Phaser.Physics.Matter.Components.SetBody#setTrapezoid
@@ -175,7 +175,7 @@ var SetBody = {
     /**
      * Set this Game Object to create and use a new Body based on the configuration object given.
      *
-     * Calling this methods resets all previous properties you may have set on the body, including
+     * Calling this method resets all previous properties you may have set on the body, including
      * plugins, mass, friction, collision categories, etc. So be sure to re-apply these as needed.
      *
      * @method Phaser.Physics.Matter.Components.SetBody#setBody

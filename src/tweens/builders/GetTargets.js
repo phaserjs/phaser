@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,7 @@ var GetValue = require('../../utils/object/GetValue');
  * @function Phaser.Tweens.Builders.GetTargets
  * @since 3.0.0
  *
- * @param {object} config - The configuration object to use.
+ * @param {object} config - The Tween configuration object containing the `targets` property to extract.
  *
  * @return {array} An array of targets (may contain only one element), or `null` if no targets were specified.
  */

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,17 +8,23 @@ var EaseMap = require('../../math/easing/EaseMap');
 var UppercaseFirst = require('../../utils/string/UppercaseFirst');
 
 /**
- * This internal function is used to return the correct ease function for a Tween.
+ * Returns the easing function corresponding to the given `ease` value for use in a Tween.
  *
- * It can take a variety of input, including an EaseMap based string, or a custom function.
+ * The `ease` argument can be an exact key from the EaseMap (e.g. `'Power2'`, `'Quad.easeIn'`),
+ * a shorthand dot-notation string (e.g. `'quad.in'`, `'cubic.inout'`), or a custom easing function.
+ * If the string cannot be resolved, the function falls back to `Power0` (linear easing).
+ *
+ * When `easeParams` is provided, the returned function is a wrapper that forwards those extra
+ * arguments to the resolved ease function on every call, enabling parameterised easings such as
+ * Stepped or Back easing.
  *
  * @function Phaser.Tweens.Builders.GetEaseFunction
  * @since 3.0.0
  *
- * @param {(string|function)} ease - The ease to find. This can be either a string from the EaseMap, or a custom function.
- * @param {number[]} [easeParams] - An optional array of ease parameters to go with the ease.
+ * @param {(string|function)} ease - The ease to resolve. Accepts an EaseMap key, a dot-notation shorthand (e.g. `'quad.in'`), or a custom easing function.
+ * @param {number[]} [easeParams] - An optional array of additional parameters to pass to the ease function on each call.
  *
- * @return {function} The ease function.
+ * @return {function} The resolved ease function, or a wrapper function that applies the resolved ease with the provided parameters.
  */
 var GetEaseFunction = function (ease, easeParams)
 {

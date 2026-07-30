@@ -1,21 +1,23 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Converts a hue to an RGB color.
+ * Calculates a single RGB channel value from a hue offset and the two intermediate
+ * lightness values used during HSL to RGB conversion. Call this function once for each
+ * channel (red, green, and blue), passing the appropriate hue offset each time.
  * Based on code by Michael Jackson (https://github.com/mjijackson)
  *
  * @function Phaser.Display.Color.HueToComponent
  * @since 3.0.0
  *
- * @param {number} p
- * @param {number} q
- * @param {number} t
+ * @param {number} p - The first intermediate value derived from the lightness during HSL to RGB conversion.
+ * @param {number} q - The second intermediate value derived from the lightness and saturation during HSL to RGB conversion.
+ * @param {number} t - The hue offset for the color channel being calculated (red, green, or blue).
  *
- * @return {number} The combined color value.
+ * @return {number} The RGB channel value for the given hue offset, in the range 0 to 1.
  */
 var HueToComponent = function (p, q, t)
 {

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,7 @@ var SetCenterY = require('../../bounds/SetCenterY');
 var SetRight = require('../../bounds/SetRight');
 
 /**
- * Takes given Game Object and aligns it so that it is positioned in the right center of the other.
+ * Takes a given Game Object and aligns it so that its right edge is flush with the right edge of the `alignIn` Game Object, and its vertical center is aligned with the vertical center of the `alignIn` Game Object.
  *
  * @function Phaser.Display.Align.In.RightCenter
  * @since 3.0.0

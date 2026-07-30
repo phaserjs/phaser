@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,11 +13,16 @@ var Random = require('./Random');
 
 /**
  * @classdesc
- * A Circle object.
+ * A Circle geometry object defined by a center position and radius.
  *
  * This is a geometry object, containing numerical values and related methods to inspect and modify them.
  * It is not a Game Object, in that you cannot add it to the display list, and it has no texture.
  * To render a Circle you should look at the capabilities of the Graphics class.
+ *
+ * Circle objects are commonly used for hit-testing, overlap checks, masking, and defining circular
+ * regions of interest within a Scene. They can be used directly with Phaser's geometry intersection
+ * methods, such as `Phaser.Geom.Intersects.CircleToCircle` or `Phaser.Geom.Intersects.CircleToRectangle`,
+ * making them useful for simple spatial queries without requiring a physics body.
  *
  * @class Circle
  * @memberof Phaser.Geom
@@ -114,16 +119,16 @@ var Circle = new Class({
      * @method Phaser.Geom.Circle#getPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [out,$return]
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @param {number} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the circle.
-     * @param {(Phaser.Geom.Point|object)} [out] - An object to store the return values in. If not given a Point object will be created.
+     * @param {Phaser.Math.Vector2} [out] - A Vector2 to store the return values in. If not given a Vector2 object will be created.
      *
-     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point around the circle.
+     * @return {Phaser.Math.Vector2} A Vector2 containing the coordinates of the point around the circle.
      */
-    getPoint: function (position, point)
+    getPoint: function (position, out)
     {
-        return GetPoint(this, position, point);
+        return GetPoint(this, position, out);
     },
 
     /**
@@ -133,13 +138,13 @@ var Circle = new Class({
      * @method Phaser.Geom.Circle#getPoints
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     * @generic {Phaser.Math.Vector2[]} O - [output,$return]
      *
-     * @param {number} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
+     * @param {number} quantity - The amount of points to return. If a falsy value the quantity will be derived from the `stepRate` instead.
      * @param {number} [stepRate] - Sets the quantity by getting the circumference of the circle and dividing it by the stepRate.
-     * @param {(array|Phaser.Geom.Point[])} [output] - An array to insert the points in to. If not provided a new array will be created.
+     * @param {Phaser.Math.Vector2[]} [output] - An array to insert the Vector2s in to. If not provided a new array will be created.
      *
-     * @return {(array|Phaser.Geom.Point[])} An array of Point objects pertaining to the points around the circumference of the circle.
+     * @return {Phaser.Math.Vector2[]} An array of Vector2 objects pertaining to the points around the circumference of the circle.
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -152,15 +157,15 @@ var Circle = new Class({
      * @method Phaser.Geom.Circle#getRandomPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [point,$return]
+     * @generic {Phaser.Math.Vector2} O - [point,$return]
      *
-     * @param {(Phaser.Geom.Point|object)} [point] - A Point or point-like object to set the random `x` and `y` values in.
+     * @param {Phaser.Math.Vector2} [vec] - A Vector2 object to set the random `x` and `y` values in.
      *
-     * @return {(Phaser.Geom.Point|object)} A Point object with the random values set in the `x` and `y` properties.
+     * @return {Phaser.Math.Vector2} A Vector2 object with the random values set in the `x` and `y` properties.
      */
-    getRandomPoint: function (point)
+    getRandomPoint: function (vec)
     {
-        return Random(this, point);
+        return Random(this, vec);
     },
 
     /**
@@ -203,7 +208,8 @@ var Circle = new Class({
     },
 
     /**
-     * Sets the position of this Circle.
+     * Sets the position of this Circle. If the `y` argument is omitted, both the x and y
+     * positions will be set to the value of `x`.
      *
      * @method Phaser.Geom.Circle#setPosition
      * @since 3.0.0
@@ -237,7 +243,7 @@ var Circle = new Class({
     },
 
     /**
-     * The radius of the Circle.
+     * The radius of the Circle. Setting this value also updates the diameter accordingly.
      *
      * @name Phaser.Geom.Circle#radius
      * @type {number}
@@ -259,7 +265,7 @@ var Circle = new Class({
     },
 
     /**
-     * The diameter of the Circle.
+     * The diameter of the Circle, which is twice the radius. Setting this value also updates the radius accordingly.
      *
      * @name Phaser.Geom.Circle#diameter
      * @type {number}
@@ -281,7 +287,8 @@ var Circle = new Class({
     },
 
     /**
-     * The left position of the Circle.
+     * The leftmost point of the Circle, equal to `x - radius`. Setting this value adjusts the
+     * x position of the circle's center while keeping the radius unchanged.
      *
      * @name Phaser.Geom.Circle#left
      * @type {number}
@@ -302,7 +309,8 @@ var Circle = new Class({
     },
 
     /**
-     * The right position of the Circle.
+     * The rightmost point of the Circle, equal to `x + radius`. Setting this value adjusts the
+     * x position of the circle's center while keeping the radius unchanged.
      *
      * @name Phaser.Geom.Circle#right
      * @type {number}
@@ -323,7 +331,8 @@ var Circle = new Class({
     },
 
     /**
-     * The top position of the Circle.
+     * The topmost point of the Circle, equal to `y - radius`. Setting this value adjusts the
+     * y position of the circle's center while keeping the radius unchanged.
      *
      * @name Phaser.Geom.Circle#top
      * @type {number}
@@ -344,7 +353,8 @@ var Circle = new Class({
     },
 
     /**
-     * The bottom position of the Circle.
+     * The bottommost point of the Circle, equal to `y + radius`. Setting this value adjusts the
+     * y position of the circle's center while keeping the radius unchanged.
      *
      * @name Phaser.Geom.Circle#bottom
      * @type {number}

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,10 +12,10 @@
  * @since 3.0.0
  *
  * @param {number} tileX - The x coordinate, in tiles, not pixels.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile index from the world values.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the world position from the tile coordinates.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
- * @return {number}
+ * @return {number} The world X coordinate, in pixels, corresponding to the given tile X coordinate.
  */
 var TileToWorldX = function (tileX, camera, layer)
 {

@@ -1,8 +1,10 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
+
+var CONST = require('../../const');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -15,9 +17,13 @@
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Layer} layer - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+ * @param {number} renderStep - The index of this function in the Game Object's list of render processes. Used to support multiple rendering functions.
+ * @param {Phaser.GameObjects.GameObject[]} displayList - The display list which is currently being rendered.
+ * @param {number} displayListIndex - The index of the Game Object within the display list.
  */
-var LayerWebGLRenderer = function (renderer, layer, camera)
+var LayerWebGLRenderer = function (renderer, layer, drawingContext, parentMatrix, renderStep, displayList, displayListIndex)
 {
     var children = layer.list;
     var childCount = children.length;
@@ -27,16 +33,19 @@ var LayerWebGLRenderer = function (renderer, layer, camera)
         return;
     }
 
+    var currentContext = drawingContext;
+    var camera = currentContext.camera;
+
     layer.depthSort();
 
-    renderer.pipelines.preBatch(layer);
+    var layerHasBlendMode = (layer.blendMode !== CONST.BlendModes.SKIP_CHECK);
 
-    var layerHasBlendMode = (layer.blendMode !== -1);
-
-    if (!layerHasBlendMode)
+    if (!layerHasBlendMode && currentContext.blendMode !== 0)
     {
         //  If Layer is SKIP_TEST then set blend mode to be Normal
-        renderer.setBlendMode(0);
+        currentContext = currentContext.getClone();
+        currentContext.setBlendMode(0);
+        currentContext.use();
     }
 
     var alpha = layer.alpha;
@@ -72,46 +81,32 @@ var LayerWebGLRenderer = function (renderer, layer, camera)
             childAlphaBottomRight = childAlpha;
         }
 
-        if (!layerHasBlendMode && child.blendMode !== renderer.currentBlendMode)
+        if (
+            !layerHasBlendMode &&
+            child.blendMode !== currentContext.blendMode &&
+            child.blendMode !== CONST.BlendModes.SKIP_CHECK
+        )
         {
             //  If Layer doesn't have its own blend mode, then a child can have one
-            renderer.setBlendMode(child.blendMode);
+            currentContext = currentContext.getClone();
+            currentContext.setBlendMode(child.blendMode);
+            currentContext.use();
         }
-
-        var mask = child.mask;
-
-        if (mask)
-        {
-            mask.preRenderWebGL(renderer, child, camera);
-        }
-
-        var type = child.type;
-
-        if (type !== renderer.currentType)
-        {
-            renderer.newType = true;
-            renderer.currentType = type;
-        }
-
-        renderer.nextTypeMatch = (i < childCount - 1) ? (children[i + 1].type === renderer.currentType) : false;
 
         child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
 
         //  Render
-        child.renderWebGL(renderer, child, camera);
+        child.renderWebGLStep(renderer, child, currentContext, undefined, undefined, children, i);
 
         //  Restore original values
         child.setAlpha(childAlphaTopLeft, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
-
-        if (mask)
-        {
-            mask.postRenderWebGL(renderer, camera);
-        }
-
-        renderer.newType = false;
     }
 
-    renderer.pipelines.postBatch(layer);
+    // Release any remaining context.
+    if (currentContext !== drawingContext)
+    {
+        currentContext.release();
+    }
 };
 
 module.exports = LayerWebGLRenderer;

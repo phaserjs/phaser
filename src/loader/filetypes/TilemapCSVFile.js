@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,6 +15,10 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
 /**
  * @classdesc
  * A single Tilemap CSV File suitable for loading by the Loader.
+ *
+ * A CSV tilemap file contains a grid of comma-separated integer values, where each value represents a tile index
+ * in a tileset. This is one of the simplest tilemap formats supported by Phaser and is useful for basic grid-based
+ * maps. Once loaded, the CSV data can be used with `this.make.tilemap` to create a `Tilemap` object in your Scene.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#tilemapCSV method and are not typically created directly.
  *
@@ -122,7 +126,7 @@ var TilemapCSVFile = new Class({
  * The key must be a unique String. It is used to add the file to the global Tilemap Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the Tilemap Cache.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
- * then remove it from the Text Cache first, before loading a new one.
+ * then remove it from the Tilemap Cache first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
  *

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,8 +13,12 @@ var GameEvents = require('../core/events');
  * The Cache Manager is the global cache owned and maintained by the Game instance.
  *
  * Various systems, such as the file Loader, rely on this cache in order to store the files
- * it has loaded. The manager itself doesn't store any files, but instead owns multiple BaseCache
- * instances, one per type of file. You can also add your own custom caches.
+ * they have loaded. The manager itself doesn't store any files, but instead owns multiple BaseCache
+ * instances, one per type of file. Built-in caches are provided for binary files, bitmap fonts,
+ * JSON, physics data, shaders, audio, video, text, HTML, WaveFront OBJ, tilemaps, and XML.
+ * You can also add your own custom caches via the `addCustom` method.
+ *
+ * The Cache Manager is available in any Scene via `this.cache` and is shared across all Scenes.
  *
  * @class CacheManager
  * @memberof Phaser.Cache
@@ -122,15 +126,6 @@ var CacheManager = new Class({
         this.html = new BaseCache();
 
         /**
-         * A Cache storing all WaveFront OBJ files, typically added via the Loader.
-         *
-         * @name Phaser.Cache.CacheManager#obj
-         * @type {Phaser.Cache.BaseCache}
-         * @since 3.0.0
-         */
-        this.obj = new BaseCache();
-
-        /**
          * A Cache storing all tilemap data files, typically added via the Loader.
          * Only the data is stored in this cache, the textures are part of the Texture Manager.
          *
@@ -148,6 +143,15 @@ var CacheManager = new Class({
          * @since 3.0.0
          */
         this.xml = new BaseCache();
+
+        /**
+         * A Cache storing all Phaser Compact Texture Atlas data files, typically added via the Loader.
+         *
+         * @name Phaser.Cache.CacheManager#atlas
+         * @type {Phaser.Cache.BaseCache}
+         * @since 4.0.0
+         */
+        this.atlas = new BaseCache();
 
         /**
          * An object that contains your own custom BaseCache entries.
@@ -185,7 +189,7 @@ var CacheManager = new Class({
     },
 
     /**
-     * Removes all entries from all BaseCaches and destroys all custom caches.
+     * Destroys all built-in BaseCaches and all custom caches, then nulls their references. Called automatically when the Game instance is destroyed.
      *
      * @method Phaser.Cache.CacheManager#destroy
      * @since 3.0.0
@@ -202,9 +206,9 @@ var CacheManager = new Class({
             'video',
             'text',
             'html',
-            'obj',
             'tilemap',
-            'xml'
+            'xml',
+            'atlas'
         ];
 
         for (var i = 0; i < keys.length; i++)

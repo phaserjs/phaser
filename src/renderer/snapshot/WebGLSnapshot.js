@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,10 +9,19 @@ var Color = require('../../display/color/Color');
 var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
- * Takes a snapshot of an area from the current frame displayed by a WebGL canvas.
+ * Takes a snapshot of an area from the current frame displayed by a WebGL canvas,
+ * or reads the color value of a single pixel, depending on the `getPixel` property
+ * of the snapshot configuration object.
  *
- * This is then copied to an Image object. When this loads, the results are sent
- * to the callback provided in the Snapshot Configuration object.
+ * When capturing an area, the raw pixel data is read from the WebGL context and
+ * composited into a temporary canvas, accounting for WebGL's inverted Y-axis and
+ * optionally reversing pre-multiplied alpha. The canvas is then serialized to a
+ * data URL and loaded into an Image object, which is passed to the callback defined
+ * in the Snapshot Configuration object once loading completes.
+ *
+ * When reading a single pixel, the RGBA values at the given coordinates are read
+ * directly via `gl.readPixels` and returned as a `Phaser.Display.Color` object
+ * via the callback.
  *
  * @function Phaser.Renderer.Snapshot.WebGL
  * @since 3.0.0
@@ -41,7 +50,7 @@ var WebGLSnapshot = function (sourceContext, config)
     {
         var pixel = new Uint8Array(4);
 
-        var destY = (isFramebuffer) ? y : bufferHeight - y;
+        var destY = bufferHeight - y - 1;
 
         gl.readPixels(x, destY, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
 
@@ -70,13 +79,27 @@ var WebGLSnapshot = function (sourceContext, config)
             for (var px = 0; px < width; px++)
             {
                 var sourceIndex = ((height - py - 1) * width + px) * 4;
+                var destIndex = (py * width + px) * 4;
 
-                var destIndex = (isFramebuffer) ? total - ((py * width + (width - px)) * 4) : (py * width + px) * 4;
+                var r = pixels[sourceIndex + 0];
+                var g = pixels[sourceIndex + 1];
+                var b = pixels[sourceIndex + 2];
+                var a = pixels[sourceIndex + 3];
 
-                data[destIndex + 0] = pixels[sourceIndex + 0];
-                data[destIndex + 1] = pixels[sourceIndex + 1];
-                data[destIndex + 2] = pixels[sourceIndex + 2];
-                data[destIndex + 3] = pixels[sourceIndex + 3];
+                // Un-premultiplication.
+                if (config.unpremultiplyAlpha && a !== 0)
+                {
+                    var ratio = 255 / a;
+
+                    r = Math.floor(r * ratio);
+                    g = Math.floor(g * ratio);
+                    b = Math.floor(b * ratio);
+                }
+
+                data[destIndex + 0] = r;
+                data[destIndex + 1] = g;
+                data[destIndex + 2] = b;
+                data[destIndex + 3] = a;
             }
         }
 

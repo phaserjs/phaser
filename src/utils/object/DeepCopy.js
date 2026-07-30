@@ -1,18 +1,20 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Deep Copy the given object or array.
+ * Recursively deep copies the given object or array, returning a brand new instance with all
+ * nested objects and arrays also cloned. The original object is not modified. If a non-object
+ * value is passed (such as a string, number, boolean, or null), it is returned as-is.
  *
  * @function Phaser.Utils.Objects.DeepCopy
  * @since 3.50.0
  *
- * @param {object} obj - The object to deep copy.
+ * @param {object} inObject - The object or array to deep copy.
  *
- * @return {object} A deep copy of the original object.
+ * @return {object} A deep copy of the original object or array.
  */
 var DeepCopy = function (inObject)
 {

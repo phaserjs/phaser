@@ -1,12 +1,14 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
-var DynamicTexture = require('../../textures/DynamicTexture');
+var UUID = require('../../utils/string/UUID');
 var Image = require('../image/Image');
+var RenderTextureRender = require('./RenderTextureRender');
+var RenderTextureRenderModes = require('./RenderTextureRenderModes');
 
 /**
  * @classdesc
@@ -45,6 +47,18 @@ var Image = require('../image/Image');
  * to be drawn with no aliasing around the edges. This is a technical limitation of WebGL1. To get around it,
  * create your shape as a texture in an art package, then draw that to this texture.
  *
+ * If you activate mipmap support in your game, it will not automatically
+ * be applied to DynamicTextures.
+ * This is because regenerating the mipmap for a texture
+ * costs over 10 microseconds, a big performance loss for a single frame.
+ * If you want to render your DynamicTextures with mipmaps,
+ * you must also activate the render config option `mipmapRegeneration`.
+ *
+ * In the event that the WebGL context is lost, this DynamicTexture will
+ * lose its contents. Once context is restored (signalled by the `restorewebgl`
+ * event), you can choose to redraw the contents of the DynamicTexture.
+ * You are responsible for the redrawing logic.
+ *
  * @class RenderTexture
  * @extends Phaser.GameObjects.Image
  * @memberof Phaser.GameObjects
@@ -56,21 +70,27 @@ var Image = require('../image/Image');
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [width=32] - The width of the Render Texture.
  * @param {number} [height=32] - The height of the Render Texture.
+ * @param {boolean} [forceEven=true] - Force the given width and height to be rounded to even values. This significantly improves the rendering quality. Set to false if you know you need an odd sized texture.
  */
 var RenderTexture = new Class({
 
     Extends: Image,
 
+    Mixins: [
+        RenderTextureRender
+    ],
+
     initialize:
 
-    function RenderTexture (scene, x, y, width, height)
+    function RenderTexture (scene, x, y, width, height, forceEven)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = 32; }
         if (height === undefined) { height = 32; }
+        if (forceEven === undefined) { forceEven = true; }
 
-        var dynamicTexture = new DynamicTexture(scene.sys.textures, '', width, height);
+        var dynamicTexture = scene.sys.textures.addDynamicTexture(UUID(), width, height, forceEven);
 
         Image.call(this, scene, x, y, dynamicTexture);
 
@@ -101,6 +121,35 @@ var RenderTexture = new Class({
          * @since 3.12.0
          */
         this._saved = false;
+
+        /**
+         * The render mode of this Render Texture.
+         * Set this property to change how the Render Texture is rendered.
+         *
+         * - 'render' mode draws the contents of the Render Texture to each frame.
+         * - 'redraw' mode calls `render()` and redraws the texture every frame,
+         *   but does not render itself. This is useful for updating textures
+         *   for reuse by other objects.
+         * - 'all' mode calls `render()` then draws the texture to the frame.
+         *
+         * @name Phaser.GameObjects.RenderTexture#renderMode
+         * @type {'render'|'redraw'|'all'}
+         * @default 'render'
+         * @since 4.0.0
+         */
+        this.renderMode = RenderTextureRenderModes.RENDER;
+
+        /**
+         * Whether this RenderTexture is currently executing `renderWebGL`.
+         * This is used to prevent infinite loops when drawing containers.
+         * You should not set this property directly.
+         *
+         * @name Phaser.GameObjects.RenderTexture#isCurrentlyRendering
+         * @type {boolean}
+         * @readonly
+         * @since 4.0.0
+         */
+        this.isCurrentlyRendering = false;
     },
 
     /**
@@ -109,10 +158,11 @@ var RenderTexture = new Class({
      * This will not change the size that the Game Object is rendered in-game.
      * For that you need to either set the scale of the Game Object (`setScale`) or call the
      * `setDisplaySize` method, which is the same thing as changing the scale but allows you
-     * to do so by giving pixel values.
+     * to do so by giving pixel values. You could also call the `resize` method, as that
+     * will resize the underlying texture.
      *
-     * If you have enabled this Game Object for input, changing the size will _not_ change the
-     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
+     * If you have enabled this Game Object for input, changing the size will also change the
+     * size of the hit area, unless you have defined a custom hit area.
      *
      * @method Phaser.GameObjects.RenderTexture#setSize
      * @since 3.0.0
@@ -126,8 +176,6 @@ var RenderTexture = new Class({
     {
         this.width = width;
         this.height = height;
-
-        this.texture.setSize(width, height);
 
         this.updateDisplayOrigin();
 
@@ -150,6 +198,12 @@ var RenderTexture = new Class({
      *
      * Both approaches will erase everything currently drawn to the Render Texture.
      *
+     * Calling this will then invoke the `setSize` method, setting the internal size of this Game Object
+     * to the values given to this method.
+     *
+     * Calling this will then invoke the `setSize` method, setting the internal size of this Game Object
+     * to the values given to this method.
+     *
      * If the dimensions given are the same as those already being used, calling this method will do nothing.
      *
      * @method Phaser.GameObjects.RenderTexture#resize
@@ -157,12 +211,15 @@ var RenderTexture = new Class({
      *
      * @param {number} width - The new width of the Render Texture.
      * @param {number} [height=width] - The new height of the Render Texture. If not specified, will be set the same as the `width`.
+     * @param {boolean} [forceEven=true] - Force the given width and height to be rounded to even values. This significantly improves the rendering quality. Set to false if you know you need an odd sized texture.
      *
      * @return {this} This Render Texture.
      */
-    resize: function (width, height)
+    resize: function (width, height, forceEven)
     {
-        this.setSize(width, height);
+        this.texture.setSize(width, height, forceEven);
+
+        this.setSize(this.texture.width, this.texture.height);
 
         return this;
     },
@@ -195,6 +252,11 @@ var RenderTexture = new Class({
      * stop rendering. Ensure you remove the texture from the Texture Manager and any Game Objects
      * using it first, before destroying this Render Texture.
      *
+     * Note that the texture is assigned a random key on creation.
+     * This key will be replaced with the new key.
+     * If the texture was previously removed from the texture manager,
+     * it will be added back so it can be reused.
+     *
      * @method Phaser.GameObjects.RenderTexture#saveTexture
      * @since 3.12.0
      *
@@ -205,15 +267,67 @@ var RenderTexture = new Class({
     saveTexture: function (key)
     {
         var texture = this.texture;
-
-        texture.key = key;
-
-        if (texture.manager.addDynamicTexture(texture))
+        var oldKey = texture.key;
+        var textureManager = texture.manager;
+        if (textureManager.exists(oldKey) && textureManager.get(oldKey) === texture)
         {
+            textureManager.renameTexture(oldKey, key);
+
             this._saved = true;
+        }
+        else
+        {
+            texture.key = key;
+
+            if (texture.manager.addDynamicTexture(texture))
+            {
+                this._saved = true;
+            }
         }
 
         return texture;
+    },
+
+    /**
+     * Set the `renderMode` of this Render Texture.
+     * Set this to change how the Render Texture is rendered.
+     *
+     * - 'render' mode draws the contents of the Render Texture to each frame.
+     * - 'redraw' mode calls `render()` and redraws the texture every frame,
+     *   but does not render itself. This is useful for updating textures
+     *   for reuse by other objects.
+     * - 'all' mode calls `render()` then draws the texture to the frame.
+     *
+     * @method Phaser.GameObjects.RenderTexture#setRenderMode
+     * @since 4.0.0
+     * @param {'render'|'redraw'|'all'} mode - The render mode to set.
+     * @param {boolean} [preserve=false] - Whether to call `preserve(true)` to preserve the current command buffer.
+     * @return {this} This Render Texture instance.
+     */
+    setRenderMode: function (mode, preserve)
+    {
+        this.renderMode = mode;
+
+        if (preserve)
+        {
+            this.texture.preserve(true);
+        }
+
+        return this;
+    },
+
+    /**
+     * Render the buffered drawing commands to this Dynamic Texture.
+     * You must do this in order to see anything drawn to it.
+     *
+     * @method Phaser.GameObjects.RenderTexture#render
+     * @since 4.0.0
+     */
+    render: function ()
+    {
+        this.texture.render();
+
+        return this;
     },
 
     /**
@@ -244,17 +358,22 @@ var RenderTexture = new Class({
     },
 
     /**
-     * Fully clears this Render Texture, erasing everything from it and resetting it back to
-     * a blank, transparent, texture.
+     * Clears a portion or everything from this Render Texture by erasing it and resetting it back to
+     * a blank, transparent, texture. To clear an area, specify the `x`, `y`, `width` and `height`.
      *
      * @method Phaser.GameObjects.RenderTexture#clear
      * @since 3.2.0
      *
+     * @param {number} [x=0] - The left coordinate of the clear rectangle.
+     * @param {number} [y=0] - The top coordinate of the clear rectangle.
+     * @param {number} [width=this.width] - The width of the clear rectangle.
+     * @param {number} [height=this.height] - The height of the clear rectangle.
+     *
      * @return {this} This Render Texture instance.
      */
-    clear: function ()
+    clear: function (x, y, width, height)
     {
-        this.texture.clear();
+        this.texture.clear(x, y, width, height);
 
         return this;
     },
@@ -269,6 +388,8 @@ var RenderTexture = new Class({
      *
      * If you wish to stamp from the top-left, set the config `originX` and
      * `originY` properties both to zero.
+     *
+     * This method ignores the `camera` property of the Dynamic Texture.
      *
      * @method Phaser.GameObjects.RenderTexture#stamp
      * @since 3.60.0
@@ -292,39 +413,8 @@ var RenderTexture = new Class({
      * Draws the given object, or an array of objects, to this Render Texture using a blend mode of ERASE.
      * This has the effect of erasing any filled pixels present in the objects from this texture.
      *
-     * It can accept any of the following:
-     *
-     * * Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
-     * * Tilemap Layers.
-     * * A Group. The contents of which will be iterated and drawn in turn.
-     * * A Container. The contents of which will be iterated fully, and drawn in turn.
-     * * A Scene Display List. Pass in `Scene.children` to draw the whole list.
-     * * Another Dynamic Texture, or a Render Texture.
-     * * A Texture Frame instance.
-     * * A string. This is used to look-up the texture from the Texture Manager.
-     *
-     * Note: You cannot erase a Render Texture from itself.
-     *
-     * If passing in a Group or Container it will only draw children that return `true`
-     * when their `willRender()` method is called. I.e. a Container with 10 children,
-     * 5 of which have `visible=false` will only draw the 5 visible ones.
-     *
-     * If passing in an array of Game Objects it will draw them all, regardless if
-     * they pass a `willRender` check or not.
-     *
-     * You can pass in a string in which case it will look for a texture in the Texture
-     * Manager matching that string, and draw the base frame.
-     *
-     * You can pass in the `x` and `y` coordinates to draw the objects at. The use of
-     * the coordinates differ based on what objects are being drawn. If the object is
-     * a Group, Container or Display List, the coordinates are _added_ to the positions
-     * of the children. For all other types of object, the coordinates are exact.
-     *
-     * Calling this method causes the WebGL batch to flush, so it can write the texture
-     * data to the framebuffer being used internally. The batch is flushed at the end,
-     * after the entries have been iterated. So if you've a bunch of objects to draw,
-     * try and pass them in an array in one single call, rather than making lots of
-     * separate calls.
+     * This method uses the `draw` method internally,
+     * and the parameters behave the same way.
      *
      * @method Phaser.GameObjects.RenderTexture#erase
      * @since 3.16.0
@@ -343,7 +433,7 @@ var RenderTexture = new Class({
     },
 
     /**
-     * Draws the given object, or an array of objects, to this Render Texture.
+     * Draws the given object, or an array of objects, to this RenderTexture.
      *
      * It can accept any of the following:
      *
@@ -358,8 +448,8 @@ var RenderTexture = new Class({
      *
      * Note 1: You cannot draw a Render Texture to itself.
      *
-     * Note 2: For Game Objects that have Post FX Pipelines, the pipeline _cannot_ be
-     * used when drawn to this texture.
+     * Note 2: GameObjects will use the camera, while textures and frames will not.
+     * Textures and frames are drawn using the `stamp` method.
      *
      * If passing in a Group or Container it will only draw children that return `true`
      * when their `willRender()` method is called. I.e. a Container with 10 children,
@@ -376,15 +466,10 @@ var RenderTexture = new Class({
      * the coordinates differ based on what objects are being drawn. If the object is
      * a Group, Container or Display List, the coordinates are _added_ to the positions
      * of the children. For all other types of object, the coordinates are exact.
+     * For textures and frames, the `x` and `y` values are the middle of the texture.
      *
      * The `alpha` and `tint` values are only used by Texture Frames.
      * Game Objects use their own alpha and tint values when being drawn.
-     *
-     * Calling this method causes the WebGL batch to flush, so it can write the texture
-     * data to the framebuffer being used internally. The batch is flushed at the end,
-     * after the entries have been iterated. So if you've a bunch of objects to draw,
-     * try and pass them in an array in one single call, rather than making lots of
-     * separate calls.
      *
      * @method Phaser.GameObjects.RenderTexture#draw
      * @since 3.2.0
@@ -405,45 +490,29 @@ var RenderTexture = new Class({
     },
 
     /**
-     * Draws the Texture Frame to the Render Texture at the given position.
+     * Draws the given object to this Render Texture.
+     * This allows you to draw the object as it appears in the game world,
+     * or with various parameter overrides in the config.
      *
-     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
+     * @method Phaser.GameObjects.RenderTexture#capture
+     * @since 4.0.0
      *
-     * ```javascript
-     * var rt = this.add.renderTexture(0, 0, 800, 600);
-     * rt.drawFrame(key, frame);
-     * ```
-     *
-     * You can optionally provide a position, alpha and tint value to apply to the frame
-     * before it is drawn.
-     *
-     * Calling this method will cause a batch flush, so if you've got a stack of things to draw
-     * in a tight loop, try using the `draw` method instead.
-     *
-     * If you need to draw a Sprite to this Render Texture, use the `draw` method instead.
-     *
-     * @method Phaser.GameObjects.RenderTexture#drawFrame
-     * @since 3.12.0
-     *
-     * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
-     * @param {(string|number)} [frame] - The name or index of the frame within the Texture. Set to `null` to skip this argument if not required.
-     * @param {number} [x=0] - The x position to draw the frame at.
-     * @param {number} [y=0] - The y position to draw the frame at.
-     * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture.
-     * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. WebGL only.
+     * @param {Phaser.GameObjects.GameObject} entry - Any renderable GameObject.
+     * @param {Phaser.Types.Textures.CaptureConfig} config - The configuration object for the capture.
      *
      * @return {this} This Render Texture instance.
      */
-    drawFrame: function (key, frame, x, y, alpha, tint)
+    capture: function (entry, config)
     {
-        this.texture.drawFrame(key, frame, x, y, alpha, tint);
+        this.texture.capture(entry, config);
 
         return this;
     },
 
     /**
-     * Takes the given Texture Frame and draws it to this Render Texture as a fill pattern,
+     * Takes the given Texture Frame and draws it to this Dynamic Texture as a fill pattern,
      * i.e. in a grid-layout based on the frame dimensions.
+     * It uses a `TileSprite` internally to draw the frame repeatedly.
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.
      *
@@ -453,8 +522,7 @@ var RenderTexture = new Class({
      *
      * The position can be negative if required, but the dimensions cannot.
      *
-     * Calling this method will cause a batch flush by default. Use the `skipBatch` argument
-     * to disable this if this call is part of a larger batch draw.
+     * This method respects the camera settings of the Dynamic Texture.
      *
      * @method Phaser.GameObjects.RenderTexture#repeat
      * @since 3.60.0
@@ -465,253 +533,53 @@ var RenderTexture = new Class({
      * @param {number} [y=0] - The y position to start drawing the frames from (can be negative to offset).
      * @param {number} [width=this.width] - The width of the area to repeat the frame within. Defaults to the width of this Dynamic Texture.
      * @param {number} [height=this.height] - The height of the area to repeat the frame within. Defaults to the height of this Dynamic Texture.
-     * @param {number} [alpha=1] - The alpha to use. Defaults to 1, no alpha.
-     * @param {number} [tint=0xffffff] - WebGL only. The tint color to use. Leave as undefined, or 0xffffff to have no tint.
-     * @param {boolean} [skipBatch=false] - Skip beginning and ending a batch with this call. Use if this is part of a bigger batched draw.
+     * @param {Phaser.Types.GameObjects.TileSprite.TileSpriteConfig} [config] - The configuration object for the TileSprite which repeats the texture, allowing you to set further properties on it.
      *
      * @return {this} This Render Texture instance.
      */
-    repeat: function (key, frame, x, y, width, height, alpha, tint, skipBatch)
+    repeat: function (key, frame, x, y, width, height, config)
     {
-        this.texture.repeat(key, frame, x, y, width, height, alpha, tint, skipBatch);
+        this.texture.repeat(key, frame, x, y, width, height, config);
 
         return this;
     },
 
     /**
-     * Use this method if you need to batch draw a large number of Game Objects to
-     * this Render Texture in a single pass, or on a frequent basis. This is especially
-     * useful under WebGL, however, if your game is using Canvas only, it will not make
-     * any speed difference in that situation.
+     * Sets the preserve flag for this Dynamic Texture.
+     * Ordinarily, after each render, the command buffer is cleared.
+     * When this flag is set to `true`, the command buffer is preserved between renders.
+     * This makes it possible to repeat the same drawing commands on each render.
      *
-     * This method starts the beginning of a batched draw, unless one is already open.
+     * Make sure to call `clear()` at the start if you don't want to accumulate
+     * drawing detail over the top of itself.
      *
-     * Batched drawing is faster than calling `draw` in loop, but you must be careful
-     * to manage the flow of code and remember to call `endDraw()` when you're finished.
-     *
-     * If you don't need to draw large numbers of objects it's much safer and easier
-     * to use the `draw` method instead.
-     *
-     * The flow should be:
-     *
-     * ```javascript
-     * // Call once:
-     * RenderTexture.beginDraw();
-     *
-     * // repeat n times:
-     * RenderTexture.batchDraw();
-     * // or
-     * RenderTexture.batchDrawFrame();
-     *
-     * // Call once:
-     * RenderTexture.endDraw();
-     * ```
-     *
-     * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
-     * have started a batch. Also, be very careful not to destroy this Render Texture while the
-     * batch is still open. Doing so will cause a run-time error in the WebGL Renderer.
-     *
-     * You can use the `RenderTexture.texture.isDrawing` boolean property to tell if a batch is
-     * currently open, or not.
-     *
-     * @method Phaser.GameObjects.RenderTexture#beginDraw
-     * @since 3.50.0
-     *
+     * @method Phaser.GameObjects.RenderTexture#preserve
+     * @since 4.0.0
+     * @param {boolean} preserve - Whether to preserve the command buffer after rendering.
      * @return {this} This Render Texture instance.
      */
-    beginDraw: function ()
+    preserve: function (preserve)
     {
-        this.texture.beginDraw();
+        this.texture.preserve(preserve);
 
         return this;
     },
 
     /**
-     * Use this method if you have already called `beginDraw` and need to batch
-     * draw a large number of objects to this Render Texture.
+     * Adds a callback to run during the render process.
+     * This callback runs as a step in the command buffer.
+     * It can be used to set up conditions for the next draw step.
      *
-     * This method batches the drawing of the given objects to this texture,
-     * without causing a WebGL bind or batch flush for each one.
+     * Note that this will only execute after `render()` is called.
      *
-     * It is faster than calling `draw`, but you must be careful to manage the
-     * flow of code and remember to call `endDraw()`. If you don't need to draw large
-     * numbers of objects it's much safer and easier to use the `draw` method instead.
-     *
-     * The flow should be:
-     *
-     * ```javascript
-     * // Call once:
-     * RenderTexture.beginDraw();
-     *
-     * // repeat n times:
-     * RenderTexture.batchDraw();
-     * // or
-     * RenderTexture.batchDrawFrame();
-     *
-     * // Call once:
-     * RenderTexture.endDraw();
-     * ```
-     *
-     * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
-     * have started a batch. Also, be very careful not to destroy this Render Texture while the
-     * batch is still open. Doing so will cause a run-time error in the WebGL Renderer.
-     *
-     * You can use the `RenderTexture.texture.isDrawing` boolean property to tell if a batch is
-     * currently open, or not.
-     *
-     * This method can accept any of the following:
-     *
-     * * Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
-     * * Tilemap Layers.
-     * * A Group. The contents of which will be iterated and drawn in turn.
-     * * A Container. The contents of which will be iterated fully, and drawn in turn.
-     * * A Scene's Display List. Pass in `Scene.children` to draw the whole list.
-     * * Another Dynamic Texture or Render Texture.
-     * * A Texture Frame instance.
-     * * A string. This is used to look-up a texture from the Texture Manager.
-     *
-     * Note: You cannot draw a Render Texture to itself.
-     *
-     * If passing in a Group or Container it will only draw children that return `true`
-     * when their `willRender()` method is called. I.e. a Container with 10 children,
-     * 5 of which have `visible=false` will only draw the 5 visible ones.
-     *
-     * If passing in an array of Game Objects it will draw them all, regardless if
-     * they pass a `willRender` check or not.
-     *
-     * You can pass in a string in which case it will look for a texture in the Texture
-     * Manager matching that string, and draw the base frame. If you need to specify
-     * exactly which frame to draw then use the method `drawFrame` instead.
-     *
-     * You can pass in the `x` and `y` coordinates to draw the objects at. The use of
-     * the coordinates differ based on what objects are being drawn. If the object is
-     * a Group, Container or Display List, the coordinates are _added_ to the positions
-     * of the children. For all other types of object, the coordinates are exact.
-     *
-     * The `alpha` and `tint` values are only used by Texture Frames.
-     * Game Objects use their own alpha and tint values when being drawn.
-     *
-     * @method Phaser.GameObjects.RenderTexture#batchDraw
-     * @since 3.50.0
-     *
-     * @param {any} entries - Any renderable Game Object, or Group, Container, Display List, other Dynamic or Texture, Texture Frame or an array of any of these.
-     * @param {number} [x=0] - The x position to draw the Frame at, or the offset applied to the object.
-     * @param {number} [y=0] - The y position to draw the Frame at, or the offset applied to the object.
-     * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture. Game Objects use their own alpha.
-     * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. Game Objects use their own tint. WebGL only.
-     *
+     * @method Phaser.GameObjects.RenderTexture#callback
+     * @since 4.0.0
+     * @param {Function} callback - A callback function to run during the render process.
      * @return {this} This Render Texture instance.
      */
-    batchDraw: function (entries, x, y, alpha, tint)
+    callback: function (callback)
     {
-        this.texture.batchDraw(entries, x, y, alpha, tint);
-
-        return this;
-    },
-
-    /**
-     * Use this method if you have already called `beginDraw` and need to batch
-     * draw a large number of texture frames to this Render Texture.
-     *
-     * This method batches the drawing of the given frames to this Render Texture,
-     * without causing a WebGL bind or batch flush for each one.
-     *
-     * It is faster than calling `drawFrame`, but you must be careful to manage the
-     * flow of code and remember to call `endDraw()`. If you don't need to draw large
-     * numbers of frames it's much safer and easier to use the `drawFrame` method instead.
-     *
-     * The flow should be:
-     *
-     * ```javascript
-     * // Call once:
-     * RenderTexture.beginDraw();
-     *
-     * // repeat n times:
-     * RenderTexture.batchDraw();
-     * // or
-     * RenderTexture.batchDrawFrame();
-     *
-     * // Call once:
-     * RenderTexture.endDraw();
-     * ```
-     *
-     * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
-     * have started a batch. Also, be very careful not to destroy this Render Texture while the
-     * batch is still open. Doing so will cause a run-time error in the WebGL Renderer.
-     *
-     * You can use the `RenderTexture.texture.isDrawing` boolean property to tell if a batch is
-     * currently open, or not.
-     *
-     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
-     *
-     * You can optionally provide a position, alpha and tint value to apply to the frame
-     * before it is drawn.
-     *
-     * @method Phaser.GameObjects.RenderTexture#batchDrawFrame
-     * @since 3.50.0
-     *
-     * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
-     * @param {(string|number)} [frame] - The name or index of the frame within the Texture.
-     * @param {number} [x=0] - The x position to draw the frame at.
-     * @param {number} [y=0] - The y position to draw the frame at.
-     * @param {number} [alpha=1] -  The alpha value. Only used when drawing Texture Frames to this texture. Game Objects use their own alpha.
-     * @param {number} [tint=0xffffff] -  The tint color value. Only used when drawing Texture Frames to this texture. Game Objects use their own tint. WebGL only.
-     *
-     * @return {this} This Render Texture instance.
-     */
-    batchDrawFrame: function (key, frame, x, y, alpha, tint)
-    {
-        this.texture.batchDrawFrame(key, frame, x, y, alpha, tint);
-
-        return this;
-    },
-
-    /**
-     * Use this method to finish batch drawing to this Render Texture.
-     *
-     * Doing so will stop the WebGL Renderer from capturing draws and then blit the
-     * framebuffer to the Render Target owned by this texture.
-     *
-     * Calling this method without first calling `beginDraw` will have no effect.
-     *
-     * Batch drawing is faster than calling `draw`, but you must be careful to manage the
-     * flow of code and remember to call `endDraw()` when you're finished.
-     *
-     * If you don't need to draw large numbers of objects it's much safer and easier
-     * to use the `draw` method instead.
-     *
-     * The flow should be:
-     *
-     * ```javascript
-     * // Call once:
-     * RenderTexture.beginDraw();
-     *
-     * // repeat n times:
-     * RenderTexture.batchDraw();
-     * // or
-     * RenderTexture.batchDrawFrame();
-     *
-     * // Call once:
-     * RenderTexture.endDraw();
-     * ```
-     *
-     * Do not call any methods other than `batchDraw`, `batchDrawFrame`, or `endDraw` once you
-     * have started a batch. Also, be very careful not to destroy this Render Texture while the
-     * batch is still open. Doing so will cause a run-time error in the WebGL Renderer.
-     *
-     * You can use the `RenderTexture.texture.isDrawing` boolean property to tell if a batch is
-     * currently open, or not.
-     *
-     * @method Phaser.GameObjects.RenderTexture#endDraw
-     * @since 3.50.0
-     *
-     * @param {boolean} [erase=false] - Draws all objects in this batch using a blend mode of ERASE. This has the effect of erasing any filled pixels in the objects being drawn.
-     *
-     * @return {this} This Render Texture instance.
-     */
-    endDraw: function (erase)
-    {
-        this.texture.endDraw(erase);
+        this.texture.callback(callback);
 
         return this;
     },
@@ -777,7 +645,7 @@ var RenderTexture = new Class({
      */
     snapshot: function (callback, type, encoderOptions)
     {
-        return this.snapshotArea(0, 0, this.width, this.height, callback, type, encoderOptions);
+        return this.texture.snapshot(callback, type, encoderOptions);
     },
 
     /**
@@ -803,7 +671,7 @@ var RenderTexture = new Class({
      */
     snapshotPixel: function (x, y, callback)
     {
-        return this.snapshotArea(x, y, 1, 1, callback, 'pixel');
+        return this.texture.snapshotPixel(x, y, callback);
     },
 
     /**

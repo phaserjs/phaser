@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,6 +9,10 @@ var _FLAG = 1; // 0001
 
 /**
  * Provides methods used for setting the visibility of a Game Object.
+ * The Visible component is mixed into Game Objects to give them a `visible` boolean property
+ * and a `setVisible` method. Visibility is tracked via a bitmask flag on `renderFlags`, so
+ * toggling it is a fast bitwise operation. An invisible Game Object is excluded from the
+ * render pass entirely, but its `update` logic continues to run normally each frame.
  * Should be applied as a mixin and not used directly.
  *
  * @namespace Phaser.GameObjects.Components.Visible

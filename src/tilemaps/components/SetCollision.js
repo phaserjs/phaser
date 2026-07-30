@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,6 +12,10 @@ var SetLayerCollisionIndex = require('./SetLayerCollisionIndex');
  * Sets collision on the given tile or tiles within a layer by index. You can pass in either a
  * single numeric index or an array of indexes: [2, 3, 15, 20]. The `collides` parameter controls if
  * collision will be enabled (true) or disabled (false).
+ *
+ * This function updates both the layer's collision index (which affects any tiles placed in the
+ * future) and, unless `updateLayer` is false, all existing tiles in the layer that match the
+ * given indexes.
  *
  * @function Phaser.Tilemaps.Components.SetCollision
  * @since 3.0.0

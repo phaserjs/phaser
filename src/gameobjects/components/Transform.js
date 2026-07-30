@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -245,7 +245,7 @@ var Transform = {
      *
      * @name Phaser.GameObjects.Components.Transform#rotation
      * @type {number}
-     * @default 1
+     * @default 0
      * @since 3.0.0
      */
     rotation: {
@@ -520,9 +520,13 @@ var Transform = {
             return this.getLocalTransformMatrix(tempMatrix);
         }
 
+        var destroyParentMatrix = false;
+
         if (!parentMatrix)
         {
             parentMatrix = new TransformMatrix();
+
+            destroyParentMatrix = true;
         }
 
         tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
@@ -534,6 +538,11 @@ var Transform = {
             parentMatrix.multiply(tempMatrix, tempMatrix);
 
             parent = parent.parentContainer;
+        }
+
+        if (destroyParentMatrix)
+        {
+            parentMatrix.destroy();
         }
 
         return tempMatrix;
@@ -590,7 +599,41 @@ var Transform = {
     },
 
     /**
-     * Gets the sum total rotation of all of this Game Objects parent Containers.
+     * Gets the world position of this Game Object, factoring in any parent Containers.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getWorldPoint
+     * @since 3.88.0
+     *
+     * @param {Phaser.Math.Vector2} [point] - A Vector2, or point-like object, to store the result in.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - A temporary matrix to hold the Game Object's values.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A temporary matrix to hold parent values.
+     *
+     * @return {Phaser.Math.Vector2} The world position of this Game Object.
+     */
+    getWorldPoint: function (point, tempMatrix, parentMatrix)
+    {
+        if (point === undefined) { point = new Vector2(); }
+
+        var parent = this.parentContainer;
+
+        if (!parent)
+        {
+            point.x = this.x;
+            point.y = this.y;
+
+            return point;
+        }
+
+        var worldTransform = this.getWorldTransformMatrix(tempMatrix, parentMatrix);
+
+        point.x = worldTransform.tx;
+        point.y = worldTransform.ty;
+
+        return point;
+    },
+
+    /**
+     * Gets the sum total rotation of all of this Game Object's parent Containers.
      *
      * The returned value is in radians and will be zero if this Game Object has no parent container.
      *

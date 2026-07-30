@@ -1,6 +1,6 @@
 /**
  * @author       @dxu https://github.com/dxu/matter-collision-events
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@ var MatterCollisionEvents = {
 
     name: 'matter-collision-events',
     version: '0.1.6',
-    for: 'matter-js@^0.19.0',
+    for: 'matter-js@^0.20.0',
     silent: true,
 
     install: function (matter)

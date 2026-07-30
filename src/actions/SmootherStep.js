@@ -1,15 +1,19 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var MathSmootherStep = require('../math/SmootherStep');
 
 /**
+ * Takes an array of Game Objects and distributes values across the specified property using
+ * smootherstep interpolation. Each item in the array is assigned a smootherstep-interpolated
+ * value based on its position, creating an even smoother transition than SmoothStep.
+ *
  * Smootherstep is a sigmoid-like interpolation and clamping function.
- * 
- * The function depends on three parameters, the input x, the "left edge" and the "right edge", with the left edge being assumed smaller than the right edge. The function receives a real number x as an argument and returns 0 if x is less than or equal to the left edge, 1 if x is greater than or equal to the right edge, and smoothly interpolates, using a Hermite polynomial, between 0 and 1 otherwise. The slope of the smoothstep function is zero at both edges. This is convenient for creating a sequence of transitions using smoothstep to interpolate each segment as an alternative to using more sophisticated or expensive interpolation techniques.
+ *
+ * The function depends on three parameters, the input x, the "left edge" and the "right edge", with the left edge being assumed smaller than the right edge. The function receives a real number x as an argument and returns 0 if x is less than or equal to the left edge, 1 if x is greater than or equal to the right edge, and smoothly interpolates, using a Hermite polynomial, between 0 and 1 otherwise. The slope of the smootherstep function is zero at both edges. This is convenient for creating a sequence of transitions using smootherstep to interpolate each segment as an alternative to using more sophisticated or expensive interpolation techniques.
  *
  * @function Phaser.Actions.SmootherStep
  * @since 3.0.0
@@ -20,7 +24,7 @@ var MathSmootherStep = require('../math/SmootherStep');
  * @param {string} property - The property of the Game Object to interpolate.
  * @param {number} min - The minimum interpolation value.
  * @param {number} max - The maximum interpolation value.
- * @param {boolean} [inc=false] - Should the values be incremented? `true` or set (`false`)
+ * @param {boolean} [inc=false] - If `true`, the values are incremented. If `false` (default), the values are set.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that was passed to this Action.
  */

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -45,9 +45,9 @@ var MATH_CONST = require('../../math/const');
  * @since 3.19.0
  *
  * @param {(number|number[])} value - The amount to stagger by, or an array containing two elements representing the min and max values to stagger between.
- * @param {Phaser.Types.Tweens.StaggerConfig} [config] - A Stagger Configuration object.
+ * @param {Phaser.Types.Tweens.StaggerConfig} [options] - A Stagger Configuration object.
  *
- * @return {function} The stagger function.
+ * @return {function} A stagger function that, when invoked by the Tween system for each target, calculates and returns the staggered property value for that target based on its index, the total number of targets, and the stagger configuration provided.
  */
 var StaggerBuilder = function (value, options)
 {

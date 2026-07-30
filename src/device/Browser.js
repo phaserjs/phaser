@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -22,8 +22,9 @@ var OS = require('./OS');
  * @property {boolean} mobileSafari - Set to true if running in Mobile Safari.
  * @property {boolean} opera - Set to true if running in Opera.
  * @property {boolean} safari - Set to true if running in Safari.
- * @property {boolean} silk - Set to true if running in the Silk browser (as used on the Amazon Kindle)
- * @property {boolean} trident - Set to true if running a Trident version of Internet Explorer (IE11+)
+ * @property {boolean} silk - Set to true if running in the Silk browser (as used on the Amazon Kindle).
+ * @property {boolean} trident - Set to true if running a Trident version of Internet Explorer (IE11 or earlier).
+ * @property {boolean} es2019 - Set to true if the browser appears to support ES2019 features.
  * @property {number} chromeVersion - If running in Chrome this will contain the major version number.
  * @property {number} firefoxVersion - If running in Firefox this will contain the major version number.
  * @property {number} ieVersion - If running in Internet Explorer this will contain the major version number. Beyond IE10 you should use Browser.trident and Browser.tridentVersion.
@@ -76,7 +77,7 @@ function init ()
         Browser.firefoxVersion = parseInt(RegExp.$1, 10);
         Browser.es2019 = (Browser.firefoxVersion > 10);
     }
-    else if ((/AppleWebKit/).test(ua) && OS.iOS)
+    else if ((/AppleWebKit\/(?!.*CriOS)/).test(ua) && OS.iOS)
     {
         Browser.mobileSafari = true;
         Browser.es2019 = true;
@@ -86,7 +87,7 @@ function init ()
         Browser.ie = true;
         Browser.ieVersion = parseInt(RegExp.$1, 10);
     }
-    else if ((/Version\/(\d+\.\d+) Safari/).test(ua) && !OS.windowsPhone)
+    else if ((/Version\/(\d+\.\d+(\.\d+)?) Safari/).test(ua) && !OS.windowsPhone)
     {
         Browser.safari = true;
         Browser.safariVersion = parseInt(RegExp.$1, 10);

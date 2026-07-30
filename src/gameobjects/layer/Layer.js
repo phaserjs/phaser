@@ -1,15 +1,14 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var ComponentsToJSON = require('../components/ToJSON');
-var DataManager = require('../../data/DataManager');
 var EventEmitter = require('eventemitter3');
+var GameObject = require('../GameObject');
 var GameObjectEvents = require('../events');
 var List = require('../../structs/List');
 var Render = require('./LayerRender');
@@ -46,10 +45,6 @@ var StableSort = require('../../utils/array/StableSort');
  * display list position of the Layers children, causing it to adjust the order in which they are
  * rendered. Using `setDepth` on a child allows you to override this.
  *
- * Layers can have Post FX Pipelines set, which allows you to easily enable a post pipeline across
- * a whole range of children, which, depending on the effect, can often be far more efficient that doing so
- * on a per-child basis.
- *
  * Layers have no position or size within the Scene. This means you cannot enable a Layer for
  * physics or input, or change the position, rotation or scale of a Layer. They also have no scroll
  * factor, texture, tint, origin, crop or bounds.
@@ -60,8 +55,14 @@ var StableSort = require('../../utils/array/StableSort');
  * However, you can set the Alpha, Blend Mode, Depth, Mask and Visible state of a Layer. These settings
  * will impact all children being rendered by the Layer.
  *
+ * Layers should always be the topmost elements of any scene hierarchy.
+ * They can be children of layers, but not of anything else.
+ *
+ * Until Phaser version 4.1.0, Layer was not a true GameObject.
+ * It is now a true GameObject.
+ *
  * @class Layer
- * @extends Phaser.Structs.List.<Phaser.GameObjects.GameObject>
+ * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.50.0
@@ -70,7 +71,6 @@ var StableSort = require('../../utils/array/StableSort');
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -81,13 +81,13 @@ var Layer = new Class({
     Extends: List,
 
     Mixins: [
+        EventEmitter,
+        GameObject,
         Components.AlphaSingle,
         Components.BlendMode,
         Components.Depth,
         Components.Mask,
-        Components.PostPipeline,
         Components.Visible,
-        EventEmitter,
         Render
     ],
 
@@ -97,6 +97,7 @@ var Layer = new Class({
     {
         List.call(this, scene);
         EventEmitter.call(this);
+        GameObject.call(this, scene, 'Layer');
 
         /**
          * A reference to the Scene to which this Game Object belongs.
@@ -111,166 +112,6 @@ var Layer = new Class({
          * @since 3.50.0
          */
         this.scene = scene;
-
-        /**
-         * Holds a reference to the Display List that contains this Game Object.
-         *
-         * This is set automatically when this Game Object is added to a Scene or Layer.
-         *
-         * You should treat this property as being read-only.
-         *
-         * @name Phaser.GameObjects.Layer#displayList
-         * @type {(Phaser.GameObjects.DisplayList|Phaser.GameObjects.Layer)}
-         * @default null
-         * @since 3.50.0
-         */
-        this.displayList = null;
-
-        /**
-         * A textual representation of this Game Object, i.e. `sprite`.
-         * Used internally by Phaser but is available for your own custom classes to populate.
-         *
-         * @name Phaser.GameObjects.Layer#type
-         * @type {string}
-         * @since 3.50.0
-         */
-        this.type = 'Layer';
-
-        /**
-         * The current state of this Game Object.
-         *
-         * Phaser itself will never modify this value, although plugins may do so.
-         *
-         * Use this property to track the state of a Game Object during its lifetime. For example, it could change from
-         * a state of 'moving', to 'attacking', to 'dead'. The state value should be an integer (ideally mapped to a constant
-         * in your game code), or a string. These are recommended to keep it light and simple, with fast comparisons.
-         * If you need to store complex data about your Game Object, look at using the Data Component instead.
-         *
-         * @name Phaser.GameObjects.Layer#state
-         * @type {(number|string)}
-         * @since 3.50.0
-         */
-        this.state = 0;
-
-        /**
-         * A Layer cannot be placed inside a Container.
-         *
-         * This property is kept purely so a Layer has the same
-         * shape as a Game Object.
-         *
-         * @name Phaser.GameObjects.Layer#parentContainer
-         * @type {Phaser.GameObjects.Container}
-         * @since 3.51.0
-         */
-        this.parentContainer = null;
-
-        /**
-         * The name of this Game Object.
-         * Empty by default and never populated by Phaser, this is left for developers to use.
-         *
-         * @name Phaser.GameObjects.Layer#name
-         * @type {string}
-         * @default ''
-         * @since 3.50.0
-         */
-        this.name = '';
-
-        /**
-         * The active state of this Game Object.
-         * A Game Object with an active state of `true` is processed by the Scenes UpdateList, if added to it.
-         * An active object is one which is having its logic and internal systems updated.
-         *
-         * @name Phaser.GameObjects.Layer#active
-         * @type {boolean}
-         * @default true
-         * @since 3.50.0
-         */
-        this.active = true;
-
-        /**
-         * The Tab Index of the Game Object.
-         * Reserved for future use by plugins and the Input Manager.
-         *
-         * @name Phaser.GameObjects.Layer#tabIndex
-         * @type {number}
-         * @default -1
-         * @since 3.51.0
-         */
-        this.tabIndex = -1;
-
-        /**
-         * A Data Manager.
-         * It allows you to store, query and get key/value paired information specific to this Game Object.
-         * `null` by default. Automatically created if you use `getData` or `setData` or `setDataEnabled`.
-         *
-         * @name Phaser.GameObjects.Layer#data
-         * @type {Phaser.Data.DataManager}
-         * @default null
-         * @since 3.50.0
-         */
-        this.data = null;
-
-        /**
-         * The flags that are compared against `RENDER_MASK` to determine if this Game Object will render or not.
-         * The bits are 0001 | 0010 | 0100 | 1000 set by the components Visible, Alpha, Transform and Texture respectively.
-         * If those components are not used by your custom class then you can use this bitmask as you wish.
-         *
-         * @name Phaser.GameObjects.Layer#renderFlags
-         * @type {number}
-         * @default 15
-         * @since 3.50.0
-         */
-        this.renderFlags = 15;
-
-        /**
-         * A bitmask that controls if this Game Object is drawn by a Camera or not.
-         * Not usually set directly, instead call `Camera.ignore`, however you can
-         * set this property directly using the Camera.id property:
-         *
-         * @example
-         * this.cameraFilter |= camera.id
-         *
-         * @name Phaser.GameObjects.Layer#cameraFilter
-         * @type {number}
-         * @default 0
-         * @since 3.50.0
-         */
-        this.cameraFilter = 0;
-
-        /**
-         * This property is kept purely so a Layer has the same
-         * shape as a Game Object. You cannot input enable a Layer.
-         *
-         * @name Phaser.GameObjects.Layer#input
-         * @type {?Phaser.Types.Input.InteractiveObject}
-         * @default null
-         * @since 3.51.0
-         */
-        this.input = null;
-
-        /**
-         * This property is kept purely so a Layer has the same
-         * shape as a Game Object. You cannot give a Layer a physics body.
-         *
-         * @name Phaser.GameObjects.Layer#body
-         * @type {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody|MatterJS.BodyType)}
-         * @default null
-         * @since 3.51.0
-         */
-        this.body = null;
-
-        /**
-         * This Game Object will ignore all calls made to its destroy method if this flag is set to `true`.
-         * This includes calls that may come from a Group, Container or the Scene itself.
-         * While it allows you to persist a Game Object across Scenes, please understand you are entirely
-         * responsible for managing references to and from this Game Object.
-         *
-         * @name Phaser.GameObjects.Layer#ignoreDestroy
-         * @type {boolean}
-         * @default false
-         * @since 3.50.0
-         */
-        this.ignoreDestroy = false;
 
         /**
          * A reference to the Scene Systems.
@@ -291,7 +132,7 @@ var Layer = new Class({
         this.events = scene.sys.events;
 
         /**
-         * The flag the determines whether Game Objects should be sorted when `depthSort()` is called.
+         * The flag that determines whether Game Objects should be sorted when `depthSort()` is called.
          *
          * @name Phaser.GameObjects.Layer#sortChildrenFlag
          * @type {boolean}
@@ -304,8 +145,6 @@ var Layer = new Class({
         this.addCallback = this.addChildCallback;
         this.removeCallback = this.removeChildCallback;
 
-        this.initPostPipeline();
-
         this.clearAlpha();
 
         this.setBlendMode(BlendModes.SKIP_CHECK);
@@ -317,243 +156,6 @@ var Layer = new Class({
 
         //  Tell the Scene to re-sort the children
         scene.sys.queueDepthSort();
-    },
-
-    /**
-     * Sets the `active` property of this Game Object and returns this Game Object for further chaining.
-     * A Game Object with its `active` property set to `true` will be updated by the Scenes UpdateList.
-     *
-     * @method Phaser.GameObjects.Layer#setActive
-     * @since 3.50.0
-     *
-     * @param {boolean} value - True if this Game Object should be set as active, false if not.
-     *
-     * @return {this} This GameObject.
-     */
-    setActive: function (value)
-    {
-        this.active = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the `name` property of this Game Object and returns this Game Object for further chaining.
-     * The `name` property is not populated by Phaser and is presented for your own use.
-     *
-     * @method Phaser.GameObjects.Layer#setName
-     * @since 3.50.0
-     *
-     * @param {string} value - The name to be given to this Game Object.
-     *
-     * @return {this} This GameObject.
-     */
-    setName: function (value)
-    {
-        this.name = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the current state of this Game Object.
-     *
-     * Phaser itself will never modify the State of a Game Object, although plugins may do so.
-     *
-     * For example, a Game Object could change from a state of 'moving', to 'attacking', to 'dead'.
-     * The state value should typically be an integer (ideally mapped to a constant
-     * in your game code), but could also be a string. It is recommended to keep it light and simple.
-     * If you need to store complex data about your Game Object, look at using the Data Component instead.
-     *
-     * @method Phaser.GameObjects.Layer#setState
-     * @since 3.50.0
-     *
-     * @param {(number|string)} value - The state of the Game Object.
-     *
-     * @return {this} This GameObject.
-     */
-    setState: function (value)
-    {
-        this.state = value;
-
-        return this;
-    },
-
-    /**
-     * Adds a Data Manager component to this Game Object.
-     *
-     * @method Phaser.GameObjects.Layer#setDataEnabled
-     * @since 3.50.0
-     * @see Phaser.Data.DataManager
-     *
-     * @return {this} This GameObject.
-     */
-    setDataEnabled: function ()
-    {
-        if (!this.data)
-        {
-            this.data = new DataManager(this);
-        }
-
-        return this;
-    },
-
-    /**
-     * Allows you to store a key value pair within this Game Objects Data Manager.
-     *
-     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
-     * before setting the value.
-     *
-     * If the key doesn't already exist in the Data Manager then it is created.
-     *
-     * ```javascript
-     * sprite.setData('name', 'Red Gem Stone');
-     * ```
-     *
-     * You can also pass in an object of key value pairs as the first argument:
-     *
-     * ```javascript
-     * sprite.setData({ name: 'Red Gem Stone', level: 2, owner: 'Link', gold: 50 });
-     * ```
-     *
-     * To get a value back again you can call `getData`:
-     *
-     * ```javascript
-     * sprite.getData('gold');
-     * ```
-     *
-     * Or you can access the value directly via the `values` property, where it works like any other variable:
-     *
-     * ```javascript
-     * sprite.data.values.gold += 50;
-     * ```
-     *
-     * When the value is first set, a `setdata` event is emitted from this Game Object.
-     *
-     * If the key already exists, a `changedata` event is emitted instead, along an event named after the key.
-     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata-PlayerLives`.
-     * These events will be emitted regardless if you use this method to set the value, or the direct `values` setter.
-     *
-     * Please note that the data keys are case-sensitive and must be valid JavaScript Object property strings.
-     * This means the keys `gold` and `Gold` are treated as two unique values within the Data Manager.
-     *
-     * @method Phaser.GameObjects.Layer#setData
-     * @since 3.50.0
-     *
-     * @param {(string|object)} key - The key to set the value for. Or an object of key value pairs. If an object the `data` argument is ignored.
-     * @param {*} [data] - The value to set for the given key. If an object is provided as the key this argument is ignored.
-     *
-     * @return {this} This GameObject.
-     */
-    setData: function (key, value)
-    {
-        if (!this.data)
-        {
-            this.data = new DataManager(this);
-        }
-
-        this.data.set(key, value);
-
-        return this;
-    },
-
-    /**
-     * Increase a value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is increased from 0.
-     *
-     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
-     * before setting the value.
-     *
-     * If the key doesn't already exist in the Data Manager then it is created.
-     *
-     * When the value is first set, a `setdata` event is emitted from this Game Object.
-     *
-     * @method Phaser.GameObjects.Layer#incData
-     * @since 3.50.0
-     *
-     * @param {(string|object)} key - The key to increase the value for.
-     * @param {*} [data] - The value to increase for the given key.
-     *
-     * @return {this} This GameObject.
-     */
-    incData: function (key, value)
-    {
-        if (!this.data)
-        {
-            this.data = new DataManager(this);
-        }
-
-        this.data.inc(key, value);
-
-        return this;
-    },
-
-    /**
-     * Toggle a boolean value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is toggled from false.
-     *
-     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
-     * before setting the value.
-     *
-     * If the key doesn't already exist in the Data Manager then it is created.
-     *
-     * When the value is first set, a `setdata` event is emitted from this Game Object.
-     *
-     * @method Phaser.GameObjects.Layer#toggleData
-     * @since 3.50.0
-     *
-     * @param {(string|object)} key - The key to toggle the value for.
-     *
-     * @return {this} This GameObject.
-     */
-    toggleData: function (key)
-    {
-        if (!this.data)
-        {
-            this.data = new DataManager(this);
-        }
-
-        this.data.toggle(key);
-
-        return this;
-    },
-
-    /**
-     * Retrieves the value for the given key in this Game Objects Data Manager, or undefined if it doesn't exist.
-     *
-     * You can also access values via the `values` object. For example, if you had a key called `gold` you can do either:
-     *
-     * ```javascript
-     * sprite.getData('gold');
-     * ```
-     *
-     * Or access the value directly:
-     *
-     * ```javascript
-     * sprite.data.values.gold;
-     * ```
-     *
-     * You can also pass in an array of keys, in which case an array of values will be returned:
-     *
-     * ```javascript
-     * sprite.getData([ 'gold', 'armor', 'health' ]);
-     * ```
-     *
-     * This approach is useful for destructuring arrays in ES6.
-     *
-     * @method Phaser.GameObjects.Layer#getData
-     * @since 3.50.0
-     *
-     * @param {(string|string[])} key - The key of the value to retrieve, or an array of keys.
-     *
-     * @return {*} The value belonging to the given key, or an array of values, the order of which will match the input array.
-     */
-    getData: function (key)
-    {
-        if (!this.data)
-        {
-            this.data = new DataManager(this);
-        }
-
-        return this.data.get(key);
     },
 
     /**
@@ -605,61 +207,6 @@ var Layer = new Class({
     },
 
     /**
-     * This callback is invoked when this Game Object is added to a Scene.
-     *
-     * Can be overriden by custom Game Objects, but be aware of some Game Objects that
-     * will use this, such as Sprites, to add themselves into the Update List.
-     *
-     * You can also listen for the `ADDED_TO_SCENE` event from this Game Object.
-     *
-     * @method Phaser.GameObjects.Layer#addedToScene
-     * @since 3.50.0
-     */
-    addedToScene: function ()
-    {
-    },
-
-    /**
-     * This callback is invoked when this Game Object is removed from a Scene.
-     *
-     * Can be overriden by custom Game Objects, but be aware of some Game Objects that
-     * will use this, such as Sprites, to removed themselves from the Update List.
-     *
-     * You can also listen for the `REMOVED_FROM_SCENE` event from this Game Object.
-     *
-     * @method Phaser.GameObjects.Layer#removedFromScene
-     * @since 3.50.0
-     */
-    removedFromScene: function ()
-    {
-    },
-
-    /**
-     * To be overridden by custom GameObjects. Allows base objects to be used in a Pool.
-     *
-     * @method Phaser.GameObjects.Layer#update
-     * @since 3.50.0
-     *
-     * @param {...*} [args] - args
-     */
-    update: function ()
-    {
-    },
-
-    /**
-     * Returns a JSON representation of the Game Object.
-     *
-     * @method Phaser.GameObjects.Layer#toJSON
-     * @since 3.50.0
-     *
-     * @return {Phaser.Types.GameObjects.JSONGameObject} A JSON representation of the Game Object.
-     */
-    toJSON: function ()
-    {
-        return ComponentsToJSON(this);
-    },
-
-    /**
      * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
      * Also checks the Game Object against the given Cameras exclusion list.
      *
@@ -676,48 +223,6 @@ var Layer = new Class({
     },
 
     /**
-     * Returns an array containing the display list index of either this Game Object, or if it has one,
-     * its parent Container. It then iterates up through all of the parent containers until it hits the
-     * root of the display list (which is index 0 in the returned array).
-     *
-     * Used internally by the InputPlugin but also useful if you wish to find out the display depth of
-     * this Game Object and all of its ancestors.
-     *
-     * @method Phaser.GameObjects.Layer#getIndexList
-     * @since 3.51.0
-     *
-     * @return {number[]} An array of display list position indexes.
-     */
-    getIndexList: function ()
-    {
-        // eslint-disable-next-line consistent-this
-        var child = this;
-        var parent = this.parentContainer;
-
-        var indexes = [];
-
-        while (parent)
-        {
-            indexes.unshift(parent.getIndex(child));
-
-            child = parent;
-
-            if (!parent.parentContainer)
-            {
-                break;
-            }
-            else
-            {
-                parent = parent.parentContainer;
-            }
-        }
-
-        indexes.unshift(this.displayList.getIndex(child));
-
-        return indexes;
-    },
-
-    /**
      * Internal method called from `List.addCallback`.
      *
      * @method Phaser.GameObjects.Layer#addChildCallback
@@ -730,7 +235,9 @@ var Layer = new Class({
      */
     addChildCallback: function (gameObject)
     {
-        if (gameObject.displayList && gameObject.displayList !== this)
+        var displayList = gameObject.displayList;
+
+        if (displayList && displayList !== this)
         {
             gameObject.removeFromDisplayList();
         }
@@ -813,14 +320,14 @@ var Layer = new Class({
     },
 
     /**
-     * Returns an array which contains all Game Objects within this Layer.
+     * Returns a reference to the array which contains all Game Objects in this Layer.
      *
-     * This is a reference to the main list array, not a copy of it, so be careful not to modify it.
+     * This is a reference, not a copy of it, so be very careful not to mutate it.
      *
      * @method Phaser.GameObjects.Layer#getChildren
      * @since 3.50.0
      *
-     * @return {Phaser.GameObjects.GameObject[]} The group members.
+     * @return {Phaser.GameObjects.GameObject[]} An array of Game Objects within this Layer.
      */
     getChildren: function ()
     {
@@ -828,93 +335,576 @@ var Layer = new Class({
     },
 
     /**
-     * Adds this Layer to the given Display List.
+     * Return an array listing the events for which the emitter has registered listeners.
      *
-     * If no Display List is specified, it will default to the Display List owned by the Scene to which
-     * this Layer belongs.
+     * @method Phaser.GameObjects.Layer#eventNames
+     * @since 3.50.0
      *
-     * A Layer can only exist on one Display List at any given time, but may move freely between them.
-     *
-     * If this Layer is already on another Display List when this method is called, it will first
-     * be removed from it, before being added to the new list.
-     *
-     * You can query which list it is on by looking at the `Phaser.GameObjects.Layer#displayList` property.
-     *
-     * If a Layer isn't on any display list, it will not be rendered. If you just wish to temporarily
-     * disable it from rendering, consider using the `setVisible` method, instead.
-     *
-     * @method Phaser.GameObjects.Layer#addToDisplayList
-     * @fires Phaser.Scenes.Events#ADDED_TO_SCENE
-     * @fires Phaser.GameObjects.Events#ADDED_TO_SCENE
-     * @since 3.60.0
-     *
-     * @param {(Phaser.GameObjects.DisplayList|Phaser.GameObjects.Layer)} [displayList] - The Display List to add to. Defaults to the Scene Display List.
-     *
-     * @return {this} This Layer.
+     * @return {Array.<string|symbol>}
      */
-    addToDisplayList: function (displayList)
-    {
-        if (displayList === undefined) { displayList = this.scene.sys.displayList; }
-
-        if (this.displayList && this.displayList !== displayList)
-        {
-            this.removeFromDisplayList();
-        }
-
-        //  Don't repeat if it's already on this list
-        if (!displayList.exists(this))
-        {
-            this.displayList = displayList;
-
-            displayList.add(this, true);
-
-            displayList.queueDepthSort();
-
-            this.emit(GameObjectEvents.ADDED_TO_SCENE, this, this.scene);
-
-            displayList.events.emit(SceneEvents.ADDED_TO_SCENE, this, this.scene);
-        }
-
-        return this;
-    },
 
     /**
-     * Removes this Layer from the Display List it is currently on.
+     * Return the listeners registered for a given event.
      *
-     * A Layer can only exist on one Display List at any given time, but may move freely removed
-     * and added back at a later stage.
+     * @method Phaser.GameObjects.Layer#listeners
+     * @since 3.50.0
      *
-     * You can query which list it is on by looking at the `Phaser.GameObjects.GameObject#displayList` property.
+     * @param {(string|symbol)} event - The event name.
      *
-     * If a Layer isn't on any Display List, it will not be rendered. If you just wish to temporarily
-     * disable it from rendering, consider using the `setVisible` method, instead.
-     *
-     * @method Phaser.GameObjects.Layer#removeFromDisplayList
-     * @fires Phaser.Scenes.Events#REMOVED_FROM_SCENE
-     * @fires Phaser.GameObjects.Events#REMOVED_FROM_SCENE
-     * @since 3.60.0
-     *
-     * @return {this} This Layer.
+     * @return {Function[]} The registered listeners.
      */
-    removeFromDisplayList: function ()
-    {
-        var displayList = this.displayList || this.scene.sys.displayList;
 
-        if (displayList.exists(this))
-        {
-            displayList.remove(this, true);
+    /**
+     * Return the number of listeners listening to a given event.
+     *
+     * @method Phaser.GameObjects.Layer#listenerCount
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     *
+     * @return {number} The number of listeners.
+     */
 
-            displayList.queueDepthSort();
+    /**
+     * Calls each of the listeners registered for a given event.
+     *
+     * @method Phaser.GameObjects.Layer#emit
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {...*} [args] - Additional arguments that will be passed to the event handler.
+     *
+     * @return {boolean} `true` if the event had listeners, else `false`.
+     */
 
-            this.displayList = null;
+    /**
+     * Add a listener for a given event.
+     *
+     * @method Phaser.GameObjects.Layer#on
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {function} fn - The listener function.
+     * @param {*} [context=this] - The context to invoke the listener with.
+     *
+     * @return {this} This Layer instance.
+     */
 
-            this.emit(GameObjectEvents.REMOVED_FROM_SCENE, this, this.scene);
+    /**
+     * Add a listener for a given event.
+     *
+     * @method Phaser.GameObjects.Layer#addListener
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {function} fn - The listener function.
+     * @param {*} [context=this] - The context to invoke the listener with.
+     *
+     * @return {this} This Layer instance.
+     */
 
-            displayList.events.emit(SceneEvents.REMOVED_FROM_SCENE, this, this.scene);
-        }
+    /**
+     * Add a one-time listener for a given event.
+     *
+     * @method Phaser.GameObjects.Layer#once
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {function} fn - The listener function.
+     * @param {*} [context=this] - The context to invoke the listener with.
+     *
+     * @return {this} This Layer instance.
+     */
 
-        return this;
-    },
+    /**
+     * Remove the listeners of a given event.
+     *
+     * @method Phaser.GameObjects.Layer#removeListener
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {function} [fn] - Only remove the listeners that match this function.
+     * @param {*} [context] - Only remove the listeners that have this context.
+     * @param {boolean} [once] - Only remove one-time listeners.
+     *
+     * @return {this} This Layer instance.
+     */
+
+    /**
+     * Remove the listeners of a given event.
+     *
+     * @method Phaser.GameObjects.Layer#off
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} event - The event name.
+     * @param {function} [fn] - Only remove the listeners that match this function.
+     * @param {*} [context] - Only remove the listeners that have this context.
+     * @param {boolean} [once] - Only remove one-time listeners.
+     *
+     * @return {this} This Layer instance.
+     */
+
+    /**
+     * Remove all listeners, or those of the specified event.
+     *
+     * @method Phaser.GameObjects.Layer#removeAllListeners
+     * @since 3.50.0
+     *
+     * @param {(string|symbol)} [event] - The event name.
+     *
+     * @return {this} This Layer instance.
+     */
+
+    // --------------
+    // Append type declarations from List, which won't otherwise be picked up by the type build system.
+    // --------------
+
+    /**
+     * The parent of this list.
+     *
+     * @name Phaser.GameObjects.Layer#parent
+     * @type {*}
+     * @since 3.0.0
+     */
+
+    /**
+     * The objects that belong to this collection.
+     *
+     * @name Phaser.GameObjects.Layer#list
+     * @type {Array.<Phaser.GameObjects.GameObject>}
+     * @default []
+     * @since 3.0.0
+     */
+
+    /**
+     * The index of the current element.
+     *
+     * This is used internally when iterating through the list with the {@link #first}, {@link #last}, {@link #next}, and {@link #previous} properties.
+     *
+     * @name Phaser.GameObjects.Layer#position
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+
+    /**
+     * A callback that is invoked every time a child is added to this list.
+     *
+     * @name Phaser.GameObjects.Layer#addCallback
+     * @type {function}
+     * @since 3.4.0
+     */
+
+    /**
+     * A callback that is invoked every time a child is removed from this list.
+     *
+     * @name Phaser.GameObjects.Layer#removeCallback
+     * @type {function}
+     * @since 3.4.0
+     */
+
+    /**
+     * The property key to sort by.
+     *
+     * @name Phaser.GameObjects.Layer#_sortKey
+     * @type {string}
+     * @since 3.4.0
+     */
+
+    /**
+     * Adds the given item to the end of the list. Each item must be unique.
+     *
+     * @method Phaser.GameObjects.Layer#add
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject|Array.<Phaser.GameObjects.GameObject>} child - The item, or array of items, to add to the list.
+     * @param {boolean} [skipCallback=false] - Skip calling the List.addCallback if this child is added successfully.
+     *
+     * @return {*} The list's underlying array.
+     */
+
+    /**
+     * Adds an item to list, starting at a specified index. Each item must be unique within the list.
+     *
+     * @method Phaser.GameObjects.Layer#addAt
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject|Array.<Phaser.GameObjects.GameObject>} child - The item, or array of items, to add to the list.
+     * @param {number} [index=0] - The index in the list at which the element(s) will be inserted.
+     * @param {boolean} [skipCallback=false] - Skip calling the List.addCallback if this child is added successfully.
+     *
+     * @return {Array.<Phaser.GameObjects.GameObject>} The List's underlying array.
+     */
+
+    /**
+     * Retrieves the item at a given position inside the List.
+     *
+     * @method Phaser.GameObjects.Layer#getAt
+     * @since 3.0.0
+     *
+     * @param {number} index - The index of the item.
+     *
+     * @return {Phaser.GameObjects.GameObject|undefined} The retrieved item, or `undefined` if it's outside the List's bounds.
+     */
+
+    /**
+     * Locates an item within the List and returns its index.
+     *
+     * @method Phaser.GameObjects.Layer#getIndex
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The item to locate.
+     *
+     * @return {number} The index of the item within the List, or -1 if it's not in the List.
+     */
+
+    /**
+     * Sort the contents of this List so the items are in order based on the given property.
+     * For example, `sort('alpha')` would sort the List contents based on the value of their `alpha` property.
+     *
+     * @method Phaser.GameObjects.Layer#sort
+     * @since 3.0.0
+     *
+     * @param {string} property - The property to lexically sort by.
+     * @param {function} [handler] - Provide your own custom handler function. Will receive 2 children which it should compare and return a number (negative if the first should come before the second, positive if after, zero if equal).
+     *
+     * @return {Phaser.GameObjects.Layer} This List object.
+     */
+
+    /**
+     * Searches for the first instance of a child with its `name`
+     * property matching the given argument. Should more than one child have
+     * the same name only the first is returned.
+     *
+     * @method Phaser.GameObjects.Layer#getByName
+     * @since 3.0.0
+     *
+     * @param {string} name - The name to search for.
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first child with a matching name, or null if none were found.
+     */
+
+    /**
+     * Returns a random child from the list.
+     *
+     * @method Phaser.GameObjects.Layer#getRandom
+     * @since 3.0.0
+     *
+     * @param {number} [startIndex=0] - Offset from the front of the list (lowest child).
+     * @param {number} [length=(to top)] - Restriction on the number of values you want to randomly select from.
+     *
+     * @return {?Phaser.GameObjects.GameObject} A random child of this List.
+     */
+
+    /**
+     * Returns the first element in a given part of the List which matches a specific criterion.
+     *
+     * @method Phaser.GameObjects.Layer#getFirst
+     * @since 3.0.0
+     *
+     * @param {string} property - The name of the property to test or a falsey value to have no criterion.
+     * @param {Phaser.GameObjects.GameObject|undefined} value - The value to test the `property` against, or `undefined` to allow any value and only check for existence.
+     * @param {number} [startIndex=0] - The position in the List to start the search at.
+     * @param {number} [endIndex] - The position in the List to optionally stop the search at. It won't be checked.
+     *
+     * @return {?Phaser.GameObjects.GameObject} The first item which matches the given criterion, or `null` if no such item exists.
+     */
+
+    /**
+     * Returns all children in this List.
+     *
+     * You can optionally specify a matching criteria using the `property` and `value` arguments.
+     *
+     * For example: `getAll('parent')` would return only children that have a property called `parent`.
+     *
+     * You can also specify a value to compare the property to:
+     *
+     * `getAll('visible', true)` would return only children that have their visible property set to `true`.
+     *
+     * Optionally you can specify a start and end index. For example if this List had 100 children,
+     * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
+     * the first 50 children in the List.
+     *
+     * @method Phaser.GameObjects.Layer#getAll
+     * @since 3.0.0
+     *
+     * @param {string} [property] - An optional property to test against the value argument.
+     * @param {any} [value] - If property is set then Child.property must strictly equal this value to be included in the results.
+     * @param {number} [startIndex] - The first child index to start the search from.
+     * @param {number} [endIndex] - The last child index to search up until.
+     *
+     * @return {Array.<Phaser.GameObjects.GameObject>} All items of the List which match the given criterion, if any.
+     */
+
+    /**
+     * Returns the total number of items in the List which have a property matching the given value.
+     *
+     * @method Phaser.GameObjects.Layer#count
+     * @since 3.0.0
+     *
+     * @param {string} property - The property to test on each item.
+     * @param {Phaser.GameObjects.GameObject} value - The value to test the property against.
+     *
+     * @return {number} The total number of matching elements.
+     */
+
+    /**
+     * Swaps the positions of two items in the list.
+     *
+     * @method Phaser.GameObjects.Layer#swap
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The first item to swap.
+     * @param {Phaser.GameObjects.GameObject} child2 - The second item to swap.
+     */
+
+    /**
+     * Moves an item in the List to a new position.
+     *
+     * @method Phaser.GameObjects.Layer#moveTo
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The item to move.
+     * @param {number} index - The new position to move the item to.
+     *
+     * @return {Phaser.GameObjects.GameObject} The item that was moved.
+     */
+
+    /**
+     * Moves an item above another one in the List.
+     * If the given item is already above the other, it isn't moved.
+     * Above means toward the end of the List.
+     *
+     * @method Phaser.GameObjects.Layer#moveAbove
+     * @since 3.55.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The element to move above base element.
+     * @param {Phaser.GameObjects.GameObject} child2 - The base element.
+     */
+
+    /**
+     * Moves an item below another one in the List.
+     * If the given item is already below the other, it isn't moved.
+     * Below means toward the start of the List.
+     *
+     * @method Phaser.GameObjects.Layer#moveBelow
+     * @since 3.55.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child1 - The element to move below base element.
+     * @param {Phaser.GameObjects.GameObject} child2 - The base element.
+     */
+
+    /**
+     * Removes one or many items from the List.
+     *
+     * @method Phaser.GameObjects.Layer#remove
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject|Array.<Phaser.GameObjects.GameObject>} child - The item, or array of items, to remove.
+     * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
+     *
+     * @return {Phaser.GameObjects.GameObject|Array.<Phaser.GameObjects.GameObject>} The item, or array of items, which were successfully removed from the List.
+     */
+
+    /**
+     * Removes the item at the given position in the List.
+     *
+     * @method Phaser.GameObjects.Layer#removeAt
+     * @since 3.0.0
+     *
+     * @param {number} index - The position to remove the item from.
+     * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
+     *
+     * @return {Phaser.GameObjects.GameObject} The item that was removed.
+     */
+
+    /**
+     * Removes the items within the given range in the List.
+     *
+     * @method Phaser.GameObjects.Layer#removeBetween
+     * @since 3.0.0
+     *
+     * @param {number} [startIndex=0] - The index to start removing from.
+     * @param {number} [endIndex] - The position to stop removing at. The item at this position won't be removed.
+     * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
+     *
+     * @return {Array.<Phaser.GameObjects.GameObject>} An array of the items which were removed.
+     */
+
+    /**
+     * Removes all the items.
+     *
+     * @method Phaser.GameObjects.Layer#removeAll
+     * @since 3.0.0
+     *
+     * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
+     *
+     * @return {this} This List object.
+     */
+
+    /**
+     * Brings the given child to the top of this List.
+     *
+     * @method Phaser.GameObjects.Layer#bringToTop
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The item to bring to the top of the List.
+     *
+     * @return {Phaser.GameObjects.GameObject} The item which was moved.
+     */
+
+    /**
+     * Sends the given child to the bottom of this List.
+     *
+     * @method Phaser.GameObjects.Layer#sendToBack
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The item to send to the back of the list.
+     *
+     * @return {Phaser.GameObjects.GameObject} The item which was moved.
+     */
+
+    /**
+     * Moves the given child up one place in this List unless it's already at the top.
+     *
+     * @method Phaser.GameObjects.Layer#moveUp
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The item to move up.
+     *
+     * @return {Phaser.GameObjects.GameObject} The item which was moved.
+     */
+
+    /**
+     * Moves the given child down one place in this List unless it's already at the bottom.
+     *
+     * @method Phaser.GameObjects.Layer#moveDown
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The item to move down.
+     *
+     * @return {Phaser.GameObjects.GameObject} The item which was moved.
+     */
+
+    /**
+     * Reverses the order of all children in this List.
+     *
+     * @method Phaser.GameObjects.Layer#reverse
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Layer} This List object.
+     */
+
+    /**
+     * Shuffles the items in the list.
+     *
+     * @method Phaser.GameObjects.Layer#shuffle
+     * @since 3.0.0
+     *
+     * @return {Phaser.GameObjects.Layer} This List object.
+     */
+
+    /**
+     * Replaces a child of this List with the given newChild. The newChild cannot be a member of this List.
+     *
+     * @method Phaser.GameObjects.Layer#replace
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} oldChild - The child in this List that will be replaced.
+     * @param {Phaser.GameObjects.GameObject} newChild - The child to be inserted into this List.
+     *
+     * @return {Phaser.GameObjects.GameObject} Returns the oldChild that was replaced within this List.
+     */
+
+    /**
+     * Checks if an item exists within the List.
+     *
+     * @method Phaser.GameObjects.Layer#exists
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} child - The item to check for the existence of.
+     *
+     * @return {boolean} `true` if the item is found in the list, otherwise `false`.
+     */
+
+    /**
+     * Sets the property `key` to the given value on all members of this List.
+     *
+     * @method Phaser.GameObjects.Layer#setAll
+     * @since 3.0.0
+     *
+     * @param {string} property - The name of the property to set.
+     * @param {any} value - The value to set the property to.
+     * @param {number} [startIndex] - The first child index to start the search from.
+     * @param {number} [endIndex] - The last child index to search up until.
+     */
+
+    /**
+     * Passes all children to the given callback.
+     *
+     * @method Phaser.GameObjects.Layer#each
+     * @since 3.0.0
+     *
+     * @param {EachListCallback.<Phaser.GameObjects.GameObject>} callback - The function to call.
+     * @param {any} [context] - Value to use as `this` when executing callback.
+     * @param {...any} [args] - Additional arguments that will be passed to the callback, after the child.
+     */
+
+    /**
+     * Clears the List and recreates its internal array.
+     *
+     * @method Phaser.GameObjects.Layer#shutdown
+     * @since 3.0.0
+     */
+
+    /**
+     * The number of items inside the List.
+     *
+     * @name Phaser.GameObjects.Layer#length
+     * @type {number}
+     * @readonly
+     * @since 3.0.0
+     */
+
+    /**
+     * The first item in the List or `null` for an empty List.
+     *
+     * @name Phaser.GameObjects.Layer#first
+     * @type {?Phaser.GameObjects.GameObject}
+     * @readonly
+     * @since 3.0.0
+     */
+
+    /**
+     * The last item in the List, or `null` for an empty List.
+     *
+     * @name Phaser.GameObjects.Layer#last
+     * @type {?Phaser.GameObjects.GameObject}
+     * @readonly
+     * @since 3.0.0
+     */
+
+    /**
+     * The next item in the List, or `null` if the entire List has been traversed.
+     *
+     * This property can be read successively after reading {@link #first} or manually setting the {@link #position} to iterate the List.
+     *
+     * @name Phaser.GameObjects.Layer#next
+     * @type {?Phaser.GameObjects.GameObject}
+     * @readonly
+     * @since 3.0.0
+     */
+
+    /**
+     * The previous item in the List, or `null` if the entire List has been traversed.
+     *
+     * This property can be read successively after reading {@link #last} or manually setting the {@link #position} to iterate the List backwards.
+     *
+     * @name Phaser.GameObjects.Layer#previous
+     * @type {?Phaser.GameObjects.GameObject}
+     * @readonly
+     * @since 3.0.0
+     */
 
     /**
      * Destroys this Layer removing it from the Display List and Update List and
@@ -933,7 +923,7 @@ var Layer = new Class({
      * @method Phaser.GameObjects.Layer#destroy
      * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.50.0
-     * 
+     *
      * @param {boolean} [fromScene=false] - `True` if this Game Object is being destroyed by the Scene, `false` if not.
      */
     destroy: function (fromScene)
@@ -944,7 +934,7 @@ var Layer = new Class({
             return;
         }
 
-        this.emit(GameObjectEvents.DESTROY, this);
+        GameObject.prototype.destroy.call(this, fromScene);
 
         var list = this.list;
 
@@ -953,30 +943,7 @@ var Layer = new Class({
             list[0].destroy(fromScene);
         }
 
-        this.removeAllListeners();
-
-        this.resetPostPipeline(true);
-
-        if (this.displayList)
-        {
-            this.displayList.remove(this, true);
-
-            this.displayList.queueDepthSort();
-        }
-
-        if (this.data)
-        {
-            this.data.destroy();
-
-            this.data = undefined;
-        }
-
-        this.active = false;
-        this.visible = false;
-
         this.list = undefined;
-        this.scene = undefined;
-        this.displayList = undefined;
         this.systems = undefined;
         this.events = undefined;
     }

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,14 +10,16 @@ var Vector2 = require('../../math/Vector2');
 var tempVec = new Vector2();
 
 /**
- * Gets the corners of the Hexagonal Tile as an array of Vector2s.
+ * Calculates and returns the six corner positions of a hexagonal tile as an array of Vector2 objects in world space.
+ * The tile is identified by its tile grid coordinates and the corners are computed relative to the tile's world center,
+ * taking into account the layer's stagger axis and any scale applied to the tilemap layer.
  *
  * @function Phaser.Tilemaps.Components.HexagonalGetTileCorners
  * @since 3.60.0
  *
  * @param {number} tileX - The x coordinate, in tiles, not pixels.
  * @param {number} tileY - The y coordinate, in tiles, not pixels.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile index from the world values.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when converting tile coordinates to world position.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {Phaser.Math.Vector2[]} An array of Vector2s corresponding to the world XY location of each tile corner.

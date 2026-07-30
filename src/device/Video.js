@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,24 +14,25 @@ var GetFastValue = require('../utils/object/GetFastValue');
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.video` from within any Scene.
  *
- * In Phaser 3.20 the properties were renamed to drop the 'Video' suffix.
- *
  * @typedef {object} Phaser.Device.Video
  * @since 3.0.0
  *
  * @property {boolean} h264 - Can this device play h264 mp4 video files?
  * @property {boolean} hls - Can this device play hls video files?
+ * @property {boolean} mov - Can this device play mov video files?
  * @property {boolean} mp4 - Can this device play h264 mp4 video files?
  * @property {boolean} m4v - Can this device play m4v (typically mp4) video files?
  * @property {boolean} ogg - Can this device play ogg video files?
  * @property {boolean} vp9 - Can this device play vp9 video files?
  * @property {boolean} webm - Can this device play webm video files?
- * @property {function} getVideoURL - Returns the first video URL that can be played by this browser.
+ * @property {boolean} hasRequestVideoFrame - Does this device support the `requestVideoFrameCallback` API?
+ * @property {function} getVideoURL - Given an array of video URLs (or a single URL string), returns an object with `url` and `type` properties for the first entry that can be played by this browser, or `null` if none of the provided formats are supported.
  */
 var Video = {
 
     h264: false,
     hls: false,
+    mov: false,
     mp4: false,
     m4v: false,
     ogg: false,
@@ -66,6 +67,11 @@ function init ()
                 // Without QuickTime, this value will be `undefined`. github.com/Modernizr/Modernizr/issues/546
                 Video.h264 = true;
                 Video.mp4 = true;
+            }
+
+            if (videoElement.canPlayType('video/quicktime4; codecs="avc1.42E01E"').replace(no, ''))
+            {
+                Video.mov = true;
             }
 
             if (videoElement.canPlayType('video/x-m4v').replace(no, ''))

@@ -34,7 +34,7 @@ var MatterAttractors =
          * This is called automatically by the plugin.
          * @function MatterAttractors.Body.init
          * @param {Matter.Body} body The body to init.
-         * @returns {void} No return value.
+         * @return {void} No return value.
          */
         init: function (body)
         {
@@ -49,7 +49,7 @@ var MatterAttractors =
          * This is called automatically by the plugin.
          * @function MatterAttractors.Engine.update
          * @param {Matter.Engine} engine The engine to update.
-         * @returns {void} No return value.
+         * @return {void} No return value.
          */
         update: function (engine)
         {
@@ -108,7 +108,7 @@ var MatterAttractors =
          * @function MatterAttractors.Attractors.gravity
          * @param {Matter.Body} bodyA The first body.
          * @param {Matter.Body} bodyB The second body.
-         * @returns {void} No return value.
+         * @return {void} No return value.
          */
         gravity: function (bodyA, bodyB)
         {
@@ -149,5 +149,5 @@ module.exports = MatterAttractors;
  * @callback AttractorFunction
  * @param {Matter.Body} bodyA
  * @param {Matter.Body} bodyB
- * @returns {(Vector|undefined)} a force vector (optional)
+ * @return {(Vector|undefined)} a force vector (optional)
  */

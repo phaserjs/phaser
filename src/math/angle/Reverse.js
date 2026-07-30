@@ -1,13 +1,15 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Normalize = require('./Normalize');
 
 /**
- * Reverse the given angle.
+ * Reverses the given angle by adding π radians (180 degrees) to it, then normalizing
+ * the result to the range of [0, 2π). This returns the angle pointing in the exact
+ * opposite direction to the one provided.
  *
  * @function Phaser.Math.Angle.Reverse
  * @since 3.0.0

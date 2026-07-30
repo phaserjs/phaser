@@ -1,15 +1,24 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Events = require('./events');
 
 /**
- * The Visibility Handler is responsible for listening out for document level visibility change events.
- * This includes `visibilitychange` if the browser supports it, and blur and focus events. It then uses
- * the provided Event Emitter and fires the related events.
+ * The Visibility Handler is responsible for listening for document-level visibility change events and
+ * window blur/focus events, then re-emitting them through the Game's Event Emitter so that the rest of
+ * the framework can respond appropriately — for example, pausing the game loop when the player switches
+ * tabs or minimizes the browser window, and resuming it when they return.
+ *
+ * It listens for the standard `visibilitychange` event where supported, and falls back to vendor-prefixed
+ * equivalents (`webkitvisibilitychange`, `mozvisibilitychange`, `msvisibilitychange`) for older browsers.
+ * Window-level `blur` and `focus` events are also captured to handle cases where the tab remains visible
+ * but the window loses focus.
+ *
+ * If the game configuration has `autoFocus` enabled, the handler will also call `window.focus()` during
+ * setup to ensure the game captures keyboard input immediately on load.
  *
  * @function Phaser.Core.VisibilityHandler
  * @fires Phaser.Core.Events#BLUR

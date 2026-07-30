@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -83,6 +83,12 @@ var ScenePluginFile = new Class({
      * Called automatically by Loader.nextFile.
      * This method controls what extra work this File does with its loaded data.
      *
+     * If the plugin was provided as a class reference (i.e. the `url` parameter was a function), it is
+     * installed directly into the Scene via the Plugin Manager. Otherwise, the loaded script text is
+     * injected into the document by appending a new `<script>` element to `document.head`, and the
+     * plugin class is then retrieved from `window` using the file key before being installed into the
+     * Scene via `pluginManager.installScenePlugin`.
+     *
      * @method Phaser.Loader.FileTypes.ScenePluginFile#onProcess
      * @since 3.8.0
      */
@@ -156,7 +162,8 @@ var ScenePluginFile = new Class({
  * Once the file has finished loading it will automatically be converted into a script element
  * via `document.createElement('script')`. It will have its language set to JavaScript, `defer` set to
  * false and then the resulting element will be appended to `document.head`. Any code then in the
- * script will be executed. It will then be passed to the Phaser PluginCache.register method.
+ * script will be executed. The plugin class is then retrieved from the global `window` object using
+ * the file key and installed into the Scene via the Plugin Manager using `installScenePlugin`.
  *
  * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
  *

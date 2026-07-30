@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -78,8 +78,10 @@ var Pan = new Class({
         this.source = new Vector2();
 
         /**
-         * The constantly updated value based on zoom.
-         * 
+         * The zoom-adjusted scroll coordinates of the camera, recalculated each frame during the pan
+         * to account for the current camera zoom level. Used as an intermediate value when interpolating
+         * between the source and destination scroll positions.
+         *
          * @name Phaser.Cameras.Scene2D.Effects.Pan#current
          * @type {Phaser.Math.Vector2}
          * @since 3.11.0
@@ -135,7 +137,7 @@ var Pan = new Class({
         this._onUpdate;
 
         /**
-         * On Complete callback scope.
+         * The context in which the `_onUpdate` callback is invoked.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Pan#_onUpdateScope
          * @type {any}

@@ -6,8 +6,8 @@ let destdir = './src/renderer/webgl/shaders/';
 let files = fs.readdirSync(srcdir);
 
 let index = `/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -69,7 +69,7 @@ files.forEach(function (file, c) {
     {
         inc = inc.concat('Frag');
     }
-    else
+    else if (file.substr(-4) === 'vert')
     {
         inc = inc.concat('Vert');
     }

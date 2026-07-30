@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18,7 +18,13 @@ var StableSort = require('../utils/array/StableSort');
 
 /**
  * @classdesc
- * List is a generic implementation of an ordered list which contains utility methods for retrieving, manipulating, and iterating items.
+ * A List is a generic, ordered collection of items that provides a rich set of utility methods for
+ * adding, removing, sorting, searching, and iterating its contents. Unlike a plain array, a List
+ * supports optional add and remove callbacks, stable sorting, named item lookup, positional
+ * traversal via the `first`, `last`, `next`, and `previous` properties, and safe in-place
+ * manipulation (swap, move, replace, shuffle). It is used throughout Phaser as the backing
+ * structure for display lists, camera lists, and other ordered collections where items must
+ * remain unique and ordered.
  *
  * @class List
  * @memberof Phaser.Structs
@@ -59,7 +65,7 @@ var List = new Class({
         /**
          * The index of the current element.
          *
-         * This is used internally when iterating through the list with the {@link #first}, {@link #last}, {@link #get}, and {@link #previous} properties.
+         * This is used internally when iterating through the list with the {@link #first}, {@link #last}, {@link #next}, and {@link #previous} properties.
          *
          * @name Phaser.Structs.List#position
          * @type {number}
@@ -102,8 +108,6 @@ var List = new Class({
      * @method Phaser.Structs.List#add
      * @since 3.0.0
      *
-     * @genericUse {T} - [child,$return]
-     *
      * @param {*|Array.<*>} child - The item, or array of items, to add to the list.
      * @param {boolean} [skipCallback=false] - Skip calling the List.addCallback if this child is added successfully.
      *
@@ -127,7 +131,7 @@ var List = new Class({
      * @method Phaser.Structs.List#addAt
      * @since 3.0.0
      *
-     * @genericUse {T} - [child,$return]
+     * @genericUse {(T|T[])} - [child,$return]
      *
      * @param {*} child - The item, or array of items, to add to the list.
      * @param {number} [index=0] - The index in the list at which the element(s) will be inserted.
@@ -192,7 +196,7 @@ var List = new Class({
      * @genericUse {T[]} - [children,$return]
      *
      * @param {string} property - The property to lexically sort by.
-     * @param {function} [handler] - Provide your own custom handler function. Will receive 2 children which it should compare and return a boolean.
+     * @param {function} [handler] - Provide your own custom handler function. Will receive 2 children which it should compare and return a number (negative if the first should come before the second, positive if after, zero if equal).
      *
      * @return {Phaser.Structs.List} This List object.
      */
@@ -236,17 +240,17 @@ var List = new Class({
     },
 
     /**
-     * Returns a random child from the group.
+     * Returns a random child from the list.
      *
      * @method Phaser.Structs.List#getRandom
      * @since 3.0.0
      *
      * @genericUse {T | null} - [$return]
      *
-     * @param {number} [startIndex=0] - Offset from the front of the group (lowest child).
+     * @param {number} [startIndex=0] - Offset from the front of the list (lowest child).
      * @param {number} [length=(to top)] - Restriction on the number of values you want to randomly select from.
      *
-     * @return {?*} A random child of this Group.
+     * @return {?*} A random child of this List.
      */
     getRandom: function (startIndex, length)
     {
@@ -348,7 +352,7 @@ var List = new Class({
      * @genericUse {T} - [child,$return]
      *
      * @param {*} child - The item to move.
-     * @param {number} index - Moves an item in the List to a new position.
+     * @param {number} index - The new position to move the item to.
      *
      * @return {*} The item that was moved.
      */
@@ -358,7 +362,9 @@ var List = new Class({
     },
 
     /**
-     * Moves the given array element above another one in the array.
+     * Moves an item above another one in the List.
+     * If the given item is already above the other, it isn't moved.
+     * Above means toward the end of the List.
      *
      * @method Phaser.Structs.List#moveAbove
      * @since 3.55.0
@@ -374,7 +380,9 @@ var List = new Class({
     },
 
     /**
-     * Moves the given array element below another one in the array.
+     * Moves an item below another one in the List.
+     * If the given item is already below the other, it isn't moved.
+     * Below means toward the start of the List.
      *
      * @method Phaser.Structs.List#moveBelow
      * @since 3.55.0
@@ -394,8 +402,6 @@ var List = new Class({
      *
      * @method Phaser.Structs.List#remove
      * @since 3.0.0
-     *
-     * @genericUse {T} - [child,$return]
      *
      * @param {*} child - The item, or array of items, to remove.
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
@@ -471,11 +477,9 @@ var List = new Class({
      * @method Phaser.Structs.List#removeAll
      * @since 3.0.0
      *
-     * @genericUse {Phaser.Structs.List.<T>} - [$return]
-     *
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
-     * @return {Phaser.Structs.List} This List object.
+     * @return {this} This List object.
      */
     removeAll: function (skipCallback)
     {
@@ -524,7 +528,7 @@ var List = new Class({
     },
 
     /**
-     * Moves the given child up one place in this group unless it's already at the top.
+     * Moves the given child up one place in this List unless it's already at the top.
      *
      * @method Phaser.Structs.List#moveUp
      * @since 3.0.0
@@ -543,7 +547,7 @@ var List = new Class({
     },
 
     /**
-     * Moves the given child down one place in this group unless it's already at the bottom.
+     * Moves the given child down one place in this List unless it's already at the bottom.
      *
      * @method Phaser.Structs.List#moveDown
      * @since 3.0.0
@@ -606,7 +610,7 @@ var List = new Class({
      * @param {*} oldChild - The child in this List that will be replaced.
      * @param {*} newChild - The child to be inserted into this List.
      *
-     * @return {*} Returns the oldChild that was replaced within this group.
+     * @return {*} Returns the oldChild that was replaced within this List.
      */
     replace: function (oldChild, newChild)
     {

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -94,7 +94,7 @@ var BodyBounds = new Class({
      * Takes a Body and returns the world coordinates of the top-left of its _bounds_.
      *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
-     * This will return the world coordinate based on the bodies _current_ position and bounds.
+     * This will return the world coordinate based on the body's _current_ position and bounds.
      *
      * @method Phaser.Physics.Matter.BodyBounds#getTopLeft
      * @since 3.22.0
@@ -128,7 +128,7 @@ var BodyBounds = new Class({
      * Takes a Body and returns the world coordinates of the top-center of its _bounds_.
      *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
-     * This will return the world coordinate based on the bodies _current_ position and bounds.
+     * This will return the world coordinate based on the body's _current_ position and bounds.
      *
      * @method Phaser.Physics.Matter.BodyBounds#getTopCenter
      * @since 3.22.0
@@ -162,7 +162,7 @@ var BodyBounds = new Class({
      * Takes a Body and returns the world coordinates of the top-right of its _bounds_.
      *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
-     * This will return the world coordinate based on the bodies _current_ position and bounds.
+     * This will return the world coordinate based on the body's _current_ position and bounds.
      *
      * @method Phaser.Physics.Matter.BodyBounds#getTopRight
      * @since 3.22.0
@@ -196,7 +196,7 @@ var BodyBounds = new Class({
      * Takes a Body and returns the world coordinates of the left-center of its _bounds_.
      *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
-     * This will return the world coordinate based on the bodies _current_ position and bounds.
+     * This will return the world coordinate based on the body's _current_ position and bounds.
      *
      * @method Phaser.Physics.Matter.BodyBounds#getLeftCenter
      * @since 3.22.0
@@ -230,7 +230,7 @@ var BodyBounds = new Class({
      * Takes a Body and returns the world coordinates of the center of its _bounds_.
      *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
-     * This will return the world coordinate based on the bodies _current_ position and bounds.
+     * This will return the world coordinate based on the body's _current_ position and bounds.
      *
      * @method Phaser.Physics.Matter.BodyBounds#getCenter
      * @since 3.22.0
@@ -263,7 +263,7 @@ var BodyBounds = new Class({
      * Takes a Body and returns the world coordinates of the right-center of its _bounds_.
      *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
-     * This will return the world coordinate based on the bodies _current_ position and bounds.
+     * This will return the world coordinate based on the body's _current_ position and bounds.
      *
      * @method Phaser.Physics.Matter.BodyBounds#getRightCenter
      * @since 3.22.0
@@ -297,7 +297,7 @@ var BodyBounds = new Class({
      * Takes a Body and returns the world coordinates of the bottom-left of its _bounds_.
      *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
-     * This will return the world coordinate based on the bodies _current_ position and bounds.
+     * This will return the world coordinate based on the body's _current_ position and bounds.
      *
      * @method Phaser.Physics.Matter.BodyBounds#getBottomLeft
      * @since 3.22.0
@@ -331,7 +331,7 @@ var BodyBounds = new Class({
      * Takes a Body and returns the world coordinates of the bottom-center of its _bounds_.
      *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
-     * This will return the world coordinate based on the bodies _current_ position and bounds.
+     * This will return the world coordinate based on the body's _current_ position and bounds.
      *
      * @method Phaser.Physics.Matter.BodyBounds#getBottomCenter
      * @since 3.22.0
@@ -365,7 +365,7 @@ var BodyBounds = new Class({
      * Takes a Body and returns the world coordinates of the bottom-right of its _bounds_.
      *
      * Body bounds are updated by Matter each step and factor in scale and rotation.
-     * This will return the world coordinate based on the bodies _current_ position and bounds.
+     * This will return the world coordinate based on the body's _current_ position and bounds.
      *
      * @method Phaser.Physics.Matter.BodyBounds#getBottomRight
      * @since 3.22.0

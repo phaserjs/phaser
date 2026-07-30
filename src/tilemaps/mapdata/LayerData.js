@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,9 +10,13 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * @classdesc
- * A class for representing data about about a layer in a map. Maps are parsed from CSV, Tiled,
- * etc. into this format. Tilemap and TilemapLayer objects have a reference
- * to this data and use it to look up and perform operations on tiles.
+ * Stores all data associated with a single layer in a tilemap. When a map is parsed from
+ * CSV, Tiled JSON, or other formats, each tile layer is converted into a LayerData instance
+ * that holds the tile grid, layer dimensions, orientation, visibility, physics bodies,
+ * tile callbacks, and any custom properties defined in the editor.
+ *
+ * Both `Tilemap` and `TilemapLayer` hold a reference to LayerData and use it to look up
+ * tile positions, perform collision checks, and drive rendering.
  *
  * @class LayerData
  * @memberof Phaser.Tilemaps
@@ -45,7 +49,7 @@ var LayerData = new Class({
          *
          * @name Phaser.Tilemaps.LayerData#id
          * @type {number}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.id = GetFastValue(config, 'id', 0);
 
@@ -104,7 +108,9 @@ var LayerData = new Class({
         this.tileHeight = GetFastValue(config, 'tileHeight', 0);
 
         /**
-         * The base tile width.
+         * The base tile width, in pixels. This is the tile width defined at the map level and
+         * is used to calculate pixel coordinates and layer dimensions. It defaults to `tileWidth`
+         * but may differ for layers that use a different tile size than the map default.
          *
          * @name Phaser.Tilemaps.LayerData#baseTileWidth
          * @type {number}
@@ -113,7 +119,9 @@ var LayerData = new Class({
         this.baseTileWidth = GetFastValue(config, 'baseTileWidth', this.tileWidth);
 
         /**
-         * The base tile height.
+         * The base tile height, in pixels. This is the tile height defined at the map level and
+         * is used to calculate pixel coordinates and layer dimensions. It defaults to `tileHeight`
+         * but may differ for layers that use a different tile size than the map default.
          *
          * @name Phaser.Tilemaps.LayerData#baseTileHeight
          * @type {number}
@@ -122,7 +130,7 @@ var LayerData = new Class({
         this.baseTileHeight = GetFastValue(config, 'baseTileHeight', this.tileHeight);
 
         /**
-         * The layers orientation, necessary to be able to determine a tiles pixelX and pixelY as well as the layers width and height.
+         * The layer's orientation, necessary to be able to determine a tile's pixelX and pixelY as well as the layer's width and height.
          *
          * @name Phaser.Tilemaps.LayerData#orientation
          * @type {Phaser.Tilemaps.OrientationType}
@@ -167,7 +175,7 @@ var LayerData = new Class({
         this.visible = GetFastValue(config, 'visible', true);
 
         /**
-         * Layer specific properties (can be specified in Tiled)
+         * Layer specific properties (can be specified in Tiled).
          *
          * @name Phaser.Tilemaps.LayerData#properties
          * @type {object[]}
@@ -194,7 +202,9 @@ var LayerData = new Class({
         this.collideIndexes = GetFastValue(config, 'collideIndexes', []);
 
         /**
-         * An array of callbacks.
+         * An array of tile location callbacks registered for this layer. Each entry maps a tile
+         * index to a callback function that is invoked when a physics-enabled Game Object overlaps
+         * or collides with that tile.
          *
          * @name Phaser.Tilemaps.LayerData#callbacks
          * @type {array}
@@ -212,7 +222,8 @@ var LayerData = new Class({
         this.bodies = GetFastValue(config, 'bodies', []);
 
         /**
-         * An array of the tile data indexes.
+         * A 2D array of Tile objects representing the tile grid for this layer. Indexed as `data[row][col]`,
+         * where each entry is a Tile instance (or null for an empty cell).
          *
          * @name Phaser.Tilemaps.LayerData#data
          * @type {Phaser.Tilemaps.Tile[][]}

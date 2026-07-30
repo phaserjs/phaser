@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -167,7 +167,10 @@ var Check = function ()
 };
 
 /**
- * The main check function. Runs through one of the four possible tests and returns the results.
+ * Executes the vertical separation and velocity exchange for the two bodies, based on
+ * the collision side determined by the `Check` function. Handles all combinations of
+ * pushable and non-pushable bodies, distributing overlap and recalculating post-collision
+ * velocities accordingly.
  *
  * @function Phaser.Physics.Arcade.ProcessY.Run
  * @ignore
@@ -357,7 +360,9 @@ var RunImmovableBody1 = function (blockedState)
     //  This is special case code that handles things like horizontally moving platforms you can ride
     if (body1.moves)
     {
-        body2.x += (body1.x - body1.prev.x) * body1.friction.x;
+        var body1Distance = body1.directControl ? (body1.x - body1.autoFrame.x) : (body1.x - body1.prev.x);
+
+        body2.x += body1Distance * body1.friction.x;
         body2._dx = body2.x - body2.prev.x;
     }
 };
@@ -391,7 +396,9 @@ var RunImmovableBody2 = function (blockedState)
     //  This is special case code that handles things like horizontally moving platforms you can ride
     if (body2.moves)
     {
-        body1.x += (body2.x - body2.prev.x) * body2.friction.x;
+        var body2Distance = body2.directControl ? (body2.x - body2.autoFrame.x) : (body2.x - body2.prev.x);
+
+        body1.x += body2Distance * body2.friction.x;
         body1._dx = body1.x - body1.prev.x;
     }
 };

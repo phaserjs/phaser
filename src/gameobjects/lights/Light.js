@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,17 +12,18 @@ var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * @classdesc
- * A 2D point light.
+ * A 2D Light.
  *
- * These are typically created by a {@link Phaser.GameObjects.LightsManager}, available from within a scene via `this.lights`.
+ * These are created by the {@link Phaser.GameObjects.LightsManager}, available from within a scene via `this.lights`.
  *
- * Any Game Objects using the Light2D pipeline will then be affected by these Lights as long as they have a normal map.
+ * Any Game Objects with the Lighting Component, and `setLighting(true)`,
+ * will then be affected by these Lights.
+ * If they have a normal map, it will be used.
+ * If they don't, the Lights will use the default normal map, a flat surface.
  *
  * They can also simply be used to represent a point light for your own purposes.
  *
- * As of Phaser 3.60 this Game Object now has the Transform and Origin components. However, changing the scale,
- * rotation or origin properties will not make any difference to the Light. They are simply present to allow you
- * to add this Light to a Container, or enable it for Physics.
+ * Lights cannot be added to Containers. They are designed to exist in the root of a Scene.
  *
  * @class Light
  * @extends Phaser.Geom.Circle
@@ -32,7 +33,6 @@ var Utils = require('../../renderer/webgl/Utils');
  *
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.ScrollFactor
- * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {number} x - The horizontal position of the light.
@@ -42,6 +42,7 @@ var Utils = require('../../renderer/webgl/Utils');
  * @param {number} g - The green color of the light. A value between 0 and 1.
  * @param {number} b - The blue color of the light. A value between 0 and 1.
  * @param {number} intensity - The intensity of the light.
+ * @param {number} [z] - The z position of the light. If not given, it will be set to `radius * 0.1`.
  */
 var Light = new Class({
 
@@ -50,13 +51,12 @@ var Light = new Class({
     Mixins: [
         Components.Origin,
         Components.ScrollFactor,
-        Components.Transform,
         Components.Visible
     ],
 
     initialize:
 
-    function Light (x, y, radius, r, g, b, intensity)
+    function Light (x, y, radius, r, g, b, intensity, z)
     {
         Circle.call(this, x, y, radius);
 
@@ -70,7 +70,8 @@ var Light = new Class({
         this.color = new RGB(r, g, b);
 
         /**
-         * The intensity of the light.
+         * The intensity of the light. This scales the overall brightness of the light effect.
+         * A value of 1 is considered normal brightness. Higher values produce a stronger, brighter light.
          *
          * @name Phaser.GameObjects.Light#intensity
          * @type {number}
@@ -79,9 +80,70 @@ var Light = new Class({
         this.intensity = intensity;
 
         /**
-         * The flags that are compared against `RENDER_MASK` to determine if this Game Object will render or not.
-         * The bits are 0001 | 0010 | 0100 | 1000 set by the components Visible, Alpha, Transform and Texture respectively.
-         * If those components are not used by your custom class then you can use this bitmask as you wish.
+         * The z position of the light.
+         * This affects the relief effect created by the light.
+         * A higher value will make the light appear more raised.
+         *
+         * Lit game objects are considered to be at z=0.
+         * Thus, if z is larger than the radius of the light,
+         * the light will not affect them.
+         * Strong values are in the range of 0 to radius/2.
+         *
+         * This is not a true position, and won't be affected by
+         * perspective or camera position. It won't be set by `setTo`.
+         * Use `setZ` to set it, or `setZNormal` to set it to a fraction
+         * of the radius.
+         *
+         * @name Phaser.GameObjects.Light#z
+         * @type {number}
+         * @since 4.0.0
+         */
+        this.z = z === undefined ? radius * 0.1 : z;
+
+        /**
+         * Whether this Light is restricted to a cone.
+         *
+         * @name Phaser.GameObjects.Light#coneEnabled
+         * @type {boolean}
+         * @default false
+         * @since 4.2.0
+         */
+        this.coneEnabled = false;
+
+        /**
+         * The cone direction, in radians, in world space.
+         *
+         * @name Phaser.GameObjects.Light#coneRotation
+         * @type {number}
+         * @default 0
+         * @since 4.2.0
+         */
+        this.coneRotation = 0;
+
+        /**
+         * The inner cone angle, in radians. Fragments inside this angle receive full light.
+         *
+         * @name Phaser.GameObjects.Light#coneInnerAngle
+         * @type {number}
+         * @default 0
+         * @since 4.2.0
+         */
+        this.coneInnerAngle = 0;
+
+        /**
+         * The outer cone angle, in radians. Fragments outside this angle receive no light.
+         *
+         * @name Phaser.GameObjects.Light#coneOuterAngle
+         * @type {number}
+         * @default 0
+         * @since 4.2.0
+         */
+        this.coneOuterAngle = 0;
+
+        /**
+         * The flags that are compared against `RENDER_MASK` to determine if this Light will render or not.
+         * The relevant bit is 0001, set by the Visible component. The remaining bits are unused by Light
+         * but are reserved for custom use if required.
          *
          * @name Phaser.GameObjects.Light#renderFlags
          * @type {number}
@@ -195,6 +257,28 @@ var Light = new Class({
     },
 
     /**
+     * The z position of the light, as a fraction of the radius.
+     * This affects the relief effect created by the light.
+     * A higher value will make the light appear more raised.
+     * Strong values are in the range of 0 to 0.5.
+     *
+     * @name Phaser.GameObjects.Light#zNormal
+     * @type {number}
+     * @since 4.0.0
+     */
+    zNormal: {
+        get: function ()
+        {
+            return this.z / this.radius;
+        },
+
+        set: function (value)
+        {
+            this.z = value * this.radius;
+        }
+    },
+
+    /**
      * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
      * Also checks the Game Object against the given Cameras exclusion list.
      *
@@ -230,12 +314,13 @@ var Light = new Class({
     },
 
     /**
-     * Set the intensity of the light.
+     * Set the intensity of the light. This scales the overall brightness of the light effect.
+     * A value of 1 is considered normal brightness. Higher values produce a stronger, brighter light.
      *
      * @method Phaser.GameObjects.Light#setIntensity
      * @since 3.0.0
      *
-     * @param {number} intensity - The intensity of the light.
+     * @param {number} intensity - The intensity (brightness multiplier) of the light.
      *
      * @return {this} This Light object.
      */
@@ -247,18 +332,157 @@ var Light = new Class({
     },
 
     /**
-     * Set the radius of the light.
+     * Set the radius of the light, in pixels. This defines the circular area of influence
+     * within which lit Game Objects will be affected by this light.
      *
      * @method Phaser.GameObjects.Light#setRadius
      * @since 3.0.0
      *
-     * @param {number} radius - The radius of the light.
+     * @param {number} radius - The radius of the light, in pixels.
      *
      * @return {this} This Light object.
      */
     setRadius: function (radius)
     {
         this.radius = radius;
+
+        return this;
+    },
+
+    /**
+     * Set the z position of the light. This controls the perceived height of the light above
+     * the scene, which influences the relief (normal-map shading) effect. Larger values make
+     * the light appear more elevated. Lit Game Objects are considered to be at z=0, so if z
+     * exceeds the light's radius the light will not affect them. Strong values are in the
+     * range of 0 to radius/2.
+     *
+     * @method Phaser.GameObjects.Light#setZ
+     * @since 4.0.0
+     *
+     * @param {number} z - The z position of the light, where 0 is at the same level as lit Game Objects.
+     *
+     * @return {this} This Light object.
+     */
+    setZ: function (z)
+    {
+        this.z = z;
+
+        return this;
+    },
+
+    /**
+     * Set the z position of the light as a fraction of the radius.
+     * This affects the relief effect created by the light.
+     * A higher value will make the light appear more raised.
+     * Strong values are in the range of 0 to 0.5.
+     *
+     * @method Phaser.GameObjects.Light#setZNormal
+     * @since 4.0.0
+     *
+     * @param {number} z - The normalized z position of the light.
+     *
+     * @return {this} This Light object.
+     */
+    setZNormal: function (z)
+    {
+        this.z = z * this.radius;
+
+        return this;
+    },
+
+    /**
+     * Restrict this Light to a cone, suitable for flashlights, lanterns and other focal lights.
+     *
+     * The `rotation` is in radians, where 0 points to the right in world space. The `innerAngle`
+     * is the fully-lit cone width. The `outerAngle` is the wider falloff cone width; if omitted,
+     * the cone has a hard edge. Both angles are full cone widths, not half-angles.
+     *
+     * @method Phaser.GameObjects.Light#setCone
+     * @since 4.2.0
+     *
+     * @param {number} rotation - The direction of the cone, in radians.
+     * @param {number} innerAngle - The fully-lit cone width, in radians.
+     * @param {number} [outerAngle=innerAngle] - The outer falloff cone width, in radians.
+     *
+     * @return {this} This Light object.
+     */
+    setCone: function (rotation, innerAngle, outerAngle)
+    {
+        if (outerAngle === undefined) { outerAngle = innerAngle; }
+
+        innerAngle = Math.max(0, Math.min(Math.PI * 2, innerAngle));
+        outerAngle = Math.max(0, Math.min(Math.PI * 2, outerAngle));
+
+        if (outerAngle < innerAngle)
+        {
+            outerAngle = innerAngle;
+        }
+
+        this.coneEnabled = true;
+        this.coneRotation = rotation;
+        this.coneInnerAngle = innerAngle;
+        this.coneOuterAngle = outerAngle;
+
+        return this;
+    },
+
+    /**
+     * Set the direction of this Light cone, in radians.
+     *
+     * @method Phaser.GameObjects.Light#setConeRotation
+     * @since 4.2.0
+     *
+     * @param {number} rotation - The direction of the cone, in radians.
+     *
+     * @return {this} This Light object.
+     */
+    setConeRotation: function (rotation)
+    {
+        this.coneRotation = rotation;
+
+        return this;
+    },
+
+    /**
+     * Set the inner and outer cone angles, in radians.
+     *
+     * @method Phaser.GameObjects.Light#setConeAngles
+     * @since 4.2.0
+     *
+     * @param {number} innerAngle - The fully-lit cone width, in radians.
+     * @param {number} [outerAngle=innerAngle] - The outer falloff cone width, in radians.
+     *
+     * @return {this} This Light object.
+     */
+    setConeAngles: function (innerAngle, outerAngle)
+    {
+        if (outerAngle === undefined) { outerAngle = innerAngle; }
+
+        innerAngle = Math.max(0, Math.min(Math.PI * 2, innerAngle));
+        outerAngle = Math.max(0, Math.min(Math.PI * 2, outerAngle));
+
+        if (outerAngle < innerAngle)
+        {
+            outerAngle = innerAngle;
+        }
+
+        this.coneInnerAngle = innerAngle;
+        this.coneOuterAngle = outerAngle;
+
+        return this;
+    },
+
+    /**
+     * Disable cone limiting and make this Light omnidirectional again.
+     *
+     * @method Phaser.GameObjects.Light#disableCone
+     * @since 4.2.0
+     *
+     * @return {this} This Light object.
+     */
+    disableCone: function ()
+    {
+        this.coneEnabled = false;
 
         return this;
     }

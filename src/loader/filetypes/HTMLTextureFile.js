@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,10 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
- * A single HTML File suitable for loading by the Loader.
+ * An HTML Texture File suitable for loading by the Loader. This file type loads an HTML file from the server,
+ * wraps its contents inside an SVG `foreignObject` element sized to the specified width and height, converts
+ * the SVG to a `Blob` URL, and then renders it as an `Image` element. The resulting image is stored in the
+ * Texture Manager and can be used as a texture by any Game Object that accepts a texture key.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#htmlTexture method and are not typically created directly.
  *
@@ -27,7 +30,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig)} key - The key to use for this file, or a file configuration object.
- * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.html`, i.e. if `key` was "alien" then the URL will be "alien.html".
  * @param {number} [width] - The width of the texture the HTML will be rendered to.
  * @param {number} [height] - The height of the texture the HTML will be rendered to.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
@@ -76,7 +79,11 @@ var HTMLTextureFile = new Class({
 
     /**
      * Called automatically by Loader.nextFile.
-     * This method controls what extra work this File does with its loaded data.
+     * Processes the loaded HTML content by wrapping it inside an SVG `foreignObject` element sized to
+     * the configured width and height. The SVG markup is then converted to a `window.Blob`, which is
+     * assigned as an object URL to a new `Image` element. Once the Image loads successfully, the file
+     * transitions to the completed state and is ready to be added to the Texture Manager. If Blob
+     * creation or Image loading fails, the file is marked as errored.
      *
      * @method Phaser.Loader.FileTypes.HTMLTextureFile#onProcess
      * @since 3.7.0

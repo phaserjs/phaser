@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,9 +8,13 @@ var Class = require('../utils/Class');
 
 /**
  * @classdesc
- * An Image Collection is a special Tile Set containing multiple images, with no slicing into each image.
+ * An Image Collection is a special Tile Set where each entry is a complete, individual image rather
+ * than a tile sliced from a larger spritesheet. Unlike a standard Tile Set, every image in the
+ * collection is its own standalone asset referenced by a unique global ID (GID).
  *
- * Image Collections are normally created automatically when Tiled data is loaded.
+ * Image Collections are normally created automatically when Tiled map data is loaded. You would
+ * encounter them when a Tiled map uses the "Collection of Images" tile set type instead of the
+ * standard single-image tile set type.
  *
  * @class ImageCollection
  * @memberof Phaser.Tilemaps
@@ -77,9 +81,8 @@ var ImageCollection = new Class({
 
         /**
          * The margin around the images in the collection (in pixels).
-         * Use `setSpacing` to change.
          *
-         * @name Phaser.Tilemaps.ImageCollection#imageMarge
+         * @name Phaser.Tilemaps.ImageCollection#imageMargin
          * @type {number}
          * @readonly
          * @since 3.0.0
@@ -88,7 +91,6 @@ var ImageCollection = new Class({
 
         /**
          * The spacing between each image in the collection (in pixels).
-         * Use `setSpacing` to change.
          *
          * @name Phaser.Tilemaps.ImageCollection#imageSpacing
          * @type {number}
@@ -149,13 +151,15 @@ var ImageCollection = new Class({
      * @since 3.0.0
      *
      * @param {number} gid - The gid of the image in the Image Collection.
-     * @param {string} image - The the key of the image in the Image Collection and in the cache.
+     * @param {string} image - The key of the image in the Image Collection and in the cache.
+     * @param {number} width - The width of the image in the Image Collection.
+     * @param {number} height - The height of the image in the Image Collection.
      *
      * @return {Phaser.Tilemaps.ImageCollection} This ImageCollection object.
      */
-    addImage: function (gid, image)
+    addImage: function (gid, image, width, height)
     {
-        this.images.push({ gid: gid, image: image });
+        this.images.push({ gid: gid, image: image, width: width, height: height });
         this.total++;
 
         return this;

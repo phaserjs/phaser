@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,7 +11,7 @@ var Triangle = require('./Triangle');
 //  w/h can be positive or negative and represent the length of each side
 
 /**
- * Builds a right triangle, i.e. one which has a 90-degree angle and two acute angles.
+ * Builds a right triangle, i.e. one which has a 90-degree angle and two acute angles. The `x` and `y` coordinates mark the position of the right-angle vertex, which becomes the first point of the Triangle. The `width` and `height` values determine the lengths of the two sides adjacent to the right angle and may be positive or negative, which controls the direction in which each side extends from the right-angle vertex.
  *
  * @function Phaser.Geom.Triangle.BuildRight
  * @since 3.0.0
@@ -19,7 +19,7 @@ var Triangle = require('./Triangle');
  * @param {number} x - The X coordinate of the right angle, which will also be the first X coordinate of the constructed Triangle.
  * @param {number} y - The Y coordinate of the right angle, which will also be the first Y coordinate of the constructed Triangle.
  * @param {number} width - The length of the side which is to the left or to the right of the right angle.
- * @param {number} height - The length of the side which is above or below the right angle.
+ * @param {number} height - The length of the side which is above or below the right angle. If not given, defaults to the value of `width`.
  *
  * @return {Phaser.Geom.Triangle} The constructed right Triangle.
  */

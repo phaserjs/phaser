@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,7 +12,7 @@ var SceneEvents = require('../scene/events');
  * @classdesc
  * The Game Object Creator is a Scene plugin that allows you to quickly create many common
  * types of Game Objects and return them using a configuration object, rather than
- * having to specify a limited set of parameters such as with the GameObjectFactory.
+ * having to specify individual parameters as required by the GameObjectFactory.
  *
  * Game Objects made via this class are automatically added to the Scene and Update List
  * unless you explicitly set the `add` property in the configuration object to `false`.
@@ -22,7 +22,7 @@ var SceneEvents = require('../scene/events');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - The Scene to which this Game Object Factory belongs.
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object Creator belongs.
  */
 var GameObjectCreator = new Class({
 
@@ -152,17 +152,15 @@ var GameObjectCreator = new Class({
 });
 
 /**
- * Static method called directly by the Game Object creator functions.
- * With this method you can register a custom GameObject factory in the GameObjectCreator,
- * providing a name (`factoryType`) and the constructor (`factoryFunction`) in order
- * to be called when you invoke Phaser.Scene.make[ factoryType ] method.
+ * Registers a Game Object creator function on the GameObjectCreator prototype,
+ * making it available for creating Game Objects via the Scene's make property.
  *
  * @method Phaser.GameObjects.GameObjectCreator.register
  * @static
  * @since 3.0.0
  *
- * @param {string} factoryType - The key of the factory that you will use to call to Phaser.Scene.make[ factoryType ] method.
- * @param {function} factoryFunction - The constructor function to be called when you invoke to the Phaser.Scene.make method.
+ * @param {string} factoryType - The key of the factory that you will use to call the Phaser.Scene.make[ factoryType ] method.
+ * @param {function} factoryFunction - The constructor function to be called when you invoke the Phaser.Scene.make method.
  */
 GameObjectCreator.register = function (factoryType, factoryFunction)
 {
@@ -173,7 +171,8 @@ GameObjectCreator.register = function (factoryType, factoryFunction)
 };
 
 /**
- * Static method called directly by the Game Object Creator functions.
+ * Removes a previously registered custom Game Object Creator from the GameObjectCreator prototype,
+ * making it no longer available via the Scene's make property.
  *
  * With this method you can remove a custom Game Object Creator that has been previously
  * registered in the Game Object Creator. Pass in its `factoryType` in order to remove it.

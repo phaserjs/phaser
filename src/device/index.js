@@ -1,15 +1,15 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-//  This singleton is instantiated as soon as Phaser loads,
-//  before a Phaser.Game instance has even been created.
-//  Which means all instances of Phaser Games can share it,
-//  without having to re-poll the device all over again
-
 /**
+ * The Device class is a collection of properties and functions that describe the device on which the Phaser Game instance is running.
+ *
+ * These values are read-only and populated during the boot sequence of the game. They are then referenced by internal game systems and are available for you to access
+ * via `this.sys.game.device` from within any Scene.
+ *
  * @namespace Phaser.Device
  * @since 3.0.0
  */

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -67,7 +67,7 @@ function hasNonConfigurable (obj, k)
 }
 
 /**
- * Extends the given `myClass` object's prototype with the properties of `definition`.
+ * Extends the given `ctor` object's prototype with the properties of `definition`.
  *
  * @function extend
  * @ignore
@@ -145,18 +145,23 @@ function mixin (myClass, mixins)
 }
 
 /**
- * Creates a new class with the given descriptor.
- * The constructor, defined by the name `initialize`,
- * is an optional function. If unspecified, an anonymous
- * function will be used which calls the parent class (if
- * one exists).
+ * `Phaser.Class` is the ES5-style class factory used throughout the Phaser framework to define
+ * classes with prototype-based inheritance. It provides a consistent pattern for creating
+ * classes and is the foundation on which most Phaser Game Objects and systems are built.
  *
- * You can also use `Extends` and `Mixins` to provide subclassing
- * and inheritance.
+ * Pass a plain object as the `definition` to describe the class. Your constructor function
+ * should be assigned to the reserved key `initialize`. It is optional; if omitted, an anonymous
+ * constructor is created automatically, which will delegate to the parent class constructor
+ * if one is provided via `Extends`.
+ *
+ * Use the `Extends` key to inherit from a parent class, setting up the prototype chain so the
+ * new class gains all of the parent's methods and properties. Use the `Mixins` key to blend in
+ * additional functionality from one or more external objects without establishing a full
+ * inheritance relationship.
  *
  * @class Phaser.Class
  * @constructor
- * @param {Object} definition a dictionary of functions for the class
+ * @param {Object} definition - A dictionary of functions and properties for the class.
  * @example
  *
  *      var MyClass = new Phaser.Class({

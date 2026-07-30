@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -73,11 +73,13 @@ var VideoFile = new Class({
 
     /**
      * Called automatically by Loader.nextFile.
-     * This method controls what extra work this File does with its loaded data.
+     * This method assembles the processed data object for this file, storing the resolved URL,
+     * the `noAudio` flag, and the cross-origin setting so that a Video Game Object can use them
+     * to load the video at the appropriate time.
      *
      * @method Phaser.Loader.FileTypes.VideoFile#onProcess
      * @since 3.20.0
-    */
+     */
     onProcess: function ()
     {
         this.data = {
@@ -90,8 +92,10 @@ var VideoFile = new Class({
     },
 
     /**
-     * Called by the Loader, starts the actual file downloading.
-     * During the load the methods onLoad, onError and onProgress are called, based on the XHR events.
+     * Called by the Loader to process this file. Unlike most file types, VideoFile does not perform
+     * an XHR request or download the video data during this step. Instead, it resolves the final URL
+     * and immediately marks the file as loaded, so the Loader can continue. The actual video content
+     * is fetched later by the Video Game Object when it needs to play it.
      * You shouldn't normally call this method directly, it's meant to be invoked by the Loader.
      *
      * @method Phaser.Loader.FileTypes.VideoFile#load

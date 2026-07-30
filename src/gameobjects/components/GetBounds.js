@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,7 +9,10 @@ var RotateAround = require('../../math/RotateAround');
 var Vector2 = require('../../math/Vector2');
 
 /**
- * Provides methods used for obtaining the bounds of a Game Object.
+ * Provides methods used for obtaining the bounds of a Game Object, including
+ * its corners, edge midpoints, center point, and overall axis-aligned bounding
+ * rectangle. All methods account for the Game Object's rotation and display
+ * size, and can optionally factor in any parent Container transforms.
  * Should be applied as a mixin and not used directly.
  *
  * @namespace Phaser.GameObjects.Components.GetBounds
@@ -286,7 +289,12 @@ var GetBounds = {
     },
 
     /**
-     * Gets the bounds of this Game Object, regardless of origin.
+     * Gets the axis-aligned bounding rectangle of this Game Object, regardless of origin.
+     *
+     * The bounding rectangle is computed by retrieving all four corner positions of the
+     * Game Object (top-left, top-right, bottom-left, bottom-right), applying any rotation
+     * and parent Container transforms, and then calculating the smallest axis-aligned
+     * rectangle that fully encloses all four points.
      *
      * The values are stored and returned in a Rectangle, or Rectangle-like, object.
      *

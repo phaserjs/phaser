@@ -1,11 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Returns an object containing dimensions of the Text object.
+ * Calculates and returns the rendered dimensions of a Text object, including the width of each line, the maximum line width, the total height (accounting for line spacing), and the number of drawn lines (respecting `maxLines`).
  *
  * @function Phaser.GameObjects.GetTextSize
  * @since 3.0.0
@@ -34,16 +34,29 @@ var GetTextSize = function (text, size, lines)
     style.syncFont(canvas, context);
 
     //  Text Width
+    var letterSpacing = text.letterSpacing;
 
     for (var i = 0; i < drawnLines; i++)
     {
         var lineWidth = style.strokeThickness;
 
-        lineWidth += context.measureText(lines[i]).width;
-
-        if (lines[i].length > 1)
+        if (letterSpacing === 0)
         {
-            lineWidth += text.letterSpacing * (lines[i].length - 1);
+            lineWidth += context.measureText(lines[i]).width;
+        }
+        else
+        {
+            var line = lines[i];
+            
+            for (var j = 0; j < line.length; j++)
+            {
+                lineWidth += context.measureText(line[j]).width;
+            }
+
+            if (line.length > 1)
+            {
+                lineWidth += letterSpacing * (line.length - 1);
+            }
         }
 
         // Adjust for wrapped text

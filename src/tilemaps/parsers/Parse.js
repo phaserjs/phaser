@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20,8 +20,8 @@ var ParseWeltmeister = require('./impact/ParseWeltmeister');
  * @since 3.0.0
  *
  * @param {string} name - The name of the tilemap, used to set the name on the MapData.
- * @param {number} mapFormat - See ../Formats.js.
- * @param {(number[][]|string|object)} data - 2D array, CSV string or Tiled JSON object.
+ * @param {number} mapFormat - The format of the map data. Must be one of the `Phaser.Tilemaps.Formats` constants, such as `Phaser.Tilemaps.Formats.TILED_JSON`.
+ * @param {(number[][]|string|object)} data - The raw map data to parse. A 2D array of tile indices, a CSV string, or a Tiled JSON object, depending on the format.
  * @param {number} tileWidth - The width of a tile in pixels. Required for 2D array and CSV, but
  * ignored for Tiled JSON.
  * @param {number} tileHeight - The height of a tile in pixels. Required for 2D array and CSV, but
@@ -33,7 +33,7 @@ var ParseWeltmeister = require('./impact/ParseWeltmeister');
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
  *
- * @return {Phaser.Tilemaps.MapData} The created `MapData` object.
+ * @return {Phaser.Tilemaps.MapData} The created `MapData` object, or `null` if the map format was not recognized.
  */
 var Parse = function (name, mapFormat, data, tileWidth, tileHeight, insertNull)
 {

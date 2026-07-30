@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,7 @@ var SetBottom = require('../../bounds/SetBottom');
 var SetCenterX = require('../../bounds/SetCenterX');
 
 /**
- * Takes given Game Object and aligns it so that it is positioned in the bottom center of the other.
+ * Takes a given Game Object and aligns it so that its bottom edge matches the bottom edge of the `alignIn` Game Object, with its horizontal center aligned to the horizontal center of `alignIn`.
  *
  * @function Phaser.Display.Align.In.BottomCenter
  * @since 3.0.0

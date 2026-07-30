@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16,7 +16,12 @@ var RGBToHSV = require('./RGBToHSV');
 
 /**
  * @classdesc
- * The Color class holds a single color value and allows for easy modification and reading of it.
+ * A mutable color representation that stores RGBA values (0-255 range) with automatic conversion
+ * to WebGL-compatible normalized floats (0-1), HSV color space, CSS rgba strings, and packed
+ * 24/32-bit integer formats. Provides methods for color manipulation including saturation,
+ * lightness, brightness adjustments, grayscale, and randomization. Supports construction from
+ * RGB integers, hex strings, HSV values, or color objects. Used throughout Phaser for tinting,
+ * effects, and rendering.
  *
  * @class Color
  * @memberof Phaser.Display
@@ -130,7 +135,8 @@ var Color = new Class({
         this._locked = false;
 
         /**
-         * An array containing the calculated color values for WebGL use.
+         * An array containing the RGBA color components in WebGL-compatible normalized float format,
+         * stored as `[red, green, blue, alpha]` with each value in the range 0 to 1.
          *
          * @name Phaser.Display.Color#gl
          * @type {number[]}
@@ -285,7 +291,7 @@ var Color = new Class({
     },
 
     /**
-     * Sets the color based on the hue, saturation and lightness values given.
+     * Sets the color based on the hue, saturation and value (HSV) components given.
      *
      * @method Phaser.Display.Color#setFromHSV
      * @since 3.13.0
@@ -522,7 +528,7 @@ var Color = new Class({
     },
 
     /**
-     * The color of this Color component, not including the alpha channel.
+     * The packed 24-bit RGB integer representation of this color, not including the alpha channel.
      *
      * @name Phaser.Display.Color#color
      * @type {number}
@@ -539,7 +545,7 @@ var Color = new Class({
     },
 
     /**
-     * The color of this Color component, including the alpha channel.
+     * The packed 32-bit RGBA integer representation of this color, including the alpha channel.
      *
      * @name Phaser.Display.Color#color32
      * @type {number}
@@ -556,7 +562,7 @@ var Color = new Class({
     },
 
     /**
-     * The color of this Color component as a string which can be used in CSS color values.
+     * The color of this Color object as a CSS-compatible `rgba()` string, suitable for use with Canvas 2D or HTML elements.
      *
      * @name Phaser.Display.Color#rgba
      * @type {string}
@@ -673,7 +679,7 @@ var Color = new Class({
     },
 
     /**
-     * The red color value, normalized to the range 0 to 255.
+     * The red color value, in the range 0 to 255.
      *
      * @name Phaser.Display.Color#red
      * @type {number}
@@ -700,7 +706,7 @@ var Color = new Class({
     },
 
     /**
-     * The green color value, normalized to the range 0 to 255.
+     * The green color value, in the range 0 to 255.
      *
      * @name Phaser.Display.Color#green
      * @type {number}
@@ -727,7 +733,7 @@ var Color = new Class({
     },
 
     /**
-     * The blue color value, normalized to the range 0 to 255.
+     * The blue color value, in the range 0 to 255.
      *
      * @name Phaser.Display.Color#blue
      * @type {number}
@@ -754,7 +760,7 @@ var Color = new Class({
     },
 
     /**
-     * The alpha color value, normalized to the range 0 to 255.
+     * The alpha color value, in the range 0 to 255.
      *
      * @name Phaser.Display.Color#alpha
      * @type {number}
@@ -829,8 +835,8 @@ var Color = new Class({
     },
 
     /**
-     * The lightness color value. A number between 0 and 1.
-     * This controls how dark the color is. Where 1 is as bright as possible and 0 is black.
+     * The value (brightness) component of this color in the HSV color space. A number between 0 and 1,
+     * where 1 is fully bright and 0 is black.
      *
      * @name Phaser.Display.Color#v
      * @type {number}

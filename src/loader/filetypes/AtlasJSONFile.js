@@ -1,16 +1,16 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var ImageFile = require('./ImageFile.js');
+var ImageFile = require('./ImageFile');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var JSONFile = require('./JSONFile.js');
-var MultiFile = require('../MultiFile.js');
+var JSONFile = require('./JSONFile');
+var MultiFile = require('../MultiFile');
 
 /**
  * @classdesc
@@ -20,7 +20,7 @@ var MultiFile = require('../MultiFile.js');
  *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#atlas.
  *
- * https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?source=photonstorm
+ * {@link https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?source=photonstorm|Texture Packer - How to create sprite sheets for Phaser}
  *
  * @class AtlasJSONFile
  * @extends Phaser.Loader.MultiFile
@@ -202,7 +202,7 @@ var AtlasJSONFile = new Class({
  * });
  * ```
  *
- * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+ * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORS and XHR Settings.
  * Normal maps are a WebGL only feature.
  *
  * Note: The ability to load this type of file will only be available if the Atlas JSON File type has been built into Phaser.

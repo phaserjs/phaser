@@ -1,17 +1,21 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var CONST = require('../const');
 var FileTypesManager = require('../FileTypesManager');
-var JSONFile = require('./JSONFile.js');
+var JSONFile = require('./JSONFile');
 
 /**
  * @classdesc
  * A single JSON Pack File suitable for loading by the Loader.
+ *
+ * A Pack File is a JSON manifest that describes a collection of other assets to be loaded. When the Pack File is
+ * processed, the Loader reads its contents and queues each listed asset for loading, allowing you to define an
+ * entire set of game resources in a single external JSON file rather than calling individual load methods in code.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#pack method and are not typically created directly.
  *
@@ -181,7 +185,7 @@ var PackFile = new Class({
  * }
  * ```
  *
- * And you only wanted to store the `boss` data in the Cache, then you could pass `level1.baddies.boss`as the `dataKey`.
+ * And you only wanted to store the `boss` data in the Cache, then you could pass `level1.baddies.boss` as the `dataKey`.
  *
  * Note: The ability to load this type of file will only be available if the Pack File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.

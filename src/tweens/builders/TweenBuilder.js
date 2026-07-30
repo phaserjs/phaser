@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,6 +9,7 @@ var Defaults = require('../tween/Defaults');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetBoolean = require('./GetBoolean');
 var GetEaseFunction = require('./GetEaseFunction');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var GetInterpolationFunction = require('./GetInterpolationFunction');
 var GetNewValue = require('./GetNewValue');
 var GetProps = require('./GetProps');
@@ -19,7 +20,23 @@ var MergeRight = require('../../utils/object/MergeRight');
 var Tween = require('../tween/Tween');
 
 /**
- * Creates a new Tween.
+ * Parses a Tween configuration object and constructs a fully initialized `Tween` instance
+ * ready to be added to the Tween Manager.
+ *
+ * This builder resolves the list of targets and properties from the config, creates a
+ * `TweenData` entry for every target/property combination, and applies default values for
+ * easing, duration, delay, hold, repeat, yoyo, flip, and interpolation. A special `scale`
+ * shortcut is supported: if a target does not have a native `scale` property, the builder
+ * automatically expands it into separate `scaleX` and `scaleY` TweenData entries. Texture
+ * tweening (changing a target's texture and frame over time) is also handled as a distinct
+ * code path.
+ *
+ * After building the TweenData entries, the builder configures top-level Tween properties
+ * such as `loop`, `loopDelay`, `completeDelay`, `paused`, `persist`, and any callbacks
+ * defined in the config (e.g. `onStart`, `onUpdate`, `onComplete`).
+ *
+ * If `config` is already a `Tween` instance, its `parent` is updated and it is returned
+ * as-is without further processing.
  *
  * @function Phaser.Tweens.Builders.TweenBuilder
  * @since 3.0.0
@@ -48,7 +65,7 @@ var TweenBuilder = function (parent, config, defaults)
         defaults = MergeRight(Defaults, defaults);
     }
 
-    //  Create arrays of the Targets and the Properties
+    //  Create arrays of the Targets and the Properties. This Targets array should not be manipulated outside of this Tween.
     var targets = GetTargets(config);
 
     if (!targets && defaults.targets)
@@ -60,17 +77,17 @@ var TweenBuilder = function (parent, config, defaults)
 
     //  Default Tween values
 
-    var delay = GetValue(config, 'delay', defaults.delay);
-    var duration = GetValue(config, 'duration', defaults.duration);
-    var easeParams = GetValue(config, 'easeParams', defaults.easeParams);
-    var ease = GetValue(config, 'ease', defaults.ease);
-    var hold = GetValue(config, 'hold', defaults.hold);
-    var repeat = GetValue(config, 'repeat', defaults.repeat);
-    var repeatDelay = GetValue(config, 'repeatDelay', defaults.repeatDelay);
+    var delay = GetFastValue(config, 'delay', defaults.delay);
+    var duration = GetFastValue(config, 'duration', defaults.duration);
+    var easeParams = GetFastValue(config, 'easeParams', defaults.easeParams);
+    var ease = GetFastValue(config, 'ease', defaults.ease);
+    var hold = GetFastValue(config, 'hold', defaults.hold);
+    var repeat = GetFastValue(config, 'repeat', defaults.repeat);
+    var repeatDelay = GetFastValue(config, 'repeatDelay', defaults.repeatDelay);
     var yoyo = GetBoolean(config, 'yoyo', defaults.yoyo);
     var flipX = GetBoolean(config, 'flipX', defaults.flipX);
     var flipY = GetBoolean(config, 'flipY', defaults.flipY);
-    var interpolation = GetValue(config, 'interpolation', defaults.interpolation);
+    var interpolation = GetFastValue(config, 'interpolation', defaults.interpolation);
 
     var addTarget = function (tween, targetIndex, key, value)
     {
@@ -108,10 +125,10 @@ var TweenBuilder = function (parent, config, defaults)
                 texture,
                 frame,
                 GetNewValue(value, 'delay', delay),
-                GetValue(value, 'duration', duration),
-                GetValue(value, 'hold', hold),
-                GetValue(value, 'repeat', repeat),
-                GetValue(value, 'repeatDelay', repeatDelay),
+                GetFastValue(value, 'duration', duration),
+                GetFastValue(value, 'hold', hold),
+                GetFastValue(value, 'repeat', repeat),
+                GetFastValue(value, 'repeatDelay', repeatDelay),
                 GetBoolean(value, 'flipX', flipX),
                 GetBoolean(value, 'flipY', flipY)
             );
@@ -120,7 +137,7 @@ var TweenBuilder = function (parent, config, defaults)
         {
             var ops = GetValueOp(key, value);
 
-            var interpolationFunc = GetInterpolationFunction(GetValue(value, 'interpolation', interpolation));
+            var interpolationFunc = GetInterpolationFunction(GetFastValue(value, 'interpolation', interpolation));
 
             tween.add(
                 targetIndex,
@@ -128,13 +145,13 @@ var TweenBuilder = function (parent, config, defaults)
                 ops.getEnd,
                 ops.getStart,
                 ops.getActive,
-                GetEaseFunction(GetValue(value, 'ease', ease), GetValue(value, 'easeParams', easeParams)),
+                GetEaseFunction(GetFastValue(value, 'ease', ease), GetFastValue(value, 'easeParams', easeParams)),
                 GetNewValue(value, 'delay', delay),
-                GetValue(value, 'duration', duration),
+                GetFastValue(value, 'duration', duration),
                 GetBoolean(value, 'yoyo', yoyo),
-                GetValue(value, 'hold', hold),
-                GetValue(value, 'repeat', repeat),
-                GetValue(value, 'repeatDelay', repeatDelay),
+                GetFastValue(value, 'hold', hold),
+                GetFastValue(value, 'repeat', repeat),
+                GetFastValue(value, 'repeatDelay', repeatDelay),
                 GetBoolean(value, 'flipX', flipX),
                 GetBoolean(value, 'flipY', flipY),
                 interpolationFunc,
@@ -154,6 +171,14 @@ var TweenBuilder = function (parent, config, defaults)
         //  Create 1 TweenData per target, per property
         for (var targetIndex = 0; targetIndex < targets.length; targetIndex++)
         {
+            var target = targets[targetIndex];
+
+            //  Skip null or undefined targets
+            if (!target)
+            {
+                continue;
+            }
+
             //  Special-case for scale short-cut:
             if (key === 'scale' && !targets[targetIndex].hasOwnProperty('scale'))
             {
@@ -174,7 +199,7 @@ var TweenBuilder = function (parent, config, defaults)
     tween.persist = GetBoolean(config, 'persist', false);
 
     //  Set the Callbacks
-    tween.callbackScope = GetValue(config, 'callbackScope', tween);
+    tween.callbackScope = GetFastValue(config, 'callbackScope', tween);
 
     var callbacks = BaseTween.TYPES;
 

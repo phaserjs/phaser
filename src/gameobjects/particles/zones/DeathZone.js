@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -56,14 +56,13 @@ var DeathZone = new Class({
      * @method Phaser.GameObjects.Particles.Zones.DeathZone#willKill
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Particles.Particle} particle - The particle to test against this Death Zones.
+     * @param {Phaser.GameObjects.Particles.Particle} particle - The particle to test against this Death Zone.
      *
      * @return {boolean} Return `true` if the Particle is to be killed, otherwise return `false`.
      */
     willKill: function (particle)
     {
         var pos = particle.worldPosition;
-
         var withinZone = this.source.contains(pos.x, pos.y);
 
         return (withinZone && this.killOnEnter || !withinZone && !this.killOnEnter);

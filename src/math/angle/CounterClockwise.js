@@ -1,13 +1,13 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CONST = require('../const');
 
 /**
- * Takes an angle in Phasers default clockwise format and converts it so that
+ * Takes an angle in Phaser's default clockwise format and converts it so that
  * 0 is North, 90 is West, 180 is South and 270 is East,
  * therefore running counter-clockwise instead of clockwise.
  * 
@@ -30,10 +30,10 @@ var CounterClockwise = function (angle)
 {
     if (angle > Math.PI)
     {
-        angle -= CONST.PI2;
+        angle -= CONST.TAU;
     }
 
-    return Math.abs((((angle + CONST.TAU) % CONST.PI2) - CONST.PI2) % CONST.PI2);
+    return Math.abs((((angle + CONST.PI_OVER_2) % CONST.TAU) - CONST.TAU) % CONST.TAU);
 };
 
 module.exports = CounterClockwise;

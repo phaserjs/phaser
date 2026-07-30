@@ -1,11 +1,25 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * The Default Plugins.
+ * Defines the three lists of plugins that Phaser loads automatically when a game starts.
+ *
+ * `Global` plugins are instantiated once by the `Phaser.Game` instance and are shared across
+ * all Scenes (e.g. the Animation Manager, Cache, Texture Manager, and Renderer).
+ *
+ * `CoreScene` plugins are installed into every `Scene.Systems` instance unconditionally and
+ * provide essential per-Scene functionality such as the Camera Manager, Game Object Factory,
+ * Display List, and Update List.
+ *
+ * `DefaultScene` plugins are also installed into every Scene but can be omitted by providing
+ * a custom `plugins` configuration in the Game Config or Scene Config. They include optional
+ * but commonly used systems such as the Input Plugin, Tween Manager, and Loader.
+ *
+ * You can customise which default plugins are loaded by modifying these arrays or by supplying
+ * a `DefaultPlugins` object in your Game Config before the game starts.
  *
  * @namespace Phaser.Plugins.DefaultPlugins
  * @memberof Phaser.Plugins

@@ -1,11 +1,14 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Provides methods used for setting the immovable properties of an Arcade Physics Body.
+ * Provides methods for controlling whether an Arcade Physics Body is immovable during collisions.
+ * An immovable body will not be moved or separated when it collides with other bodies, making it
+ * ideal for static obstacles, walls, platforms, or any object that should never be displaced by
+ * physics interactions. This component is mixed into Game Objects that use Arcade Physics.
  *
  * @namespace Phaser.Physics.Arcade.Components.Immovable
  * @since 3.0.0
@@ -22,7 +25,7 @@ var Immovable = {
      * @method Phaser.Physics.Arcade.Components.Immovable#setImmovable
      * @since 3.0.0
      *
-     * @param {boolean} [value=true] - Sets if this body will be separated during collisions with other bodies.
+     * @param {boolean} [value=true] - Whether this body should be immovable (`true`) or movable (`false`) during collisions.
      *
      * @return {this} This Game Object.
      */

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,8 +15,8 @@ var CalculateFacesAt = require('./CalculateFacesAt');
  * @function Phaser.Tilemaps.Components.RemoveTileAt
  * @since 3.0.0
  *
- * @param {number} tileX - The x coordinate.
- * @param {number} tileY - The y coordinate.
+ * @param {number} tileX - The x coordinate of the tile to remove, in tile grid units (not pixels).
+ * @param {number} tileY - The y coordinate of the tile to remove, in tile grid units (not pixels).
  * @param {boolean} replaceWithNull - If true, this will replace the tile at the specified location with null instead of a Tile with an index of -1.
  * @param {boolean} recalculateFaces - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.

@@ -1,11 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Retrieves the value of the given key from an object.
+ * Retrieves the boolean value of the given key from a source object, returning a default value if the key is missing or no source object is provided.
  *
  * @function Phaser.Tweens.Builders.GetBoolean
  * @since 3.0.0
@@ -14,7 +14,7 @@
  * @param {string} key - The key to look for in the `source` object.
  * @param {boolean} defaultValue - The default value to return if the `key` doesn't exist or if no `source` object is provided.
  *
- * @return {boolean} The retrieved value.
+ * @return {boolean} The boolean value associated with the key, or `defaultValue` if the key does not exist or no source object was provided.
  */
 var GetBoolean = function (source, key, defaultValue)
 {

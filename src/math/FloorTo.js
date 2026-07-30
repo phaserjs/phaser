@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,11 +12,11 @@
  * @function Phaser.Math.FloorTo
  * @since 3.0.0
  *
- * @param {number} value - The value to round.
- * @param {number} [place=0] - The place to round to.
- * @param {number} [base=10] - The base to round in. Default is 10 for decimal.
+ * @param {number} value - The value to floor.
+ * @param {number} [place=0] - The place to floor to.
+ * @param {number} [base=10] - The base to floor in. Default is 10 for decimal.
  *
- * @return {number} The rounded value.
+ * @return {number} The floored value.
  */
 var FloorTo = function (value, place, base)
 {

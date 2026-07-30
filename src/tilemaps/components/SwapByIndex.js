@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,14 +8,14 @@ var GetTilesWithin = require('./GetTilesWithin');
 
 /**
  * Scans the given rectangular area (given in tile coordinates) for tiles with an index matching
- * `indexA` and swaps then with `indexB`. This only modifies the index and does not change collision
+ * `indexA` and swaps them with `indexB`. This only modifies the index and does not change collision
  * information.
  *
  * @function Phaser.Tilemaps.Components.SwapByIndex
  * @since 3.0.0
  *
- * @param {number} tileA - First tile index.
- * @param {number} tileB - Second tile index.
+ * @param {number} indexA - The tile index to search for and replace with `indexB`.
+ * @param {number} indexB - The tile index to replace `indexA` with.
  * @param {number} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
  * @param {number} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
  * @param {number} width - How many tiles wide from the `tileX` index the area will be.

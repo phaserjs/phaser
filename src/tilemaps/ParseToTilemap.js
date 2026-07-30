@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -28,12 +28,12 @@ var Tilemap = require('./Tilemap');
  * a 2D array of tile indexes.
  * @param {boolean} [insertNull=false] - Controls how empty tiles, tiles with an index of -1, in the
  * map data are handled. If `true`, empty locations will get a value of `null`. If `false`, empty
- * location will get a Tile object with an index of -1. If you've a large sparsely populated map and
+ * locations will get a Tile object with an index of -1. If you have a large sparsely populated map and
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
  *
- * @return {Phaser.Tilemaps.Tilemap}
+ * @return {Phaser.Tilemaps.Tilemap} The Tilemap object created from the given data.
  */
 var ParseToTilemap = function (scene, key, tileWidth, tileHeight, width, height, data, insertNull)
 {

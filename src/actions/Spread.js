@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25,7 +25,7 @@
  * @param {string} property - The property of the Game Object to spread.
  * @param {number} min - The minimum value.
  * @param {number} max - The maximum value.
- * @param {boolean} [inc=false] - Should the values be incremented? `true` or set (`false`)
+ * @param {boolean} [inc=false] - Should the values be incremented (`true`) or set directly (`false`)?
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that were passed to this Action.
  */

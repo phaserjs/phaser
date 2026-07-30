@@ -1,11 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Provides methods used for getting and setting the Scroll Factor of a Game Object.
+ * Provides methods used for setting the Scroll Factor of a Game Object.
  *
  * @namespace Phaser.GameObjects.Components.ScrollFactor
  * @since 3.0.0
@@ -25,7 +25,7 @@ var ScrollFactor = {
      * A value of 0 means it will not move at all, even if the camera moves.
      * Other values control the degree to which the camera movement is mapped to this Game Object.
      *
-     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * Please be aware that scroll factor values other than 1 are not taken into consideration when
      * calculating physics collisions. Bodies always collide based on their world position, but changing
      * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
      * them from physics bodies if not accounted for in your code.
@@ -49,7 +49,7 @@ var ScrollFactor = {
      * A value of 0 means it will not move at all, even if the camera moves.
      * Other values control the degree to which the camera movement is mapped to this Game Object.
      *
-     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * Please be aware that scroll factor values other than 1 are not taken into consideration when
      * calculating physics collisions. Bodies always collide based on their world position, but changing
      * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
      * them from physics bodies if not accounted for in your code.
@@ -62,7 +62,9 @@ var ScrollFactor = {
     scrollFactorY: 1,
 
     /**
-     * Sets the scroll factor of this Game Object.
+     * Sets the horizontal and vertical scroll factor of this Game Object. If only the `x` value is
+     * provided, it is applied to both axes. This is a convenience method for setting `scrollFactorX`
+     * and `scrollFactorY` in a single call.
      *
      * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
      *
@@ -73,7 +75,7 @@ var ScrollFactor = {
      * A value of 0 means it will not move at all, even if the camera moves.
      * Other values control the degree to which the camera movement is mapped to this Game Object.
      *
-     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * Please be aware that scroll factor values other than 1 are not taken into consideration when
      * calculating physics collisions. Bodies always collide based on their world position, but changing
      * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
      * them from physics bodies if not accounted for in your code.

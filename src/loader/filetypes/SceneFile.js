@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,14 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
- * An external Scene JavaScript File suitable for loading by the Loader.
+ * A Scene File is an external JavaScript file that defines a Phaser Scene class, which is loaded by the Loader
+ * and then registered directly with the Scene Manager so it can be started, launched, or otherwise used like
+ * any Scene that was defined locally. This allows you to split your game's Scenes across multiple JavaScript
+ * files and load them on demand rather than bundling everything upfront.
+ *
+ * The key used when loading must match the class name defined in the JavaScript file, as the file is evaluated
+ * and the class is instantiated by name. Once loaded, the Scene is available to the Scene Manager under either
+ * that key or whichever key was passed to `super()` in the Scene's constructor.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#sceneFile method and are not typically created directly.
  *
@@ -79,7 +86,8 @@ var SceneFile = new Class({
     },
 
     /**
-     * Adds this file to its target cache upon successful loading and processing.
+     * Evaluates the loaded JavaScript source, instantiates the Scene class identified by this file's key,
+     * and registers the resulting Scene instance with the Scene Manager so it is available for use.
      *
      * @method Phaser.Loader.FileTypes.SceneFile#addToCache
      * @since 3.16.0

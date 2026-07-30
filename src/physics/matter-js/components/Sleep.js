@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,7 +9,12 @@ var Sleeping = require('../lib/core/Sleeping');
 var MatterEvents = require('../lib/core/Events');
 
 /**
- * Enables a Matter-enabled Game Object to be able to go to sleep. Should be used as a mixin and not directly.
+ * Provides methods for controlling the sleep state of a Matter.js physics body. Sleep is a performance
+ * optimization in Matter.js: when a body has had near-zero velocity for a set number of updates, the
+ * engine can put it to sleep, temporarily removing it from active simulation. Sleeping bodies do not
+ * participate in collision detection or physics updates, which can significantly reduce CPU overhead
+ * in scenes with many idle bodies. When a sleeping body is disturbed by a collision or a manual wake
+ * call, it is reactivated automatically. This component should be used as a mixin and not directly.
  *
  * @namespace Phaser.Physics.Matter.Components.Sleep
  * @since 3.0.0
@@ -17,7 +22,9 @@ var MatterEvents = require('../lib/core/Events');
 var Sleep = {
 
     /**
-     * Sets this Body to sleep.
+     * Immediately puts this physics body to sleep, removing it from active simulation.
+     * A sleeping body will not move, generate collisions, or consume CPU until it is woken.
+     * It can be woken manually via `setAwake`, or automatically when struck by another body.
      *
      * @method Phaser.Physics.Matter.Components.Sleep#setToSleep
      * @since 3.22.0
@@ -32,7 +39,8 @@ var Sleep = {
     },
 
     /**
-     * Wakes this Body if asleep.
+     * Wakes this physics body if it is currently asleep, returning it to active simulation.
+     * Once awake, the body will resume participating in collisions and physics updates.
      *
      * @method Phaser.Physics.Matter.Components.Sleep#setAwake
      * @since 3.22.0
@@ -52,7 +60,7 @@ var Sleep = {
      * @method Phaser.Physics.Matter.Components.Sleep#setSleepThreshold
      * @since 3.0.0
      *
-     * @param {number} [value=60] - A `Number` that defines the number of updates in which this body must have near-zero velocity before it is set as sleeping.
+     * @param {number} [value=60] - The number of consecutive updates with near-zero velocity required before the body is put to sleep.
      *
      * @return {this} This Game Object instance.
      */
@@ -95,7 +103,7 @@ var Sleep = {
      * @method Phaser.Physics.Matter.Components.Sleep#setSleepStartEvent
      * @since 3.0.0
      *
-     * @param {boolean} value - `true` to enable the sleep event, or `false` to disable it.
+     * @param {boolean} value - `true` to enable the `SLEEP_START` event for this body, or `false` to disable it.
      *
      * @return {this} This Game Object instance.
      */
@@ -124,7 +132,7 @@ var Sleep = {
      * @method Phaser.Physics.Matter.Components.Sleep#setSleepEndEvent
      * @since 3.0.0
      *
-     * @param {boolean} value - `true` to enable the sleep event, or `false` to disable it.
+     * @param {boolean} value - `true` to enable the `SLEEP_END` event for this body, or `false` to disable it.
      *
      * @return {this} This Game Object instance.
      */

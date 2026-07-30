@@ -1,12 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
-var JSONFile = require('./JSONFile.js');
+var JSONFile = require('./JSONFile');
 var TILEMAP_FORMATS = require('../../tilemaps/Formats');
 
 /**
@@ -70,7 +70,7 @@ var TilemapImpactFile = new Class({
  * }
  * ```
  *
- * Impact Tilemap data is created the Impact.js Map Editor called Weltmeister.
+ * Impact Tilemap data is created by the Impact.js Map Editor called Weltmeister.
  *
  * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
  * or if it's already running, when the next free load slot becomes available. This happens automatically if you
@@ -83,7 +83,7 @@ var TilemapImpactFile = new Class({
  * The key must be a unique String. It is used to add the file to the global Tilemap Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the Tilemap Cache.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
- * then remove it from the Text Cache first, before loading a new one.
+ * then remove it from the Tilemap Cache first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
  *

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -279,7 +279,7 @@ var ScenePlugin = new Class({
      *
      * @param {Phaser.Types.Scenes.SceneTransitionConfig} config - The transition configuration object.
      *
-     * @return {boolean} `true` is the transition was started, otherwise `false`.
+     * @return {boolean} `true` if the transition was started, otherwise `false`.
      */
     transition: function (config)
     {
@@ -506,7 +506,7 @@ var ScenePlugin = new Class({
      * @genericUse {(T|string)} - [key]
      *
      * @param {(string|Phaser.Scene)} key - The Scene to run.
-     * @param {object} [data] - A data object that will be passed to the Scene and emitted in its ready, wake, or resume events.
+     * @param {object} [data] - A data object that will be passed to the Scene and emitted in its start, wake, or resume events.
      *
      * @return {this} This Scene Plugin instance.
      */
@@ -596,7 +596,7 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Makes the Scene wake-up (starts update and render)
+     * Makes the Scene wake-up (starts update and render).
      *
      * This will happen at the next Scene Manager update, not immediately.
      *
@@ -632,14 +632,15 @@ var ScenePlugin = new Class({
      * @genericUse {(T|string)} - [key]
      *
      * @param {(string|Phaser.Scene)} key - The Scene to start.
+     * @param {any} [data] - Optional data object to pass to either the Scene `wake` or `start` method.
      *
      * @return {this} This Scene Plugin instance.
      */
-    switch: function (key)
+    switch: function (key, data)
     {
         if (key !== this.key)
         {
-            this.manager.queueOp('switch', this.key, key);
+            this.manager.queueOp('switch', this.key, key, data);
         }
 
         return this;
@@ -708,7 +709,7 @@ var ScenePlugin = new Class({
      * @generic {Phaser.Scene} T
      * @genericUse {(T|string)} - [key]
      *
-     * @param {boolean} value - The visible value.
+     * @param {boolean} value - If `true` the Scene will be made visible. If `false` it will be hidden.
      * @param {(string|Phaser.Scene)} [key] - The Scene to set the visible state for.
      *
      * @return {this} This Scene Plugin instance.
@@ -728,7 +729,7 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Checks if the given Scene is sleeping or not?
+     * Checks if the given Scene is sleeping or not.
      *
      * @method Phaser.Scenes.ScenePlugin#isSleeping
      * @since 3.0.0
@@ -748,7 +749,7 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Checks if the given Scene is running or not?
+     * Checks if the given Scene is running or not.
      *
      * @method Phaser.Scenes.ScenePlugin#isActive
      * @since 3.0.0
@@ -768,7 +769,7 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Checks if the given Scene is paused or not?
+     * Checks if the given Scene is paused or not.
      *
      * @method Phaser.Scenes.ScenePlugin#isPaused
      * @since 3.17.0
@@ -788,7 +789,7 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Checks if the given Scene is visible or not?
+     * Checks if the given Scene is visible or not.
      *
      * @method Phaser.Scenes.ScenePlugin#isVisible
      * @since 3.0.0
@@ -836,9 +837,10 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Swaps the position of two scenes in the Scenes list, so that Scene B is directly above Scene A.
+     * Moves a Scene so it is immediately above another Scene in the Scenes list.
+     * If the Scene is already above the other, it isn't moved.
      *
-     * This controls the order in which they are rendered and updated.
+     * This means it will render over the top of the other Scene.
      *
      * @method Phaser.Scenes.ScenePlugin#moveAbove
      * @since 3.2.0
@@ -864,9 +866,10 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Swaps the position of two scenes in the Scenes list, so that Scene B is directly below Scene A.
+     * Moves a Scene so it is immediately below another Scene in the Scenes list.
+     * If the Scene is already below the other, it isn't moved.
      *
-     * This controls the order in which they are rendered and updated.
+     * This means it will render behind the other Scene.
      *
      * @method Phaser.Scenes.ScenePlugin#moveBelow
      * @since 3.2.0
@@ -894,7 +897,7 @@ var ScenePlugin = new Class({
     /**
      * Removes a Scene from the SceneManager.
      *
-     * The Scene is removed from the local scenes array, it's key is cleared from the keys
+     * The Scene is removed from the local scenes array, its key is cleared from the keys
      * cache and Scene.Systems.destroy is then called on it.
      *
      * If the SceneManager is processing the Scenes when this method is called it will
@@ -1012,7 +1015,10 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Retrieve a Scene.
+     * Retrieves a Scene based on the given key.
+     *
+     * If an actual Scene is passed to this method, it can be used to check if
+     * its currently within the Scene Manager, or not.
      *
      * @generic {Phaser.Scene} T
      * @genericUse {(T|string)} - [key]

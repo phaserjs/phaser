@@ -1,20 +1,25 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Tileset = require('../../Tileset');
 
 /**
- * Master list of tiles -> x, y, index in tileset.
+ * Builds a lookup index that maps each global tile ID (GID) to its pixel position within its
+ * tileset image and the index of that tileset within the map data. The returned array is sparse,
+ * keyed by GID, where each entry is a three-element array of the form `[x, y, tilesetIndex]`.
+ * The x and y values are the pixel coordinates of the top-left corner of the tile within its
+ * tileset image, accounting for tile margin and spacing. Any image collections in the map data
+ * are also converted into Tileset objects and added to `mapData.tilesets` before the index is built.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.BuildTilesetIndex
  * @since 3.0.0
  *
  * @param {(Phaser.Tilemaps.MapData|Phaser.Tilemaps.Tilemap)} mapData - The Map Data object.
  *
- * @return {array} An array of Tileset objects.
+ * @return {array} A sparse array keyed by global tile ID (GID), where each entry is `[x, y, tilesetIndex]`.
  */
 var BuildTilesetIndex = function (mapData)
 {
@@ -30,10 +35,14 @@ var BuildTilesetIndex = function (mapData)
         for (var j = 0; j < images.length; j++)
         {
             var image = images[j];
+            var offset = {
+                x: 0,
+                y: image.height - mapData.tileHeight
+            };
+            
+            set = new Tileset(image.image, image.gid, image.width, image.height, 0, 0, undefined, undefined, offset);
 
-            set = new Tileset(image.image, image.gid, collection.imageWidth, collection.imageHeight, 0, 0);
-
-            set.updateTileData(collection.imageWidth, collection.imageHeight);
+            set.updateTileData(image.width, image.height);
 
             mapData.tilesets.push(set);
         }

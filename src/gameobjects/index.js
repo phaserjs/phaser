@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29,8 +29,8 @@ var GameObjects = {
     Container: require('./container/Container'),
     DOMElement: require('./domelement/DOMElement'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
-    Extern: require('./extern/Extern.js'),
-    Graphics: require('./graphics/Graphics.js'),
+    Extern: require('./extern/Extern'),
+    Graphics: require('./graphics/Graphics'),
     Group: require('./group/Group'),
     Image: require('./image/Image'),
     Layer: require('./layer/Layer'),
@@ -40,6 +40,7 @@ var GameObjects = {
     RetroFont: require('./bitmaptext/RetroFont'),
     Rope: require('./rope/Rope'),
     Sprite: require('./sprite/Sprite'),
+    Stamp: require('./stamp/Stamp'),
 
     Text: require('./text/Text'),
     GetTextSize: require('./text/GetTextSize'),
@@ -82,6 +83,7 @@ var GameObjects = {
         RenderTexture: require('./rendertexture/RenderTextureFactory'),
         Rope: require('./rope/RopeFactory'),
         Sprite: require('./sprite/SpriteFactory'),
+        Stamp: require('./stamp/StampFactory'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
         Text: require('./text/TextFactory'),
         TileSprite: require('./tilesprite/TileSpriteFactory'),
@@ -114,6 +116,7 @@ var GameObjects = {
         RenderTexture: require('./rendertexture/RenderTextureCreator'),
         Rope: require('./rope/RopeCreator'),
         Sprite: require('./sprite/SpriteCreator'),
+        Stamp: require('./stamp/StampCreator'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
         Text: require('./text/TextCreator'),
         TileSprite: require('./tilesprite/TileSpriteCreator'),
@@ -126,23 +129,56 @@ var GameObjects = {
 //  WebGL only Game Objects
 if (typeof WEBGL_RENDERER)
 {
+    GameObjects.CaptureFrame = require('./captureframe/CaptureFrame');
+    GameObjects.CustomContext = require('./customcontext/CustomContext');
+    GameObjects.Gradient = require('./gradient/Gradient');
+    GameObjects.Mesh2D = require('./mesh2d/Mesh2D');
+    GameObjects.Noise = require('./noise/Noise');
+    GameObjects.NoiseCell2D = require('./noise/noisecell2d/NoiseCell2D');
+    GameObjects.NoiseCell3D = require('./noise/noisecell3d/NoiseCell3D');
+    GameObjects.NoiseCell4D = require('./noise/noisecell4d/NoiseCell4D');
+    GameObjects.NoiseSimplex2D = require('./noise/noisesimplex2d/NoiseSimplex2D');
+    GameObjects.NoiseSimplex3D = require('./noise/noisesimplex3d/NoiseSimplex3D');
     GameObjects.Shader = require('./shader/Shader');
-    GameObjects.Mesh = require('./mesh/Mesh');
     GameObjects.NineSlice = require('./nineslice/NineSlice');
     GameObjects.PointLight = require('./pointlight/PointLight');
-    GameObjects.Plane = require('./plane/Plane');
+    GameObjects.SpriteGPULayer = require('./spritegpulayer/SpriteGPULayer');
+    GameObjects.Stencil = require('./stencil/Stencil');
+    GameObjects.StencilReference = require('./stencilreference/StencilReference');
 
+    GameObjects.Factories.CaptureFrame = require('./captureframe/CaptureFrameFactory');
+    GameObjects.Factories.CustomContext = require('./customcontext/CustomContextFactory');
+    GameObjects.Factories.Gradient = require('./gradient/GradientFactory');
+    GameObjects.Factories.Mesh2D = require('./mesh2d/Mesh2DFactory');
+    GameObjects.Factories.Noise = require('./noise/NoiseFactory');
+    GameObjects.Factories.NoiseCell2D = require('./noise/noisecell2d/NoiseCell2DFactory');
+    GameObjects.Factories.NoiseCell3D = require('./noise/noisecell3d/NoiseCell3DFactory');
+    GameObjects.Factories.NoiseCell4D = require('./noise/noisecell4d/NoiseCell4DFactory');
+    GameObjects.Factories.NoiseSimplex2D = require('./noise/noisesimplex2d/NoiseSimplex2DFactory');
+    GameObjects.Factories.NoiseSimplex3D = require('./noise/noisesimplex3d/NoiseSimplex3DFactory');
     GameObjects.Factories.Shader = require('./shader/ShaderFactory');
-    GameObjects.Factories.Mesh = require('./mesh/MeshFactory');
     GameObjects.Factories.NineSlice = require('./nineslice/NineSliceFactory');
     GameObjects.Factories.PointLight = require('./pointlight/PointLightFactory');
-    GameObjects.Factories.Plane = require('./plane/PlaneFactory');
+    GameObjects.Factories.SpriteGPULayer = require('./spritegpulayer/SpriteGPULayerFactory');
+    GameObjects.Factories.Stencil = require('./stencil/StencilFactory');
+    GameObjects.Factories.StencilReference = require('./stencilreference/StencilReferenceFactory');
 
+    GameObjects.Creators.CaptureFrame = require('./captureframe/CaptureFrameCreator');
+    GameObjects.Creators.CustomContext = require('./customcontext/CustomContextCreator');
+    GameObjects.Creators.Gradient = require('./gradient/GradientCreator');
+    GameObjects.Creators.Mesh2D = require('./mesh2d/Mesh2DCreator');
+    GameObjects.Creators.Noise = require('./noise/NoiseCreator');
+    GameObjects.Creators.NoiseCell2D = require('./noise/noisecell2d/NoiseCell2DCreator');
+    GameObjects.Creators.NoiseCell3D = require('./noise/noisecell3d/NoiseCell3DCreator');
+    GameObjects.Creators.NoiseCell4D = require('./noise/noisecell4d/NoiseCell4DCreator');
+    GameObjects.Creators.NoiseSimplex2D = require('./noise/noisesimplex2d/NoiseSimplex2DCreator');
+    GameObjects.Creators.NoiseSimplex3D = require('./noise/noisesimplex3d/NoiseSimplex3DCreator');
     GameObjects.Creators.Shader = require('./shader/ShaderCreator');
-    GameObjects.Creators.Mesh = require('./mesh/MeshCreator');
     GameObjects.Creators.NineSlice = require('./nineslice/NineSliceCreator');
     GameObjects.Creators.PointLight = require('./pointlight/PointLightCreator');
-    GameObjects.Creators.Plane = require('./plane/PlaneCreator');
+    GameObjects.Creators.SpriteGPULayer = require('./spritegpulayer/SpriteGPULayerCreator');
+    GameObjects.Creators.Stencil = require('./stencil/StencilCreator');
+    GameObjects.Creators.StencilReference = require('./stencilreference/StencilReferenceCreator');
 
     GameObjects.Light = require('./lights/Light');
     GameObjects.LightsManager = require('./lights/LightsManager');

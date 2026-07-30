@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,6 +14,11 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 /**
  * @classdesc
  * A single Text File suitable for loading by the Loader.
+ *
+ * Text Files load plain-text content from an external file and store it in the Text Cache as a raw string. They are
+ * useful for loading any text-based data, such as dialogue scripts, CSV data, GLSL shader source code, level data,
+ * or any other content that can be represented as a string. Once loaded, the text can be retrieved from the cache
+ * and parsed or processed however the game requires.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#text method and are not typically created directly.
  *
@@ -70,6 +75,8 @@ var TextFile = new Class({
     /**
      * Called automatically by Loader.nextFile.
      * This method controls what extra work this File does with its loaded data.
+     * It reads the plain-text content from the XHR response and stores it in `this.data`,
+     * then calls `onProcessComplete` to flag the file as ready for use in the Text Cache.
      *
      * @method Phaser.Loader.FileTypes.TextFile#onProcess
      * @since 3.7.0

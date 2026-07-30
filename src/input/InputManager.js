@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -46,7 +46,7 @@ var InputManager = new Class({
     {
         /**
          * The Game instance that owns the Input Manager.
-         * A Game only maintains on instance of the Input Manager at any time.
+         * A Game only maintains one instance of the Input Manager at any time.
          *
          * @name Phaser.Input.InputManager#game
          * @type {Phaser.Game}
@@ -176,11 +176,6 @@ var InputManager = new Class({
          * @since 3.10.0
          */
         this.pointersTotal = config.inputActivePointers;
-
-        if (config.inputTouch && this.pointersTotal === 1)
-        {
-            this.pointersTotal = 2;
-        }
 
         for (var i = 0; i <= this.pointersTotal; i++)
         {
@@ -457,11 +452,12 @@ var InputManager = new Class({
      * @private
      * @since 3.10.0
      *
-     * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
+     * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method. Pass `null` if you just want to set the force value.
+     * @param {boolean} [forceReset=false] - Should the reset happen regardless of the object's cursor state? Default false.
      */
-    resetCursor: function (interactiveObject)
+    resetCursor: function (interactiveObject, forceReset)
     {
-        if (interactiveObject.cursor && this.canvas)
+        if ((forceReset || (interactiveObject && interactiveObject.cursor)) && this.canvas)
         {
             this.canvas.style.cursor = this.defaultCursor;
         }
@@ -570,7 +566,7 @@ var InputManager = new Class({
         {
             var changedTouch = event.changedTouches[c];
 
-            for (var i = 1; i < this.pointersTotal; i++)
+            for (var i = 1; i < pointers.length; i++)
             {
                 var pointer = pointers[i];
 
@@ -608,13 +604,13 @@ var InputManager = new Class({
         {
             var changedTouch = event.changedTouches[c];
 
-            for (var i = 1; i < this.pointersTotal; i++)
+            for (var i = 1; i < pointers.length; i++)
             {
                 var pointer = pointers[i];
 
                 if (pointer.active && pointer.identifier === changedTouch.identifier)
                 {
-                    var element = document.elementFromPoint(changedTouch.pageX, changedTouch.pageY);
+                    var element = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
                     var overCanvas = element === this.canvas;
 
                     if (!this.isOver && overCanvas)
@@ -665,7 +661,7 @@ var InputManager = new Class({
         {
             var changedTouch = event.changedTouches[c];
 
-            for (var i = 1; i < this.pointersTotal; i++)
+            for (var i = 1; i < pointers.length; i++)
             {
                 var pointer = pointers[i];
 
@@ -701,7 +697,7 @@ var InputManager = new Class({
         {
             var changedTouch = event.changedTouches[c];
 
-            for (var i = 1; i < this.pointersTotal; i++)
+            for (var i = 1; i < pointers.length; i++)
             {
                 var pointer = pointers[i];
 
@@ -999,7 +995,7 @@ var InputManager = new Class({
      * @param {number} x - The translated x coordinate for the hit test.
      * @param {number} y - The translated y coordinate for the hit test.
      *
-     * @return {boolean} `true` if the coordinates were inside the Game Objects hit area, otherwise `false`.
+     * @return {boolean} `true` if the coordinates were inside the Interactive Object's hit area, otherwise `false`.
      */
     pointWithinInteractiveObject: function (object, x, y)
     {

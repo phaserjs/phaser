@@ -16,8 +16,7 @@
         "CANVAS_RENDERER": true,
         "Phaser": true,
         "process": true,
-        "ActiveXObject": true,
-        "FBInstant": true
+        "ActiveXObject": true
     },
     "rules": {
 
@@ -28,7 +27,6 @@
         "es5/no-computed-properties": 2,
         "es5/no-default-parameters": 2,
         "es5/no-destructuring": 2,
-        "es5/no-es6-static-methods": 2,
         "es5/no-for-of": 2,
         "es5/no-generators": 2,
         "es5/no-modules": 2,
@@ -43,6 +41,7 @@
 
         "no-cond-assign": [ "error", "except-parens" ],
         "no-duplicate-case": [ "error" ],
+        "no-unused-vars": [ "error", { "args": "none" } ],
 
         "accessor-pairs": "error",
         "curly": "error",
@@ -97,7 +96,7 @@
         "space-in-parens": [ "error",  "never" ],
         "space-infix-ops": [ "error", { "int32Hint": true } ],
         "wrap-regex": "error",
-        "spaced-comment": [ "error", "always", { "block": { "balanced": true, "exceptions": ["*", "!"] }} ]
-
+        "spaced-comment": [ "error", "always", { "block": { "balanced": true, "exceptions": ["*", "!"] }} ],
+        "no-irregular-whitespace": ["error", { "skipComments": true }]
     }
 }

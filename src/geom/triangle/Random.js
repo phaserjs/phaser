@@ -1,10 +1,10 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Returns a random Point from within the area of the given Triangle.
@@ -12,16 +12,16 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Triangle.Random
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Triangle} triangle - The Triangle to get a random point from.
- * @param {Phaser.Geom.Point} [out] - The Point object to store the position in. If not given, a new Point instance is created.
+ * @param {Phaser.Math.Vector2} [out] - The Vector2 point object to store the position in. If not given, a new Vector2 instance is created.
  *
- * @return {Phaser.Geom.Point} A Point object holding the coordinates of a random position within the Triangle.
+ * @return {Phaser.Math.Vector2} A Vector2 point object holding the coordinates of a random position within the Triangle.
  */
 var Random = function (triangle, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     //  Basis vectors
     var ux = triangle.x2 - triangle.x1;

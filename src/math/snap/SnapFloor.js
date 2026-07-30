@@ -1,11 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Snap a value to nearest grid slice, using floor.
+ * Snap a value to the nearest lower grid slice, using floor.
  *
  * Example: if you have an interval gap of `5` and a position of `12`... you will snap to `10`.
  * As will `14` snap to `10`... but `16` will snap to `15`.

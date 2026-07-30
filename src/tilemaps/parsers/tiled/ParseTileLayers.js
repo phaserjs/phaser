@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,22 @@ var ParseGID = require('./ParseGID');
 var Tile = require('../../Tile');
 
 /**
- * Parses all tilemap layers in a Tiled JSON object into new LayerData objects.
+ * Parses all tile layers from a Tiled JSON object and returns them as an array of LayerData
+ * objects. Each tile layer in the JSON becomes one LayerData instance populated with Tile objects.
+ *
+ * The function walks the full layer hierarchy, descending into Tiled group layers so that nested
+ * tile layers are included. Group transform properties (offset, opacity, visibility) are
+ * accumulated and applied to every child layer. Compressed tile data is not supported and any
+ * compressed layer will be skipped with a console warning. Layers encoded as uncompressed Base64
+ * are decoded automatically before processing.
+ *
+ * Both finite and infinite (chunked) Tiled maps are handled. For hexagonal maps the stagger axis,
+ * stagger index, and hex side length are read from the JSON and stored on each LayerData, and the
+ * pixel dimensions of the layer are calculated accordingly.
+ *
+ * Each tile's flip flags and rotation are derived from the GID bit-packing that Tiled uses, so
+ * FlippedHorizontal, FlippedVertical, and FlippedAntiDiagonal are translated into the tile's
+ * `flipX` and `rotation` properties.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseTileLayers
  * @since 3.0.0
@@ -111,6 +126,8 @@ var ParseTileLayers = function (json, insertNull)
         var gidInfo;
         var tile;
         var blankTile;
+        var triangleHeight;
+        var triangleWidth;
 
         var output = [];
         var x = 0;
@@ -140,6 +157,19 @@ var ParseTileLayers = function (json, insertNull)
                 layerData.hexSideLength = json.hexsidelength;
                 layerData.staggerAxis = json.staggeraxis;
                 layerData.staggerIndex = json.staggerindex;
+
+                if (layerData.staggerAxis === 'y')
+                {
+                    triangleHeight = (layerData.tileHeight - layerData.hexSideLength) / 2;
+                    layerData.widthInPixels = layerData.tileWidth * (layerData.width + 0.5);
+                    layerData.heightInPixels = layerData.height * (layerData.hexSideLength + triangleHeight) + triangleHeight;
+                }
+                else
+                {
+                    triangleWidth = (layerData.tileWidth - layerData.hexSideLength) / 2;
+                    layerData.widthInPixels = layerData.width * (layerData.hexSideLength + triangleWidth) + triangleWidth;
+                    layerData.heightInPixels = layerData.tileHeight * (layerData.height + 0.5);
+                }
             }
 
             for (var c = 0; c < curl.height; c++)
@@ -221,6 +251,19 @@ var ParseTileLayers = function (json, insertNull)
                 layerData.hexSideLength = json.hexsidelength;
                 layerData.staggerAxis = json.staggeraxis;
                 layerData.staggerIndex = json.staggerindex;
+
+                if (layerData.staggerAxis === 'y')
+                {
+                    triangleHeight = (layerData.tileHeight - layerData.hexSideLength) / 2;
+                    layerData.widthInPixels = layerData.tileWidth * (layerData.width + 0.5);
+                    layerData.heightInPixels = layerData.height * (layerData.hexSideLength + triangleHeight) + triangleHeight;
+                }
+                else
+                {
+                    triangleWidth = (layerData.tileWidth - layerData.hexSideLength) / 2;
+                    layerData.widthInPixels = layerData.width * (layerData.hexSideLength + triangleWidth) + triangleWidth;
+                    layerData.heightInPixels = layerData.tileHeight * (layerData.height + 0.5);
+                }
             }
             var row = [];
 

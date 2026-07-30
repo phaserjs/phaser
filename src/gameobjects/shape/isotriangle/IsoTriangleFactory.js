@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20,10 +20,10 @@ var IsoTriangle = require('./IsoTriangle');
  * This shape supports only fill colors and cannot be stroked.
  *
  * An IsoTriangle is an 'isometric' triangle. Think of it like a pyramid. Each face has a different
- * fill color. You can set the color of the top, left and right faces of the triangle respectively
+ * fill color. You can set the color of the top, left and right faces of the triangle respectively.
  * You can also choose which of the faces are rendered via the `showTop`, `showLeft` and `showRight` properties.
  *
- * You cannot view an IsoTriangle from under-neath, however you can change the 'angle' by setting
+ * You cannot view an IsoTriangle from underneath, however you can change the 'angle' by setting
  * the `projection` property. The `reversed` property controls if the IsoTriangle is rendered upside
  * down or not.
  *

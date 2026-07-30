@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,9 +12,11 @@ var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
- * A single Gamepad.
- *
- * These are created, updated and managed by the Gamepad Plugin.
+ * Represents a single connected gamepad controller. Each Gamepad contains Button and Axis
+ * objects that are automatically created and updated by the Gamepad Plugin. You can access
+ * the directional sticks via the `leftStick` and `rightStick` Vector2 properties, individual
+ * buttons via the `buttons` array, and axes via the `axes` array. Gamepads are typically
+ * accessed through `this.input.gamepad.pad1` through `pad4` in a Scene.
  *
  * @class Gamepad
  * @extends Phaser.Events.EventEmitter
@@ -83,7 +85,7 @@ var Gamepad = new Class({
 
         for (var i = 0; i < pad.buttons.length; i++)
         {
-            buttons.push(new Button(this, i));
+            buttons.push(new Button(this, i, (pad.buttons[i].value >= 0.5)));
         }
 
         /**
@@ -252,7 +254,7 @@ var Gamepad = new Class({
          * A reference to the Horizontal Axis for the Left Stick.
          *
          * @name Phaser.Input.Gamepad.Gamepad#_HAxisLeft
-         * @type {Phaser.Input.Gamepad.Button}
+         * @type {Phaser.Input.Gamepad.Axis}
          * @private
          * @since 3.10.0
          */
@@ -262,7 +264,7 @@ var Gamepad = new Class({
          * A reference to the Vertical Axis for the Left Stick.
          *
          * @name Phaser.Input.Gamepad.Gamepad#_VAxisLeft
-         * @type {Phaser.Input.Gamepad.Button}
+         * @type {Phaser.Input.Gamepad.Axis}
          * @private
          * @since 3.10.0
          */
@@ -272,7 +274,7 @@ var Gamepad = new Class({
          * A reference to the Horizontal Axis for the Right Stick.
          *
          * @name Phaser.Input.Gamepad.Gamepad#_HAxisRight
-         * @type {Phaser.Input.Gamepad.Button}
+         * @type {Phaser.Input.Gamepad.Axis}
          * @private
          * @since 3.10.0
          */
@@ -282,7 +284,7 @@ var Gamepad = new Class({
          * A reference to the Vertical Axis for the Right Stick.
          *
          * @name Phaser.Input.Gamepad.Gamepad#_VAxisRight
-         * @type {Phaser.Input.Gamepad.Button}
+         * @type {Phaser.Input.Gamepad.Axis}
          * @private
          * @since 3.10.0
          */
@@ -341,14 +343,14 @@ var Gamepad = new Class({
     /**
      * Gets the value of an axis based on the given index.
      * The index must be valid within the range of axes supported by this Gamepad.
-     * The return value will be a float between 0 and 1.
+     * The return value will be a float between -1 and 1.
      *
      * @method Phaser.Input.Gamepad.Gamepad#getAxisValue
      * @since 3.10.0
      *
      * @param {number} index - The index of the axes to get the value for.
      *
-     * @return {number} The value of the axis, between 0 and 1.
+     * @return {number} The value of the axis, between -1 and 1.
      */
     getAxisValue: function (index)
     {
@@ -389,8 +391,8 @@ var Gamepad = new Class({
      * Gets the value of a button based on the given index.
      * The index must be valid within the range of buttons supported by this Gamepad.
      *
-     * The return value will be either 0 or 1 for an analogue button, or a float between 0 and 1
-     * for a pressure-sensitive digital button, such as the shoulder buttons on a Dual Shock.
+     * The return value will be either 0 or 1 for a digital button, or a float between 0 and 1
+     * for a pressure-sensitive analogue button, such as the shoulder buttons on a Dual Shock.
      *
      * @method Phaser.Input.Gamepad.Gamepad#getButtonValue
      * @since 3.10.0

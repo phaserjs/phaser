@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,10 +17,10 @@ var SetTileCollision = require('./SetTileCollision');
  * @since 3.0.0
  *
  * @param {number} index - The tile index to fill the area with.
- * @param {number} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
- * @param {number} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
- * @param {number} width - How many tiles wide from the `tileX` index the area will be.
- * @param {number} height - How many tiles tall from the `tileY` index the area will be.
+ * @param {number} tileX - The left most tile coordinate (in tile coordinates) to use as the origin of the area.
+ * @param {number} tileY - The top most tile coordinate (in tile coordinates) to use as the origin of the area.
+ * @param {number} width - How many tiles wide from the `tileX` coordinate the area will be.
+ * @param {number} height - How many tiles tall from the `tileY` coordinate the area will be.
  * @param {boolean} recalculateFaces - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The tile layer to use. If not given the current layer is used.
  */

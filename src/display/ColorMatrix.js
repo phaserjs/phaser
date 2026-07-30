@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,24 @@ var tempMatrix = new Float32Array(20);
  * operations. It provides methods required to modify the color values, such as adjusting
  * the brightness, setting a sepia tone, hue rotation and more.
  *
+ * The matrix rows (indices 0, 1, 2, 3, 4 form the first row)
+ * are summed to create the red, green, blue, and alpha channels in order.
+ * The matrix columns (indices 0, 5, 10, 15 form the first column)
+ * describe contributions from the initial channels,
+ * typically in the range -1 to 1.
+ * The last column (4, 9, 14, 19) contains an addition,
+ * expected to be in the range 0-255 (although other values are valid).
+ * For example, to set the red channel to the contents of the green channel,
+ * the first row would be [0, 1, 0, 0, 0].
+ * To set the red channel to full, regardless of current channels,
+ * the first row would be [0, 0, 0, 0, 255].
+ *
+ * These operations are the default use,
+ * but you can use ColorMatrix to conveniently store data for other purposes.
+ *
  * Use the method `getData` to return a Float32Array containing the current color values.
+ * This shrinks the addition column from the range 0-255 to 0-1
+ * (but does not clamp it).
  *
  * @class ColorMatrix
  * @memberof Phaser.Display
@@ -203,7 +220,7 @@ var ColorMatrix = new Class({
     /**
      * Desaturates this ColorMatrix (removes color from it).
      *
-     * @method Phaser.Display.ColorMatrix#saturation
+     * @method Phaser.Display.ColorMatrix#desaturate
      * @since 3.50.0
      *
      * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
@@ -283,6 +300,22 @@ var ColorMatrix = new Class({
         if (multiply === undefined) { multiply = false; }
 
         return this.multiply(ColorMatrix.BLACK_WHITE, multiply);
+    },
+
+    /**
+     * Sets this ColorMatrix to be black, only preserving alpha.
+     * Useful for cases where you only want the alpha.
+     *
+     * @method Phaser.Display.ColorMatrix#black
+     * @since 4.0.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    black: function (multiply)
+    {
+        return this.multiply(ColorMatrix.BLACK, multiply);
     },
 
     /**
@@ -490,6 +523,83 @@ var ColorMatrix = new Class({
     },
 
     /**
+     * Applies an alpha-to-brightness color effect to this ColorMatrix.
+     * This replaces the color with a grayscale depiction of the original alpha,
+     * where black represents transparency and white represents opacity,
+     * and sets the alpha to full.
+     *
+     * @method Phaser.Display.ColorMatrix#alphaToBrightness
+     * @since 4.0.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    alphaToBrightness: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.ALPHA_TO_BRIGHTNESS, multiply);
+    },
+
+    /**
+     * Applies an alpha-to-brightness color effect to this ColorMatrix.
+     * This replaces the color with a grayscale depiction of the original alpha,
+     * where white represents transparency and black represents opacity,
+     * and sets the alpha to full.
+     *
+     * @method Phaser.Display.ColorMatrix#alphaToBrightnessInverse
+     * @since 4.0.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    alphaToBrightnessInverse: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.ALPHA_TO_BRIGHTNESS_INVERSE, multiply);
+    },
+
+    /**
+     * Applies a brightness-to-alpha color effect to this ColorMatrix.
+     * This preserves RGB, but replaces the alpha with the brightness of the color.
+     *
+     * @method Phaser.Display.ColorMatrix#brightnessToAlpha
+     * @since 4.0.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    brightnessToAlpha: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.BRIGHTNESS_TO_ALPHA, multiply);
+    },
+
+    /**
+     * Applies a brightness-to-alpha color effect to this ColorMatrix.
+     * This preserves RGB, but replaces the alpha with the brightness of the color,
+     * inverted.
+     *
+     * @method Phaser.Display.ColorMatrix#brightnessToAlphaInverse
+     * @since 4.0.0
+     *
+     * @param {boolean} [multiply=false] - Multiply the resulting ColorMatrix (`true`), or set it (`false`) ?
+     *
+     * @return {this} This ColorMatrix instance.
+     */
+    brightnessToAlphaInverse: function (multiply)
+    {
+        if (multiply === undefined) { multiply = false; }
+
+        return this.multiply(ColorMatrix.BRIGHTNESS_TO_ALPHA_INVERSE, multiply);
+    },
+
+    /**
      * Shifts the values of this ColorMatrix into BGR order.
      *
      * @method Phaser.Display.ColorMatrix#shiftToBGR
@@ -507,7 +617,7 @@ var ColorMatrix = new Class({
     },
 
     /**
-     * Multiplies the two given matrices.
+     * Multiplies the given matrix `a` against the current `_matrix`.
      *
      * @method Phaser.Display.ColorMatrix#multiply
      * @since 3.50.0
@@ -573,6 +683,21 @@ var ColorMatrix = new Class({
 });
 
 /**
+ * A constant array used by the ColorMatrix class for black operations.
+ *
+ * @name Phaser.Display.ColorMatrix.BLACK
+ * @const
+ * @type {number[]}
+ * @since 4.0.0
+ */
+ColorMatrix.BLACK = [
+    0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0,
+    0, 0, 0, 1, 0
+];
+
+/**
  * A constant array used by the ColorMatrix class for black_white operations.
  *
  * @name Phaser.Display.ColorMatrix.BLACK_WHITE
@@ -593,7 +718,7 @@ ColorMatrix.BLACK_WHITE = [ 0.3, 0.6, 0.1, 0, 0, 0.3, 0.6, 0.1, 0, 0, 0.3, 0.6, 
 ColorMatrix.NEGATIVE = [ -1, 0, 0, 1, 0, 0, -1, 0, 1, 0, 0, 0, -1, 1, 0, 0, 0, 0, 1, 0 ];
 
 /**
- * A constant array used by the ColorMatrix class for desatured luminance operations.
+ * A constant array used by the ColorMatrix class for desaturated luminance operations.
  *
  * @name Phaser.Display.ColorMatrix.DESATURATE_LUMINANCE
  * @const
@@ -671,6 +796,66 @@ ColorMatrix.TECHNICOLOR = [ 1.9125277891456083, -0.8545344976951645, -0.09155508
  * @since 3.60.0
  */
 ColorMatrix.POLAROID = [ 1.438, -0.062, -0.062, 0, 0, -0.122, 1.378, -0.122, 0, 0, -0.016, -0.016, 1.483, 0, 0, 0, 0, 0, 1, 0 ];
+
+/**
+ * A constant array used by the ColorMatrix class for alpha-to-brightness operations.
+ *
+ * @name Phaser.Display.ColorMatrix.ALPHA_TO_BRIGHTNESS
+ * @const
+ * @type {number[]}
+ * @since 4.0.0
+ */
+ColorMatrix.ALPHA_TO_BRIGHTNESS = [
+    0, 0, 0, 1, 0,
+    0, 0, 0, 1, 0,
+    0, 0, 0, 1, 0,
+    0, 0, 0, 0, 255
+];
+
+/**
+ * A constant array used by the ColorMatrix class for inverse alpha-to-brightness operations.
+ *
+ * @name Phaser.Display.ColorMatrix.ALPHA_TO_BRIGHTNESS_INVERSE
+ * @const
+ * @type {number[]}
+ * @since 4.0.0
+ */
+ColorMatrix.ALPHA_TO_BRIGHTNESS_INVERSE = [
+    0, 0, 0, -1, 255,
+    0, 0, 0, -1, 255,
+    0, 0, 0, -1, 255,
+    0, 0, 0, 0, 255
+];
+
+/**
+ * A constant array used by the ColorMatrix class for brightness-to-alpha operations.
+ *
+ * @name Phaser.Display.ColorMatrix.BRIGHTNESS_TO_ALPHA
+ * @const
+ * @type {number[]}
+ * @since 4.0.0
+ */
+ColorMatrix.BRIGHTNESS_TO_ALPHA = [
+    1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0,
+    0.3, 0.6, 0.1, 0, 0
+];
+
+/**
+ * A constant array used by the ColorMatrix class for inverse brightness-to-alpha operations.
+ *
+ * @name Phaser.Display.ColorMatrix.BRIGHTNESS_TO_ALPHA_INVERSE
+ * @const
+ * @type {number[]}
+ * @since 4.0.0
+ */
+ColorMatrix.BRIGHTNESS_TO_ALPHA_INVERSE = [
+    1, 0, 0, 0, 0,
+    0, 1, 0, 0, 0,
+    0, 0, 1, 0, 0,
+    -0.3, -0.6, -0.1, 0, 255
+];
 
 /**
  * A constant array used by the ColorMatrix class for shift BGR operations.

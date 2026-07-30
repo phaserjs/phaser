@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18,8 +18,8 @@ var Acceleration = {
      * @method Phaser.Physics.Arcade.Components.Acceleration#setAcceleration
      * @since 3.0.0
      *
-     * @param {number} x - The horizontal acceleration
-     * @param {number} [y=x] - The vertical acceleration
+     * @param {number} x - The horizontal acceleration, in pixels per second squared.
+     * @param {number} [y=x] - The vertical acceleration, in pixels per second squared.
      *
      * @return {this} This Game Object.
      */
@@ -36,7 +36,7 @@ var Acceleration = {
      * @method Phaser.Physics.Arcade.Components.Acceleration#setAccelerationX
      * @since 3.0.0
      *
-     * @param {number} value - The horizontal acceleration
+     * @param {number} value - The horizontal acceleration, in pixels per second squared.
      *
      * @return {this} This Game Object.
      */
@@ -53,7 +53,7 @@ var Acceleration = {
      * @method Phaser.Physics.Arcade.Components.Acceleration#setAccelerationY
      * @since 3.0.0
      *
-     * @param {number} value - The vertical acceleration
+     * @param {number} value - The vertical acceleration, in pixels per second squared.
      *
      * @return {this} This Game Object.
      */

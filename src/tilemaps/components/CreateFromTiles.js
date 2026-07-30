@@ -1,9 +1,10 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DeepCopy = require('../../utils/object/DeepCopy');
 var GetTilesWithin = require('./GetTilesWithin');
 var ReplaceByIndex = require('./ReplaceByIndex');
 
@@ -20,7 +21,7 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  * @param {?(number|number[])} replacements - The tile index, or array of indexes, to change a converted tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a one-to-one mapping with the indexes array.
  * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e. scene.make.sprite).
  * @param {Phaser.Scene} scene - The Scene to create the Sprites within.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when determining the world XY
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when determining the world XY position of each tile.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {Phaser.GameObjects.Sprite[]} An array of the Sprites that were created.
@@ -39,39 +40,70 @@ var CreateFromTiles = function (indexes, replacements, spriteConfig, scene, came
     if (!scene) { scene = tilemapLayer.scene; }
     if (!camera) { camera = scene.cameras.main; }
 
-    var tiles = GetTilesWithin(0, 0, layer.width, layer.height, null, layer);
+    var layerWidth = layer.width;
+    var layerHeight = layer.height;
+
+    var tiles = GetTilesWithin(0, 0, layerWidth, layerHeight, null, layer);
     var sprites = [];
     var i;
+
+    var mergeExtras = function (config, tile, properties)
+    {
+        for (var i = 0; i < properties.length; i++)
+        {
+            var property = properties[i];
+
+            if (!config.hasOwnProperty(property))
+            {
+                config[property] = tile[property];
+            }
+        }
+    };
 
     for (i = 0; i < tiles.length; i++)
     {
         var tile = tiles[i];
+        var config = DeepCopy(spriteConfig);
 
         if (indexes.indexOf(tile.index) !== -1)
         {
             var point = tilemapLayer.tileToWorldXY(tile.x, tile.y, undefined, camera,layer);
 
-            spriteConfig.x = point.x;
-            spriteConfig.y = point.y;
+            config.x = point.x;
+            config.y = point.y;
 
-            sprites.push(scene.make.sprite(spriteConfig));
+            mergeExtras(config, tile, [ 'rotation', 'flipX', 'flipY', 'alpha', 'visible', 'tint' ]);
+
+            if (!config.hasOwnProperty('origin'))
+            {
+                config.x += tile.width * 0.5;
+                config.y += tile.height * 0.5;
+            }
+
+            if (config.hasOwnProperty('useSpriteSheet'))
+            {
+                config.key = tile.tileset.image;
+                config.frame = tile.index - tile.tileset.firstgid;
+            }
+
+            sprites.push(scene.make.sprite(config));
         }
     }
 
-    if (typeof replacements === 'number')
-    {
-        //  Assume 1 replacement for all types of tile given
-        for (i = 0; i < indexes.length; i++)
-        {
-            ReplaceByIndex(indexes[i], replacements, 0, 0, layer.width, layer.height, layer);
-        }
-    }
-    else if (Array.isArray(replacements))
+    if (Array.isArray(replacements))
     {
         //  Assume 1 to 1 mapping with indexes array
         for (i = 0; i < indexes.length; i++)
         {
-            ReplaceByIndex(indexes[i], replacements[i], 0, 0, layer.width, layer.height, layer);
+            ReplaceByIndex(indexes[i], replacements[i], 0, 0, layerWidth, layerHeight, layer);
+        }
+    }
+    else if (replacements !== null)
+    {
+        //  Assume 1 replacement for all types of tile given
+        for (i = 0; i < indexes.length; i++)
+        {
+            ReplaceByIndex(indexes[i], replacements, 0, 0, layerWidth, layerHeight, layer);
         }
     }
 

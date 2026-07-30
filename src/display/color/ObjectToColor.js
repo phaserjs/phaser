@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,12 +13,15 @@ var Color = require('./Color');
  * @since 3.0.0
  *
  * @param {Phaser.Types.Display.InputColorObject} input - An object containing `r`, `g`, `b` and `a` properties in the range 0 to 255.
+ * @param {Phaser.Display.Color} [color] - The color where the new color will be stored. If not defined, a new color object is returned.
  *
  * @return {Phaser.Display.Color} A Color object.
  */
-var ObjectToColor = function (input)
+var ObjectToColor = function (input, color)
 {
-    return new Color(input.r, input.g, input.b, input.a);
+    if (!color) { return new Color(input.r, input.g, input.b, input.a); }
+
+    return color.setTo(input.r, input.g, input.b, input.a);
 };
 
 module.exports = ObjectToColor;

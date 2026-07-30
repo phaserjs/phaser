@@ -1,14 +1,14 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var TransformMatrix = require('../gameobjects/components/TransformMatrix');
 
-var tempMatrix1 = new TransformMatrix();
-var tempMatrix2 = new TransformMatrix();
-var tempMatrix3 = new TransformMatrix();
+var camMatrix = new TransformMatrix();
+var layerMatrix = new TransformMatrix();
+var calcMatrix = new TransformMatrix();
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -36,40 +36,27 @@ var TilemapLayerCanvasRenderer = function (renderer, src, camera, parentMatrix)
         return;
     }
 
-    var camMatrix = tempMatrix1;
-    var layerMatrix = tempMatrix2;
-    var calcMatrix = tempMatrix3;
-
     layerMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
 
     var ctx = renderer.currentContext;
     var gidMap = src.gidMap;
 
     ctx.save();
 
+    camMatrix.copyWithScrollFactorFrom(
+        camera.matrixCombined,
+        camera.scrollX, camera.scrollY,
+        src.scrollFactorX, src.scrollFactorY
+    );
+
     if (parentMatrix)
     {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        layerMatrix.e = src.x;
-        layerMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(layerMatrix, calcMatrix);
-
-        calcMatrix.copyToContext(ctx);
+        camMatrix.multiply(parentMatrix);
     }
-    else
-    {
-        layerMatrix.e -= camera.scrollX * src.scrollFactorX;
-        layerMatrix.f -= camera.scrollY * src.scrollFactorY;
 
-        layerMatrix.copyToContext(ctx);
-    }
+    camMatrix.multiply(layerMatrix, calcMatrix);
+
+    calcMatrix.setToContext(ctx);
 
     if (!renderer.antialias || src.scaleX > 1 || src.scaleY > 1)
     {

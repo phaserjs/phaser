@@ -1,0 +1,75 @@
+/**
+ * @author       Benjamin D. Richards <benjamindrichards@gmail.com>
+ * @copyright    2013-2026 Phaser Studio Inc.
+ * @license      {@link https://opensource.org/licenses/MIT|MIT License}
+ */
+
+var Class = require('../../../utils/Class');
+var RenderNode = require('./RenderNode');
+
+/**
+ * @classdesc
+ * A RenderNode that fills the viewport of a camera with a solid color, used
+ * to render a camera's background color before any game objects are drawn.
+ *
+ * This node is invoked during the WebGL render pipeline whenever a camera has
+ * a background color set. It delegates the actual drawing to the `FillRect`
+ * RenderNode, which means the fill is submitted as a batched quad rather than
+ * a standalone draw call, keeping it efficient.
+ *
+ * For cameras that render to a framebuffer (render textures), the camera's
+ * screen position is ignored and the fill is drawn at the origin of the
+ * framebuffer instead, since the framebuffer itself will be composited into
+ * the main scene at the correct position.
+ *
+ * @class FillCamera
+ * @memberof Phaser.Renderer.WebGL.RenderNodes
+ * @constructor
+ * @since 4.0.0
+ * @extends Phaser.Renderer.WebGL.RenderNodes.RenderNode
+ * @param {Phaser.Renderer.WebGL.RenderNodes.RenderNodeManager} manager - The manager that owns this RenderNode.
+ */
+var FillCamera = new Class({
+    Extends: RenderNode,
+
+    initialize: function FillCamera (manager)
+    {
+        RenderNode.call(this, 'FillCamera', manager);
+
+        /**
+         * The RenderNode that draws a filled rectangle.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.FillCamera#fillRectNode
+         * @type {Phaser.Renderer.WebGL.RenderNodes.FillRect}
+         * @since 4.0.0
+         */
+        this.fillRectNode = this.manager.getNode('FillRect');
+    },
+
+    /**
+     * Fills the camera with a color.
+     * This uses `FillRect`, so it is batched with other quads.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.FillCamera#run
+     * @since 4.0.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The context currently in use.
+     * @param {number} color - The color to fill the camera with. Note, this must be a 32-bit ARGB integer.
+     * @param {boolean} [isFramebufferCamera] - Is this camera rendering to a framebuffer? If so, the camera position will not be applied, on the assumption that the camera position will be used to position the framebuffer in the external context.
+     */
+    run: function (drawingContext, color, isFramebufferCamera)
+    {
+        this.onRunBegin(drawingContext);
+
+        var camera = drawingContext.camera;
+        var cx = isFramebufferCamera ? 0 : camera.x;
+        var cy = isFramebufferCamera ? 0 : camera.y;
+        var cw = camera.width;
+        var ch = camera.height;
+
+        this.fillRectNode.run(drawingContext, null, null, cx, cy, cw, ch, color, color, color, color);
+
+        this.onRunEnd(drawingContext);
+    }
+});
+
+module.exports = FillCamera;

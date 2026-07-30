@@ -1,10 +1,10 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Returns the center of a Rectangle as a Point.
@@ -12,16 +12,16 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Rectangle.GetCenter
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Rectangle} rect - The Rectangle to get the center of.
- * @param {(Phaser.Geom.Point|object)} [out] - Optional point-like object to update with the center coordinates.
+ * @param {Phaser.Math.Vector2} [out] - Optional Vector2 object to update with the center coordinates.
  *
- * @return {(Phaser.Geom.Point|object)} The modified `out` object, or a new Point if none was provided.
+ * @return {Phaser.Math.Vector2} The modified `out` object, or a new Vector2 if none was provided.
  */
 var GetCenter = function (rect, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     out.x = rect.centerX;
     out.y = rect.centerY;

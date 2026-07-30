@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18,6 +18,7 @@ var MatterBody = require('./lib/body/Body');
 var MatterEvents = require('./lib/core/Events');
 var MatterTileBody = require('./MatterTileBody');
 var MatterWorld = require('./lib/body/World');
+var MatterRunner = require('./lib/core/Runner');
 var Vector = require('./lib/geometry/Vector');
 
 /**
@@ -144,15 +145,9 @@ var World = new Class({
 
         var hasFPS = GetFastValue(runnerConfig, 'fps', false);
 
-        var fps = GetFastValue(runnerConfig, 'fps', 60);
-
-        var delta = GetFastValue(runnerConfig, 'delta', 1000 / fps);
-        var deltaMin = GetFastValue(runnerConfig, 'deltaMin', 1000 / fps);
-        var deltaMax = GetFastValue(runnerConfig, 'deltaMax', 1000 / (fps * 0.5));
-
-        if (!hasFPS)
+        if (hasFPS)
         {
-            fps = 1000 / delta;
+            runnerConfig.delta = 1000 / GetFastValue(runnerConfig, 'fps', 60);
         }
 
         /**
@@ -165,20 +160,7 @@ var World = new Class({
          * @type {Phaser.Types.Physics.Matter.MatterRunnerConfig}
          * @since 3.22.0
          */
-        this.runner = {
-            fps: fps,
-            deltaSampleSize: GetFastValue(runnerConfig, 'deltaSampleSize', 60),
-            counterTimestamp: 0,
-            frameCounter: 0,
-            deltaHistory: [],
-            timePrev: null,
-            timeScalePrev: 1,
-            frameRequestId: null,
-            isFixed: GetFastValue(runnerConfig, 'isFixed', false),
-            delta: delta,
-            deltaMin: deltaMin,
-            deltaMax: deltaMax
-        };
+        this.runner = MatterRunner.create(runnerConfig);
 
         /**
          * Automatically call Engine.update every time the game steps.
@@ -468,7 +450,7 @@ var World = new Class({
     /**
      * Sets the debug render style for the given Matter Constraint.
      *
-     * If you are using this on a Phaser Game Object, then pass in the body property
+     * If you are using this on a Phaser Game Object, then pass in the constraint property
      * to this method, not the Game Object itself.
      *
      * If you wish to skip a parameter, so it retains its current value, pass `false` for it.
@@ -661,8 +643,44 @@ var World = new Class({
 
             if (pairs.length > 0)
             {
-                bodyA = pairs[0].bodyA;
-                bodyB = pairs[0].bodyB;
+                pairs.map(function (pair)
+                {
+                    bodyA = pair.bodyA;
+                    bodyB = pair.bodyB;
+
+                    if (bodyA.gameObject)
+                    {
+                        bodyA.gameObject.emit('collide', bodyA, bodyB, pair);
+                    }
+
+                    if (bodyB.gameObject)
+                    {
+                        bodyB.gameObject.emit('collide', bodyB, bodyA, pair);
+                    }
+
+                    MatterEvents.trigger(bodyA, 'onCollide', { pair: pair });
+                    MatterEvents.trigger(bodyB, 'onCollide', { pair: pair });
+
+                    if (bodyA.onCollideCallback)
+                    {
+                        bodyA.onCollideCallback(pair);
+                    }
+
+                    if (bodyB.onCollideCallback)
+                    {
+                        bodyB.onCollideCallback(pair);
+                    }
+
+                    if (bodyA.onCollideWith[bodyB.id])
+                    {
+                        bodyA.onCollideWith[bodyB.id](bodyB, pair);
+                    }
+
+                    if (bodyB.onCollideWith[bodyA.id])
+                    {
+                        bodyB.onCollideWith[bodyA.id](bodyA, pair);
+                    }
+                });
             }
 
             _this.emit(Events.COLLISION_START, event, bodyA, bodyB);
@@ -676,8 +694,34 @@ var World = new Class({
 
             if (pairs.length > 0)
             {
-                bodyA = pairs[0].bodyA;
-                bodyB = pairs[0].bodyB;
+                pairs.map(function (pair)
+                {
+                    bodyA = pair.bodyA;
+                    bodyB = pair.bodyB;
+
+                    if (bodyA.gameObject)
+                    {
+                        bodyA.gameObject.emit('collideActive', bodyA, bodyB, pair);
+                    }
+
+                    if (bodyB.gameObject)
+                    {
+                        bodyB.gameObject.emit('collideActive', bodyB, bodyA, pair);
+                    }
+
+                    MatterEvents.trigger(bodyA, 'onCollideActive', { pair: pair });
+                    MatterEvents.trigger(bodyB, 'onCollideActive', { pair: pair });
+
+                    if (bodyA.onCollideActiveCallback)
+                    {
+                        bodyA.onCollideActiveCallback(pair);
+                    }
+
+                    if (bodyB.onCollideActiveCallback)
+                    {
+                        bodyB.onCollideActiveCallback(pair);
+                    }
+                });
             }
 
             _this.emit(Events.COLLISION_ACTIVE, event, bodyA, bodyB);
@@ -691,8 +735,34 @@ var World = new Class({
 
             if (pairs.length > 0)
             {
-                bodyA = pairs[0].bodyA;
-                bodyB = pairs[0].bodyB;
+                pairs.map(function (pair)
+                {
+                    bodyA = pair.bodyA;
+                    bodyB = pair.bodyB;
+
+                    if (bodyA.gameObject)
+                    {
+                        bodyA.gameObject.emit('collideEnd', bodyA, bodyB, pair);
+                    }
+
+                    if (bodyB.gameObject)
+                    {
+                        bodyB.gameObject.emit('collideEnd', bodyB, bodyA, pair);
+                    }
+
+                    MatterEvents.trigger(bodyA, 'onCollideEnd', { pair: pair });
+                    MatterEvents.trigger(bodyB, 'onCollideEnd', { pair: pair });
+
+                    if (bodyA.onCollideEndCallback)
+                    {
+                        bodyA.onCollideEndCallback(pair);
+                    }
+
+                    if (bodyB.onCollideEndCallback)
+                    {
+                        bodyB.onCollideEndCallback(pair);
+                    }
+                });
             }
 
             _this.emit(Events.COLLISION_END, event, bodyA, bodyB);
@@ -831,7 +901,7 @@ var World = new Class({
     },
 
     /**
-     * Sets the worlds gravity to the values given.
+     * Sets the world's gravity to the values given.
      *
      * Gravity effects all bodies in the world, unless they have the `ignoreGravity` flag set.
      *
@@ -967,7 +1037,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#convertTilemapLayer
      * @since 3.0.0
      *
-     * @param {Phaser.Tilemaps.TilemapLayer} tilemapLayer - An array of tiles.
+     * @param {Phaser.Tilemaps.TilemapLayer} tilemapLayer - The Tilemap Layer containing the tiles to convert.
      * @param {object} [options] - Options to be passed to the MatterTileBody constructor. {@see Phaser.Physics.Matter.TileBody}
      *
      * @return {this} This Matter World object.
@@ -1074,6 +1144,8 @@ var World = new Class({
     {
         this.enabled = true;
 
+        this.runner.timeLastTick = Common.now();
+
         this.emit(Events.RESUME);
 
         return this;
@@ -1099,7 +1171,7 @@ var World = new Class({
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
-    update: function (time, delta)
+    update: function (time)
     {
         if (!this.enabled || !this.autoUpdate)
         {
@@ -1108,46 +1180,89 @@ var World = new Class({
 
         var engine = this.engine;
         var runner = this.runner;
+        
+        var tickStartTime = Common.now(),
+            engineDelta = runner.delta,
+            updateCount = 0;
 
-        var timing = engine.timing;
+        // find frame delta time since last call
+        var frameDelta = time - runner.timeLastTick;
 
-        if (runner.isFixed)
+        // fallback for unusable frame delta values (e.g. 0, NaN, on first frame or long pauses)
+        if (!frameDelta || !runner.timeLastTick || frameDelta > Math.max(MatterRunner._maxFrameDelta, runner.maxFrameTime))
         {
-            //  fixed timestep
-            delta = this.getDelta(time, delta);
-        }
-        else
-        {
-            //  dynamic timestep based on wall clock between calls
-            delta = (time - runner.timePrev) || runner.delta;
-            runner.timePrev = time;
-
-            // optimistically filter delta over a few frames, to improve stability
-            runner.deltaHistory.push(delta);
-            runner.deltaHistory = runner.deltaHistory.slice(-runner.deltaSampleSize);
-            delta = Math.min.apply(null, runner.deltaHistory);
-
-            // limit delta
-            delta = delta < runner.deltaMin ? runner.deltaMin : delta;
-            delta = delta > runner.deltaMax ? runner.deltaMax : delta;
-
-            // update engine timing object
-            runner.delta = delta;
+            // reuse last accepted frame delta else fallback
+            frameDelta = runner.frameDelta || MatterRunner._frameDeltaFallback;
         }
 
-        runner.timeScalePrev = timing.timeScale;
-
-        // fps counter
-        runner.frameCounter += 1;
-
-        if (time - runner.counterTimestamp >= 1000)
+        if (runner.frameDeltaSmoothing)
         {
-            runner.fps = runner.frameCounter * ((time - runner.counterTimestamp) / 1000);
-            runner.counterTimestamp = time;
-            runner.frameCounter = 0;
+            // record frame delta over a number of frames
+            runner.frameDeltaHistory.push(frameDelta);
+            runner.frameDeltaHistory = runner.frameDeltaHistory.slice(-runner.frameDeltaHistorySize);
+
+            // sort frame delta history
+            var deltaHistorySorted = runner.frameDeltaHistory.slice(0).sort();
+
+            // sample a central window to limit outliers
+            var deltaHistoryWindow = runner.frameDeltaHistory.slice(
+                deltaHistorySorted.length * MatterRunner._smoothingLowerBound,
+                deltaHistorySorted.length * MatterRunner._smoothingUpperBound
+            );
+
+            // take the mean of the central window
+            var frameDeltaSmoothed = MatterRunner._mean(deltaHistoryWindow);
+            frameDelta = frameDeltaSmoothed || frameDelta;
         }
 
-        Engine.update(engine, delta);
+        if (runner.frameDeltaSnapping)
+        {
+            // snap frame delta to the nearest 1 Hz
+            frameDelta = 1000 / Math.round(1000 / frameDelta);
+        }
+
+        // update runner values for next call
+        runner.frameDelta = frameDelta;
+        runner.timeLastTick = time;
+
+        // accumulate elapsed time
+        runner.timeBuffer += runner.frameDelta;
+
+        // limit time buffer size to a single frame of updates
+        runner.timeBuffer = Common.clamp(
+            runner.timeBuffer, 0, runner.frameDelta + engineDelta * MatterRunner._timeBufferMargin
+        );
+
+        // reset count of over budget updates
+        runner.lastUpdatesDeferred = 0;
+
+        // get max updates per frame
+        var maxUpdates = runner.maxUpdates || Math.ceil(runner.maxFrameTime / engineDelta);
+
+        var updateStartTime = Common.now();
+
+        // simulate time elapsed between calls
+        while (engineDelta > 0 && runner.timeBuffer >= engineDelta * MatterRunner._timeBufferMargin)
+        {
+            // update the engine
+            Engine.update(engine, engineDelta);
+
+            // consume time simulated from buffer
+            runner.timeBuffer -= engineDelta;
+            updateCount += 1;
+
+            // find elapsed time during this tick
+            var elapsedTimeTotal = Common.now() - tickStartTime,
+                elapsedTimeUpdates = Common.now() - updateStartTime,
+                elapsedNextEstimate = elapsedTimeTotal + MatterRunner._elapsedNextEstimate * elapsedTimeUpdates / updateCount;
+
+            // defer updates if over performance budgets for this frame
+            if (updateCount >= maxUpdates || elapsedNextEstimate > runner.maxFrameTime)
+            {
+                runner.lastUpdatesDeferred = Math.round(Math.max(0, (runner.timeBuffer / engineDelta) - MatterRunner._timeBufferMargin));
+                break;
+            }
+        }
     },
 
     /**
@@ -1215,7 +1330,7 @@ var World = new Class({
      *
      * @param {(MatterJS.Body|Phaser.GameObjects.GameObject)} body - The Matter Body, or Game Object, to search for within the world.
      *
-     * @return {MatterJS.BodyType[]} An array of all the Matter JS Bodies in this World.
+     * @return {boolean} `true` if the body was found in the world, otherwise `false`.
      */
     has: function (body)
     {
@@ -1380,7 +1495,7 @@ var World = new Class({
      * The debug renderer calls this method if the `showSeparations` config value is set.
      *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
-     * you wish to render the Grid to your own Graphics instance.
+     * you wish to render pair separations to your own Graphics instance.
      *
      * @method Phaser.Physics.Matter.World#renderSeparations
      * @since 3.22.0
@@ -1449,7 +1564,7 @@ var World = new Class({
      * The debug renderer calls this method if the `showCollisions` config value is set.
      *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
-     * you wish to render the Grid to your own Graphics instance.
+     * you wish to render collision points and normals to your own Graphics instance.
      *
      * @method Phaser.Physics.Matter.World#renderCollisions
      * @since 3.22.0
@@ -1479,12 +1594,15 @@ var World = new Class({
                 continue;
             }
 
-            for (var j = 0; j < pair.activeContacts.length; j++)
+            for (var j = 0; j < pair.contactCount; j++)
             {
-                var contact = pair.activeContacts[j];
+                var contact = pair.contacts[j];
                 var vertex = contact.vertex;
-
-                graphics.fillRect(vertex.x - 2, vertex.y - 2, 5, 5);
+                
+                if (vertex)
+                {
+                    graphics.fillRect(vertex.x - 2, vertex.y - 2, 5, 5);
+                }
             }
         }
 
@@ -1500,14 +1618,14 @@ var World = new Class({
             }
 
             var collision = pair.collision;
-            var contacts = pair.activeContacts;
+            var contacts = pair.contacts;
 
-            if (contacts.length > 0)
+            if (pair.contactCount > 0)
             {
                 var normalPosX = contacts[0].vertex.x;
                 var normalPosY = contacts[0].vertex.y;
 
-                if (contacts.length === 2)
+                if (pair.contactCount === 2)
                 {
                     normalPosX = (contacts[0].vertex.x + contacts[1].vertex.x) / 2;
                     normalPosY = (contacts[0].vertex.y + contacts[1].vertex.y) / 2;
@@ -1607,7 +1725,7 @@ var World = new Class({
      * The debug renderer calls this method if the `showAxes` or `showAngleIndicator` config values are set.
      *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
-     * you wish to render bounds to your own Graphics instance.
+     * you wish to render body axes to your own Graphics instance.
      *
      * @method Phaser.Physics.Matter.World#renderBodyAxes
      * @since 3.22.0
@@ -1684,7 +1802,7 @@ var World = new Class({
      * The debug renderer calls this method if the `showVelocity` config value is set.
      *
      * This method is used internally by the Matter Debug Renderer, but is also exposed publically should
-     * you wish to render bounds to your own Graphics instance.
+     * you wish to render velocity indicators to your own Graphics instance.
      *
      * @method Phaser.Physics.Matter.World#renderBodyVelocity
      * @since 3.22.0

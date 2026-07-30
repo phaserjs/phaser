@@ -1,0 +1,44 @@
+// NORMAL_TOOLS_FS
+#pragma phaserTemplate(shaderName)
+
+precision mediump float;
+
+#pragma phaserTemplate(fragmentHeader)
+
+uniform sampler2D uMainSampler;
+uniform mat4 uViewMatrix;
+
+#ifdef FACING_POWER
+uniform float uFacingPower;
+#endif
+
+#ifdef OUTPUT_RATIO
+uniform vec3 uRatioVector;
+uniform float uRatioRadius;
+#endif
+
+varying vec2 outTexCoord;
+
+void main()
+{
+    vec3 normal = texture2D(uMainSampler, outTexCoord).rgb * 2.0 - 1.0;
+
+    // Apply rotation.
+    normal = (uViewMatrix * vec4(normal, 1.0)).xyz;
+
+    #ifdef FACING_POWER
+    normal = normalize(normal * vec3(1.0, 1.0, uFacingPower));
+    #endif
+
+    #ifdef OUTPUT_RATIO
+    float ratio = dot(normal, normalize(uRatioVector));
+    ratio = (ratio - 1.0 + uRatioRadius) / uRatioRadius;
+    if (ratio <= 0.0)
+    {
+        ratio = 0.0;
+    }
+    normal = vec3(ratio * 2.0 - 1.0);
+    #endif
+
+    gl_FragColor = vec4((normal + 1.0) * 0.5, 1.0);
+}

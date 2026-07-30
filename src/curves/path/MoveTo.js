@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,8 +9,10 @@ var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
- * A MoveTo Curve is a very simple curve consisting of only a single point.
- * Its intended use is to move the ending point in a Path.
+ * A MoveTo Curve is a special curve type consisting of a single point. Unlike other curve types,
+ * it does not draw anything — it simply repositions the current endpoint of a `Path`, analogous
+ * to the SVG `moveto` command. Use it within a `Phaser.Curves.Path` to create a gap between
+ * two sub-paths, or to begin drawing from a new position without connecting to the previous curve.
  *
  * @class MoveTo
  * @memberof Phaser.Curves
@@ -27,7 +29,7 @@ var MoveTo = new Class({
     function MoveTo (x, y)
     {
         /**
-         * Denotes that this Curve does not influence the bounds, points, and drawing of its parent Path. Must be `false` or some methods in the parent Path will throw errors.
+         * A flag indicating that this curve is inactive and does not contribute to the bounds, length, or rendering of its parent Path. It is always `false` for a MoveTo, which marks it as a positional marker rather than a drawable segment.
          *
          * @name Phaser.Curves.MoveTo#active
          * @type {boolean}
@@ -47,7 +49,7 @@ var MoveTo = new Class({
     },
 
     /**
-     * Get point at relative position in curve according to length.
+     * Returns the single point that this MoveTo curve represents. Because a MoveTo has only one point, the value of `t` is ignored and `p0` is always returned.
      *
      * @method Phaser.Curves.MoveTo#getPoint
      * @since 3.0.0

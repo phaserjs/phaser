@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24,6 +24,7 @@ var CONST = require('./const');
  * @borrows Phaser.Scale.ScaleModes.FIT as FIT
  * @borrows Phaser.Scale.ScaleModes.ENVELOP as ENVELOP
  * @borrows Phaser.Scale.ScaleModes.RESIZE as RESIZE
+ * @borrows Phaser.Scale.ScaleModes.EXPAND as EXPAND 
  *
  * @borrows Phaser.Scale.Zoom.NO_ZOOM as NO_ZOOM
  * @borrows Phaser.Scale.Zoom.ZOOM_2X as ZOOM_2X

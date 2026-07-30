@@ -1,7 +1,7 @@
 /**
  * @author       Vladimir Agafonkin
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16,7 +16,7 @@ var quickselect = require('../utils/array/QuickSelect');
  * "all items within this bounding box" very efficiently (e.g. hundreds of times faster than looping over all items).
  *
  * This version of RBush uses a fixed min/max accessor structure of `[ '.left', '.top', '.right', '.bottom' ]`.
- * This is to avoid the eval like function creation that the original library used, which caused CSP policy violations.
+ * This is to avoid the eval-like function creation that the original library used, which caused CSP policy violations.
  *
  * rbush is forked from https://github.com/mourner/rbush by Vladimir Agafonkin
  *
@@ -41,11 +41,29 @@ function rbush (maxEntries)
 
 rbush.prototype = {
 
+    /**
+     * Returns all items stored in the RTree as a flat array.
+     *
+     * @method Phaser.Structs.RTree#all
+     * @since 3.0.0
+     *
+     * @return {any[]} An array containing all items currently stored in the tree.
+     */
     all: function ()
     {
         return this._all(this.data, []);
     },
 
+    /**
+     * Searches the RTree for all items that intersect with the given bounding box and returns them as an array.
+     *
+     * @method Phaser.Structs.RTree#search
+     * @since 3.0.0
+     *
+     * @param {Object} bbox - The bounding box to search within. Must have `minX`, `minY`, `maxX`, and `maxY` properties.
+     *
+     * @return {any[]} An array of all items in the tree that intersect with the given bounding box.
+     */
     search: function (bbox)
     {
         var node = this.data,
@@ -75,6 +93,19 @@ rbush.prototype = {
         return result;
     },
 
+    /**
+     * Tests whether any item in the RTree intersects with the given bounding box.
+     *
+     * Unlike `search`, this method stops as soon as the first intersection is found, making it more
+     * efficient when you only need to know whether a collision exists rather than retrieving all results.
+     *
+     * @method Phaser.Structs.RTree#collides
+     * @since 3.0.0
+     *
+     * @param {Object} bbox - The bounding box to test against. Must have `minX`, `minY`, `maxX`, and `maxY` properties.
+     *
+     * @return {boolean} `true` if any item in the tree intersects with the bounding box, otherwise `false`.
+     */
     collides: function (bbox)
     {
         var node = this.data,
@@ -102,6 +133,20 @@ rbush.prototype = {
         return false;
     },
 
+    /**
+     * Bulk loads an array of items into the RTree.
+     *
+     * Bulk loading is significantly more efficient than inserting items one by one when adding large
+     * datasets, as it builds an optimally structured tree in a single pass using the OMT algorithm.
+     * If the array is smaller than the minimum entry threshold, items are inserted individually instead.
+     *
+     * @method Phaser.Structs.RTree#load
+     * @since 3.0.0
+     *
+     * @param {any[]} data - An array of items to insert. Each item must have `left`, `top`, `right`, and `bottom` properties.
+     *
+     * @return {Phaser.Structs.RTree} This RTree instance, for chaining.
+     */
     load: function (data)
     {
         if (!(data && data.length)) return this;
@@ -139,18 +184,51 @@ rbush.prototype = {
         return this;
     },
 
+    /**
+     * Inserts a single item into the RTree.
+     *
+     * @method Phaser.Structs.RTree#insert
+     * @since 3.0.0
+     *
+     * @param {*} item - The item to insert. Must have `left`, `top`, `right`, and `bottom` properties.
+     *
+     * @return {Phaser.Structs.RTree} This RTree instance, for chaining.
+     */
     insert: function (item)
     {
         if (item) this._insert(item, this.data.height - 1);
         return this;
     },
 
+    /**
+     * Removes all items from the RTree, resetting it to an empty state.
+     *
+     * @method Phaser.Structs.RTree#clear
+     * @since 3.0.0
+     *
+     * @return {Phaser.Structs.RTree} This RTree instance, for chaining.
+     */
     clear: function ()
     {
         this.data = createNode([]);
         return this;
     },
 
+    /**
+     * Removes a single item from the RTree.
+     *
+     * An optional equality function can be provided to compare items by value rather than by reference,
+     * which is useful when the original item reference is not available. The function receives two items
+     * and should return `true` if they are considered equal.
+     *
+     * @method Phaser.Structs.RTree#remove
+     * @since 3.0.0
+     *
+     * @param {*} item - The item to remove.
+     * @param {function} [equalsFn] - An optional custom equality function taking two items and returning a boolean.
+     *
+     * @return {Phaser.Structs.RTree} This RTree instance, for chaining.
+     */
     remove: function (item, equalsFn)
     {
         if (!item) return this;
@@ -206,8 +284,30 @@ rbush.prototype = {
     compareMinX: compareNodeMinX,
     compareMinY: compareNodeMinY,
 
+    /**
+     * Returns the raw internal tree data as a JSON-compatible object.
+     *
+     * The returned value can be passed to `fromJSON` to restore the tree state at a later point.
+     *
+     * @method Phaser.Structs.RTree#toJSON
+     * @since 3.0.0
+     *
+     * @return {Object} The internal tree data object.
+     */
     toJSON: function () { return this.data; },
 
+    /**
+     * Populates this RTree with data previously exported via `toJSON`.
+     *
+     * This allows a tree to be serialized and restored without re-inserting every item individually.
+     *
+     * @method Phaser.Structs.RTree#fromJSON
+     * @since 3.0.0
+     *
+     * @param {Object} data - The tree data to import, as returned by `toJSON`.
+     *
+     * @return {Phaser.Structs.RTree} This RTree instance, for chaining.
+     */
     fromJSON: function (data)
     {
         this.data = data;
@@ -466,16 +566,55 @@ rbush.prototype = {
         }
     },
 
+    /**
+     * Comparator function used to sort items by their minimum X boundary (`left` property).
+     *
+     * Returns a negative number if `a` should sort before `b`, a positive number if after, or zero if equal.
+     *
+     * @method Phaser.Structs.RTree#compareMinX
+     * @since 3.0.0
+     *
+     * @param {Object} a - The first item to compare.
+     * @param {Object} b - The second item to compare.
+     *
+     * @return {number} The difference between the `left` values of the two items.
+     */
     compareMinX: function (a, b)
     {
         return a.left - b.left;
     },
 
+    /**
+     * Comparator function used to sort items by their minimum Y boundary (`top` property).
+     *
+     * Returns a negative number if `a` should sort before `b`, a positive number if after, or zero if equal.
+     *
+     * @method Phaser.Structs.RTree#compareMinY
+     * @since 3.0.0
+     *
+     * @param {Object} a - The first item to compare.
+     * @param {Object} b - The second item to compare.
+     *
+     * @return {number} The difference between the `top` values of the two items.
+     */
     compareMinY: function (a, b)
     {
         return a.top - b.top;
     },
 
+    /**
+     * Converts a Phaser-style bounds object into the internal bounding box format used by the RTree.
+     *
+     * Maps the `left`, `top`, `right`, and `bottom` properties of the input to `minX`, `minY`, `maxX`,
+     * and `maxY` respectively, which is the format expected by the R-tree algorithms.
+     *
+     * @method Phaser.Structs.RTree#toBBox
+     * @since 3.0.0
+     *
+     * @param {Object} a - The object to convert. Must have `left`, `top`, `right`, and `bottom` properties.
+     *
+     * @return {Object} A bounding box object with `minX`, `minY`, `maxX`, and `maxY` properties.
+     */
     toBBox: function (a)
     {
         return {

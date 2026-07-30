@@ -1,15 +1,20 @@
 /**
  * @author       samme
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var QuickSet = require('../display/align/to/QuickSet');
 
 /**
- * Takes an array of Game Objects, or any objects that have public `x` and `y` properties, and aligns them next to each other.
+ * Takes an array of Game Objects and aligns them next to each other.
  *
- * The first item isn't moved. The second item is aligned next to the first, then the third next to the second, and so on.
+ * The alignment position is controlled by the `position` parameter, which should be one
+ * of the Phaser.Display.Align constants, such as `Phaser.Display.Align.TOP_LEFT`,
+ * `Phaser.Display.Align.TOP_CENTER`, etc.
+ *
+ * The first item isn't moved. The second item is aligned next to the first,
+ * then the third next to the second, and so on.
  *
  * @function Phaser.Actions.AlignTo
  * @since 3.22.0
@@ -18,8 +23,8 @@ var QuickSet = require('../display/align/to/QuickSet');
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be updated by this action.
  * @param {number} position - The position to align the items with. This is an align constant, such as `Phaser.Display.Align.LEFT_CENTER`.
- * @param {number} [offsetX=0] - Optional horizontal offset from the position.
- * @param {number} [offsetY=0] - Optional vertical offset from the position.
+ * @param {number} [offsetX=0] - Optional horizontal offset from the position, in pixels.
+ * @param {number} [offsetY=0] - Optional vertical offset from the position, in pixels.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of objects that were passed to this Action.
  */

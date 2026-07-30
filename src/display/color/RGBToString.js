@@ -1,13 +1,19 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var ComponentToHex = require('./ComponentToHex');
 
 /**
- * Converts the color values into an HTML compatible color string, prefixed with either `#` or `0x`.
+ * Converts the given red, green, blue, and alpha color component values into a hex color string.
+ *
+ * When using the `#` prefix the result is a 6-character CSS-compatible hex string in `#rrggbb` format.
+ * The alpha value is not included in this format.
+ *
+ * When using the `0x` prefix the result is an 8-character ARGB hex string in `0xaarrggbb` format,
+ * which includes the alpha component as the most significant byte.
  *
  * @function Phaser.Display.Color.RGBToString
  * @since 3.0.0
@@ -18,7 +24,7 @@ var ComponentToHex = require('./ComponentToHex');
  * @param {number} [a=255] - The alpha value. A number between 0 and 255.
  * @param {string} [prefix=#] - The prefix of the string. Either `#` or `0x`.
  *
- * @return {string} A string-based representation of the color values.
+ * @return {string} A hex color string in either `#rrggbb` or `0xaarrggbb` format, depending on the prefix.
  */
 var RGBToString = function (r, g, b, a, prefix)
 {

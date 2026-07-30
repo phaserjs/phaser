@@ -1,0 +1,72 @@
+// IMAGELIGHT_FS
+#pragma phaserTemplate(shaderName)
+
+precision mediump float;
+
+uniform sampler2D uMainSampler;
+uniform sampler2D uEnvSampler;
+uniform sampler2D uNormSampler;
+uniform mat4 uViewMatrix;
+uniform float uModelRotation;
+uniform float uBulge;
+uniform vec3 uColorFactor;
+
+varying vec2 outTexCoord;
+
+#define PI 3.14159265358979323846
+
+void main()
+{
+    vec4 color = texture2D(uMainSampler, outTexCoord);
+    vec3 normal = texture2D(uNormSampler, outTexCoord).rgb;
+
+    // Rotate the normal by the model rotation.
+    vec3 normalN = normal * 2.0 - 1.0;
+    float normalXYLength = length(normalN.xy);
+    float angle = atan(
+        normalN.y,
+        normalN.x
+    ) - uModelRotation;
+    normalN = vec3(
+        normalXYLength * cos(angle),
+        normalXYLength * sin(angle),
+        normalN.z
+    );
+
+    // Reflect a Z vector along the normal.
+    normalN = reflect(vec3(0.0, 0.0, -1.0), normalN);
+
+    // Transform the normal by the view matrix.
+    normalN = (uViewMatrix * vec4(normalN, 1.0)).xyz;
+
+    // Map the normal to the environment map.
+    float envX = atan(normalN.x, normalN.z) / PI;
+    float envY = sin(normalN.y * PI / 2.0);
+    vec2 uv = vec2(envX, envY) * 0.5 + 0.5;
+
+    // Create a rotation of the texture coordinates.
+    vec2 rotatedTexCoord = vec2(
+        cos(-uModelRotation) * outTexCoord.x - sin(-uModelRotation) * outTexCoord.y,
+        sin(-uModelRotation) * outTexCoord.x + cos(-    uModelRotation) * outTexCoord.y
+    );
+
+    // Bulge the UVs slightly based on texture coordinates.
+    // The X axis is allowed to go outside the range 0.0 to 1.0, but the Y axis is not.
+    uv += uBulge * (rotatedTexCoord - 0.5);
+    if (uv.y < 0.0)
+    {
+        uv.y = abs(uv.y);
+        uv.x += 0.5;
+    }
+    else if (uv.y > 1.0)
+    {
+        uv.y = 2.0 - uv.y;
+        uv.x += 0.5;
+    }
+
+    vec3 environment = texture2D(uEnvSampler, uv).rgb;
+
+    // gl_FragColor = color;
+    // gl_FragColor = vec4(normal, 1.0);
+    gl_FragColor = vec4(environment * color.rgb * uColorFactor, color.a);
+}

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,8 +17,6 @@ var Geom = {
     Ellipse: require('./ellipse'),
     Intersects: require('./intersects'),
     Line: require('./line'),
-    Mesh: require('./mesh'),
-    Point: require('./point'),
     Polygon: require('./polygon'),
     Rectangle: require('./rectangle'),
     Triangle: require('./triangle')

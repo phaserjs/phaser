@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,10 +15,10 @@ var Browser = require('./Browser');
  * @typedef {object} Phaser.Device.Input
  * @since 3.0.0
  *
- * @property {?string} wheelType - The newest type of Wheel/Scroll event supported: 'wheel', 'mousewheel', 'DOMMouseScroll'
- * @property {boolean} gamepads - Is navigator.getGamepads available?
- * @property {boolean} mspointer - Is mspointer available?
- * @property {boolean} touch - Is touch available?
+ * @property {?string} wheelEvent - The most modern wheel/scroll event type supported by the browser: `'wheel'` (DOM3), `'mousewheel'` (legacy Chrome/IE/Safari), or `'DOMMouseScroll'` (legacy Firefox). `null` if no wheel event is supported.
+ * @property {boolean} gamepads - Whether the Gamepad API (`navigator.getGamepads`) is available in this browser, allowing gamepad input to be read.
+ * @property {boolean} mspointer - Whether the Microsoft Pointer API (`navigator.msPointerEnabled` or `navigator.pointerEnabled`) is available, used for pointer input on older IE/Edge browsers.
+ * @property {boolean} touch - Whether touch input is supported, detected via the `ontouchstart` event or `navigator.maxTouchPoints`.
  */
 var Input = {
 

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,9 +9,15 @@ var NOOP = require('../utils/NOOP');
 
 /**
  * @classdesc
- * Abstracts away the use of RAF or setTimeOut for the core game update loop.
+ * Abstracts away the use of `requestAnimationFrame` or `setTimeout` for the core game update loop,
+ * providing a unified interface regardless of which mechanism is in use.
  *
- * This is invoked automatically by the Phaser.Game instance.
+ * When `requestAnimationFrame` is available and not overridden, it is used to drive the game loop,
+ * which ties updates to the display refresh rate and pauses automatically when the tab is hidden.
+ * If `forceSetTimeOut` is enabled in the Game Config, `setTimeout` is used instead, which runs
+ * at a fixed interval regardless of visibility or display sync.
+ *
+ * This class is instantiated and managed automatically by the Phaser.Game instance.
  *
  * @class RequestAnimationFrame
  * @memberof Phaser.DOM
@@ -64,7 +70,7 @@ var RequestAnimationFrame = new Class({
         this.timeOutID = null;
 
         /**
-         * The delay rate in ms for setTimeOut.
+         * The delay, in milliseconds, between each step when using setTimeout.
          *
          * @name Phaser.DOM.RequestAnimationFrame#delay
          * @type {number}
@@ -125,7 +131,7 @@ var RequestAnimationFrame = new Class({
      *
      * @param {FrameRequestCallback} callback - The callback to invoke each step.
      * @param {boolean} forceSetTimeOut - Should it use SetTimeout, even if RAF is available?
-     * @param {number} delay - The setTimeout delay rate in ms.
+     * @param {number} delay - The delay, in milliseconds, between each step when using setTimeout.
      */
     start: function (callback, forceSetTimeOut, delay)
     {

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@
  * The Animation Stop Event.
  *
  * This event is dispatched by a Sprite when an animation is stopped on it. An animation
- * will only be stopeed if a method such as `Sprite.stop` or `Sprite.anims.stopAfterDelay`
+ * will only be stopped if a method such as `Sprite.stop` or `Sprite.anims.stopAfterDelay`
  * is called. It can also be emitted if a new animation is started before the current one completes.
  *
  * Listen for it on the Sprite using `sprite.on('animationstop', listener)`

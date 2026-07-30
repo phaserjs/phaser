@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,6 +9,7 @@ var GetTilesWithin = require('./GetTilesWithin');
 var Intersects = require('../../geom/intersects/');
 var NOOP = require('../../utils/NOOP');
 var Vector2 = require('../../math/Vector2');
+var CONST = require('../const/ORIENTATION_CONST');
 
 var TriangleToRectangle = function (triangle, rect)
 {
@@ -22,6 +23,8 @@ var pointEnd = new Vector2();
 /**
  * Gets the tiles that overlap with the given shape in the given layer. The shape must be a Circle,
  * Line, Rectangle or Triangle. The shape should be in world coordinates.
+ * 
+ * **Note:** This method currently only works with orthogonal tilemap layers.
  *
  * @function Phaser.Tilemaps.Components.GetTilesWithinShape
  * @since 3.0.0
@@ -31,10 +34,16 @@ var pointEnd = new Vector2();
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
- * @return {Phaser.Tilemaps.Tile[]} Array of Tile objects.
+ * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects that intersect with the given shape, or an empty array if no tiles overlap or the layer is not orthogonal.
  */
 var GetTilesWithinShape = function (shape, filteringOptions, camera, layer)
 {
+    if (layer.orientation !== CONST.ORTHOGONAL)
+    {
+        console.warn('GetTilesWithinShape only works with orthogonal tilemaps');
+        return [];
+    }
+
     if (shape === undefined) { return []; }
 
     // intersectTest is a function with parameters: shape, rect

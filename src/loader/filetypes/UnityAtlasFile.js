@@ -1,16 +1,16 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var ImageFile = require('./ImageFile.js');
+var ImageFile = require('./ImageFile');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var MultiFile = require('../MultiFile.js');
-var TextFile = require('./TextFile.js');
+var MultiFile = require('../MultiFile');
+var TextFile = require('./TextFile');
 
 /**
  * @classdesc
@@ -112,7 +112,7 @@ var UnityAtlasFile = new Class({
  * ```javascript
  * function preload ()
  * {
- *     this.load.unityAtlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.txt');
+ *     this.load.unityAtlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.meta');
  * }
  * ```
  *
@@ -142,7 +142,7 @@ var UnityAtlasFile = new Class({
  * this.load.unityAtlas({
  *     key: 'mainmenu',
  *     textureURL: 'images/MainMenu.png',
- *     atlasURL: 'images/MainMenu.txt'
+ *     atlasURL: 'images/MainMenu.meta'
  * });
  * ```
  *
@@ -151,7 +151,7 @@ var UnityAtlasFile = new Class({
  * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
  *
  * ```javascript
- * this.load.unityAtlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.json');
+ * this.load.unityAtlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.meta');
  * // and later in your game ...
  * this.add.image(x, y, 'mainmenu', 'background');
  * ```
@@ -172,7 +172,7 @@ var UnityAtlasFile = new Class({
  * then you can specify it by providing an array as the `url` where the second element is the normal map:
  *
  * ```javascript
- * this.load.unityAtlas('mainmenu', [ 'images/MainMenu.png', 'images/MainMenu-n.png' ], 'images/MainMenu.txt');
+ * this.load.unityAtlas('mainmenu', [ 'images/MainMenu.png', 'images/MainMenu-n.png' ], 'images/MainMenu.meta');
  * ```
  *
  * Or, if you are using a config object use the `normalMap` property:
@@ -182,7 +182,7 @@ var UnityAtlasFile = new Class({
  *     key: 'mainmenu',
  *     textureURL: 'images/MainMenu.png',
  *     normalMap: 'images/MainMenu-n.png',
- *     atlasURL: 'images/MainMenu.txt'
+ *     atlasURL: 'images/MainMenu.meta'
  * });
  * ```
  *

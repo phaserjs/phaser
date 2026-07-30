@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@ var Vector2 = require('../../math/Vector2');
 
 /**
  * Converts from world XY coordinates (pixels) to isometric tile XY coordinates (tile units), factoring in the
- * layers position, scale and scroll. This will return a new Vector2 object or update the given
+ * layer's position, scale and scroll. This will return a new Vector2 object or update the given
  * `point` object.
  *
  * @function Phaser.Tilemaps.Components.IsometricWorldToTileXY

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16,6 +16,8 @@ module.exports = {
     JSONArray: require('./JSONArray'),
     JSONHash: require('./JSONHash'),
     KTXParser: require('./KTXParser'),
+    PCT: require('./PCT'),
+    PCTDecode: require('./PCTDecode'),
     PVRParser: require('./PVRParser'),
     SpriteSheet: require('./SpriteSheet'),
     SpriteSheetFromAtlas: require('./SpriteSheetFromAtlas'),

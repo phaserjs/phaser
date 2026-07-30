@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,8 +8,8 @@ var Color = require('./Color');
 
 /**
  * Converts a hex string into a Phaser Color object.
- * 
- * The hex string can supplied as `'#0033ff'` or the short-hand format of `'#03f'`; it can begin with an optional "#" or "0x", or be unprefixed.
+ *
+ * The hex string can be supplied as `'#0033ff'` or the short-hand format of `'#03f'`; it can begin with an optional "#" or "0x", or be unprefixed.
  *
  * An alpha channel is _not_ supported.
  *
@@ -17,12 +17,13 @@ var Color = require('./Color');
  * @since 3.0.0
  *
  * @param {string} hex - The hex color value to convert, such as `#0033ff` or the short-hand format: `#03f`.
+ * @param {Phaser.Display.Color} [color] - The color where the new color will be stored. If not defined, a new color object is returned.
  *
  * @return {Phaser.Display.Color} A Color object populated by the values of the given string.
  */
-var HexStringToColor = function (hex)
+var HexStringToColor = function (hex, color)
 {
-    var color = new Color();
+    if (!color) { color = new Color(); }
 
     // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
     hex = hex.replace(/^(?:#|0x)?([a-f\d])([a-f\d])([a-f\d])$/i, function (m, r, g, b)

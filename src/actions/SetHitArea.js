@@ -1,12 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Passes all provided Game Objects to the Input Manager to enable them for input with identical areas and callbacks.
- * 
+ * Iterates over all items in the given array and calls `setInteractive` on each one, applying the same hit area shape and callback to every Game Object in the array.
+ *
  * @see {@link Phaser.GameObjects.GameObject#setInteractive}
  *
  * @function Phaser.Actions.SetHitArea
@@ -15,8 +15,8 @@
  * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
- * @param {*} hitArea - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
- * @param {Phaser.Types.Input.HitAreaCallback} hitAreaCallback - A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
+ * @param {(Phaser.Types.Input.InputConfiguration|any)} [hitArea] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not given it will try to create a Rectangle based on the texture frame.
+ * @param {Phaser.Types.Input.HitAreaCallback} [hitAreaCallback] - The callback that determines if the pointer is within the Hit Area shape or not. If you provide a shape you must also provide a callback.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that was passed to this Action.
  */

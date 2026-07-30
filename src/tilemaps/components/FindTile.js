@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @param {number} index - The index of the tile.
  * @param {Phaser.Tilemaps.Tile[]} array - An array of Tile objects.
  *
- * @return {boolean} Return `true` if the callback should run, otherwise `false`.
+ * @return {boolean} Return `true` if this tile matches the search criteria, otherwise `false`.
  */
 
 /**
@@ -24,7 +24,7 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @function Phaser.Tilemaps.Components.FindTile
  * @since 3.0.0
  *
- * @param {FindTileCallback} callback - The callback. Each tile in the given area will be passed to this callback as the first and only parameter.
+ * @param {FindTileCallback} callback - The callback. Each tile in the given area will be passed to this callback as the first parameter, along with the tile index and the array of tiles.
  * @param {object} context - The context under which the callback should be run.
  * @param {number} tileX - The left most tile index (in tile coordinates) to use as the origin of the area to filter.
  * @param {number} tileY - The top most tile index (in tile coordinates) to use as the origin of the area to filter.

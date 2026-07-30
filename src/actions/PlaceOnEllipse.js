@@ -1,12 +1,15 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Takes an array of Game Objects and positions them on evenly spaced points around the perimeter of an Ellipse.
- * 
+ *
+ * Each Game Object's `x` and `y` properties are updated in place. The spacing between objects is determined
+ * by dividing the angular range (from `startAngle` to `endAngle`) evenly across the number of items.
+ *
  * If you wish to pass a `Phaser.GameObjects.Ellipse` Shape to this function, you should pass its `geom` property.
  *
  * @function Phaser.Actions.PlaceOnEllipse

@@ -1,35 +1,31 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var MATH_CONST = {
 
     /**
-     * The value of PI * 2.
-     *
-     * @name Phaser.Math.PI2
-     * @type {number}
-     * @since 3.0.0
-     */
-    PI2: Math.PI * 2,
-
-    /**
-     * The value of PI * 0.5.
-     *
-     * Yes, we understand that this should actually be PI * 2, but
-     * it has been like this for so long we can't change it now.
-     * If you need PI * 2, use the PI2 constant instead.
+     * The value of PI * 2, representing a full circle (360 degrees) in radians.
      *
      * @name Phaser.Math.TAU
      * @type {number}
-     * @since 3.0.0
+     * @since 4.0.0
      */
-    TAU: Math.PI * 0.5,
+    TAU: Math.PI * 2,
 
     /**
-     * An epsilon value (1.0e-6)
+     * The value of PI / 2, or 90 degrees, in radians.
+     *
+     * @name Phaser.Math.PI_OVER_2
+     * @type {number}
+     * @since 3.0.0
+     */
+    PI_OVER_2: Math.PI / 2,
+
+    /**
+     * A small epsilon value (1.0e-6) used for floating-point comparisons and near-zero checks to avoid precision errors.
      *
      * @name Phaser.Math.EPSILON
      * @type {number}
@@ -38,7 +34,7 @@ var MATH_CONST = {
     EPSILON: 1.0e-6,
 
     /**
-     * For converting degrees to radians (PI / 180)
+     * Conversion factor for degrees to radians (PI / 180). Multiply a degree value by this constant to obtain its equivalent in radians.
      *
      * @name Phaser.Math.DEG_TO_RAD
      * @type {number}
@@ -47,7 +43,7 @@ var MATH_CONST = {
     DEG_TO_RAD: Math.PI / 180,
 
     /**
-     * For converting radians to degrees (180 / PI)
+     * Conversion factor for radians to degrees (180 / PI). Multiply a radian value by this constant to obtain its equivalent in degrees.
      *
      * @name Phaser.Math.RAD_TO_DEG
      * @type {number}
@@ -67,7 +63,7 @@ var MATH_CONST = {
 
     /**
      * The minimum safe integer this browser supports.
-     * We use a const for backward compatibility with Internet Explorer.
+     * We use a const for backward compatibility with older browsers.
      *
      * @name Phaser.Math.MIN_SAFE_INTEGER
      * @type {number}
@@ -77,7 +73,7 @@ var MATH_CONST = {
 
     /**
      * The maximum safe integer this browser supports.
-     * We use a const for backward compatibility with Internet Explorer.
+     * We use a const for backward compatibility with older browsers.
      *
      * @name Phaser.Math.MAX_SAFE_INTEGER
      * @type {number}

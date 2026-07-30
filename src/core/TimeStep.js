@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -32,7 +32,7 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
  * @since 3.0.0
  *
  * @param {Phaser.Game} game - A reference to the Phaser.Game instance that owns this Time Step.
- * @param {Phaser.Types.Core.FPSConfig} config
+ * @param {Phaser.Types.Core.FPSConfig} config - The FPS configuration object, as parsed by the Game Config.
  */
 var TimeStep = new Class({
 
@@ -130,9 +130,14 @@ var TimeStep = new Class({
          *
          * Use it purely to _restrict_ updates in low-intensity situations only.
          *
+         * You can change the FPS limit at any time by calling
+         * `TimeStep.setFPSLimit(limit)`.
+         * This will update the `fpsLimit`, `hasFpsLimit` and `_limitRate` properties.
+         *
          * @name Phaser.Core.TimeStep#fpsLimit
          * @type {number}
          * @default 0
+         * @readonly
          * @since 3.60.0
          */
         this.fpsLimit = GetValue(config, 'limit', 0);
@@ -147,6 +152,7 @@ var TimeStep = new Class({
          * @name Phaser.Core.TimeStep#hasFpsLimit
          * @type {boolean}
          * @default false
+         * @readonly
          * @since 3.60.0
          */
         this.hasFpsLimit = (this.fpsLimit > 0);
@@ -157,6 +163,7 @@ var TimeStep = new Class({
          * @name Phaser.Core.TimeStep#_limitRate
          * @type {number}
          * @private
+         * @readonly
          * @since 3.60.0
          */
         this._limitRate = (this.hasFpsLimit) ? (1000 / this.fpsLimit) : 0;
@@ -305,6 +312,17 @@ var TimeStep = new Class({
         this.inFocus = true;
 
         /**
+         * The duration of the most recent game pause, if any, in ms.
+         *
+         * @name Phaser.Core.TimeStep#pauseDuration
+         * @type {number}
+         * @readonly
+         * @default 0
+         * @since 3.85.0
+         */
+        this.pauseDuration = 0;
+
+        /**
          * The timestamp at which the game became paused, as determined by the Page Visibility API.
          *
          * @name Phaser.Core.TimeStep#_pauseTime
@@ -408,7 +426,7 @@ var TimeStep = new Class({
         this.now = 0;
 
         /**
-         * Apply smoothing to the delta value used within Phasers internal calculations?
+         * Apply smoothing to the delta value used within Phaser's internal calculations?
          *
          * This can be changed in the Game Config via the `fps.smoothStep` property. The default is `true`.
          *
@@ -469,12 +487,13 @@ var TimeStep = new Class({
     {
         this.resetDelta();
 
-        this.startTime += this.time - this._pauseTime;
+        this.pauseDuration = this.time - this._pauseTime;
+        this.startTime += this.pauseDuration;
     },
 
     /**
      * Resets the time, lastTime, fps averages and delta history.
-     * Called automatically when a browser sleeps them resumes.
+     * Called automatically when a browser sleeps then resumes.
      *
      * @method Phaser.Core.TimeStep#resetDelta
      * @since 3.0.0
@@ -612,7 +631,7 @@ var TimeStep = new Class({
      * will start to throttle the raf callback time. It waits for a while, and then
      * starts to drop the frame rate at 1 frame per second until it's down to just over 1fps.
      * So if the game was running at 60fps, and the player opens a new window, then
-     * after 60 seconds (+ the 'buffer time') it'll be down to 1fps, so rafin'g at 1Hz.
+     * after 60 seconds (+ the 'buffer time') it'll be down to 1fps, firing at just 1Hz.
      *
      * When they make the game visible again, the frame rate is increased at a rate of
      * approx. 8fps, back up to 60fps (or the max it can obtain)
@@ -677,7 +696,7 @@ var TimeStep = new Class({
         {
             this.callback(time, this.delta);
 
-            this.delta = 0;
+            this.delta %= this._limitRate;
         }
 
         //  Shift time value over
@@ -733,7 +752,8 @@ var TimeStep = new Class({
     },
 
     /**
-     * Manually calls `TimeStep.step`.
+     * Manually advances the TimeStep by one step, using the current timestamp from `window.performance.now`.
+     * Calls `TimeStep.stepLimitFPS` if an FPS limit is active, otherwise calls `TimeStep.step`.
      *
      * @method Phaser.Core.TimeStep#tick
      * @since 3.0.0
@@ -829,6 +849,39 @@ var TimeStep = new Class({
     getDurationMS: function ()
     {
         return Math.round(this.lastTime - this.startTime);
+    },
+
+    /**
+     * Sets the FPS limit (`fpsLimit` property) and related properties.
+     *
+     * Use this method to set the FPS limit at runtime, rather than setting the
+     * `fpsLimit` property directly, to ensure the related properties are
+     * updated correctly. If the TimeStep is running, it will be stopped and
+     * restarted with the new FPS limit.
+     *
+     * If you just want a constant limit, use the Game Config `fps: { limit: 30 }` value instead.
+     *
+     * @method Phaser.Core.TimeStep#setFPSLimit
+     * @since 4.2.0
+     *
+     * @param {number} limit - The FPS limit to set. Set to 0 to remove the FPS limit.
+     *
+     * @return {this} The TimeStep object.
+     */
+    setFPSLimit: function (limit)
+    {
+        this.fpsLimit = limit;
+        this.hasFpsLimit = (this.fpsLimit > 0);
+        this._limitRate = (this.hasFpsLimit) ? (1000 / this.fpsLimit) : 0;
+
+        if (this.running)
+        {
+            var step = (this.hasFpsLimit) ? this.stepLimitFPS.bind(this) : this.step.bind(this);
+            this.raf.stop();
+            this.raf.start(step, this.forceSetTimeOut, this._limitRate);
+        }
+
+        return this;
     },
 
     /**

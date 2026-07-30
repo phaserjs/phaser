@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,6 +8,11 @@ var TransformMatrix = require('../components/TransformMatrix');
 var Utils = require('../../renderer/webgl/Utils');
 
 var tempMatrix = new TransformMatrix();
+var tempTransformer = {
+    quad: new Float32Array(8)
+};
+var tempTexturer = {};
+var tempTinter = {};
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -20,13 +25,14 @@ var tempMatrix = new TransformMatrix();
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Blitter} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var BlitterWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
     var list = src.getRenderList();
-    var alpha = camera.alpha * src.alpha;
+    var camera = drawingContext.camera;
+    var alpha = src.alpha;
 
     if (list.length === 0 || alpha === 0)
     {
@@ -36,28 +42,22 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
 
     camera.addToRenderList(src);
 
-    var pipeline = renderer.pipelines.set(this.pipeline, src);
-
-    var cameraScrollX = camera.scrollX * src.scrollFactorX;
-    var cameraScrollY = camera.scrollY * src.scrollFactorY;
-
-    var calcMatrix = tempMatrix.copyFrom(camera.matrix);
+    var calcMatrix = tempMatrix.copyWithScrollFactorFrom(
+        camera.getViewMatrix(!drawingContext.useCanvas),
+        camera.scrollX, camera.scrollY,
+        src.scrollFactorX, src.scrollFactorY
+    );
 
     if (parentMatrix)
     {
-        calcMatrix.multiplyWithOffset(parentMatrix, -cameraScrollX, -cameraScrollY);
-
-        cameraScrollX = 0;
-        cameraScrollY = 0;
+        calcMatrix.multiply(parentMatrix);
     }
 
-    var blitterX = src.x - cameraScrollX;
-    var blitterY = src.y - cameraScrollY;
-    var prevTextureSourceIndex = -1;
-    var tintEffect = false;
-    var roundPixels = camera.roundPixels;
+    var blitterX = src.x;
+    var blitterY = src.y;
 
-    renderer.pipelines.preBatch(src);
+    var customRenderNodes = src.customRenderNodes;
+    var defaultRenderNodes = src.defaultRenderNodes;
 
     for (var i = 0; i < list.length; i++)
     {
@@ -88,25 +88,32 @@ var BlitterWebGLRenderer = function (renderer, src, camera, parentMatrix)
             y += frame.height;
         }
 
-        var quad = calcMatrix.setQuad(x, y, x + width, y + height, roundPixels);
+        calcMatrix.setQuad(x, y, x + width, y + height, tempTransformer.quad);
+
+        tempTexturer.frame = frame;
+        tempTexturer.uvSource = frame;
 
         var tint = Utils.getTintAppendFloatAlpha(bob.tint, bobAlpha);
 
-        //  Bind texture only if the Texture Source is different from before
-        if (frame.sourceIndex !== prevTextureSourceIndex)
-        {
-            var textureUnit = pipeline.setGameObject(src, frame);
+        tempTinter.tintTopLeft = tint;
+        tempTinter.tintBottomLeft = tint;
+        tempTinter.tintTopRight = tint;
+        tempTinter.tintBottomRight = tint;
 
-            prevTextureSourceIndex = frame.sourceIndex;
-        }
+        (customRenderNodes.Submitter || defaultRenderNodes.Submitter).run(
+            drawingContext,
+            src,
+            parentMatrix,
+            0,
+            tempTexturer,
+            tempTransformer,
+            tempTinter,
 
-        if (pipeline.batchQuad(src, quad[0], quad[1], quad[2], quad[3], quad[4], quad[5], quad[6], quad[7], frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, frame.glTexture, textureUnit))
-        {
-            prevTextureSourceIndex = -1;
-        }
+            // Optional normal map parameters.
+            undefined,
+            0
+        );
     }
-
-    renderer.pipelines.postBatch(src);
 };
 
 module.exports = BlitterWebGLRenderer;

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,10 +14,12 @@ var ParseXML = require('../../dom/ParseXML');
 
 /**
  * @classdesc
- * A single XML File suitable for loading by the Loader.
+ * A single XML File suitable for loading by the Phaser Loader. Once loaded, the XML response text is parsed into
+ * a DOM Document object and stored in the global XML Cache, keyed by the file key you provided. You can then
+ * retrieve it at any time via `this.cache.xml.get(key)` and traverse it using standard DOM methods.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#xml method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#xml.
  *
  * @class XMLFile
@@ -65,8 +67,10 @@ var XMLFile = new Class({
     },
 
     /**
-     * Called automatically by Loader.nextFile.
-     * This method controls what extra work this File does with its loaded data.
+     * Called automatically by Loader.nextFile. Parses the raw XHR response text as XML using `ParseXML`
+     * and stores the resulting DOM Document in `this.data`. If parsing succeeds, `onProcessComplete` is called
+     * to add the document to the XML Cache and advance the load queue. If parsing fails (i.e. `ParseXML` returns
+     * a falsy value), `onProcessError` is called instead.
      *
      * @method Phaser.Loader.FileTypes.XMLFile#onProcess
      * @since 3.7.0
@@ -93,7 +97,7 @@ var XMLFile = new Class({
  * Adds an XML file, or array of XML files, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -108,14 +112,14 @@ var XMLFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * The key must be a unique String. It is used to add the file to the global XML Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the XML Cache.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
  * then remove it from the XML Cache first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.xml({
  *     key: 'wavedata',
@@ -126,7 +130,7 @@ var XMLFile = new Class({
  * See the documentation for `Phaser.Types.Loader.FileTypes.XMLFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
- * 
+ *
  * ```javascript
  * this.load.xml('wavedata', 'files/AlienWaveData.xml');
  * // and later in your game ...

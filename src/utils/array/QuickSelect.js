@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -35,11 +35,11 @@ function defaultCompare (a, b)
  * @function Phaser.Utils.Array.QuickSelect
  * @since 3.0.0
  *
- * @param {array} arr - The array to sort.
+ * @param {array} arr - The array to rearrange in-place.
  * @param {number} k - The k-th element index.
  * @param {number} [left=0] - The index of the left part of the range.
  * @param {number} [right] - The index of the right part of the range.
- * @param {function} [compare] - An optional comparison function. Is passed two elements and should return 0, 1 or -1.
+ * @param {function} [compare] - An optional comparison function. Is passed two elements and should return a negative number if the first is less than the second, zero if they are equal, or a positive number if the first is greater.
  */
 var QuickSelect = function (arr, k, left, right, compare)
 {

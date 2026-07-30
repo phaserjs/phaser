@@ -1,12 +1,14 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Provides methods for setting the size of an Arcade Physics Game Object.
- * Should be applied as a mixin and not used directly.
+ * Provides methods used for controlling the size and offset of the Arcade Physics body belonging
+ * to a Game Object. The physics body dimensions are independent of the Game Object's visual
+ * dimensions, allowing the collision area to be smaller, larger, or offset from the sprite.
+ * This component is mixed into Arcade Physics-enabled Game Objects and should not be used directly.
  *
  * @namespace Phaser.Physics.Arcade.Components.Size
  * @since 3.0.0
@@ -20,8 +22,8 @@ var Size = {
      * @method Phaser.Physics.Arcade.Components.Size#setOffset
      * @since 3.0.0
      *
-     * @param {number} x - The amount to offset the body from the parent Game Object along the x-axis.
-     * @param {number} [y=x] - The amount to offset the body from the parent Game Object along the y-axis. Defaults to the value given for the x-axis.
+     * @param {number} x - The amount to offset the body from the parent Game Object along the x-axis, in pixels.
+     * @param {number} [y=x] - The amount to offset the body from the parent Game Object along the y-axis, in pixels. Defaults to the value given for the x-axis.
      *
      * @return {this} This Game Object.
      */

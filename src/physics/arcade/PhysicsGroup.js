@@ -1,11 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var ArcadeSprite = require('./ArcadeSprite');
 var Class = require('../../utils/Class');
+var CollisionComponent = require('./components/Collision');
 var CONST = require('./const');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Group = require('../../gameobjects/group/Group');
@@ -15,8 +16,8 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @classdesc
  * An Arcade Physics Group object.
  *
- * The primary use of a Physics Group is a way to collect together physics enable objects
- * that share the same intrinsic structure into a single pool. They can they be easily
+ * The primary use of a Physics Group is a way to collect together physics-enabled objects
+ * that share the same intrinsic structure into a single pool. They can then be easily
  * compared against other Groups, or Game Objects.
  *
  * All Game Objects created by, or added to this Group will automatically be given **dynamic**
@@ -35,6 +36,8 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @constructor
  * @since 3.0.0
  *
+ * @extends Phaser.Physics.Arcade.Components.Collision
+ *
  * @param {Phaser.Physics.Arcade.World} world - The physics simulation.
  * @param {Phaser.Scene} scene - The scene this group belongs to.
  * @param {(Phaser.GameObjects.GameObject[]|Phaser.Types.Physics.Arcade.PhysicsGroupConfig|Phaser.Types.GameObjects.Group.GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
@@ -43,6 +46,10 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 var PhysicsGroup = new Class({
 
     Extends: Group,
+
+    Mixins: [
+        CollisionComponent
+    ],
 
     initialize:
 
@@ -101,6 +108,8 @@ var PhysicsGroup = new Class({
          *
          * This should be either `Phaser.Physics.Arcade.Image`, `Phaser.Physics.Arcade.Sprite`, or a class extending one of those.
          *
+         * The constructor arguments must match `(scene, x, y, texture, frame)`.
+         *
          * @name Phaser.Physics.Arcade.Group#classType
          * @type {function}
          * @default ArcadeSprite
@@ -121,6 +130,30 @@ var PhysicsGroup = new Class({
          * @since 3.0.0
          */
         this.physicsType = CONST.DYNAMIC_BODY;
+
+        /**
+         * The Arcade Physics Group Collision Category.
+         *
+         * This can be set to any valid collision bitfield value.
+         *
+         * See the `setCollisionCategory` method for more details.
+         *
+         * @name Phaser.Physics.Arcade.Group#collisionCategory
+         * @type {number}
+         * @since 3.70.0
+         */
+        this.collisionCategory = 0x0001;
+
+        /**
+         * The Arcade Physics Group Collision Mask.
+         *
+         * See the `setCollidesWith` method for more details.
+         *
+         * @name Phaser.Physics.Arcade.Group#collisionMask
+         * @type {number}
+         * @since 3.70.0
+         */
+        this.collisionMask = 2147483647;
 
         /**
          * Default physics properties applied to Game Objects added to the Group or created by the Group. Derived from the `config` argument.
@@ -185,8 +218,14 @@ var PhysicsGroup = new Class({
      */
     createCallbackHandler: function (child)
     {
-        if (!child.body)
+        if (!child.body || child.body.physicsType !== CONST.DYNAMIC_BODY)
         {
+            if (child.body)
+            {
+                child.body.destroy();
+                child.body = null;
+            }
+
             this.world.enableBody(child, CONST.DYNAMIC_BODY);
         }
 
@@ -220,8 +259,8 @@ var PhysicsGroup = new Class({
      * @method Phaser.Physics.Arcade.Group#setVelocity
      * @since 3.0.0
      *
-     * @param {number} x - The horizontal velocity.
-     * @param {number} y - The vertical velocity.
+     * @param {number} x - The horizontal velocity, in pixels per second.
+     * @param {number} y - The vertical velocity, in pixels per second.
      * @param {number} [step=0] - The velocity increment. When set, the first member receives velocity (x, y), the second (x + step, y + step), and so on.
      *
      * @return {Phaser.Physics.Arcade.Group} This Physics Group object.
@@ -246,7 +285,7 @@ var PhysicsGroup = new Class({
      * @method Phaser.Physics.Arcade.Group#setVelocityX
      * @since 3.0.0
      *
-     * @param {number} value - The velocity value.
+     * @param {number} value - The velocity value, in pixels per second.
      * @param {number} [step=0] - The velocity increment. When set, the first member receives velocity (x), the second (x + step), and so on.
      *
      * @return {Phaser.Physics.Arcade.Group} This Physics Group object.
@@ -271,7 +310,7 @@ var PhysicsGroup = new Class({
      * @method Phaser.Physics.Arcade.Group#setVelocityY
      * @since 3.0.0
      *
-     * @param {number} value - The velocity value.
+     * @param {number} value - The velocity value, in pixels per second.
      * @param {number} [step=0] - The velocity increment. When set, the first member receives velocity (y), the second (y + step), and so on.
      *
      * @return {Phaser.Physics.Arcade.Group} This Physics Group object.

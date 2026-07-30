@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29,7 +29,7 @@ var TweenFrameData = require('./TweenFrameData');
  * @since 3.0.0
  *
  * @param {Phaser.Tweens.TweenManager} parent - A reference to the Tween Manager that owns this Tween.
- * @param {object[]} targets - An array of targets to be tweened.
+ * @param {object[]} targets - An array of targets to be tweened. This array should not be manipulated outside of this Tween.
  */
 var Tween = new Class({
 
@@ -154,6 +154,16 @@ var Tween = new Class({
          * @since 3.60.0
          */
         this.totalProgress = 0;
+
+        /**
+         * Is this Tween a Number Tween? Number Tweens are a special kind of tween that don't have a target.
+         *
+         * @name Phaser.Tweens.Tween#isNumberTween
+         * @type {boolean}
+         * @default false
+         * @since 3.88.0
+         */
+        this.isNumberTween = false;
     },
 
     /**
@@ -173,9 +183,9 @@ var Tween = new Class({
      * @param {function} delay - Function that returns the time in milliseconds before tween will start.
      * @param {number} duration - The duration of the tween in milliseconds.
      * @param {boolean} yoyo - Determines whether the tween should return back to its start value after hold has expired.
-     * @param {number} hold - Function that returns the time in milliseconds the tween will pause before repeating or returning to its starting value if yoyo is set to true.
-     * @param {number} repeat - Function that returns the number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
-     * @param {number} repeatDelay - Function that returns the time in milliseconds before the repeat will start.
+     * @param {number} hold - The time in milliseconds the tween will pause before repeating or returning to its starting value if yoyo is set to true.
+     * @param {number} repeat - The number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
+     * @param {number} repeatDelay - The time in milliseconds before the repeat will start.
      * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
      * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
      * @param {?function} interpolation - The interpolation function to be used for arrays of data. Defaults to 'null'.
@@ -205,9 +215,9 @@ var Tween = new Class({
      * @param {string|number} frame - The texture frame to set on the target at the end of the tween.
      * @param {function} delay - Function that returns the time in milliseconds before tween will start.
      * @param {number} duration - The duration of the tween in milliseconds.
-     * @param {number} hold - Function that returns the time in milliseconds the tween will pause before repeating or returning to its starting value if yoyo is set to true.
-     * @param {number} repeat - Function that returns the number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
-     * @param {number} repeatDelay - Function that returns the time in milliseconds before the repeat will start.
+     * @param {number} hold - The time in milliseconds the tween will pause before repeating or returning to its starting value if yoyo is set to true.
+     * @param {number} repeat - The number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
+     * @param {number} repeatDelay - The time in milliseconds before the repeat will start.
      * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
      * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
      *
@@ -232,7 +242,7 @@ var Tween = new Class({
      *
      * @param {number} [index=0] - The Tween Data to return the value from.
      *
-     * @return {number} The value of the requested Tween Data, or `null` if this Tween has been destroyed.
+     * @return {number|null} The value of the requested Tween Data, or `null` if this Tween has been destroyed.
      */
     getValue: function (index)
     {
@@ -464,7 +474,7 @@ var Tween = new Class({
      * so seeking to 3000 ms would seek to the Tweens half-way point based on its _entire_ duration.
      *
      * Prior to Phaser 3.60 this value was given as a number between 0 and 1 and didn't
-     * work for Tweens had an infinite repeat. This new method works for all Tweens.
+     * work for Tweens that had an infinite repeat. This new method works for all Tweens.
      *
      * Seeking works by resetting the Tween to its initial values and then iterating through the Tween at `delta`
      * jumps per step. The longer the Tween, the longer this can take. If you need more precision you can
@@ -644,6 +654,13 @@ var Tween = new Class({
     {
         if (this.isPendingRemove() || this.isDestroyed())
         {
+            if (this.persist)
+            {
+                this.setFinishedState();
+
+                return false;
+            }
+
             return true;
         }
         else if (this.paused || this.isFinished())
@@ -667,17 +684,7 @@ var Tween = new Class({
         }
         else if (!this.hasStarted)
         {
-            this.startDelay -= delta;
-
-            if (this.startDelay <= 0)
-            {
-                this.hasStarted = true;
-
-                this.dispatchEvent(Events.TWEEN_START, 'onStart');
-
-                //  Reset the delta so we always start progress from zero
-                delta = 0;
-            }
+            delta = this.updateStartCountdown(delta);
         }
 
         var stillRunning = false;
@@ -748,7 +755,7 @@ var Tween = new Class({
      * Moves this Tween backward by the given amount of milliseconds.
      *
      * It will only rewind through the current loop of the Tween. For example, if the
-     * Tween is set to repeat or yoyo, it can only fast forward through a single
+     * Tween is set to repeat or yoyo, it can only rewind through a single
      * section of the sequence. Use `Tween.seek` for more complex playhead control.
      *
      * If the Tween is paused or has already finished, calling this will have no effect.
@@ -781,6 +788,11 @@ var Tween = new Class({
         if (!this.isSeeking)
         {
             this.emit(event, this, this.targets);
+
+            if (!this.callbacks)
+            {
+                return;
+            }
 
             var handler = this.callbacks[callback];
 

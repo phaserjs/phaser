@@ -1,10 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var GetTilesWithin = require('./GetTilesWithin');
+var MATH = require('../../math');
 
 /**
  * Randomizes the indexes of a rectangular region of tiles (in tile coordinates) within the
@@ -15,10 +16,10 @@ var GetTilesWithin = require('./GetTilesWithin');
  *  { index: 6, weight: 4 },    // Probability of index 6 is 4 / 8
  *  { index: 7, weight: 2 },    // Probability of index 7 would be 2 / 8
  *  { index: 8, weight: 1.5 },  // Probability of index 8 would be 1.5 / 8
- *  { index: 26, weight: 0.5 }  // Probability of index 27 would be 0.5 / 8
+ *  { index: 26, weight: 0.5 }  // Probability of index 26 would be 0.5 / 8
  * ]
  *
- * The probability of any index being choose is (the index's weight) / (sum of all weights). This
+ * The probability of any index being chosen is (the index's weight) / (sum of all weights). This
  * method only modifies tile indexes and does not change collision information.
  *
  * @function Phaser.Tilemaps.Components.WeightedRandomize
@@ -51,7 +52,7 @@ var WeightedRandomize = function (tileX, tileY, width, height, weightedIndexes, 
 
     for (i = 0; i < tiles.length; i++)
     {
-        var rand = Math.random() * weightTotal;
+        var rand = MATH.RND.frac() * weightTotal;
         var sum = 0;
         var randomIndex = -1;
 
@@ -64,7 +65,7 @@ var WeightedRandomize = function (tileX, tileY, width, height, weightedIndexes, 
                 var chosen = weightedIndexes[j].index;
 
                 randomIndex = Array.isArray(chosen)
-                    ? chosen[Math.floor(Math.random() * chosen.length)]
+                    ? chosen[Math.floor(MATH.RND.frac() * chosen.length)]
                     : chosen;
                 break;
             }

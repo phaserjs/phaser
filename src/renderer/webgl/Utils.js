@@ -1,10 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @author       Felipe Alfonso <@bitnenfer>
  * @author       Matthew Groves <@doormat>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
+
+var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
 /**
  * @namespace Phaser.Renderer.WebGL.Utils
@@ -13,7 +15,7 @@
 module.exports = {
 
     /**
-     * Packs four floats on a range from 0.0 to 1.0 into a single Uint32
+     * Packs four floats in a range from 0.0 to 1.0 into a single Uint32
      *
      * @function Phaser.Renderer.WebGL.Utils.getTintFromFloats
      * @since 3.0.0
@@ -37,7 +39,7 @@ module.exports = {
 
     /**
      * Packs a Uint24, representing RGB components, with a Float32, representing
-     * the alpha component, with a range between 0.0 and 1.0 and return a Uint32
+     * the alpha component, with a range between 0.0 and 1.0 and returns a Uint32
      *
      * @function Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlpha
      * @since 3.0.0
@@ -56,8 +58,8 @@ module.exports = {
 
     /**
      * Packs a Uint24, representing RGB components, with a Float32, representing
-     * the alpha component, with a range between 0.0 and 1.0 and return a
-     * swizzled Uint32
+     * the alpha component, with a range between 0.0 and 1.0 and returns a
+     * swizzled Uint32 with the red and blue channels exchanged (RGB becomes BGR)
      *
      * @function Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlphaAndSwap
      * @since 3.0.0
@@ -78,7 +80,7 @@ module.exports = {
     },
 
     /**
-     * Unpacks a Uint24 RGB into an array of floats of ranges of 0.0 and 1.0
+     * Unpacks a Uint24 RGB into an array of floats with values in the range 0.0 to 1.0
      *
      * @function Phaser.Renderer.WebGL.Utils.getFloatsFromUintRGB
      * @since 3.0.0
@@ -98,7 +100,7 @@ module.exports = {
 
     /**
      * Check to see how many texture units the GPU supports in a fragment shader
-     * and if the value specific in the game config is allowed.
+     * and if the value specified in the game config is allowed.
      *
      * This value is hard-clamped to 16 for performance reasons on Android devices.
      *
@@ -129,78 +131,229 @@ module.exports = {
     },
 
     /**
-     * Checks the given Fragment Shader Source for `%count%` and `%forloop%` declarations and
-     * replaces those with GLSL code for setting `texture = texture2D(uMainSampler[i], outTexCoord)`.
+     * Sets or clears all lighting-related uniforms on the given shader program manager.
      *
-     * @function Phaser.Renderer.WebGL.Utils.parseFragmentShaderMaxTextures
-     * @since 3.50.0
+     * When `enable` is `true`, this function queries the Scene's Light Manager for all
+     * active lights visible to the camera and uploads their positions, colors, intensities,
+     * radii, and cone settings as uniform arrays to the shader. It also uploads the ambient
+     * light color, camera transform, and the normal map texture unit. Optionally enables
+     * self-shadowing by uploading the penumbra and diffuse threshold uniforms.
      *
-     * @param {string} fragmentShaderSource - The Fragment Shader source code to operate on.
-     * @param {number} maxTextures - The number of maxTextures value.
+     * When `enable` is `false`, all previously set lighting uniforms are removed from the
+     * program manager. If the Scene has no active Light Manager, the function returns early
+     * without making any changes.
      *
-     * @return {string} The modified Fragment Shader source.
+     * @function Phaser.Renderer.WebGL.Utils.updateLightingUniforms
+     * @since 4.0.0
+     * @webglOnly
+     *
+     * @param {boolean} enable - Whether to enable lighting.
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The DrawingContext instance.
+     * @param {Phaser.Renderer.WebGL.ProgramManager} programManager - The ShaderProgramManager instance.
+     * @param {number} textureUnit - The texture unit to use for the normal map.
+     * @param {Phaser.Math.Vector2} vec - A Vector2 instance.
+     * @param {boolean} [selfShadow] - Whether to enable self-shadowing.
+     * @param {number} [selfShadowPenumbra] - The penumbra value for self-shadowing.
+     * @param {number} [selfShadowThreshold] - The threshold value for self-shadowing.
      */
-    parseFragmentShaderMaxTextures: function (fragmentShaderSource, maxTextures)
+    updateLightingUniforms: function (
+        enable,
+        drawingContext,
+        programManager,
+        textureUnit,
+        vec,
+        selfShadow,
+        selfShadowPenumbra,
+        selfShadowThreshold
+    )
     {
-        if (!fragmentShaderSource)
+        var camera = drawingContext.camera;
+        var scene = camera.scene;
+        var lightManager = scene.sys.lights;
+
+        if (!lightManager || !lightManager.active)
         {
-            return '';
+            return;
         }
 
-        var src = '';
 
-        for (var i = 0; i < maxTextures; i++)
+        var lights = lightManager.getLights(camera);
+        var lightsCount = lights.length;
+        var ambientColor = lightManager.ambientColor;
+        var height = drawingContext.height;
+
+        if (enable)
         {
-            if (i > 0)
+            programManager.setUniform(
+                'uNormSampler',
+                textureUnit
+            );
+
+            programManager.setUniform(
+                'uCamera',
+                [
+                    camera.x,
+                    camera.y,
+                    camera.rotation,
+                    camera.zoom
+                ]
+            );
+            programManager.setUniform(
+                'uAmbientLightColor',
+                [
+                    ambientColor.r,
+                    ambientColor.g,
+                    ambientColor.b
+                ]
+            );
+            programManager.setUniform(
+                'uLightCount',
+                lightsCount
+            );
+
+            var camMatrix = new TransformMatrix();
+
+            for (var i = 0; i < lightsCount; i++)
             {
-                src += '\n\telse ';
+                var light = lights[i].light;
+                var color = light.color;
+
+                var lightName = 'uLights[' + i + '].';
+
+                camMatrix.copyWithScrollFactorFrom(
+                    camera.matrixCombined,
+                    camera.scrollX, camera.scrollY,
+                    light.scrollFactorX, light.scrollFactorY
+                );
+                camMatrix.transformPoint(
+                    light.x,
+                    light.y,
+                    vec
+                );
+
+                var lightX = vec.x;
+                var lightY = height - vec.y;
+
+                programManager.setUniform(
+                    lightName + 'position',
+                    [
+                        lightX,
+                        lightY,
+                        light.z * camera.zoom
+                    ]
+                );
+                programManager.setUniform(
+                    lightName + 'color',
+                    [
+                        color.r,
+                        color.g,
+                        color.b
+                    ]
+                );
+                programManager.setUniform(
+                    lightName + 'intensity',
+                    light.intensity
+                );
+                programManager.setUniform(
+                    lightName + 'radius',
+                    light.radius
+                );
+
+                if (light.coneEnabled)
+                {
+                    camMatrix.transformPoint(
+                        light.x + Math.cos(light.coneRotation),
+                        light.y + Math.sin(light.coneRotation),
+                        vec
+                    );
+
+                    var dirX = vec.x - lightX;
+                    var dirY = (height - vec.y) - lightY;
+                    var dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
+
+                    if (dirLength === 0)
+                    {
+                        dirX = 1;
+                        dirY = 0;
+                    }
+                    else
+                    {
+                        dirX /= dirLength;
+                        dirY /= dirLength;
+                    }
+
+                    programManager.setUniform(
+                        lightName + 'direction',
+                        [
+                            dirX,
+                            dirY
+                        ]
+                    );
+                    programManager.setUniform(
+                        lightName + 'cone',
+                        [
+                            Math.cos(light.coneOuterAngle * 0.5),
+                            Math.cos(light.coneInnerAngle * 0.5),
+                            1
+                        ]
+                    );
+                }
+                else
+                {
+                    programManager.setUniform(
+                        lightName + 'direction',
+                        [
+                            1,
+                            0
+                        ]
+                    );
+                    programManager.setUniform(
+                        lightName + 'cone',
+                        [
+                            -1,
+                            1,
+                            0
+                        ]
+                    );
+                }
             }
 
-            if (i < maxTextures - 1)
+            if (selfShadow)
             {
-                src += 'if (outTexId < ' + i + '.5)';
+                // Self-shadowing uniforms.
+                programManager.setUniform(
+                    'uDiffuseFlatThreshold',
+                    selfShadowThreshold * 3
+                );
+
+                programManager.setUniform(
+                    'uPenumbra',
+                    selfShadowPenumbra
+                );
             }
-
-            src += '\n\t{';
-            src += '\n\t\ttexture = texture2D(uMainSampler[' + i + '], outTexCoord);';
-            src += '\n\t}';
         }
-
-        fragmentShaderSource = fragmentShaderSource.replace(/%count%/gi, maxTextures.toString());
-
-        return fragmentShaderSource.replace(/%forloop%/gi, src);
-    },
-
-    /**
-     * Takes the Glow FX Shader source and parses out the __SIZE__ and __DIST__
-     * consts with the configuration values.
-     *
-     * @function Phaser.Renderer.WebGL.Utils.setGlowQuality
-     * @since 3.60.0
-     *
-     * @param {string} shader - The Fragment Shader source code to operate on.
-     * @param {Phaser.Game} game - The Phaser Game instance.
-     * @param {number} [quality] - The quality of the glow (defaults to 0.1)
-     * @param {number} [distance] - The distance of the glow (defaults to 10)
-     *
-     * @return {string} The modified Fragment Shader source.
-     */
-    setGlowQuality: function (shader, game, quality, distance)
-    {
-        if (quality === undefined)
+        else
         {
-            quality = game.config.glowFXQuality;
+            // Clear lighting uniforms.
+            programManager.removeUniform('uNormSampler');
+            programManager.removeUniform('uCamera');
+            programManager.removeUniform('uAmbientLightColor');
+            programManager.removeUniform('uLightCount');
+
+            programManager.removeUniform('uPenumbra');
+            programManager.removeUniform('uDiffuseFlatThreshold');
+
+            for (i = 0; i < lightsCount; i++)
+            {
+                lightName = 'uLights[' + i + '].';
+
+                programManager.removeUniform(lightName + 'position');
+                programManager.removeUniform(lightName + 'color');
+                programManager.removeUniform(lightName + 'intensity');
+                programManager.removeUniform(lightName + 'radius');
+                programManager.removeUniform(lightName + 'direction');
+                programManager.removeUniform(lightName + 'cone');
+            }
         }
-
-        if (distance === undefined)
-        {
-            distance = game.config.glowFXDistance;
-        }
-
-        shader = shader.replace(/__SIZE__/gi, (1 / quality / distance).toFixed(7));
-        shader = shader.replace(/__DIST__/gi, distance.toFixed(0) + '.0');
-
-        return shader;
     }
-
 };

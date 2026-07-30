@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,9 +17,17 @@ var Events = require('./events');
  * The `destroy` list is a selection of items that were active and are awaiting being destroyed in the next update.
  *
  * When new items are added to a Process Queue they are put in the pending list, rather than being added
- * immediately the active list. Equally, items that are removed are put into the destroy list, rather than
+ * immediately to the active list. Equally, items that are removed are put into the destroy list, rather than
  * being destroyed immediately. This allows the Process Queue to carefully process each item at a specific, fixed
  * time, rather than at the time of the request from the API.
+ *
+ * Process Queue is used extensively within Phaser to safely manage collections of objects such as Cameras,
+ * Plugins, and Scene Systems, where items may be added or removed during an active update loop. By deferring
+ * additions and removals to a controlled point between updates, it avoids the bugs that would result from
+ * modifying a list while it is being iterated over.
+ *
+ * The queue extends EventEmitter and fires `Phaser.Structs.Events#PROCESS_QUEUE_ADD` when an item becomes
+ * active and `Phaser.Structs.Events#PROCESS_QUEUE_REMOVE` when an item is removed.
  *
  * @class ProcessQueue
  * @extends Phaser.Events.EventEmitter
@@ -90,7 +98,7 @@ var ProcessQueue = new Class({
         this._toProcess = 0;
 
         /**
-         * If `true` only unique objects will be allowed in the queue.
+         * If `true` only unique objects will be allowed in the queue, preventing the same item from being added more than once.
          *
          * @name Phaser.Structs.ProcessQueue#checkQueue
          * @type {boolean}

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25,7 +25,7 @@
  * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
  * the propagation of this event.
  *
- * If the pointer leaves the game canvas itself, it will not trigger an this event. To handle those cases,
+ * If the pointer leaves the game canvas itself, it will not trigger this event. To handle those cases,
  * please listen for the [GAME_OUT]{@linkcode Phaser.Input.Events#event:GAME_OUT} event.
  *
  * @event Phaser.Input.Events#GAMEOBJECT_OUT

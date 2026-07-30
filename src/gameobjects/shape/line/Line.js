@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19,8 +19,8 @@ var LineRender = require('./LineRender');
  * This shape supports only stroke colors and cannot be filled.
  *
  * A Line Shape allows you to draw a line between two points in your game. You can control the
- * stroke color and thickness of the line. In WebGL only you can also specify a different
- * thickness for the start and end of the line, allowing you to render lines that taper-off.
+ * stroke color and thickness of the line. In WebGL only, you can also specify a different
+ * thickness for the start and end of the line, allowing you to render lines that taper off.
  *
  * If you need to draw multiple lines in a sequence you may wish to use the Polygon Shape instead.
  *
@@ -64,9 +64,6 @@ var Line = new Class({
 
         Shape.call(this, scene, 'Line', new GeomLine(x1, y1, x2, y2));
 
-        var width = Math.max(1, this.geom.right - this.geom.left);
-        var height = Math.max(1, this.geom.bottom - this.geom.top);
-
         /**
          * The width (or thickness) of the line.
          * See the setLineWidth method for extra details on changing this on WebGL.
@@ -98,7 +95,7 @@ var Line = new Class({
         this._endWidth = 1;
 
         this.setPosition(x, y);
-        this.setSize(width, height);
+        this.updateSize();
 
         if (strokeColor !== undefined)
         {
@@ -153,9 +150,29 @@ var Line = new Class({
     {
         this.geom.setTo(x1, y1, x2, y2);
 
+        this.updateSize();
+
+        return this;
+    },
+
+    /**
+     * Updates the width and height of the Line based on its geometry.
+     *
+     * @method Phaser.GameObjects.Line#updateSize
+     * @private
+     * @since 4.2.0
+     *
+     * @return {this} This Line instance.
+     */
+    updateSize: function ()
+    {
+        var width = Math.max(1, this.geom.right - this.geom.left);
+        var height = Math.max(1, this.geom.bottom - this.geom.top);
+
+        this.setSize(width, height);
+
         return this;
     }
-
 });
 
 module.exports = Line;

@@ -3,6 +3,7 @@
  * @since 3.0.0
  *
  * @property {string} type - The name of the Loader method that loads this file, e.g., 'image', 'json', 'spritesheet'.
+ * @property {(Phaser.Cache.BaseCache|false)} cache - Reference to the cache instance responsible for this file type. Or false if you don't need to retrieve files from your game; e.g.: Font files tracked by the browser.
  * @property {string} key - Unique cache key (unique within its file type)
  * @property {object|string} [url] - The URL of the file, not including baseURL.
  * @property {string} [path] - The path of the file, not including the baseURL.
@@ -35,7 +36,7 @@
  * @property {(Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry | string)} [RGTC] - The string, or file entry object, for an RGTC format texture.
  * @property {(Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry | string)} [PVRTC] - The string, or file entry object, for an PVRTC format texture.
  * @property {(Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry | string)} [S3TC] - The string, or file entry object, for an S3TC format texture.
- * @property {(Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry | string)} [S3TCRGB] - The string, or file entry object, for an S3TCRGB format texture.
+ * @property {(Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry | string)} [S3TCSRGB] - The string, or file entry object, for an S3TCSRGB format texture.
  * @property {(Phaser.Types.Loader.FileTypes.CompressedTextureFileEntry | string)} [IMG] - The string, or file entry object, for the fallback image file.
  * @property {string} [shaderType='fragment'] - The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle.
  * @property {number} [width=512] - The width of the texture the HTML will be rendered to.
@@ -51,4 +52,5 @@
  * @property {string} [systemKey] - If this plugin is to be added to Scene.Systems, this is the property key for it.
  * @property {string} [sceneKey] - If this plugin is to be added to the Scene, this is the property key for it.
  * @property {Phaser.Types.Loader.FileTypes.SVGSizeConfig} [svgConfig] - The svg size configuration object.
+ * @property {number} [maxRetries=2] - The number of times to retry the file load if it fails.
  */

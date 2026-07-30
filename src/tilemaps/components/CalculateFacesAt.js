@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,9 +14,11 @@ var GetTileAt = require('./GetTileAt');
  * @function Phaser.Tilemaps.Components.CalculateFacesAt
  * @since 3.0.0
  *
- * @param {number} tileX - The x coordinate.
- * @param {number} tileY - The y coordinate.
+ * @param {number} tileX - The x coordinate of the tile in tile grid coordinates.
+ * @param {number} tileY - The y coordinate of the tile in tile grid coordinates.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
+ *
+ * @return {Phaser.Tilemaps.Tile} The tile at the given coordinates, or `null` if no tile exists there.
  */
 var CalculateFacesAt = function (tileX, tileY, layer)
 {

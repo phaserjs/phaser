@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -80,6 +80,16 @@ var JSONArray = function (texture, sourceIndex, json)
             newFrame.customPivot = true;
             newFrame.pivotX = pivot.x;
             newFrame.pivotY = pivot.y;
+        }
+
+        if (src.scale9Borders)
+        {
+            newFrame.setScale9(
+                src.scale9Borders.x,
+                src.scale9Borders.y,
+                src.scale9Borders.w,
+                src.scale9Borders.h
+            );
         }
 
         //  Copy over any extra data

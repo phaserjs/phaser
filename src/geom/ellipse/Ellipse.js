@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,6 +14,11 @@ var Random = require('./Random');
 /**
  * @classdesc
  * An Ellipse object.
+ *
+ * An Ellipse is defined by its center position (x, y), a total width, and a total height. It can be
+ * used for geometric intersection tests (point-in-ellipse containment), sampling evenly-spaced or random
+ * points on its circumference or interior, and as a lightweight shape descriptor for collision or
+ * hit-area purposes.
  *
  * This is a geometry object, containing numerical values and related methods to inspect and modify them.
  * It is not a Game Object, in that you cannot add it to the display list, and it has no texture.
@@ -109,19 +114,19 @@ var Ellipse = new Class({
     },
 
     /**
-     * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse
+     * Returns a Vector2 object containing the coordinates of a point on the circumference of the Ellipse
      * based on the given angle normalized to the range 0 to 1. I.e. a value of 0.5 will give the point
-     * at 180 degrees around the circle.
+     * at 180 degrees around the ellipse.
      *
      * @method Phaser.Geom.Ellipse#getPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [out,$return]
+     * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
      * @param {number} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the ellipse.
-     * @param {(Phaser.Geom.Point|object)} [out] - An object to store the return values in. If not given a Point object will be created.
+     * @param {Phaser.Math.Vector2} [point] - A Vector2 to store the return values in. If not given a Vector2 object will be created.
      *
-     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point around the ellipse.
+     * @return {Phaser.Math.Vector2} A Vector2 instance containing the coordinates of the point around the ellipse.
      */
     getPoint: function (position, point)
     {
@@ -129,19 +134,19 @@ var Ellipse = new Class({
     },
 
     /**
-     * Returns an array of Point objects containing the coordinates of the points around the circumference of the Ellipse,
+     * Returns an array of Vector2 objects containing the coordinates of the points around the circumference of the Ellipse,
      * based on the given quantity or stepRate values.
      *
      * @method Phaser.Geom.Ellipse#getPoints
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     * @generic {Phaser.Math.Vector2[]} O - [output,$return]
      *
      * @param {number} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
      * @param {number} [stepRate] - Sets the quantity by getting the circumference of the ellipse and dividing it by the stepRate.
-     * @param {(array|Phaser.Geom.Point[])} [output] - An array to insert the points in to. If not provided a new array will be created.
+     * @param {Phaser.Math.Vector2[]} [output] - An array to insert the Vector2s in. If not provided a new array will be created.
      *
-     * @return {(array|Phaser.Geom.Point[])} An array of Point objects pertaining to the points around the circumference of the ellipse.
+     * @return {Phaser.Math.Vector2[]} An array of Vector2 objects pertaining to the points around the circumference of the ellipse.
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -154,15 +159,15 @@ var Ellipse = new Class({
      * @method Phaser.Geom.Ellipse#getRandomPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [point,$return]
+     * @generic {Phaser.Math.Vector2} O - [point,$return]
      *
-     * @param {(Phaser.Geom.Point|object)} [point] - A Point or point-like object to set the random `x` and `y` values in.
+     * @param {Phaser.Math.Vector2} [vec] - A Vector2 object to set the random `x` and `y` values in.
      *
-     * @return {(Phaser.Geom.Point|object)} A Point object with the random values set in the `x` and `y` properties.
+     * @return {Phaser.Math.Vector2} A Vector2 object with the random values set in the `x` and `y` properties.
      */
-    getRandomPoint: function (point)
+    getRandomPoint: function (vec)
     {
-        return Random(this, point);
+        return Random(this, vec);
     },
 
     /**
@@ -206,7 +211,8 @@ var Ellipse = new Class({
     },
 
     /**
-     * Sets the position of this Ellipse.
+     * Sets the position of this Ellipse. If the `y` argument is omitted, both the x and y positions
+     * will be set to the value of `x`.
      *
      * @method Phaser.Geom.Ellipse#setPosition
      * @since 3.0.0
@@ -227,8 +233,8 @@ var Ellipse = new Class({
     },
 
     /**
-     * Sets the size of this Ellipse.
-     * Does not change its position.
+     * Sets the size of this Ellipse. Does not change its position.
+     * If the `height` argument is omitted it will be set equal to `width`, producing a circle.
      *
      * @method Phaser.Geom.Ellipse#setSize
      * @since 3.0.0
@@ -249,7 +255,7 @@ var Ellipse = new Class({
     },
 
     /**
-     * Checks to see if the Ellipse is empty: has a width or height equal to zero.
+     * Checks to see if the Ellipse is empty: has a width or height of zero or less.
      *
      * @method Phaser.Geom.Ellipse#isEmpty
      * @since 3.0.0

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,20 @@ var Class = require('../../../utils/Class');
 
 /**
  * @classdesc
- * A zone that places particles on a shape's edges.
+ * An Edge Zone is an emit zone for a Particle Emitter that places emitted particles
+ * sequentially along the edges of a shape. The shape is defined by a source object
+ * that provides a `getPoints(quantity, stepRate)` method, such as a Phaser Curve,
+ * Path, or any compatible geometry object.
+ *
+ * As each particle is emitted, it is positioned at the next point along the shape's
+ * edge, cycling through all points in order. If `yoyo` is enabled, the traversal
+ * reverses direction when it reaches either end, creating a back-and-forth effect.
+ * If `seamless` is enabled, duplicate endpoints are removed to avoid stacking
+ * particles at the join when the shape loops back on itself.
+ *
+ * Use this zone when you want particles to trace or outline a shape — for example,
+ * sparks running along a wire, particles orbiting a path, or effects that follow
+ * the boundary of a geometric figure.
  *
  * @class EdgeZone
  * @memberof Phaser.GameObjects.Particles.Zones
@@ -17,7 +30,7 @@ var Class = require('../../../utils/Class');
  *
  * @param {Phaser.Types.GameObjects.Particles.EdgeZoneSource} source - An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
  * @param {number} quantity - The number of particles to place on the source edge. Set to 0 to use `stepRate` instead.
- * @param {number} stepRate - The distance between each particle. When set, `quantity` is implied and should be set to 0.
+ * @param {number} [stepRate] - The distance between each particle. When set, `quantity` is implied and should be set to 0.
  * @param {boolean} [yoyo=false] - Whether particles are placed from start to end and then end to start.
  * @param {boolean} [seamless=true] - Whether one endpoint will be removed if it's identical to the other.
  * @param {number} [total=-1] - The total number of particles this zone will emit before passing over to the next emission zone in the Emitter. -1 means it will never pass over and you must use `setEmitZone` to change it.
@@ -45,7 +58,7 @@ var EdgeZone = new Class({
          * The points placed on the source edge.
          *
          * @name Phaser.GameObjects.Particles.Zones.EdgeZone#points
-         * @type {Phaser.Geom.Point[]}
+         * @type {Phaser.Math.Vector2[]}
          * @default []
          * @since 3.0.0
          */
@@ -183,7 +196,10 @@ var EdgeZone = new Class({
     },
 
     /**
-     * Change the source of the EdgeZone.
+     * Change the source of the EdgeZone, replacing the existing shape with a new one.
+     * The new source must provide a `getPoints(quantity, stepRate)` method. After
+     * the source is replaced, `updateSource` is called automatically to regenerate
+     * the edge points and reset internal state accordingly.
      *
      * @method Phaser.GameObjects.Particles.Zones.EdgeZone#changeSource
      * @since 3.0.0
@@ -201,6 +217,11 @@ var EdgeZone = new Class({
 
     /**
      * Get the next point in the Zone and set its coordinates on the given Particle.
+     *
+     * Points are stepped through sequentially. When the end of the point list is
+     * reached, the counter wraps back to the start, or reverses direction if `yoyo`
+     * is enabled. Called automatically by the Particle Emitter each time a new
+     * particle is emitted.
      *
      * @method Phaser.GameObjects.Particles.Zones.EdgeZone#getPoint
      * @since 3.0.0

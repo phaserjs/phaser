@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,7 @@ var SpliceOne = require('./SpliceOne');
  * @function Phaser.Utils.Array.RemoveRandomElement
  * @since 3.0.0
  *
- * @param {array} array - The array to removed a random element from.
+ * @param {array} array - The array to remove a random element from.
  * @param {number} [start=0] - The array index to start the search from.
  * @param {number} [length=array.length] - Optional restriction on the number of elements to randomly select from.
  *

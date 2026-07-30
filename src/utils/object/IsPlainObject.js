@@ -1,12 +1,15 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * This is a slightly modified version of jQuery.isPlainObject.
- * A plain object is an object whose internal class property is [object Object].
+ * A plain object is an object whose internal [[Class]] property is `[object Object]`,
+ * meaning it was created via `{}`, `new Object()`, or `Object.create(null)`. Objects
+ * such as DOM nodes, the `window` object, and instances of custom classes are not
+ * considered plain objects and will cause this function to return `false`.
  *
  * @function Phaser.Utils.Objects.IsPlainObject
  * @since 3.0.0

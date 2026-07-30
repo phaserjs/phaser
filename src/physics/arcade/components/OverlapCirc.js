@@ -16,9 +16,10 @@ var CircleToRectangle = require('../../../geom/intersects/CircleToRectangle');
  * @function Phaser.Physics.Arcade.Components.OverlapCirc
  * @since 3.21.0
  *
- * @param {number} x - The x coordinate of the center of the area to search within.
- * @param {number} y - The y coordinate of the center of the area to search within.
- * @param {number} radius - The radius of the area to search within.
+ * @param {Phaser.Physics.Arcade.World} world - The Arcade Physics World.
+ * @param {number} x - The x coordinate of the center of the area to search within, in pixels.
+ * @param {number} y - The y coordinate of the center of the area to search within, in pixels.
+ * @param {number} radius - The radius of the area to search within, in pixels.
  * @param {boolean} [includeDynamic=true] - Should the search include Dynamic Bodies?
  * @param {boolean} [includeStatic=false] - Should the search include Static Bodies?
  *

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,8 +9,8 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 /**
  * Gets the tiles in the given rectangular area (in tile coordinates) of the layer.
  *
- * This returns an array with references to the Tile instances in, so be aware of
- * modifying them directly.
+ * This returns an array containing references to the Tile instances themselves, so be aware that
+ * modifying them directly will affect the layer data.
  *
  * @function Phaser.Tilemaps.Components.GetTilesWithin
  * @since 3.0.0

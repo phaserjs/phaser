@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -185,8 +185,8 @@ var Size = new Class({
     },
 
     /**
-     * By setting a Snap To value when this Size component is modified its dimensions will automatically
-     * by snapped to the nearest grid slice, using floor. For example, if you have snap value of 16,
+     * By setting snap values, when this Size component is modified its dimensions will automatically
+     * be snapped to the nearest grid slice, using floor. For example, if you have snap value of 16,
      * and the width changes to 68, then it will snap down to 64 (the closest multiple of 16 when floored)
      *
      * Note that snapping takes place before adjustments by the parent, or the min / max settings. If these
@@ -252,7 +252,7 @@ var Size = new Class({
      * Setting this will automatically adjust both the `width` and `height` properties to ensure they are within range.
      *
      * Note that based on the aspect mode, and if this Size component has a parent set or not, the minimums set here
-     * _can_ be exceed in some situations.
+     * _can_ be exceeded in some situations.
      *
      * @method Phaser.Structs.Size#setMin
      * @since 3.16.0
@@ -279,7 +279,7 @@ var Size = new Class({
      * Setting this will automatically adjust both the `width` and `height` properties to ensure they are within range.
      *
      * Note that based on the aspect mode, and if this Size component has a parent set or not, the maximums set here
-     * _can_ be exceed in some situations.
+     * _can_ be exceeded in some situations.
      *
      * @method Phaser.Structs.Size#setMax
      * @since 3.16.0
@@ -568,7 +568,7 @@ var Size = new Class({
      * @method Phaser.Structs.Size#setWidth
      * @since 3.16.0
      *
-     * @param {number} width - The new width of the Size component.
+     * @param {number} value - The new width of the Size component.
      *
      * @return {this} This Size component instance.
      */
@@ -585,7 +585,7 @@ var Size = new Class({
      * @method Phaser.Structs.Size#setHeight
      * @since 3.16.0
      *
-     * @param {number} height - The new height of the Size component.
+     * @param {number} value - The new height of the Size component.
      *
      * @return {this} This Size component instance.
      */
@@ -669,7 +669,7 @@ var Size = new Class({
      * A width can never be less than zero.
      *
      * Changing this value will automatically update the `height` if the aspect ratio lock is enabled.
-     * You can also use the `setWidth` and `getWidth` methods.
+     * You can also use the `setWidth` method.
      *
      * @name Phaser.Structs.Size#width
      * @type {number}
@@ -697,7 +697,7 @@ var Size = new Class({
      * A height can never be less than zero.
      *
      * Changing this value will automatically update the `width` if the aspect ratio lock is enabled.
-     * You can also use the `setHeight` and `getHeight` methods.
+     * You can also use the `setHeight` method.
      *
      * @name Phaser.Structs.Size#height
      * @type {number}

@@ -1,12 +1,16 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * PlayStation DualShock 4 Gamepad Configuration.
- * Sony PlayStation DualShock 4 (v2) wireless controller
+ * Button and axis index constants for the Sony PlayStation DualShock 4 (v2) wireless controller.
+ *
+ * This configuration object maps human-readable names to the numeric button and axis indices
+ * reported by the browser Gamepad API when a DualShock 4 controller is connected. Use these
+ * constants with Phaser's `Gamepad` class to check button states and read analog stick values
+ * without relying on magic numbers in your game code.
  *
  * @name Phaser.Input.Gamepad.Configs.DUALSHOCK_4
  * @namespace
@@ -45,7 +49,7 @@ module.exports = {
     LEFT: 14,
 
     /**
-     * D-Pad up
+     * D-Pad right
      *
      * @name Phaser.Input.Gamepad.Configs.DUALSHOCK_4.RIGHT
      * @const

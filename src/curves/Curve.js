@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,6 +12,15 @@ var Vector2 = require('../math/Vector2');
 /**
  * @classdesc
  * A Base Curve class, which all other curve types extend.
+ *
+ * A Curve represents a mathematical path through 2D space and provides methods for
+ * sampling points, calculating arc lengths, and obtaining tangent vectors along it.
+ * Curves are the building blocks of `Phaser.Curves.Path`, which allows Game Objects
+ * to follow complex routes through a scene.
+ *
+ * This class is not intended to be instantiated directly. Instead, use one of the
+ * concrete subclasses in the `Phaser.Curves` namespace, such as `LineCurve`,
+ * `QuadraticBezier`, `CubicBezier`, `EllipseCurve`, or `SplineCurve`.
  *
  * Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
  *
@@ -175,7 +184,7 @@ var Curve = new Class({
      *
      * @param {number} distance - The distance, in pixels, between each point along the curve.
      *
-     * @return {Phaser.Geom.Point[]} An Array of Point objects.
+     * @return {Phaser.Math.Vector2[]} An Array of Vector2 objects.
      */
     getDistancePoints: function (distance)
     {
@@ -194,7 +203,7 @@ var Curve = new Class({
      *
      * @param {Phaser.Math.Vector2} [out] - Optional Vector object to store the result in.
      *
-     * @return {Phaser.Math.Vector2} Vector2 containing the coordinates of the curves end point.
+     * @return {Phaser.Math.Vector2} Vector2 containing the coordinates of the curve's end point.
      */
     getEndPoint: function (out)
     {
@@ -204,7 +213,7 @@ var Curve = new Class({
     },
 
     /**
-     * Get total curve arc length
+     * Returns the total arc length of the curve, in pixels. The length is calculated by summing the distances between sampled points along the curve.
      *
      * @method Phaser.Curves.Curve#getLength
      * @since 3.0.0
@@ -222,7 +231,7 @@ var Curve = new Class({
     /**
      * Get a list of cumulative segment lengths.
      *
-     * These lengths are
+     * These lengths are calculated and cached the first time this method is called.
      *
      * - [0] 0
      * - [1] The first segment
@@ -317,9 +326,9 @@ var Curve = new Class({
      *
      * @param {number} [divisions] - The number of divisions to make.
      * @param {number} [stepRate] - The curve distance between points, implying `divisions`.
-     * @param {(array|Phaser.Math.Vector2[])} [out] - An optional array to store the points in.
+     * @param {Phaser.Math.Vector2[]} [out] - An optional array to store the points in.
      *
-     * @return {(array|Phaser.Math.Vector2[])} An array of Points from the curve.
+     * @return {Phaser.Math.Vector2[]} An array of Vector2 points from the curve.
      */
     getPoints: function (divisions, stepRate, out)
     {
@@ -377,9 +386,9 @@ var Curve = new Class({
      *
      * @param {number} [divisions=this.defaultDivisions] - The number of divisions to make.
      * @param {number} [stepRate] - Step between points. Used to calculate the number of points to return when divisions is falsy. Ignored if divisions is positive.
-     * @param {(array|Phaser.Math.Vector2[])} [out] - An optional array to store the points in.
+     * @param {Phaser.Math.Vector2[]} [out] - An optional array to store the points in.
      *
-     * @return {Phaser.Math.Vector2[]} An array of points.
+     * @return {Phaser.Math.Vector2[]} An array of Vector2 points.
      */
     getSpacedPoints: function (divisions, stepRate, out)
     {
@@ -429,9 +438,9 @@ var Curve = new Class({
 
     /**
      * Get a unit vector tangent at a relative position on the curve.
-     * In case any sub curve does not implement its tangent derivation,
-     * 2 points a small delta apart will be used to find its gradient
-     * which seems to give a reasonable approximation
+     * If a subclass does not override this method with an analytic tangent derivation,
+     * the tangent is approximated by sampling two points a small delta apart and
+     * computing the normalized direction vector between them.
      *
      * @method Phaser.Curves.Curve#getTangent
      * @since 3.0.0
@@ -490,7 +499,7 @@ var Curve = new Class({
     },
 
     /**
-     * Given a distance in pixels, get a t to find p.
+     * Given a distance in pixels along the curve, returns the corresponding t parameter value that can be used with `getPoint()` to find the position at that distance. This gives you equidistant points along the curve.
      *
      * @method Phaser.Curves.Curve#getTFromDistance
      * @since 3.0.0
@@ -498,7 +507,7 @@ var Curve = new Class({
      * @param {number} distance - The distance, in pixels.
      * @param {number} [divisions] - Optional amount of divisions.
      *
-     * @return {number} The distance.
+     * @return {number} The t value (between 0 and 1) at the given distance along the curve.
      */
     getTFromDistance: function (distance, divisions)
     {
@@ -511,7 +520,7 @@ var Curve = new Class({
     },
 
     /**
-     * Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant.
+     * Maps a uniform parameter u (0 to 1, distributed evenly by arc length) to the raw curve parameter t. This mapping ensures that points sampled at regular intervals of u will be equidistant along the curve, unlike the raw t parameter which may produce uneven spacing.
      *
      * @method Phaser.Curves.Curve#getUtoTmapping
      * @since 3.0.0

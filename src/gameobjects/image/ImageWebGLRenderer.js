@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,14 +15,24 @@
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Image} src - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var ImageWebGLRenderer = function (renderer, src, camera, parentMatrix)
+var ImageWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
-    camera.addToRenderList(src);
+    drawingContext.camera.addToRenderList(src);
 
-    this.pipeline.batchSprite(src, camera, parentMatrix);
+    var customRenderNodes = src.customRenderNodes;
+    var defaultRenderNodes = src.defaultRenderNodes;
+
+    (customRenderNodes.Submitter || defaultRenderNodes.Submitter).run(
+        drawingContext,
+        src,
+        parentMatrix,
+        0,
+        customRenderNodes.Texturer || defaultRenderNodes.Texturer,
+        customRenderNodes.Transformer || defaultRenderNodes.Transformer
+    );
 };
 
 module.exports = ImageWebGLRenderer;

@@ -1,13 +1,13 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CheckIsoBounds = require('./CheckIsoBounds');
 
 /**
- * Returns the tiles in the given layer that are within the cameras viewport. This is used internally.
+ * Returns the tiles in the given layer that are within the camera's viewport. This is used internally.
  *
  * @function Phaser.Tilemaps.Components.IsometricCullTiles
  * @since 3.50.0
@@ -15,7 +15,7 @@ var CheckIsoBounds = require('./CheckIsoBounds');
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to run the cull check against.
  * @param {array} [outputArray] - An optional array to store the Tile objects within.
- * @param {number} [renderOrder=0] - The rendering order constant.
+ * @param {number} [renderOrder=0] - The rendering order constant. 0 = right-down, 1 = left-down, 2 = right-up, 3 = left-up.
  *
  * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
  */
@@ -50,17 +50,19 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
         {
             for (x = drawLeft; x < drawRight; x++)
             {
-                if (skipCull || CheckIsoBounds(x, y, layer, camera))
+                tile = mapData[y][x];
+
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
-                    tile = mapData[y][x];
-
-                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-                    {
-                        continue;
-                    }
-
-                    outputArray.push(tile);
+                    continue;
                 }
+
+                if (!skipCull && !CheckIsoBounds(x, y, layer, camera))
+                {
+                    continue;
+                }
+
+                outputArray.push(tile);
             }
         }
     }
@@ -72,17 +74,19 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
         {
             for (x = drawRight; x >= drawLeft; x--)
             {
-                if (skipCull || CheckIsoBounds(x, y, layer, camera))
+                tile = mapData[y][x];
+
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
-                    tile = mapData[y][x];
-
-                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-                    {
-                        continue;
-                    }
-
-                    outputArray.push(tile);
+                    continue;
                 }
+
+                if (!skipCull && !CheckIsoBounds(x, y, layer, camera))
+                {
+                    continue;
+                }
+
+                outputArray.push(tile);
             }
         }
     }
@@ -94,17 +98,19 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
         {
             for (x = drawLeft; x < drawRight; x++)
             {
-                if (skipCull || CheckIsoBounds(x, y, layer, camera))
+                tile = mapData[y][x];
+
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
-                    tile = mapData[y][x];
-
-                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-                    {
-                        continue;
-                    }
-
-                    outputArray.push(tile);
+                    continue;
                 }
+
+                if (!skipCull && !CheckIsoBounds(x, y, layer, camera))
+                {
+                    continue;
+                }
+
+                outputArray.push(tile);
             }
         }
     }
@@ -116,17 +122,19 @@ var IsometricCullTiles = function (layer, camera, outputArray, renderOrder)
         {
             for (x = drawRight; x >= drawLeft; x--)
             {
-                if (skipCull || CheckIsoBounds(x, y, layer, camera))
+                tile = mapData[y][x];
+
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
-                    tile = mapData[y][x];
-
-                    if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-                    {
-                        continue;
-                    }
-
-                    outputArray.push(tile);
+                    continue;
                 }
+
+                if (!skipCull && !CheckIsoBounds(x, y, layer, camera))
+                {
+                    continue;
+                }
+
+                outputArray.push(tile);
             }
         }
     }

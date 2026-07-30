@@ -1,6 +1,6 @@
 /**
  * @author       samme
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -33,8 +33,8 @@ AlignToMap[ALIGN_CONST.TOP_RIGHT] = require('./TopRight');
  * @param {Phaser.GameObjects.GameObject} child - The Game Object that will be positioned.
  * @param {Phaser.GameObjects.GameObject} alignTo - The Game Object to base the alignment position on.
  * @param {number} position - The position to align the Game Object with. This is an align constant, such as `Phaser.Display.Align.LEFT_CENTER`.
- * @param {number} [offsetX=0] - Optional horizontal offset from the position.
- * @param {number} [offsetY=0] - Optional vertical offset from the position.
+ * @param {number} [offsetX=0] - Optional horizontal offset from the position, in pixels.
+ * @param {number} [offsetY=0] - Optional vertical offset from the position, in pixels.
  *
  * @return {Phaser.GameObjects.GameObject} The Game Object that was aligned.
  */

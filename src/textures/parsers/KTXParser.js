@@ -1,19 +1,25 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2021 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Parses a KTX format Compressed Texture file and generates texture data suitable for WebGL from it.
+ * Parses a KTX (Khronos Texture) format Compressed Texture file and extracts the texture data
+ * required to upload it to WebGL. KTX is a container format for GPU-compressed textures that
+ * supports formats such as ETC, ASTC, S3TC, and PVRTC.
+ *
+ * The parser validates the 12-byte KTX file identifier, confirms the texture uses a compressed
+ * format (uncompressed KTX files are not supported), then reads the image dimensions, internal
+ * GL format, and all available mipmap levels from the binary data.
  *
  * @function Phaser.Textures.Parsers.KTXParser
  * @memberof Phaser.Textures.Parsers
  * @since 3.60.0
  *
- * @param {ArrayBuffer} data - The data object created by the Compressed Texture File Loader.
+ * @param {ArrayBuffer} data - The raw binary ArrayBuffer of the KTX file, as loaded by the Compressed Texture File Loader.
  *
- * @return {Phaser.Types.Textures.CompressedTextureData} The Compressed Texture data.
+ * @return {Phaser.Types.Textures.CompressedTextureData} A CompressedTextureData object containing the mipmap levels, dimensions, and internal GL format, ready for WebGL upload.
  */
 var KTXParser = function (data)
 {

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -33,7 +33,7 @@ var Collision = {
 
     /**
      * Sets the collision group of this Game Object's Matter Body. If this is zero or two Matter Bodies have different values,
-     * they will collide according to the usual rules (see {@link #setCollisionCategory} and {@link #setCollisionGroup}).
+     * they will collide according to the usual rules (see {@link #setCollisionCategory} and {@link #setCollidesWith}).
      * If two Matter Bodies have the same positive value, they will always collide; if they have the same negative value,
      * they will never collide.
      *
@@ -85,6 +85,7 @@ var Collision = {
     },
 
     /**
+     * Sets a callback to be invoked when this Game Object's Matter Body begins colliding with another body.
      * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
      *
      * This does not change the bodies collision category, group or filter. Those must be set in addition
@@ -105,6 +106,7 @@ var Collision = {
     },
 
     /**
+     * Sets a callback to be invoked when this Game Object's Matter Body stops colliding with another body.
      * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
      *
      * This does not change the bodies collision category, group or filter. Those must be set in addition
@@ -125,6 +127,7 @@ var Collision = {
     },
 
     /**
+     * Sets a callback to be invoked each step while this Game Object's Matter Body is actively colliding with another body.
      * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
      *
      * This does not change the bodies collision category, group or filter. Those must be set in addition
@@ -145,6 +148,7 @@ var Collision = {
     },
 
     /**
+     * Sets a callback to be invoked when this Game Object's Matter Body collides with a specific body or bodies.
      * The callback is sent a reference to the other body, along with a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
      *
      * This does not change the bodies collision category, group or filter. Those must be set in addition

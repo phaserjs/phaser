@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -36,7 +36,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * all the usual things to it, such as scaling, rotating, cropping, tinting, making interactive, giving a
  * physics body, etc.
  *
- * Transparent videos are also possible via the WebM file format. Providing the video file has was encoded with
+ * Transparent videos are also possible via the WebM file format. Providing the video file has been encoded with
  * an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render
  * in-game with full transparency.
  *
@@ -69,8 +69,6 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * You can set the `noAudio` parameter to `true` even if the video does contain audio. It will still allow the video
  * to play immediately, but the audio will not start.
- *
- * Note that due to a bug in IE11 you cannot play a video texture to a Sprite in WebGL. For IE11 force Canvas mode.
  *
  * More details about video playback and the supported media formats can be found on MDN:
  *

@@ -1,7 +1,7 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -222,7 +222,11 @@ var NoAudioSoundManager = new Class({
     },
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would be called when the browser window loses focus
+     * and would pause all playing sounds if `pauseOnBlur` is enabled.
      *
      * @method Phaser.Sound.NoAudioSoundManager#onBlur
      * @since 3.0.0
@@ -230,7 +234,11 @@ var NoAudioSoundManager = new Class({
     onBlur: NOOP,
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would be called when the browser window regains focus
+     * and would resume any sounds that were paused when focus was lost.
      *
      * @method Phaser.Sound.NoAudioSoundManager#onFocus
      * @since 3.0.0
@@ -238,7 +246,11 @@ var NoAudioSoundManager = new Class({
     onFocus: NOOP,
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would be called when the Phaser Game instance loses
+     * focus (e.g. the canvas loses the pointer) and would pause sounds accordingly.
      *
      * @method Phaser.Sound.NoAudioSoundManager#onGameBlur
      * @since 3.0.0
@@ -246,7 +258,11 @@ var NoAudioSoundManager = new Class({
     onGameBlur: NOOP,
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would be called when the Phaser Game instance
+     * regains focus and would resume any sounds that were paused on blur.
      *
      * @method Phaser.Sound.NoAudioSoundManager#onGameFocus
      * @since 3.0.0
@@ -254,7 +270,10 @@ var NoAudioSoundManager = new Class({
     onGameFocus: NOOP,
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would pause all currently playing sounds.
      *
      * @method Phaser.Sound.NoAudioSoundManager#pauseAll
      * @since 3.0.0
@@ -262,7 +281,10 @@ var NoAudioSoundManager = new Class({
     pauseAll: NOOP,
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would resume all paused sounds.
      *
      * @method Phaser.Sound.NoAudioSoundManager#resumeAll
      * @since 3.0.0
@@ -270,7 +292,10 @@ var NoAudioSoundManager = new Class({
     resumeAll: NOOP,
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would stop all currently playing sounds.
      *
      * @method Phaser.Sound.NoAudioSoundManager#stopAll
      * @since 3.0.0
@@ -278,7 +303,11 @@ var NoAudioSoundManager = new Class({
     stopAll: NOOP,
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would be called on each game step to update
+     * the state of all active sounds.
      *
      * @method Phaser.Sound.NoAudioSoundManager#update
      * @since 3.0.0
@@ -286,7 +315,11 @@ var NoAudioSoundManager = new Class({
     update: NOOP,
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would set the global playback rate for all sounds,
+     * where 1 is normal speed, 0.5 is half speed, and 2 is double speed.
      *
      * @method Phaser.Sound.NoAudioSoundManager#setRate
      * @since 3.0.0
@@ -296,7 +329,11 @@ var NoAudioSoundManager = new Class({
     setRate: NOOP,
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would set the global detune value for all sounds,
+     * measured in cents, where 100 cents equals one semitone.
      *
      * @method Phaser.Sound.NoAudioSoundManager#setDetune
      * @since 3.0.0
@@ -306,7 +343,10 @@ var NoAudioSoundManager = new Class({
     setDetune: NOOP,
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would mute or unmute all sounds in the manager.
      *
      * @method Phaser.Sound.NoAudioSoundManager#setMute
      * @since 3.0.0
@@ -314,7 +354,11 @@ var NoAudioSoundManager = new Class({
     setMute: NOOP,
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would set the global volume for all sounds in the
+     * manager, where 0 is silent and 1 is full volume.
      *
      * @method Phaser.Sound.NoAudioSoundManager#setVolume
      * @since 3.0.0
@@ -322,7 +366,12 @@ var NoAudioSoundManager = new Class({
     setVolume: NOOP,
 
     /**
-     * Empty function for the No Audio Sound Manager.
+     * This method does nothing for the No Audio Sound Manager, to maintain
+     * compatibility with the other Sound Managers.
+     *
+     * In a real Sound Manager, this would attempt to unlock the audio context after
+     * a user gesture, which is required by modern browsers before audio playback
+     * can begin.
      *
      * @method Phaser.Sound.NoAudioSoundManager#unlock
      * @since 3.0.0
@@ -336,7 +385,7 @@ var NoAudioSoundManager = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Sound.EachActiveSoundCallback} callback - Callback function. (manager: Phaser.Sound.BaseSoundManager, sound: Phaser.Sound.BaseSound, index: number, sounds: Phaser.Manager.BaseSound[]) => void
+     * @param {Phaser.Types.Sound.EachActiveSoundCallback} callbackfn - Callback function. (sound: Phaser.Sound.BaseSound, index: number, sounds: Phaser.Sound.BaseSound[]) => void
      * @param {*} [scope] - Callback context.
      */
     forEachActiveSound: function (callbackfn, scope)

@@ -1,17 +1,19 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Tests if one rectangle fully contains another.
+ * Tests if one rectangle fully contains another. A rectangle is considered fully contained
+ * if all four of its edges (left, right, top, and bottom) lie strictly within the bounds
+ * of the outer rectangle. Rectangles that merely touch or overlap are not considered contained.
  *
  * @function Phaser.Geom.Rectangle.ContainsRect
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Rectangle} rectA - The first rectangle.
- * @param {Phaser.Geom.Rectangle} rectB - The second rectangle.
+ * @param {Phaser.Geom.Rectangle} rectA - The outer rectangle to test as the container.
+ * @param {Phaser.Geom.Rectangle} rectB - The inner rectangle to test for full containment within rectA.
  *
  * @return {boolean} True only if rectA fully contains rectB.
  */

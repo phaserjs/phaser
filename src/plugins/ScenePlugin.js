@@ -1,6 +1,6 @@
 /**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2013-2023 Photon Storm Ltd.
+* @author       Richard Davey <rich@phaser.io>
+* @copyright    2013-2026 Phaser Studio Inc.
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
@@ -10,9 +10,16 @@ var SceneEvents = require('../scene/events');
 
 /**
  * @classdesc
- * A Scene Level Plugin is installed into every Scene and belongs to that Scene.
- * It can listen for Scene events and respond to them.
- * It can map itself to a Scene property, or into the Scene Systems, or both.
+ * A Scene Level Plugin is a plugin that is installed into every Scene and belongs to that Scene for its lifetime.
+ * Unlike a Global Plugin, which exists once for the entire game, a Scene Plugin is instantiated separately for
+ * each Scene and is destroyed when its Scene is destroyed.
+ *
+ * You would extend this class when creating your own custom plugins that need per-Scene state or need to
+ * respond to Scene lifecycle events such as `start`, `pause`, `sleep`, `wake`, `shutdown`, and `destroy`.
+ *
+ * The plugin can map itself to a property on the Scene (e.g. `this.myPlugin`) and/or into the Scene Systems,
+ * making it accessible from anywhere within that Scene. Override the `boot` method to set up event listeners
+ * and initialize any per-Scene resources your plugin requires.
  *
  * @class ScenePlugin
  * @memberof Phaser.Plugins
@@ -116,9 +123,11 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Game instance has been destroyed.
+     * Destroys this plugin and releases all references it holds, including the Scene, Scene Systems,
+     * and Plugin Manager. This method is called automatically when the Scene is destroyed.
      *
-     * You must release everything in here, all references, all objects, free it all up.
+     * If you extend this class you should override this method, clean up any resources your plugin
+     * has created, and then call `BasePlugin.destroy` via `super.destroy()` or the prototype chain.
      *
      * @method Phaser.Plugins.ScenePlugin#destroy
      * @since 3.8.0

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,16 @@ var PluginCache = require('../plugins/PluginCache');
 
 /**
  * @classdesc
- * EventEmitter is a Scene Systems plugin compatible version of eventemitter3.
+ * EventEmitter is a Scene Systems plugin compatible wrapper around the `eventemitter3` library,
+ * providing a full-featured event emitter used throughout Phaser for event-driven communication
+ * between game objects, scenes, and systems.
+ *
+ * Every Scene has an instance of this class available via `scene.events`, and many Phaser objects
+ * extend or embed it to dispatch and receive events. It supports persistent listeners via `on` /
+ * `addListener`, one-time listeners that auto-remove after firing via `once`, and listener removal
+ * via `off` / `removeListener`.
+ *
+ * You can also instantiate it directly when you need a standalone event bus within your own code.
  *
  * @class EventEmitter
  * @memberof Phaser.Events
@@ -29,7 +38,9 @@ var EventEmitter = new Class({
     },
 
     /**
-     * Removes all listeners.
+     * Removes all listeners from this EventEmitter. This method is called automatically
+     * by the Scene Systems when the parent Scene shuts down, ensuring that all event
+     * bindings are cleared and no stale references remain.
      *
      * @method Phaser.Events.EventEmitter#shutdown
      * @since 3.0.0
@@ -40,7 +51,9 @@ var EventEmitter = new Class({
     },
 
     /**
-     * Removes all listeners.
+     * Removes all listeners from this EventEmitter and prepares it for garbage collection.
+     * This method is called automatically when the parent object is destroyed and should
+     * not be called directly unless you are tearing down the emitter manually.
      *
      * @method Phaser.Events.EventEmitter#destroy
      * @since 3.0.0
@@ -122,7 +135,8 @@ var EventEmitter = new Class({
  */
 
 /**
- * Add a one-time listener for a given event.
+ * Add a one-time listener for a given event. The listener is automatically removed
+ * the first time the event is emitted, so it will never be called more than once.
  *
  * @method Phaser.Events.EventEmitter#once
  * @since 3.0.0

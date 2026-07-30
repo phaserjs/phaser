@@ -1,19 +1,27 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var GetAdvancedValue = require('../utils/object/GetAdvancedValue');
 
 /**
- * Adds an Animation component to a Sprite and populates it based on the given config.
+ * Reads the `anims` property from a Game Object configuration object and uses it to
+ * configure the animation state of the given Sprite. If the `anims` property is absent,
+ * the Sprite is returned unchanged.
+ *
+ * The `anims` value may be either a string or an object. If it is a string, it is treated
+ * as an animation key and the animation is played immediately. If it is an object, the
+ * animation key and playback options (such as `delay`, `repeat`, `yoyo`, and `startFrame`)
+ * are read from it. Depending on the `play` and `delayedPlay` properties, the animation
+ * will be played immediately, played after a delay, or simply loaded ready to play later.
  *
  * @function Phaser.GameObjects.BuildGameObjectAnimation
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.Sprite} sprite - The sprite to add an Animation component to.
- * @param {object} config - The animation config.
+ * @param {Phaser.GameObjects.Sprite} sprite - The Sprite whose animation state will be configured.
+ * @param {object} config - The Game Object configuration object. The `anims` property of this object is used to configure the animation.
  *
  * @return {Phaser.GameObjects.Sprite} The updated Sprite.
  */

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -21,14 +21,9 @@ var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
-var MatterAttractors = require('./lib/plugins/MatterAttractors');
-var MatterCollisionEvents = require('./lib/plugins/MatterCollisionEvents');
-var MatterLib = require('./lib/core/Matter');
-var MatterWrap = require('./lib/plugins/MatterWrap');
 var Merge = require('../../utils/object/Merge');
 var Pair = require('./lib/collision/Pair');
 var Pairs = require('./lib/collision/Pairs');
-var Plugin = require('./lib/core/Plugin');
 var PluginCache = require('../../plugins/PluginCache');
 var Query = require('./lib/collision/Query');
 var Resolver = require('./lib/collision/Resolver');
@@ -104,7 +99,7 @@ var MatterPhysics = new Class({
     function MatterPhysics (scene)
     {
         /**
-         * The Phaser Scene that owns this Matter Physics instance
+         * The Phaser Scene that owns this Matter Physics instance.
          *
          * @name Phaser.Physics.Matter.MatterPhysics#scene
          * @type {Phaser.Scene}
@@ -368,7 +363,7 @@ var MatterPhysics = new Class({
         this.vertices = Vertices;
 
         /**
-         * A reference to the `Matter.Vertices` module.
+         * A reference to the `Matter.Vertices` module. This is an alias for {@link Phaser.Physics.Matter.MatterPhysics#vertices}.
          *
          * The `Matter.Vertices` module contains methods for creating and manipulating sets of vertices.
          * A set of vertices is an array of `Matter.Vector` with additional indexing properties inserted by `Vertices.create`.
@@ -389,23 +384,6 @@ var MatterPhysics = new Class({
          * @since 3.22.0
          */
         this._tempVec2 = Vector.create();
-
-        //  Matter plugins
-
-        if (GetValue(this.config, 'plugins.collisionevents', true))
-        {
-            this.enableCollisionEventsPlugin();
-        }
-
-        if (GetValue(this.config, 'plugins.attractors', false))
-        {
-            this.enableAttractorPlugin();
-        }
-
-        if (GetValue(this.config, 'plugins.wrap', false))
-        {
-            this.enableWrapPlugin();
-        }
 
         Resolver._restingThresh = GetValue(this.config, 'restingThresh', 4);
         Resolver._restingThreshTangent = GetValue(this.config, 'restingThreshTangent', 6);
@@ -477,94 +455,6 @@ var MatterPhysics = new Class({
         );
 
         return config;
-    },
-
-    /**
-     * Enables the Matter Attractors Plugin.
-     *
-     * The attractors plugin that makes it easy to apply continual forces on bodies.
-     * It's possible to simulate effects such as wind, gravity and magnetism.
-     *
-     * https://github.com/liabru/matter-attractors
-     *
-     * This method is called automatically if `plugins.attractors` is set in the Matter World Config.
-     * However, you can also call it directly from within your game.
-     *
-     * @method Phaser.Physics.Matter.MatterPhysics#enableAttractorPlugin
-     * @since 3.0.0
-     *
-     * @return {this} This Matter Physics instance.
-     */
-    enableAttractorPlugin: function ()
-    {
-        Plugin.register(MatterAttractors);
-        Plugin.use(MatterLib, MatterAttractors);
-
-        return this;
-    },
-
-    /**
-     * Enables the Matter Wrap Plugin.
-     *
-     * The coordinate wrapping plugin that automatically wraps the position of bodies such that they always stay
-     * within the given bounds. Upon crossing a boundary the body will appear on the opposite side of the bounds,
-     * while maintaining its velocity.
-     *
-     * https://github.com/liabru/matter-wrap
-     *
-     * This method is called automatically if `plugins.wrap` is set in the Matter World Config.
-     * However, you can also call it directly from within your game.
-     *
-     * @method Phaser.Physics.Matter.MatterPhysics#enableWrapPlugin
-     * @since 3.0.0
-     *
-     * @return {this} This Matter Physics instance.
-     */
-    enableWrapPlugin: function ()
-    {
-        Plugin.register(MatterWrap);
-        Plugin.use(MatterLib, MatterWrap);
-
-        return this;
-    },
-
-    /**
-     * Enables the Matter Collision Events Plugin.
-     *
-     * Note that this plugin is enabled by default. So you should only ever need to call this
-     * method if you have specifically disabled the plugin in your Matter World Config.
-     * You can disable it by setting `plugins.collisionevents: false` in your Matter World Config.
-     *
-     * This plugin triggers three new events on Matter.Body:
-     *
-     * 1. `onCollide`
-     * 2. `onCollideEnd`
-     * 3. `onCollideActive`
-     *
-     * These events correspond to the Matter.js events `collisionStart`, `collisionActive` and `collisionEnd`, respectively.
-     * You can listen to these events via Matter.Events or they will also be emitted from the Matter World.
-     *
-     * This plugin also extends Matter.Body with three convenience functions:
-     *
-     * `Matter.Body.setOnCollide(callback)`
-     * `Matter.Body.setOnCollideEnd(callback)`
-     * `Matter.Body.setOnCollideActive(callback)`
-     *
-     * You can register event callbacks by providing a function of type (pair: Matter.Pair) => void
-     *
-     * https://github.com/dxu/matter-collision-events
-     *
-     * @method Phaser.Physics.Matter.MatterPhysics#enableCollisionEventsPlugin
-     * @since 3.22.0
-     *
-     * @return {this} This Matter Physics instance.
-     */
-    enableCollisionEventsPlugin: function ()
-    {
-        Plugin.register(MatterCollisionEvents);
-        Plugin.use(MatterLib, MatterCollisionEvents);
-
-        return this;
     },
 
     /**
@@ -794,7 +684,7 @@ var MatterPhysics = new Class({
      * @param {number} [rayWidth=1] - The width of the ray segment.
      * @param {Phaser.Types.Physics.Matter.MatterBody[]} [bodies] - An array of bodies to check. If not provided it will search all bodies in the world.
      *
-     * @return {Phaser.Types.Physics.Matter.MatterBody[]} An array of bodies whos vertices intersect with the ray segment.
+     * @return {Phaser.Types.Physics.Matter.MatterBody[]} An array of bodies whose vertices intersect with the ray segment.
      */
     intersectRay: function (x1, y1, x2, y2, rayWidth, bodies)
     {
@@ -824,7 +714,7 @@ var MatterPhysics = new Class({
      * @param {Phaser.Types.Physics.Matter.MatterBody} body - The target body.
      * @param {Phaser.Types.Physics.Matter.MatterBody[]} [bodies] - An array of bodies to check the target body against. If not provided it will search all bodies in the world.
      *
-     * @return {Phaser.Types.Physics.Matter.MatterBody[]} An array of bodies whos vertices intersect with target body.
+     * @return {Phaser.Types.Physics.Matter.MatterBody[]} An array of bodies whose vertices intersect with the target body.
      */
     intersectBody: function (body, bodies)
     {
@@ -958,7 +848,7 @@ var MatterPhysics = new Class({
      * Sets the collision filter group of all given Matter Bodies to the given value.
      *
      * If the group value is zero, or if two Matter Bodies have different group values,
-     * they will collide according to the usual collision filter rules (see {@link #setCollisionCategory} and {@link #setCollisionGroup}).
+     * they will collide according to the usual collision filter rules (see {@link #setCollisionCategory} and {@link #setCollidesWith}).
      *
      * If two Matter Bodies have the same positive group value, they will always collide;
      * if they have the same negative group value they will never collide.

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -65,6 +65,9 @@ var Vector4 = require('../../math/Vector4');
  * entirely and clipped accordingly. DOM Elements respect camera scrolling and scrollFactor settings, but if you
  * change the size of the camera so it no longer matches the size of the canvas, they won't be clipped accordingly.
  *
+ * DOM Game Objects can be added to a Phaser Container, however you should only nest them **one level deep**.
+ * Any further down the chain and they will ignore all root container properties.
+ *
  * Also, all DOM Elements are inserted into the same DOM Container, regardless of which Scene they are created in.
  *
  * Note that you should only have DOM Elements in a Scene with a _single_ Camera. If you require multiple cameras,
@@ -127,6 +130,11 @@ var DOMElement = new Class({
          */
         this.parent = scene.sys.game.domContainer;
 
+        if (!this.parent)
+        {
+            throw new Error('No DOM Container set in game config');
+        }
+
         /**
          * A reference to the HTML Cache.
          *
@@ -186,7 +194,8 @@ var DOMElement = new Class({
         /**
          * A Vector4 that contains the 3D rotation of this DOM Element around a fixed axis in 3D space.
          *
-         * All values in the Vector4 are treated as degrees, unless the `rotate3dAngle` property is changed.
+         * The x, y, and z components define the direction of the rotation axis. The w component holds the
+         * angle of rotation, in the unit defined by the `rotate3dAngle` property (degrees by default).
          *
          * For more details see the following MDN page:
          *
@@ -517,7 +526,7 @@ var DOMElement = new Class({
      * @since 3.17.0
      *
      * @param {string} tagName - A string that specifies the type of element to be created. The nodeName of the created element is initialized with the value of tagName. Don't use qualified names (like "html:a") with this method.
-     * @param {(string|any)} [style] - Either a DOMString that holds the CSS styles to be applied to the created element, or an object the styles will be ready from.
+     * @param {(string|any)} [style] - Either a DOMString that holds the CSS styles to be applied to the created element, or an object the styles will be read from.
      * @param {string} [innerText] - A DOMString that holds the text that will be set as the innerText of the created element.
      *
      * @return {this} This DOM Element instance.
@@ -573,7 +582,7 @@ var DOMElement = new Class({
      * @since 3.17.0
      *
      * @param {(string|Element)} element - If a string it is passed to `getElementById()`, or it should be a reference to an existing Element.
-     * @param {(string|any)} [style] - Either a DOMString that holds the CSS styles to be applied to the created element, or an object the styles will be ready from.
+     * @param {(string|any)} [style] - Either a DOMString that holds the CSS styles to be applied to the created element, or an object the styles will be read from.
      * @param {string} [innerText] - A DOMString that holds the text that will be set as the innerText of the created element.
      *
      * @return {this} This DOM Element instance.
@@ -630,10 +639,7 @@ var DOMElement = new Class({
 
         target.phaser = this;
 
-        if (this.parent)
-        {
-            this.parent.appendChild(target);
-        }
+        this.parent.appendChild(target);
 
         //  InnerText
 
@@ -678,7 +684,7 @@ var DOMElement = new Class({
      * @method Phaser.GameObjects.DOMElement#createFromCache
      * @since 3.17.0
      *
-     * @param {string} The key of the html cache entry to use for this DOM Element.
+     * @param {string} key - The key of the html cache entry to use for this DOM Element.
      * @param {string} [tagName='div'] - The tag name of the element into which all of the loaded html will be inserted. Defaults to a plain div tag.
      *
      * @return {this} This DOM Element instance.
@@ -745,10 +751,7 @@ var DOMElement = new Class({
 
         element.phaser = this;
 
-        if (this.parent)
-        {
-            this.parent.appendChild(element);
-        }
+        this.parent.appendChild(element);
 
         element.innerHTML = html;
 
@@ -777,9 +780,8 @@ var DOMElement = new Class({
     },
 
     /**
-     * Internal method that calls `getBoundingClientRect` on the `node` and then sets the bounds width
-     * and height into the `displayWidth` and `displayHeight` properties, and the `clientWidth` and `clientHeight`
-     * values into the `width` and `height` properties respectively.
+     * Internal method that sets the `displayWidth` and `displayHeight` properties, and the `clientWidth` 
+     * and `clientHeight` values into the `width` and `height` properties respectively.
      *
      * This is called automatically whenever a new element is created or set.
      *
@@ -792,13 +794,11 @@ var DOMElement = new Class({
     {
         var node = this.node;
 
-        var nodeBounds = node.getBoundingClientRect();
-
         this.width = node.clientWidth;
         this.height = node.clientHeight;
 
-        this.displayWidth = nodeBounds.width || 0;
-        this.displayHeight = nodeBounds.height || 0;
+        this.displayWidth = this.width * this.scaleX;
+        this.displayHeight = this.height * this.scaleY;
 
         return this;
     },

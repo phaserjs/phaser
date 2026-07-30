@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,7 +17,7 @@ var Triangle = require('./Triangle');
  * @param {number} y - y coordinate of the top point of the triangle.
  * @param {number} length - Length of each side of the triangle.
  *
- * @return {Phaser.Geom.Triangle} The Triangle object of the given size.
+ * @return {Phaser.Geom.Triangle} A new equilateral Triangle with its apex at (`x`, `y`) and all sides of the specified `length`.
  */
 var BuildEquilateral = function (x, y, length)
 {

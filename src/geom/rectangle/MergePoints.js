@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,7 @@
  * @generic {Phaser.Geom.Rectangle} O - [target,$return]
  *
  * @param {Phaser.Geom.Rectangle} target - The Rectangle which should be merged.
- * @param {Phaser.Geom.Point[]} points - An array of Points (or any object with public `x` and `y` properties) which should be merged with the Rectangle.
+ * @param {Phaser.Math.Vector2[]} points - An array of Vector2 objects which should be merged with the Rectangle.
  *
  * @return {Phaser.Geom.Rectangle} The modified Rectangle.
  */

@@ -1,17 +1,17 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../utils/Class');
 var CONST = require('./const');
-var CustomSet = require('../structs/Set');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var FileTypesManager = require('./FileTypesManager');
 var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
+var IsPlainObject = require('../utils/object/IsPlainObject');
 var PluginCache = require('../plugins/PluginCache');
 var SceneEvents = require('../scene/events');
 var XHRSettings = require('./XHRSettings');
@@ -184,7 +184,7 @@ var LoaderPlugin = new Class({
         this.maxParallelDownloads = GetFastValue(sceneConfig, 'maxParallelDownloads', gameConfig.loaderMaxParallelDownloads);
 
         /**
-         * xhr specific global settings (can be overridden on a per-file basis)
+         * XHR-specific global settings (can be overridden on a per-file basis)
          *
          * @name Phaser.Loader.LoaderPlugin#xhr
          * @type {Phaser.Types.Loader.XHRSettingsObject}
@@ -261,10 +261,10 @@ var LoaderPlugin = new Class({
          * By the end of the load process this Set will be empty.
          *
          * @name Phaser.Loader.LoaderPlugin#list
-         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
+         * @type {Set.<Phaser.Loader.File>}
          * @since 3.0.0
          */
-        this.list = new CustomSet();
+        this.list = new Set();
 
         /**
          * Files are stored in this Set while they're in the process of being loaded.
@@ -274,10 +274,10 @@ var LoaderPlugin = new Class({
          * By the end of the load process this Set will be empty.
          *
          * @name Phaser.Loader.LoaderPlugin#inflight
-         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
+         * @type {Set.<Phaser.Loader.File>}
          * @since 3.0.0
          */
-        this.inflight = new CustomSet();
+        this.inflight = new Set();
 
         /**
          * Files are stored in this Set while they're being processed.
@@ -288,21 +288,21 @@ var LoaderPlugin = new Class({
          * At the end of the load process this Set will be empty.
          *
          * @name Phaser.Loader.LoaderPlugin#queue
-         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
+         * @type {Set.<Phaser.Loader.File>}
          * @since 3.0.0
          */
-        this.queue = new CustomSet();
+        this.queue = new Set();
 
         /**
          * A temporary Set in which files are stored after processing,
          * awaiting destruction at the end of the load process.
          *
          * @name Phaser.Loader.LoaderPlugin#_deleteQueue
-         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
+         * @type {Set.<Phaser.Loader.File>}
          * @private
          * @since 3.7.0
          */
-        this._deleteQueue = new CustomSet();
+        this._deleteQueue = new Set();
 
         /**
          * The total number of files that failed to load during the most recent load.
@@ -345,6 +345,24 @@ var LoaderPlugin = new Class({
          * @since 3.20.0
          */
         this.multiKeyIndex = 0;
+
+        /**
+         * The number of times to retry loading a single file before it fails.
+         * 
+         * This property is read by the `File` object when it is created and set to
+         * the internal property of the same name. It's not used by the Loader itself.
+         * 
+         * You can set this value via the Game Config, or you can adjust this property
+         * at any point after the Loader has started. However, it will not apply to files
+         * that have already been added to the Loader, only those added after this value
+         * is changed.
+         *
+         * @name Phaser.Loader.LoaderPlugin#maxRetries
+         * @type {number}
+         * @default 2
+         * @since 3.85.0
+         */
+        this.maxRetries = GetFastValue(sceneConfig, 'maxRetries', gameConfig.loaderMaxRetries);
 
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.pluginStart, this);
@@ -499,11 +517,11 @@ var LoaderPlugin = new Class({
      *
      * The file must be an instance of `Phaser.Loader.File`, or a class that extends it. The Loader will check that the key
      * used by the file won't conflict with any other key either in the loader, the inflight queue or the target cache.
-     * If allowed it will then add the file into the pending list, read for the load to start. Or, if the load has already
+     * If allowed it will then add the file into the pending list, ready for the load to start. Or, if the load has already
      * started, ready for the next batch of files to be pulled from the list to the inflight queue.
      *
-     * You should not normally call this method directly, but rather use one of the Loader methods like `image` or `atlas`,
-     * however you can call this as long as the file given to it is well formed.
+     * You should not normally call this method directly, but rather use one of the Loader methods like `image` or `atlas`.
+     * However you can call this as long as the file given to it is well formed.
      *
      * @method Phaser.Loader.LoaderPlugin#addFile
      * @fires Phaser.Loader.Events#ADD
@@ -526,7 +544,7 @@ var LoaderPlugin = new Class({
             //  Or will it conflict with a file already in the queue or inflight?
             if (!this.keyExists(item))
             {
-                this.list.set(item);
+                this.list.add(item);
 
                 this.emit(Events.ADD, item.key, item.type, this, item);
 
@@ -556,7 +574,7 @@ var LoaderPlugin = new Class({
 
         if (!keyConflict)
         {
-            this.list.iterate(function (item)
+            this.list.forEach(function (item)
             {
                 if (item.type === file.type && item.key === file.key)
                 {
@@ -570,7 +588,7 @@ var LoaderPlugin = new Class({
 
         if (!keyConflict && this.isLoading())
         {
-            this.inflight.iterate(function (item)
+            this.inflight.forEach(function (item)
             {
                 if (item.type === file.type && item.key === file.key)
                 {
@@ -581,7 +599,7 @@ var LoaderPlugin = new Class({
 
             });
 
-            this.queue.iterate(function (item)
+            this.queue.forEach(function (item)
             {
                 if (item.type === file.type && item.key === file.key)
                 {
@@ -608,7 +626,7 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#addPack
      * @since 3.7.0
      *
-     * @param {any} pack - The Pack File data to be parsed and each entry of it to added to the load queue.
+     * @param {any} pack - The Pack File data to be parsed and have each entry in it added to the load queue.
      * @param {string} [packKey] - An optional key to use from the pack file data.
      *
      * @return {boolean} `true` if any files were added to the queue, otherwise `false`.
@@ -676,6 +694,180 @@ var LoaderPlugin = new Class({
         this.setPrefix(currentPrefix);
 
         return (total > 0);
+    },
+
+    /**
+     * Remove the resources listed in an Asset Pack.
+     *
+     * This removes Animations from the Animation Manager, Textures from the Texture Manager, and all other assets from their respective caches.
+     * It doesn't remove the Pack itself from the JSON cache, if it exists there.
+     * If the Pack includes another Pack, its resources will be removed too.
+     *
+     * @method Phaser.Loader.LoaderPlugin#removePack
+     * @since 3.85.0
+     *
+     * @param {(string|object)} packKey - The key of an Asset Pack in the JSON cache, or a Pack File data.
+     * @param {string} [dataKey] - A key in the Pack data, if you want to process only a section of it.
+     */
+    removePack: function (packKey, dataKey)
+    {
+        var animationManager = this.systems.anims;
+        var cacheManager = this.cacheManager;
+        var textureManager = this.textureManager;
+
+        var cacheMap = {
+            animation: 'json',
+            aseprite: 'json',
+            audio: 'audio',
+            audioSprite: 'audio',
+            binary: 'binary',
+            bitmapFont: 'bitmapFont',
+            css: null,
+            glsl: 'shader',
+            html: 'html',
+            json: 'json',
+            obj: 'obj',
+            plugin: null,
+            scenePlugin: null,
+            script: null,
+            spine: 'json',
+            text: 'text',
+            tilemapCSV: 'tilemap',
+            tilemapImpact: 'tilemap',
+            tilemapTiledJSON: 'tilemap',
+            video: 'video',
+            xml: 'xml'
+        };
+
+        var pack;
+
+        if (IsPlainObject(packKey))
+        {
+            pack = packKey;
+        }
+        else
+        {
+            pack = cacheManager.json.get(packKey);
+
+            if (!pack)
+            {
+                console.warn('Asset Pack not found in JSON cache:', packKey);
+
+                return;
+            }
+        }
+
+        if (dataKey)
+        {
+            pack = { _: pack[dataKey] };
+        }
+
+        for (var configKey in pack)
+        {
+            var config = pack[configKey];
+            var prefix = GetFastValue(config, 'prefix', '');
+            var files = GetFastValue(config, 'files');
+            var defaultType = GetFastValue(config, 'defaultType');
+
+            if (Array.isArray(files))
+            {
+                for (var i = 0; i < files.length; i++)
+                {
+                    var file = files[i];
+                    var type = (file.hasOwnProperty('type')) ? file.type : defaultType;
+
+                    if (!type)
+                    {
+                        console.warn('No type:', file);
+
+                        continue;
+                    }
+
+                    var fileKey = prefix + file.key;
+
+                    if (type === 'animation')
+                    {
+                        animationManager.remove(fileKey);
+                    }
+
+                    if (type === 'aseprite' || type === 'atlas' || type === 'atlasXML' || type === 'htmlTexture' || type === 'image' || type === 'multiatlas' || type === 'spritesheet' || type === 'svg' || type === 'texture' || type === 'unityAtlas')
+                    {
+                        textureManager.remove(fileKey);
+
+                        if (!cacheMap[type])
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (type === 'pack')
+                    {
+                        this.removePack(fileKey, file.dataKey);
+
+                        continue;
+                    }
+
+                    if (type === 'spine')
+                    {
+                        var spineAtlas = cacheManager.custom.spine.get(fileKey);
+
+                        if (!spineAtlas)
+                        {
+                            continue;
+                        }
+
+                        var spinePrefix = (spineAtlas.prefix === undefined) ? '' : spineAtlas.prefix;
+
+                        cacheManager.custom.spine.remove(fileKey);
+
+                        var spineTexture = cacheManager.custom.spineTextures.get(fileKey);
+
+                        if (!spineTexture)
+                        {
+                            continue;
+                        }
+
+                        cacheManager.custom.spineTextures.remove(fileKey);
+
+                        for (var j = 0; j < spineTexture.pages.length; j++)
+                        {
+                            var page = spineTexture.pages[j];
+                            var textureKey = spinePrefix + page.name;
+                            var altTextureKey = fileKey + ':' + textureKey;
+
+                            if (textureManager.exists(altTextureKey))
+                            {
+                                textureManager.remove(altTextureKey);
+                            }
+                            else
+                            {
+                                textureManager.remove(textureKey);
+                            }
+                        }
+                    }
+
+                    var cacheName = cacheMap[type];
+
+                    if (cacheName === null)
+                    {
+                        //  Nothing to remove.
+
+                        continue;
+                    }
+
+                    if (!cacheName)
+                    {
+                        console.warn('Unknown type:', type);
+
+                        continue;
+                    }
+
+                    var cache = cacheManager[cacheName];
+
+                    cache.remove(fileKey);
+                }
+            }
+        }
     },
 
     /**
@@ -770,7 +962,9 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * Called automatically during the load process.
+     * Called automatically once per game step while the Loader is in the LOADING state.
+     * Checks whether there is capacity in the inflight queue and, if so, calls `checkLoadQueue`
+     * to move more files from the pending list into active loading.
      *
      * @method Phaser.Loader.LoaderPlugin#update
      * @since 3.10.0
@@ -789,7 +983,7 @@ var LoaderPlugin = new Class({
      * It will check to see if there are any more files in the pending list that need loading, and if so it will move
      * them from the list Set into the inflight Set, set their CORs flag and start them loading.
      *
-     * It will carrying on doing this for each file in the pending list until it runs out, or hits the max allowed parallel downloads.
+     * It will carry on doing this for each file in the pending list until it runs out, or hits the max allowed parallel downloads.
      *
      * @method Phaser.Loader.LoaderPlugin#checkLoadQueue
      * @private
@@ -797,11 +991,11 @@ var LoaderPlugin = new Class({
      */
     checkLoadQueue: function ()
     {
-        this.list.each(function (file)
+        this.list.forEach(function (file)
         {
             if (file.state === CONST.FILE_POPULATED || (file.state === CONST.FILE_PENDING && this.inflight.size < this.maxParallelDownloads))
             {
-                this.inflight.set(file);
+                this.inflight.add(file);
 
                 this.list.delete(file);
 
@@ -824,7 +1018,7 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * An internal method called automatically by the XHRLoader belong to a File.
+     * An internal method called automatically by the XHRLoader belonging to a File.
      *
      * This method will remove the given file from the inflight Set and update the load progress.
      * If the file was successful its `onProcess` method is called, otherwise it is added to the delete queue.
@@ -853,7 +1047,7 @@ var LoaderPlugin = new Class({
         {
             this.totalComplete++;
 
-            this.queue.set(file);
+            this.queue.add(file);
 
             this.emit(Events.FILE_LOAD, file);
 
@@ -863,7 +1057,7 @@ var LoaderPlugin = new Class({
         {
             this.totalFailed++;
 
-            this._deleteQueue.set(file);
+            this._deleteQueue.add(file);
 
             this.emit(Events.FILE_LOAD_ERROR, file);
 
@@ -876,7 +1070,7 @@ var LoaderPlugin = new Class({
      *
      * If the process was successful, and the File isn't part of a MultiFile, its `addToCache` method is called.
      *
-     * It this then removed from the queue. If there are no more files to load `loadComplete` is called.
+     * It is then removed from the queue. If there are no more files to load `loadComplete` is called.
      *
      * @method Phaser.Loader.LoaderPlugin#fileProcessComplete
      * @since 3.7.0
@@ -955,7 +1149,10 @@ var LoaderPlugin = new Class({
         this.systems.events.off(SceneEvents.UPDATE, this.update, this);
 
         //  Call 'destroy' on each file ready for deletion
-        this._deleteQueue.iterateLocal('destroy');
+        this._deleteQueue.forEach(function (file)
+        {
+            file.destroy();
+        });
 
         this._deleteQueue.clear();
 
@@ -972,13 +1169,13 @@ var LoaderPlugin = new Class({
      */
     flagForRemoval: function (file)
     {
-        this._deleteQueue.set(file);
+        this._deleteQueue.add(file);
     },
 
     /**
-     * Converts the given JSON data into a file that the browser then prompts you to download so you can save it locally.
+     * Converts the given JavaScript object into JSON and triggers a browser download so you can save it locally.
      *
-     * The data must be well formed JSON and ready-parsed, not a JavaScript object.
+     * The data must be a plain JavaScript object that can be serialized via `JSON.stringify`. Do not pass a pre-stringified JSON string.
      *
      * @method Phaser.Loader.LoaderPlugin#saveJSON
      * @since 3.0.0

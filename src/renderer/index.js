@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,9 +14,17 @@
 
 module.exports = {
 
-    Canvas: require('./canvas'),
     Events: require('./events'),
-    Snapshot: require('./snapshot'),
-    WebGL: require('./webgl')
+    Snapshot: require('./snapshot')
 
 };
+
+if (typeof CANVAS_RENDERER)
+{
+    module.exports.Canvas = require('./canvas');
+}
+
+if (typeof WEBGL_RENDERER)
+{
+    module.exports.WebGL = require('./webgl');
+}

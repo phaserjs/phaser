@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,13 @@ var ObjectLayer = require('../../mapdata/ObjectLayer');
 var CreateGroupLayer = require('./CreateGroupLayer');
 
 /**
- * Parses a Tiled JSON object into an array of ObjectLayer objects.
+ * Parses all object layers from a Tiled JSON tilemap into an array of `ObjectLayer` objects.
+ *
+ * Iterates through every layer in the map, including layers nested inside Tiled group layers,
+ * and converts each `objectgroup` type layer into an `ObjectLayer` instance. Opacity and
+ * visibility values are inherited from parent group layers and multiplied down to their children.
+ * Non-object layers (tile layers, image layers, etc.) and non-objectgroup group members are
+ * skipped. The resulting array contains one entry per object layer found at any depth of nesting.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseObjectLayers
  * @since 3.0.0

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@
  * The Input Plugin Game Over Event.
  *
  * This event is dispatched by the Input Plugin if the active pointer enters the game canvas and is now
- * over of it, having previously been elsewhere on the web page.
+ * over it, having previously been elsewhere on the web page.
  *
  * Listen to this event from within a Scene using: `this.input.on('gameover', listener)`.
  *

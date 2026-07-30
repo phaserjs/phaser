@@ -1,11 +1,17 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Attempts to determine the document inner height across iOS and standard devices.
+ * On non-iOS devices this simply returns `window.innerHeight`. On iOS, Safari's dynamic
+ * browser chrome (such as the address bar appearing or hiding on scroll) can cause
+ * `window.innerHeight` to report an inaccurate value. To work around this, a temporary
+ * fixed-position element sized to `100vh` is injected into the DOM, its measured height
+ * is used instead, and the element is immediately removed. The result is also adjusted
+ * for landscape orientation using `window.orientation`.
  * Based on code by @tylerjpeterson
  *
  * @function Phaser.DOM.GetInnerHeight
@@ -13,7 +19,7 @@
  *
  * @param {boolean} iOS - Is this running on iOS?
  *
- * @return {number} The inner height value.
+ * @return {number} The inner height of the viewport, in pixels.
  */
 var GetInnerHeight = function (iOS)
 {

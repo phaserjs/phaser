@@ -1,14 +1,21 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BitmapMask = require('../../display/mask/BitmapMask');
+var CONST = require('../../const');
 var GeometryMask = require('../../display/mask/GeometryMask');
 
 /**
- * Provides methods used for getting and setting the mask of a Game Object.
+ * Provides methods used for setting, clearing, and creating masks on a Game Object.
+ *
+ * A mask clips the rendered output of a Game Object to the shape defined by a Graphics
+ * or Shape Game Object. Only pixels that fall within the mask geometry are drawn to the screen.
+ * Masks have no effect on physics or input detection; they are purely a visual rendering tool.
+ *
+ * This component only works under the Canvas Renderer.
+ * For WebGL, see {@link Phaser.GameObjects.Components.FilterList#addMask}.
  *
  * @namespace Phaser.GameObjects.Components.Mask
  * @since 3.0.0
@@ -17,10 +24,10 @@ var GeometryMask = require('../../display/mask/GeometryMask');
 var Mask = {
 
     /**
-     * The Mask this Game Object is using during render.
+     * The Mask this Game Object is using during render, or `null` if no mask has been set.
      *
      * @name Phaser.GameObjects.Components.Mask#mask
-     * @type {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask}
+     * @type {Phaser.Display.Masks.GeometryMask}
      * @since 3.0.0
      */
     mask: null,
@@ -28,8 +35,9 @@ var Mask = {
     /**
      * Sets the mask that this Game Object will use to render with.
      *
-     * The mask must have been previously created and can be either a GeometryMask or a BitmapMask.
-     * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+     * The mask must have been previously created and must be a GeometryMask.
+     * This only works in the Canvas Renderer.
+     * In WebGL, use a Mask filter instead (see {@link Phaser.GameObjects.Components.FilterList#addMask}).
      *
      * If a mask is already set on this Game Object it will be immediately replaced.
      *
@@ -42,12 +50,18 @@ var Mask = {
      * @method Phaser.GameObjects.Components.Mask#setMask
      * @since 3.6.2
      *
-     * @param {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask} mask - The mask this Game Object will use when rendering.
+     * @param {Phaser.Display.Masks.GeometryMask} mask - The mask this Game Object will use when rendering.
      *
      * @return {this} This Game Object instance.
      */
     setMask: function (mask)
     {
+        if (this.scene.renderer.type === CONST.WEBGL)
+        {
+            console.warn('Phaser.GameObjects.Components.Mask.setMask: This method is not supported in WebGL. Create a Mask filter instead.');
+            return this;
+        }
+
         this.mask = mask;
 
         return this;
@@ -55,6 +69,9 @@ var Mask = {
 
     /**
      * Clears the mask that this Game Object was using.
+     *
+     * This only works in the Canvas Renderer.
+     * In WebGL, use a Mask filter instead (see {@link Phaser.GameObjects.Components.FilterList#addMask}).
      *
      * @method Phaser.GameObjects.Components.Mask#clearMask
      * @since 3.6.2
@@ -78,46 +95,6 @@ var Mask = {
     },
 
     /**
-     * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
-     * including this one, or a Dynamic Texture.
-     *
-     * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
-     *
-     * To create the mask you need to pass in a reference to a renderable Game Object.
-     * A renderable Game Object is one that uses a texture to render with, such as an
-     * Image, Sprite, Render Texture or BitmapText.
-     *
-     * If you do not provide a renderable object, and this Game Object has a texture,
-     * it will use itself as the object. This means you can call this method to create
-     * a Bitmap Mask from any renderable texture-based Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Mask#createBitmapMask
-     * @since 3.6.2
-     *
-     * @generic {Phaser.GameObjects.GameObject} G
-     * @generic {Phaser.Textures.DynamicTexture} T
-     * @genericUse {(G|T|null)} [maskObject]
-     *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.Textures.DynamicTexture)} [maskObject] - The Game Object or Dynamic Texture that will be used as the mask. If `null` it will generate an Image Game Object using the rest of the arguments.
-     * @param {number} [x] - If creating a Game Object, the horizontal position in the world.
-     * @param {number} [y] - If creating a Game Object, the vertical position in the world.
-     * @param {(string|Phaser.Textures.Texture)} [texture] - If creating a Game Object, the key, or instance of the Texture it will use to render with, as stored in the Texture Manager.
-     * @param {(string|number|Phaser.Textures.Frame)} [frame] - If creating a Game Object, an optional frame from the Texture this Game Object is rendering with.
-     *
-     * @return {Phaser.Display.Masks.BitmapMask} This Bitmap Mask that was created.
-     */
-    createBitmapMask: function (maskObject, x, y, texture, frame)
-    {
-        if (maskObject === undefined && (this.texture || this.shader || this.geom))
-        {
-            // eslint-disable-next-line consistent-this
-            maskObject = this;
-        }
-
-        return new BitmapMask(this.scene, maskObject, x, y, texture, frame);
-    },
-
-    /**
      * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
      * including this one.
      *
@@ -127,6 +104,9 @@ var Mask = {
      * of a Graphics object, then it will use itself to create the mask.
      *
      * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+     *
+     * This only works in the Canvas Renderer.
+     * In WebGL, use a Mask filter instead (see {@link Phaser.GameObjects.Components.FilterList#addMask}).
      *
      * @method Phaser.GameObjects.Components.Mask#createGeometryMask
      * @since 3.6.2

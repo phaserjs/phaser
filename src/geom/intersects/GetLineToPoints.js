@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,8 +15,9 @@ var segment = new Line();
 var tempIntersect = new Vector3();
 
 /**
- * Checks for the closest point of intersection between a line segment and an array of points, where each pair
- * of points are converted to line segments for the intersection tests.
+ * Checks for the closest point of intersection between a line segment and an array of points, where each consecutive pair
+ * of points is converted to a line segment for the intersection tests. The array is treated as a closed shape, meaning
+ * the last point is connected back to the first point.
  *
  * If no intersection is found, this function returns `null`.
  *
@@ -29,7 +30,7 @@ var tempIntersect = new Vector3();
  * @since 3.50.0
  *
  * @param {Phaser.Geom.Line} line - The line segment, or ray, to check. If a ray, set the `isRay` parameter to `true`.
- * @param {Phaser.Math.Vector2[] | Phaser.Geom.Point[]} points - An array of points to check.
+ * @param {Phaser.Math.Vector2[] | Phaser.Math.Vector2[]} points - An array of points to check.
  * @param {boolean} [isRay=false] - Is `line` a ray or a line segment?
  * @param {Phaser.Math.Vector3} [out] - A Vector3 to store the intersection results in.
  *
@@ -46,9 +47,9 @@ var GetLineToPoints = function (line, points, isRay, out)
     out.set();
     tempIntersect.set();
 
-    var prev = points[0];
+    var prev = points[points.length - 1];
 
-    for (var i = 1; i < points.length; i++)
+    for (var i = 0; i < points.length; i++)
     {
         var current = points[i];
 

@@ -1,9 +1,10 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DefaultGraphicsNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultGraphicsNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
@@ -11,8 +12,17 @@ var Line = require('../../geom/line/Line');
 
 /**
  * @classdesc
- * The Shape Game Object is a base class for the various different shapes, such as the Arc, Star or Polygon.
- * You cannot add a Shape directly to your Scene, it is meant as a base for your own custom Shape classes.
+ * The Shape Game Object is a base class for the various built-in shape types, such as the Arc, Star, Polygon,
+ * Rectangle, and Triangle. It provides a common interface for managing fill color, stroke color, line width,
+ * and the precomputed path data used when rendering.
+ *
+ * You cannot add a Shape directly to your Scene. Instead, use one of the built-in subclasses, or extend this
+ * class to create your own custom Shape types with their own geometry logic.
+ *
+ * Shape objects share the same render batch as the Graphics Game Object when rendering in WebGL.
+ * They do not support gradients, path smoothing thresholds, or other advanced Graphics features.
+ * In return, they store precomputed internal geometry data which allows them to render more efficiently
+ * than dynamically-constructed Graphics objects.
  *
  * @class Shape
  * @extends Phaser.GameObjects.GameObject
@@ -26,8 +36,7 @@ var Line = require('../../geom/line/Line');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -45,10 +54,10 @@ var Shape = new Class({
         Components.BlendMode,
         Components.Depth,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Transform,
         Components.Visible
@@ -94,7 +103,8 @@ var Shape = new Class({
         this.pathIndexes = [];
 
         /**
-         * The fill color used by this Shape.
+         * The fill color used by this Shape, as a hex value (e.g., 0xff0000 for red).
+         * Only used when `isFilled` is `true`. Set via `setFillStyle`.
          *
          * @name Phaser.GameObjects.Shape#fillColor
          * @type {number}
@@ -103,7 +113,8 @@ var Shape = new Class({
         this.fillColor = 0xffffff;
 
         /**
-         * The fill alpha value used by this Shape.
+         * The alpha applied to the fill of this Shape, in the range 0 (fully transparent) to 1 (fully opaque).
+         * Only used when `isFilled` is `true`. Set via `setFillStyle`.
          *
          * @name Phaser.GameObjects.Shape#fillAlpha
          * @type {number}
@@ -112,7 +123,8 @@ var Shape = new Class({
         this.fillAlpha = 1;
 
         /**
-         * The stroke color used by this Shape.
+         * The stroke color used by this Shape, as a hex value (e.g., 0x00ff00 for green).
+         * Only used when `isStroked` is `true`. Set via `setStrokeStyle`.
          *
          * @name Phaser.GameObjects.Shape#strokeColor
          * @type {number}
@@ -121,7 +133,8 @@ var Shape = new Class({
         this.strokeColor = 0xffffff;
 
         /**
-         * The stroke alpha value used by this Shape.
+         * The alpha applied to the stroke of this Shape, in the range 0 (fully transparent) to 1 (fully opaque).
+         * Only used when `isStroked` is `true`. Set via `setStrokeStyle`.
          *
          * @name Phaser.GameObjects.Shape#strokeAlpha
          * @type {number}
@@ -130,7 +143,8 @@ var Shape = new Class({
         this.strokeAlpha = 1;
 
         /**
-         * The stroke line width used by this Shape.
+         * The width of the stroke line for this Shape, in pixels.
+         * Only used when `isStroked` is `true`. Set via `setStrokeStyle`.
          *
          * @name Phaser.GameObjects.Shape#lineWidth
          * @type {number}
@@ -205,8 +219,30 @@ var Shape = new Class({
          */
         this.height = 0;
 
-        this.initPipeline();
-        this.initPostPipeline();
+        if (this.enableFilters)
+        {
+            // Prevent Shape stroke from being cut off in filters.
+            this.filtersFocusContext = true;
+        }
+
+        this.initRenderNodes(this._defaultRenderNodesMap);
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.Shape#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultGraphicsNodes;
+        }
     },
 
     /**
@@ -330,15 +366,17 @@ var Shape = new Class({
     },
 
     /**
-     * Sets the display size of this Shape.
+     * Sets the displayed pixel size of this Shape by adjusting its `scaleX` and `scaleY` properties
+     * relative to its native width and height. This is equivalent to calling `setScale` but lets you
+     * specify the desired rendered dimensions in pixels rather than as a scale multiplier.
      *
-     * Calling this will adjust the scale.
+     * This call can be chained.
      *
      * @method Phaser.GameObjects.Shape#setDisplaySize
      * @since 3.53.0
      *
-     * @param {number} width - The display width of this Shape.
-     * @param {number} height - The display height of this Shape.
+     * @param {number} width - The display width of this Shape, in pixels.
+     * @param {number} height - The display height of this Shape, in pixels.
      *
      * @return {this} This Shape instance.
      */

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -123,6 +123,8 @@ var Pointer = new Class({
         this.button = 0;
 
         /**
+         * A bitmask representing which mouse buttons are currently held down. The possible values are:
+         *
          * 0: No button or un-initialized
          * 1: Left button
          * 2: Right button
@@ -212,7 +214,7 @@ var Pointer = new Class({
          * This property is updated whenever the Pointer moves, regardless of any button states. In other words,
          * it changes based on movement alone - a button doesn't have to be pressed first.
          *
-         * If you need the total distance travelled since the primary buttons was pressed down,
+         * If you need the total distance travelled since the primary button was pressed down,
          * then use the `Pointer.getDistance` method.
          *
          * @name Phaser.Input.Pointer#distance
@@ -285,7 +287,7 @@ var Pointer = new Class({
         this.worldY = 0;
 
         /**
-         * Time when this Pointer was most recently moved (regardless of the state of its buttons, if any)
+         * Time when this Pointer was most recently moved (regardless of the state of its buttons, if any).
          *
          * @name Phaser.Input.Pointer#moveTime
          * @type {number}
@@ -954,68 +956,68 @@ var Pointer = new Class({
     },
 
     /**
-     * Checks to see if the left button was just released on this Pointer.
+     * Checks to see if the release of the left button was the most recent activity on this Pointer.
      *
      * @method Phaser.Input.Pointer#leftButtonReleased
      * @since 3.18.0
      *
-     * @return {boolean} `true` if the left button was just released.
+     * @return {boolean} `true` if the release of the left button was the most recent activity on this Pointer.
      */
     leftButtonReleased: function ()
     {
-        return (this.button === 0 && !this.isDown);
+        return this.buttons === 0 ? (this.button === 0 && !this.isDown) : this.button === 0;
     },
 
     /**
-     * Checks to see if the right button was just released on this Pointer.
+     * Checks to see if the release of the right button was the most recent activity on this Pointer.
      *
      * @method Phaser.Input.Pointer#rightButtonReleased
      * @since 3.18.0
      *
-     * @return {boolean} `true` if the right button was just released.
+     * @return {boolean} `true` if the release of the right button was the most recent activity on this Pointer.
      */
     rightButtonReleased: function ()
     {
-        return (this.button === 2 && !this.isDown);
+        return this.buttons === 0 ? (this.button === 2 && !this.isDown) : this.button === 2;
     },
 
     /**
-     * Checks to see if the middle button was just released on this Pointer.
+     * Checks to see if the release of the middle button was the most recent activity on this Pointer.
      *
      * @method Phaser.Input.Pointer#middleButtonReleased
      * @since 3.18.0
      *
-     * @return {boolean} `true` if the middle button was just released.
+     * @return {boolean} `true` if the release of the middle button was the most recent activity on this Pointer.
      */
     middleButtonReleased: function ()
     {
-        return (this.button === 1 && !this.isDown);
+        return this.buttons === 0 ? (this.button === 1 && !this.isDown) : this.button === 1;
     },
 
     /**
-     * Checks to see if the back button was just released on this Pointer.
+     * Checks to see if the release of the back button was the most recent activity on this Pointer.
      *
      * @method Phaser.Input.Pointer#backButtonReleased
      * @since 3.18.0
      *
-     * @return {boolean} `true` if the back button was just released.
+     * @return {boolean} `true` if the release of the back button was the most recent activity on this Pointer.
      */
     backButtonReleased: function ()
     {
-        return (this.button === 3 && !this.isDown);
+        return this.buttons === 0 ? (this.button === 3 && !this.isDown) : this.button === 3;
     },
 
     /**
-     * Checks to see if the forward button was just released on this Pointer.
+     * Checks to see if the release of the forward button was the most recent activity on this Pointer.
      *
      * @method Phaser.Input.Pointer#forwardButtonReleased
      * @since 3.18.0
      *
-     * @return {boolean} `true` if the forward button was just released.
+     * @return {boolean} `true` if the release of the forward button was the most recent activity on this Pointer.
      */
     forwardButtonReleased: function ()
     {
-        return (this.button === 4 && !this.isDown);
+        return this.buttons === 0 ? (this.button === 4 && !this.isDown) : this.button === 4;
     },
 
     /**
@@ -1047,7 +1049,7 @@ var Pointer = new Class({
 
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
-     * horizontal distance between the Pointer's `downX` and `downY` values and the current position.
+     * horizontal distance between the Pointer's `downX` value and the current `x` position.
      *
      * If no button is held down, it will return the last recorded horizontal distance, based on where
      * the Pointer was when the button was released.
@@ -1071,7 +1073,7 @@ var Pointer = new Class({
 
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
-     * vertical distance between the Pointer's `downX` and `downY` values and the current position.
+     * vertical distance between the Pointer's `downY` value and the current `y` position.
      *
      * If no button is held down, it will return the last recorded vertical distance, based on where
      * the Pointer was when the button was released.
@@ -1150,7 +1152,7 @@ var Pointer = new Class({
      * Takes the previous and current Pointer positions and then generates an array of interpolated values between
      * the two. The array will be populated up to the size of the `steps` argument.
      *
-     * ```javaScript
+     * ```javascript
      * var points = pointer.getInterpolatedPosition(4);
      *
      * // points[0] = { x: 0, y: 0 }
@@ -1198,7 +1200,7 @@ var Pointer = new Class({
     },
 
     /**
-     * Fully reset this Pointer back to its unitialized state.
+     * Fully reset this Pointer back to its uninitialized state.
      *
      * @method Phaser.Input.Pointer#reset
      * @since 3.60.0

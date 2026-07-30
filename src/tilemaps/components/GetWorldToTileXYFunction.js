@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,14 +12,17 @@ var StaggeredWorldToTileXY = require('./StaggeredWorldToTileXY');
 var WorldToTileXY = require('./WorldToTileXY');
 
 /**
- * Gets the correct function to use to translate tiles, based on the map orientation.
+ * Returns the appropriate world-to-tile coordinate conversion function for the given map orientation.
+ * The returned function converts world pixel coordinates (X, Y) into tile grid coordinates, using
+ * the correct projection math for orthogonal, isometric, hexagonal, or staggered tilemaps.
+ * If the orientation is unrecognised, a NOOP function is returned.
  *
  * @function Phaser.Tilemaps.Components.GetWorldToTileXYFunction
  * @since 3.50.0
  *
- * @param {number} orientation - The Tilemap orientation constant.
+ * @param {number} orientation - The Tilemap orientation constant, as defined in `Phaser.Tilemaps.ORIENTATION_CONST`.
  *
- * @return {function} The function to use to translate tiles for the given map type.
+ * @return {function} The world-to-tile coordinate conversion function for the given map orientation.
  */
 var GetWorldToTileXYFunction = function (orientation)
 {

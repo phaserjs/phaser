@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20,6 +20,7 @@ module.exports = {
     BitmapFontFile: require('./BitmapFontFile'),
     CompressedTextureFile: require('./CompressedTextureFile'),
     CSSFile: require('./CSSFile'),
+    FontFile: require('./FontFile'),
     GLSLFile: require('./GLSLFile'),
     HTML5AudioFile: require('./HTML5AudioFile'),
     HTMLFile: require('./HTMLFile'),
@@ -28,8 +29,8 @@ module.exports = {
     JSONFile: require('./JSONFile'),
     MultiAtlasFile: require('./MultiAtlasFile'),
     MultiScriptFile: require('./MultiScriptFile'),
-    OBJFile: require('./OBJFile'),
     PackFile: require('./PackFile'),
+    PCTAtlasFile: require('./PCTAtlasFile'),
     PluginFile: require('./PluginFile'),
     SceneFile: require('./SceneFile'),
     ScenePluginFile: require('./ScenePluginFile'),

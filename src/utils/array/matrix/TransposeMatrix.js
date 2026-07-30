@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,7 @@
  * The transpose of a matrix is a new matrix whose rows are the columns of the original.
  *
  * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
- * have the same length. There must be at least two rows. This is an example matrix:
+ * have the same length. There must be at least one row. This is an example matrix:
  *
  * ```
  * [

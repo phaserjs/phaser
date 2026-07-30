@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,14 +8,17 @@ var GetFastValue = require('../../../utils/object/GetFastValue');
 var CreateGroupLayer = require('./CreateGroupLayer');
 
 /**
- * Parses a Tiled JSON object into an array of objects with details about the image layers.
+ * Parses a Tiled JSON object and extracts all image layers, including those nested inside
+ * group layers. Each image layer is returned as a plain object with its name, image source,
+ * computed position (accounting for group and layer offsets), combined opacity, visibility, and
+ * custom properties inherited from the Tiled layer definition.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseImageLayers
  * @since 3.0.0
  *
  * @param {object} json - The Tiled JSON object.
  *
- * @return {array} Array of objects that include critical info about the map's image layers
+ * @return {array} An array of objects, one per image layer, each containing `name`, `image`, `x`, `y`, `alpha`, `visible`, and `properties` fields.
  */
 var ParseImageLayers = function (json)
 {

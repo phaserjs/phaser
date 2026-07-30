@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,8 +10,9 @@ var Vector3 = require('../../math/Vector3');
  * Checks for intersection between the two line segments, or a ray and a line segment,
  * and returns the intersection point as a Vector3, or `null` if the lines are parallel, or do not intersect.
  *
- * The `z` property of the Vector3 contains the intersection distance, which can be used to find
- * the closest intersecting point from a group of line segments.
+ * The `z` property of the Vector3 contains the parametric `t` value (a scalar between 0 and 1)
+ * representing how far along `line1` the intersection occurs. This can be used to sort or compare
+ * multiple intersection results to find the closest intersecting point from a group of line segments.
  *
  * @function Phaser.Geom.Intersects.GetLineToLine
  * @since 3.50.0
@@ -21,7 +22,7 @@ var Vector3 = require('../../math/Vector3');
  * @param {boolean} [isRay=false] - Is `line1` a ray or a line segment?
  * @param {Phaser.Math.Vector3} [out] - A Vector3 to store the intersection results in.
  *
- * @return {Phaser.Math.Vector3} A Vector3 containing the intersection results, or `null`.
+ * @return {Phaser.Math.Vector3} A Vector3 where `x` and `y` are the intersection point coordinates and `z` is the parametric `t` value along `line1`, or `null` if the lines do not intersect.
  */
 var GetLineToLine = function (line1, line2, isRay, out)
 {
@@ -63,7 +64,19 @@ var GetLineToLine = function (line1, line2, isRay, out)
     if (isRay)
     {
         t = (dx1 * (y3 - y1) + dy1 * (x1 - x3)) / (dx2 * dy1 - dy2 * dx1);
-        u = (x3 + dx2 * t - x1) / dx1;
+        
+        if (dx1 !== 0)
+        {
+            u = (x3 + dx2 * t - x1) / dx1;
+        }
+        else if (dy1 !== 0)
+        {
+            u = (y3 + dy2 * t - y1) / dy1;
+        }
+        else
+        {
+            return null; // degenerate line segment
+        }
 
         //  Intersects?
         if (u < 0 || t < 0 || t > 1)

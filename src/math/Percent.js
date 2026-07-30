@@ -1,12 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Work out what percentage `value` is of the range between `min` and `max`.
- * If `max` isn't given then it will return the percentage of `value` to `min`.
+ * If `max` isn't given then it defaults to `min + 1`, giving a unit range of width 1 starting at `min`.
  *
  * You can optionally specify an `upperMax` value, which is a mid-way point in the range that represents 100%, after which the % starts to go down to zero again.
  *

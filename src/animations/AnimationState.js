@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -113,7 +113,7 @@ var AnimationState = new Class({
         /**
          * The current Animation loaded into this Animation component.
          *
-         * Will by `null` if no animation is yet loaded.
+         * Will be `null` if no animation is yet loaded.
          *
          * @name Phaser.Animations.AnimationState#currentAnim
          * @type {?Phaser.Animations.Animation}
@@ -125,7 +125,7 @@ var AnimationState = new Class({
         /**
          * The current AnimationFrame being displayed by this Animation component.
          *
-         * Will by `null` if no animation is yet loaded.
+         * Will be `null` if no animation is yet loaded.
          *
          * @name Phaser.Animations.AnimationState#currentFrame
          * @type {?Phaser.Animations.AnimationFrame}
@@ -138,7 +138,7 @@ var AnimationState = new Class({
          * The key, instance, or config of the next Animation to be loaded into this Animation component
          * when the current animation completes.
          *
-         * Will by `null` if no animation has been queued.
+         * Will be `null` if no animation has been queued.
          *
          * @name Phaser.Animations.AnimationState#nextAnim
          * @type {?(string|Phaser.Animations.Animation|Phaser.Types.Animations.PlayAnimationConfig)}
@@ -1888,7 +1888,6 @@ var AnimationState = new Class({
      * If you're working with a texture atlas, see the `generateFrameNames` method instead.
      *
      * It's a helper method, designed to make it easier for you to extract frames from sprite sheets.
-     * If you're working with a texture atlas, see the `generateFrameNames` method instead.
      *
      * Example:
      *

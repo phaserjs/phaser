@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,18 @@ var TweenBuilder = require('./TweenBuilder');
 var TweenChain = require('../tween/TweenChain');
 
 /**
- * Creates a new Tween Chain instance.
+ * Creates a new TweenChain instance from the given configuration object. A TweenChain is a
+ * sequence of Tweens that play one after another in order, rather than all at once. This makes
+ * it useful for creating multi-step animations where each step must complete before the next begins.
+ *
+ * This builder is called internally by the TweenManager when you use `scene.tweens.chain()`.
+ * It processes the config object to set up the chain's start delay, loop count, loop delay,
+ * completion delay, paused state, lifecycle callbacks, and the individual Tweens that make up
+ * the chain. If any top-level `targets` are defined in the config, they are passed as defaults
+ * to each child Tween that does not specify its own targets.
+ *
+ * If the `config` argument is already a TweenChain instance, its parent is updated and it is
+ * returned as-is without rebuilding.
  *
  * @function Phaser.Tweens.Builders.TweenChainBuilder
  * @since 3.60.0
@@ -41,7 +52,7 @@ var TweenChainBuilder = function (parent, config)
     chain.loop = Math.round(GetAdvancedValue(config, 'loop', GetValue(config, 'repeat', 0)));
     chain.loopDelay = Math.round(GetAdvancedValue(config, 'loopDelay', GetValue(config, 'repeatDelay', 0)));
     chain.paused = GetBoolean(config, 'paused', false);
-    chain.persist = GetBoolean(config, 'persist', true);
+    chain.persist = GetBoolean(config, 'persist', false);
 
     //  Set the Callbacks
     chain.callbackScope = GetValue(config, 'callbackScope', chain);

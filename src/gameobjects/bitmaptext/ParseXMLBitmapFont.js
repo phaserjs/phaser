@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -62,8 +62,8 @@ var ParseXMLBitmapFont = function (xml, frame, xSpacing, ySpacing, texture)
 
     if (adjustForTrim)
     {
-        var top = frame.height;
-        var left = frame.width;
+        var trimX = frame.data.spriteSourceSize.x;
+        var trimY = frame.data.spriteSourceSize.y;
     }
 
     for (var i = 0; i < letters.length; i++)
@@ -78,33 +78,16 @@ var ParseXMLBitmapFont = function (xml, frame, xSpacing, ySpacing, texture)
         var gh = getValue(node, 'height');
 
         //  Handle frame trim issues
-
         if (adjustForTrim)
         {
-            if (gx < left)
-            {
-                left = gx;
-            }
-
-            if (gy < top)
-            {
-                top = gy;
-            }
-        }
-
-        if (adjustForTrim && top !== 0 && left !== 0)
-        {
-            //  Now we know the top and left coordinates of the glyphs in the original data
-            //  so we can work out how much to adjust the glyphs by
-
-            gx -= frame.x;
-            gy -= frame.y;
+            gx -= trimX;
+            gy -= trimY;
         }
 
         var u0 = (textureX + gx) / textureWidth;
-        var v0 = (textureY + gy) / textureHeight;
+        var v0 = 1 - (textureY + gy) / textureHeight;
         var u1 = (textureX + gx + gw) / textureWidth;
-        var v1 = (textureY + gy + gh) / textureHeight;
+        var v1 = 1 - (textureY + gy + gh) / textureHeight;
 
         data.chars[charCode] =
         {
@@ -127,12 +110,7 @@ var ParseXMLBitmapFont = function (xml, frame, xSpacing, ySpacing, texture)
 
         if (texture && gw !== 0 && gh !== 0)
         {
-            var charFrame = texture.add(letter, sourceIndex, gx, gy, gw, gh);
-
-            if (charFrame)
-            {
-                charFrame.setUVs(gw, gh, u0, v0, u1, v1);
-            }
+            texture.add(letter, sourceIndex, gx + frame.data.cut.x, gy + frame.data.cut.y, gw, gh);
         }
     }
 

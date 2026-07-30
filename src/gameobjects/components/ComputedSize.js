@@ -1,11 +1,17 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Provides methods used for calculating and setting the size of a non-Frame based Game Object.
+ * A non-Frame based Game Object is one that derives its dimensions from internal logic rather
+ * than from a texture frame, such as Graphics, Text, or BitmapText objects.
+ *
+ * The component exposes `width` and `height` as the native (un-scaled) dimensions, and
+ * `displayWidth` and `displayHeight` as the rendered dimensions after the scale factor is applied.
+ *
  * Should be applied as a mixin and not used directly.
  *
  * @namespace Phaser.GameObjects.Components.ComputedSize
@@ -120,7 +126,9 @@ var ComputedSize = {
     /**
      * Sets the display size of this Game Object.
      *
-     * Calling this will adjust the scale.
+     * Calling this will adjust the `scaleX` and `scaleY` properties so that the Game Object
+     * is rendered at the specified pixel dimensions. It is the equivalent of setting the scale
+     * manually, but expressed in pixels rather than as a multiplier.
      *
      * @method Phaser.GameObjects.Components.ComputedSize#setDisplaySize
      * @since 3.4.0

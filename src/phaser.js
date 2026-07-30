@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,6 +10,14 @@ var CONST = require('./const');
 var Extend = require('./utils/object/Extend');
 
 /**
+ * The Phaser namespace is the root namespace for the entire Phaser game framework.
+ * It contains all sub-namespaces, classes, and constants that make up the framework,
+ * including the Game class, Scene management, Game Objects, physics systems, input
+ * handling, asset loading, cameras, tweens, tilemaps, and more.
+ *
+ * When Phaser is built as a bundle, this namespace is also exported to `Phaser`,
+ * making it available as a browser global.
+ *
  * @namespace Phaser
  */
 
@@ -22,13 +30,12 @@ var Phaser = {
     Cameras: require('./cameras'),
     Core: require('./core'),
     Class: require('./utils/Class'),
-    Create: require('./create'),
     Curves: require('./curves'),
     Data: require('./data'),
     Display: require('./display'),
     DOM: require('./dom'),
     Events: require('./events'),
-    FX: require('./fx'),
+    Filters: require('./filters'),
     Game: require('./core/Game'),
     GameObjects: require('./gameobjects'),
     Geom: require('./geom'),
@@ -46,6 +53,7 @@ var Phaser = {
     Textures: require('./textures'),
     Tilemaps: require('./tilemaps'),
     Time: require('./time'),
+    TintModes: require('./renderer/TintModes'),
     Tweens: require('./tweens'),
     Utils: require('./utils')
 
@@ -56,19 +64,6 @@ var Phaser = {
 if (typeof FEATURE_SOUND)
 {
     Phaser.Sound = require('./sound');
-}
-
-if (typeof PLUGIN_CAMERA3D)
-{
-    Phaser.Cameras.Sprite3D = require('../plugins/camera3d/src');
-    Phaser.GameObjects.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3D');
-    Phaser.GameObjects.Factories.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3DFactory');
-    Phaser.GameObjects.Creators.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3DCreator');
-}
-
-if (typeof PLUGIN_FBINSTANT)
-{
-    Phaser.FacebookInstantGamesPlugin = require('../plugins/fbinstant/src/FacebookInstantGamesPlugin');
 }
 
 //   Merge in the consts

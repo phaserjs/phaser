@@ -1,18 +1,18 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Returns the tiles in the given layer that are within the cameras viewport. This is used internally.
+ * Returns the tiles in the given layer that are within the camera's viewport. This is used internally.
  *
  * @function Phaser.Tilemaps.Components.RunCull
  * @since 3.50.0
  *
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {object} bounds - An object containing the `left`, `right`, `top` and `bottom` bounds.
- * @param {number} renderOrder - The rendering order constant.
+ * @param {number} renderOrder - The rendering order constant. 0 = right-down, 1 = left-down, 2 = right-up, 3 = left-up.
  * @param {array} outputArray - The array to store the Tile objects within.
  *
  * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.

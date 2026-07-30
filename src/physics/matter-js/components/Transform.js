@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,7 +15,10 @@ var _FLAG = 4; // 0100
 //  Transform Component
 
 /**
- * Provides methods used for getting and setting the position, scale and rotation of a Game Object.
+ * Provides methods used for getting and setting the position, scale, and rotation of a Matter.js
+ * physics-enabled Game Object. This component acts as a bridge between the Game Object's visual
+ * transform and its underlying Matter.js physics body, keeping them synchronized. It is mixed into
+ * Game Objects that use the Matter.js physics system and should not be used directly.
  *
  * @namespace Phaser.Physics.Matter.Components.Transform
  * @since 3.0.0
@@ -64,6 +67,31 @@ var Transform = {
             this._tempVec2.set(this.x, value);
 
             Body.setPosition(this.body, this._tempVec2);
+        }
+
+    },
+
+    /**
+     * This is a special setter that allows you to set both the horizontal and vertical scale of this Game Object
+     * to the same value, at the same time. When reading this value the result returned is `(scaleX + scaleY) / 2`.
+     *
+     * Use of this property implies you wish the horizontal and vertical scales to be equal to each other. If this
+     * isn't the case, use the `scaleX` or `scaleY` properties instead.
+     *
+     * @name Phaser.Physics.Matter.Components.Transform#scale
+     * @type {number}
+     * @since 3.88.0
+     */
+    scale: {
+
+        get: function ()
+        {
+            return (this._scaleX + this._scaleY) / 2;
+        },
+
+        set: function (value)
+        {
+            this.setScale(value, value);
         }
 
     },
@@ -144,8 +172,8 @@ var Transform = {
     },
 
     /**
-     * Use `angle` to set or get rotation of the physics body associated to this GameObject.
-     * Unlike rotation, when using set the value can be in degrees, which will be converted to radians internally.
+     * Use `angle` to set or get the rotation of the physics body associated with this Game Object.
+     * Unlike `rotation`, when setting this value it is specified in degrees, which are converted to radians internally.
      *
      * @name Phaser.Physics.Matter.Components.Transform#angle
      * @type {number}
@@ -190,8 +218,8 @@ var Transform = {
     },
 
     /**
-     * Sets the position of the physics body along x and y axes.
-     * Both the parameters to this function are optional and if not passed any they default to 0.
+     * Sets the position of the physics body along the x and y axes.
+     * Both parameters are optional and default to 0 if not provided.
      * Velocity, angle, force etc. are unchanged.
      *
      * @method Phaser.Physics.Matter.Components.Transform#setPosition
@@ -275,7 +303,9 @@ var Transform = {
     },
 
     /**
-     * Sets the scale of this Game Object.
+     * Sets the scale of this Game Object and its underlying Matter.js physics body.
+     * The optional `point` parameter specifies the origin from which scaling will occur.
+     * If omitted, scaling is applied from the body's current position.
      *
      * @method Phaser.Physics.Matter.Components.Transform#setScale
      * @since 3.0.0

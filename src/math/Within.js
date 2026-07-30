@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,7 @@
  * @param {number} b - The second value to use in the calculation.
  * @param {number} tolerance - The tolerance. Anything equal to or less than this value is considered as being within range.
  *
- * @return {boolean} Returns `true` if `a` is less than or equal to the tolerance of `b`.
+ * @return {boolean} Returns `true` if the absolute difference between `a` and `b` is less than or equal to `tolerance`.
  */
 var Within = function (a, b, tolerance)
 {

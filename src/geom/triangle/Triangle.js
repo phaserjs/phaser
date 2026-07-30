@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,9 +14,13 @@ var Random = require('./Random');
 
 /**
  * @classdesc
- * A triangle is a plane created by connecting three points.
- * The first two arguments specify the first point, the middle two arguments
- * specify the second point, and the last two arguments specify the third point.
+ * A Triangle is a closed polygon defined by three vertices in 2D space, useful for hit testing,
+ * defining spawn or trigger regions, and geometric calculations. It is a geometry object only —
+ * not a Game Object — and cannot be rendered directly. To draw a Triangle to the screen, pass it
+ * to a Graphics Game Object's `strokeTriangleShape` or `fillTriangleShape` method.
+ *
+ * The three vertices are stored as coordinate pairs (`x1`,`y1`), (`x2`,`y2`), and (`x3`,`y3`).
+ * All coordinates default to `0` if not provided.
  *
  * @class Triangle
  * @memberof Phaser.Geom
@@ -116,7 +120,7 @@ var Triangle = new Class({
     },
 
     /**
-     * Checks whether a given points lies within the triangle.
+     * Checks whether a given point lies within the triangle.
      *
      * @method Phaser.Geom.Triangle#contains
      * @since 3.0.0
@@ -132,17 +136,17 @@ var Triangle = new Class({
     },
 
     /**
-     * Returns a specific point  on the triangle.
+     * Returns a point at a given normalized position along the perimeter of the triangle.
      *
      * @method Phaser.Geom.Triangle#getPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [output,$return]
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {number} position - Position as float within `0` and `1`. `0` equals the first point.
-     * @param {(Phaser.Geom.Point|object)} [output] - Optional Point, or point-like object, that the calculated point will be written to.
+     * @param {Phaser.Math.Vector2} [output] - Optional Vector2 point that the calculated point will be written to.
      *
-     * @return {(Phaser.Geom.Point|object)} Calculated `Point` that represents the requested position. It is the same as `output` when this parameter has been given.
+     * @return {Phaser.Math.Vector2} Calculated Vector2 that represents the requested position. It is the same as `output` when this parameter has been given.
      */
     getPoint: function (position, output)
     {
@@ -150,18 +154,18 @@ var Triangle = new Class({
     },
 
     /**
-     * Calculates a list of evenly distributed points on the triangle. It is either possible to pass an amount of points to be generated (`quantity`) or the distance between two points (`stepRate`).
+     * Calculates a list of evenly distributed points along the perimeter of the triangle. Either pass the number of points to generate (`quantity`) or the distance between consecutive points (`stepRate`).
      *
      * @method Phaser.Geom.Triangle#getPoints
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     * @generic {Phaser.Math.Vector2[]} O - [output,$return]
      *
      * @param {number} quantity - Number of points to be generated. Can be falsey when `stepRate` should be used. All points have the same distance along the triangle.
      * @param {number} [stepRate] - Distance between two points. Will only be used when `quantity` is falsey.
-     * @param {(array|Phaser.Geom.Point[])} [output] - Optional Array for writing the calculated points into. Otherwise a new array will be created.
+     * @param {Phaser.Math.Vector2[]} [output] - Optional array of Vector2 points for writing the calculated points into. Otherwise a new array will be created.
      *
-     * @return {(array|Phaser.Geom.Point[])} Returns a list of calculated `Point` instances or the filled array passed as parameter `output`.
+     * @return {Phaser.Math.Vector2[]} Returns a list of calculated `Vector2` instances or the filled array passed as parameter `output`.
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -169,20 +173,20 @@ var Triangle = new Class({
     },
 
     /**
-     * Returns a random point along the triangle.
+     * Returns a random point from within the area of the triangle.
      *
      * @method Phaser.Geom.Triangle#getRandomPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [point,$return]
+     * @generic {Phaser.Math.Vector2} O - [point,$return]
      *
-     * @param {Phaser.Geom.Point} [point] - Optional `Point` that should be modified. Otherwise a new one will be created.
+     * @param {Phaser.Math.Vector2} [vec] - Optional Vector2 point that will be modified. Otherwise a new one will be created.
      *
-     * @return {Phaser.Geom.Point} Random `Point`. When parameter `point` has been provided it will be returned.
+     * @return {Phaser.Math.Vector2} Random Vector2. When parameter `vec` has been provided it will be returned.
      */
-    getRandomPoint: function (point)
+    getRandomPoint: function (vec)
     {
-        return Random(this, point);
+        return Random(this, vec);
     },
 
     /**
@@ -222,7 +226,7 @@ var Triangle = new Class({
     },
 
     /**
-     * Returns a Line object that corresponds to Line A of this Triangle.
+     * Returns a Line object that corresponds to Line A of this Triangle, running from vertex 1 (`x1`, `y1`) to vertex 2 (`x2`, `y2`).
      *
      * @method Phaser.Geom.Triangle#getLineA
      * @since 3.0.0
@@ -243,7 +247,7 @@ var Triangle = new Class({
     },
 
     /**
-     * Returns a Line object that corresponds to Line B of this Triangle.
+     * Returns a Line object that corresponds to Line B of this Triangle, running from vertex 2 (`x2`, `y2`) to vertex 3 (`x3`, `y3`).
      *
      * @method Phaser.Geom.Triangle#getLineB
      * @since 3.0.0
@@ -264,7 +268,7 @@ var Triangle = new Class({
     },
 
     /**
-     * Returns a Line object that corresponds to Line C of this Triangle.
+     * Returns a Line object that corresponds to Line C of this Triangle, running from vertex 3 (`x3`, `y3`) back to vertex 1 (`x1`, `y1`), closing the shape.
      *
      * @method Phaser.Geom.Triangle#getLineC
      * @since 3.0.0

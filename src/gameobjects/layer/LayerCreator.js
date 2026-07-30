@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,12 +12,18 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 /**
  * Creates a new Layer Game Object and returns it.
  *
+ * A Layer is a special type of Game Object that groups other Game Objects together. Unlike a Container,
+ * a Layer does not apply any transform to its children. Instead, it provides a way to manage rendering
+ * order and apply post-pipelines or effects to a collection of Game Objects as a single unit.
+ * The `children` property of the config object can be used to pass an array of Game Objects to add
+ * to the Layer immediately upon creation.
+ *
  * Note: This method will only be available if the Layer Game Object has been built into Phaser.
  *
  * @method Phaser.GameObjects.GameObjectCreator#layer
  * @since 3.50.0
  *
- * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.Types.GameObjects.Sprite.SpriteConfig} config - The configuration object this Game Object will use to create itself. The `children` key can be set to an array of Game Objects to add to the Layer.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Layer} The Game Object that was created.

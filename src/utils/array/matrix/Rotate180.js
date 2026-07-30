@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31,7 +31,7 @@ var RotateMatrix = require('./RotateMatrix');
  *
  * @param {T[][]} [matrix] - The array to rotate.
  *
- * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
+ * @return {T[][]} The rotated matrix array. The source matrix should be discarded for the returned matrix.
  */
 var Rotate180 = function (matrix)
 {

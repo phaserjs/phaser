@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,14 @@ var Random = require('./Random');
 
 /**
  * @classdesc
- * Encapsulates a 2D rectangle defined by its corner point in the top-left and its extends in x (width) and y (height)
+ * A Rectangle is an axis-aligned region of 2D space defined by its top-left corner position (`x`, `y`) and its
+ * dimensions (`width`, `height`). It is one of the core geometric primitives in Phaser and is used extensively
+ * throughout the framework for bounds checking, camera viewports, hit areas, culling regions, and UI layout.
+ *
+ * Rectangles support containment tests, perimeter point sampling, and many other geometric operations available
+ * via the `Phaser.Geom.Rectangle` static methods. The `left`, `right`, `top`, `bottom`, `centerX`, and `centerY`
+ * properties provide convenient access to derived positional values and can be set directly to reposition or
+ * resize the Rectangle.
  *
  * @class Rectangle
  * @memberof Phaser.Geom
@@ -115,12 +122,12 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#getPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [output,$return]
+     * @generic {Phaser.Math.Vector2} O - [output,$return]
      *
      * @param {number} position - The normalized distance into the Rectangle's perimeter to return.
-     * @param {(Phaser.Geom.Point|object)} [output] - An object to update with the `x` and `y` coordinates of the point.
+     * @param {Phaser.Math.Vector2} [output] - A Vector2 instance to update with the `x` and `y` coordinates of the point.
      *
-     * @return {(Phaser.Geom.Point|object)} The updated `output` object, or a new Point if no `output` object was given.
+     * @return {Phaser.Math.Vector2} The updated `output` object, or a new Vector2 if no `output` object was given.
      */
     getPoint: function (position, output)
     {
@@ -133,13 +140,13 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#getPoints
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point[]} O - [output,$return]
+     * @generic {Phaser.Math.Vector2[]} O - [output,$return]
      *
      * @param {number} quantity - The number of points to return. Set to `false` or 0 to return an arbitrary number of points (`perimeter / stepRate`) evenly spaced around the Rectangle based on the `stepRate`.
      * @param {number} [stepRate] - If `quantity` is 0, determines the normalized distance between each returned point.
-     * @param {(array|Phaser.Geom.Point[])} [output] - An array to which to append the points.
+     * @param {Phaser.Math.Vector2[]} [output] - An array to which to append the points.
      *
-     * @return {(array|Phaser.Geom.Point[])} The modified `output` array, or a new array if none was provided.
+     * @return {Phaser.Math.Vector2[]} The modified `output` array, or a new array if none was provided.
      */
     getPoints: function (quantity, stepRate, output)
     {
@@ -152,15 +159,15 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#getRandomPoint
      * @since 3.0.0
      *
-     * @generic {Phaser.Geom.Point} O - [point,$return]
+     * @generic {Phaser.Math.Vector2} O - [point,$return]
      *
-     * @param {Phaser.Geom.Point} [point] - The object in which to store the `x` and `y` coordinates of the point.
+     * @param {Phaser.Math.Vector2} [vec] - The object in which to store the `x` and `y` coordinates of the point.
      *
-     * @return {Phaser.Geom.Point} The updated `point`, or a new Point if none was provided.
+     * @return {Phaser.Math.Vector2} The updated `vec`, or a new Vector2 if none was provided.
      */
-    getRandomPoint: function (point)
+    getRandomPoint: function (vec)
     {
-        return Random(this, point);
+        return Random(this, vec);
     },
 
     /**
@@ -247,7 +254,7 @@ var Rectangle = new Class({
      * @method Phaser.Geom.Rectangle#isEmpty
      * @since 3.0.0
      *
-     * @return {boolean} `true` if the Rectangle is empty. A Rectangle object is empty if its width or height is less than or equal to 0.
+     * @return {boolean} `true` if the Rectangle is empty, otherwise `false`.
      */
     isEmpty: function ()
     {

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,8 +8,10 @@ var SnapCeil = require('../../math/snap/SnapCeil');
 var SnapFloor = require('../../math/snap/SnapFloor');
 
 /**
- * Returns the bounds in the given layer that are within the camera's viewport.
- * This is used internally by the cull tiles function.
+ * Calculates the tile grid index bounds of a hexagonal Tilemap Layer that fall within the
+ * camera's viewport. The bounds account for the layer's stagger axis (x or y), hex side length,
+ * tile scale, layer offset, and cull padding, returning the range of tile columns and rows that
+ * need to be rendered. This is used internally by the hexagonal cull tiles function.
  *
  * @function Phaser.Tilemaps.Components.HexagonalCullBounds
  * @since 3.50.0
@@ -17,7 +19,7 @@ var SnapFloor = require('../../math/snap/SnapFloor');
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to run the cull check against.
  *
- * @return {object} An object containing the `left`, `right`, `top` and `bottom` bounds.
+ * @return {object} An object containing the `left`, `right`, `top` and `bottom` tile grid index bounds.
  */
 var HexagonalCullBounds = function (layer, camera)
 {

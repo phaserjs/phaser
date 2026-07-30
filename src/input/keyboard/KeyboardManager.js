@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -125,7 +125,7 @@ var KeyboardManager = new Class({
          *
          * @name Phaser.Input.Keyboard.KeyboardManager#onKeyDown
          * @type {function}
-         * @since 3.16.00
+         * @since 3.16.0
          */
         this.onKeyDown = NOOP;
 
@@ -136,7 +136,7 @@ var KeyboardManager = new Class({
          *
          * @name Phaser.Input.Keyboard.KeyboardManager#onKeyUp
          * @type {function}
-         * @since 3.16.00
+         * @since 3.16.0
          */
         this.onKeyUp = NOOP;
 
@@ -268,7 +268,7 @@ var KeyboardManager = new Class({
      * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
      * There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
      *
-     * This `addCapture` method enables consuming keyboard event for specific keys so it doesn't bubble up to the the browser
+     * This `addCapture` method enables consuming keyboard events for specific keys so they don't bubble up to the browser
      * and cause the default browser behavior.
      *
      * Please note that keyboard captures are global. This means that if you call this method from within a Scene, to say prevent
@@ -426,7 +426,7 @@ var KeyboardManager = new Class({
 
         this.queue = [];
 
-        this.manager.game.events.off(GameEvents.POST_RENDER, this.postUpdate, this);
+        this.manager.game.events.off(GameEvents.POST_STEP, this.postUpdate, this);
 
         this.target = null;
         this.enabled = false;

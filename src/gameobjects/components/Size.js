@@ -1,11 +1,20 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Provides methods used for getting and setting the size of a Game Object.
+ *
+ * This component distinguishes between two size concepts. The native size (`width` and `height`)
+ * is the un-scaled logical size, typically derived from the Game Object's texture frame. The
+ * display size (`displayWidth` and `displayHeight`) is the actual rendered size in pixels, which
+ * factors in the Game Object's scale. Setting the display size adjusts the scale automatically,
+ * while setting the native size does not affect rendering directly.
+ *
+ * This component is mixed into Game Objects such as Sprites and Images by the Phaser Game Object
+ * Factory and is not intended to be used standalone.
  *
  * @namespace Phaser.GameObjects.Components.Size
  * @since 3.0.0
@@ -101,20 +110,21 @@ var Size = {
     },
 
     /**
-     * Sets the size of this Game Object to be that of the given Frame.
+     * Sets the size of this Game Object to be that of the given Frame or the current Frame.
      *
      * This will not change the size that the Game Object is rendered in-game.
      * For that you need to either set the scale of the Game Object (`setScale`) or call the
      * `setDisplaySize` method, which is the same thing as changing the scale but allows you
      * to do so by giving pixel values.
      *
-     * If you have enabled this Game Object for input, changing the size will _not_ change the
-     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
+     * If you have enabled this Game Object for input with a custom hit area, changing the size of the Game Object will _not_ change the
+     * size of the hit area. If you wish to do this, you should adjust the `input.hitArea` object directly.
+     * If you have enabled this Game Object for input without a custom hit area, the hit area will be automatically resized to match the size of the selected Frame.
      *
      * @method Phaser.GameObjects.Components.Size#setSizeToFrame
      * @since 3.0.0
      *
-     * @param {Phaser.Textures.Frame|boolean} [frame] - The frame to base the size of this Game Object on.
+     * @param {Phaser.Textures.Frame} [frame] - The frame to base the size of this Game Object on. The default is the current frame of the Game Object.
      *
      * @return {this} This Game Object instance.
      */
@@ -164,9 +174,12 @@ var Size = {
     },
 
     /**
-     * Sets the display size of this Game Object.
+     * Sets the display (rendered) size of this Game Object in pixels.
      *
-     * Calling this will adjust the scale.
+     * Unlike `setSize`, which changes the native logical dimensions without affecting rendering,
+     * this method adjusts the `scaleX` and `scaleY` properties so that the Game Object appears
+     * at exactly the given pixel dimensions in-game. It is equivalent to calculating and setting
+     * the scale manually, but more convenient when you want to work in pixel values directly.
      *
      * @method Phaser.GameObjects.Components.Size#setDisplaySize
      * @since 3.0.0

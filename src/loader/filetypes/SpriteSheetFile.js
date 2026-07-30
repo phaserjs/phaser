@@ -1,13 +1,13 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var CONST = require('../const');
 var FileTypesManager = require('../FileTypesManager');
-var ImageFile = require('./ImageFile.js');
+var ImageFile = require('./ImageFile');
 
 /**
  * @classdesc
@@ -175,7 +175,7 @@ var SpriteSheetFile = new Class({
  * });
  * ```
  *
- * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+ * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORS and XHR Settings.
  * Normal maps are a WebGL only feature.
  *
  * Note: The ability to load this type of file will only be available if the Sprite Sheet File type has been built into Phaser.

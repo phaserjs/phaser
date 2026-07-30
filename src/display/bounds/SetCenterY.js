@@ -1,11 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Positions the Game Object so that the center top of its bounds aligns with the given coordinate.
+ * Positions the Game Object so that the vertical center of its bounds aligns with the given coordinate.
  *
  * @function Phaser.Display.Bounds.SetCenterY
  * @since 3.0.0

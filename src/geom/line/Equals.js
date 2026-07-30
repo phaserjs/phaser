@@ -1,11 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Compare two lines for strict equality.
+ * Compares two lines for strict equality. Two lines are considered equal if their start
+ * and end point coordinates all match exactly: `x1`, `y1`, `x2`, and `y2`.
  *
  * @function Phaser.Geom.Line.Equals
  * @since 3.0.0
@@ -13,7 +14,7 @@
  * @param {Phaser.Geom.Line} line - The first line to compare.
  * @param {Phaser.Geom.Line} toCompare - The second line to compare.
  *
- * @return {boolean} Whether the two lines are equal.
+ * @return {boolean} `true` if the two lines have identical start and end point coordinates, otherwise `false`.
  */
 var Equals = function (line, toCompare)
 {

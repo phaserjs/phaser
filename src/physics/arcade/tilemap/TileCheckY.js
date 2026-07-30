@@ -1,26 +1,28 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var ProcessTileSeparationY = require('./ProcessTileSeparationY');
 
 /**
- * Check the body against the given tile on the Y axis.
- * Used internally by the SeparateTile function.
+ * Checks for overlap between a physics body and a tile along the Y axis and resolves any
+ * collision that is found. If the body has a custom separator set, the overlap value is stored
+ * on `body.overlapY` for the caller to handle; otherwise `ProcessTileSeparationY` is called to
+ * resolve the collision immediately. Used internally by the SeparateTile function.
  *
  * @function Phaser.Physics.Arcade.Tilemap.TileCheckY
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
  * @param {Phaser.Tilemaps.Tile} tile - The tile to check.
- * @param {number} tileTop - The top position of the tile within the tile world.
- * @param {number} tileBottom - The bottom position of the tile within the tile world.
- * @param {number} tileBias - The tile bias value. Populated by the `World.TILE_BIAS` constant.
+ * @param {number} tileTop - The top position of the tile in world space, in pixels.
+ * @param {number} tileBottom - The bottom position of the tile in world space, in pixels.
+ * @param {number} tileBias - The tile bias value, as defined by the `World.TILE_BIAS` constant.
  * @param {boolean} isLayer - Is this check coming from a TilemapLayer or an array of tiles?
  *
- * @return {number} The amount of separation that occurred.
+ * @return {number} The amount of vertical separation that occurred, in pixels.
  */
 var TileCheckY = function (body, tile, tileTop, tileBottom, tileBias, isLayer)
 {

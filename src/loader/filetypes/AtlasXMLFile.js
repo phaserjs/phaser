@@ -1,20 +1,22 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var ImageFile = require('./ImageFile.js');
+var ImageFile = require('./ImageFile');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var MultiFile = require('../MultiFile.js');
-var XMLFile = require('./XMLFile.js');
+var MultiFile = require('../MultiFile');
+var XMLFile = require('./XMLFile');
 
 /**
  * @classdesc
- * A single XML based Texture Atlas File suitable for loading by the Loader.
+ * An XML-based Texture Atlas File that coordinates the loading of both a texture image and its associated XML data
+ * file as a single unit. Both files must load successfully before the atlas is registered with the Texture Manager.
+ * Once registered, individual frames defined in the XML can be used as textures for Game Objects throughout your game.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#atlasXML method and are not typically created directly.
  *
@@ -83,7 +85,9 @@ var AtlasXMLFile = new Class({
     },
 
     /**
-     * Adds this file to its target cache upon successful loading and processing.
+     * Checks whether both the image and XML data files have finished loading, and if so, registers the texture atlas
+     * with the Texture Manager. An optional normal map (the third file in the set) is also passed through if present.
+     * Sets `complete` to `true` once the atlas has been added.
      *
      * @method Phaser.Loader.FileTypes.AtlasXMLFile#addToCache
      * @since 3.7.0
@@ -187,7 +191,7 @@ var AtlasXMLFile = new Class({
  * });
  * ```
  *
- * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+ * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORS and XHR Settings.
  * Normal maps are a WebGL only feature.
  *
  * Note: The ability to load this type of file will only be available if the Atlas XML File type has been built into Phaser.

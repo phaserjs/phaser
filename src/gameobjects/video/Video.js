@@ -1,10 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Clamp = require('../../math/Clamp');
+var DefaultImageNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultImageNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var Events = require('../events');
@@ -49,6 +50,11 @@ var VideoRender = require('./VideoRender');
  * an alpha channel, and providing the browser supports WebM playback (not all of them do), then it will render
  * in-game with full transparency.
  *
+ * Transparent videos are supported by the HEVC (H.265) codec,
+ * but only on some devices and browsers, and sometimes the alpha channel is ignored,
+ * which can be a problem if you're aiming for a consistent experience.
+ * We advise against relying on HEVC.
+ *
  * Playback is handled entirely via the Request Video Frame API, which is supported by most modern browsers.
  * A polyfill is provided for older browsers.
  *
@@ -82,8 +88,6 @@ var VideoRender = require('./VideoRender');
  * You can set the `noAudio` parameter to `true` even if the video does contain audio. It will still allow the video
  * to play immediately, but the audio will not start.
  *
- * Note that due to a bug in IE11 you cannot play a video texture to a Sprite in WebGL. For IE11 force Canvas mode.
- *
  * More details about video playback and the supported media formats can be found on MDN:
  *
  * https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement
@@ -97,15 +101,15 @@ var VideoRender = require('./VideoRender');
  *
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
- * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.TextureCrop
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
@@ -123,15 +127,15 @@ var Video = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.ComputedSize,
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.ScrollFactor,
-        Components.Size,
         Components.TextureCrop,
         Components.Tint,
         Components.Transform,
@@ -193,15 +197,15 @@ var Video = new Class({
 
         /**
          * If you have saved this video to a texture via the `saveTexture` method, this controls if the video
-         * is rendered with `flipY` in WebGL or not. You often need to set this if you wish to use the video texture
-         * as the input source for a shader. If you find your video is appearing upside down within a shader or
-         * custom pipeline, flip this property.
+         * is rendered with `flipY` in WebGL or not.
+         * If you find your video is appearing upside down within a shader or
+         * custom renderer, flip this property.
          *
-         * @name Phaser.GameObjects.Video#flipY
+         * @name Phaser.GameObjects.Video#glFlipY
          * @type {boolean}
-         * @since 3.20.0
+         * @since 4.0.0
          */
-        this.flipY = false;
+        this.glFlipY = true;
 
         /**
          * The key used by the texture as stored in the Texture Manager.
@@ -390,6 +394,16 @@ var Video = new Class({
         this._loadCallbackHandler = this.loadErrorHandler.bind(this);
 
         /**
+         * The locally bound callback handler specifically for the loadedmetadata event.
+         *
+         * @name Phaser.GameObjects.Video#_metadataCallbackHandler
+         * @type {function}
+         * @private
+         * @since 3.80.0
+         */
+        this._metadataCallbackHandler = this.metadataHandler.bind(this);
+
+        /**
          * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
          *
          * @name Phaser.GameObjects.Video#_crop
@@ -439,7 +453,7 @@ var Video = new Class({
         this._playingMarker = false;
 
         /**
-         * The previous frames mediaTime.
+         * The previous frame's mediaTime.
          *
          * @name Phaser.GameObjects.Video#_lastUpdate
          * @type {number}
@@ -484,6 +498,16 @@ var Video = new Class({
         this._playCalled = false;
 
         /**
+         * Has Video.getFirstFrame been called? This is reset if a new Video is loaded or played.
+         *
+         * @name Phaser.GameObjects.Video#_getFrame
+         * @type {boolean}
+         * @private
+         * @since 3.85.0
+         */
+        this._getFrame = false;
+
+        /**
          * The Callback ID returned by Request Video Frame.
          *
          * @name Phaser.GameObjects.Video#_rfvCallbackId
@@ -507,8 +531,7 @@ var Video = new Class({
 
         this.setPosition(x, y);
         this.setSize(256, 256);
-        this.initPipeline();
-        this.initPostPipeline(true);
+        this.initRenderNodes(this._defaultRenderNodesMap);
 
         game.events.on(GameEvents.PAUSE, this.globalPause, this);
         game.events.on(GameEvents.RESUME, this.globalResume, this);
@@ -526,13 +549,44 @@ var Video = new Class({
         }
     },
 
-    //  Overrides Game Object method
+    /**
+     * The default render node map for this Game Object.
+     *
+     * @name Phaser.GameObjects.Video#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultImageNodes;
+        }
+    },
+
+    /**
+     * Adds this Video to the Scene's update list, ensuring it receives
+     * `preUpdate` calls each game step. This is called automatically by
+     * the Scene when this Game Object is added to it.
+     *
+     * @method Phaser.GameObjects.Video#addedToScene
+     * @since 3.20.0
+     */
     addedToScene: function ()
     {
         this.scene.sys.updateList.add(this);
     },
 
-    //  Overrides Game Object method
+    /**
+     * Removes this Video from the Scene's update list, stopping it from
+     * receiving `preUpdate` calls. This is called automatically by the
+     * Scene when this Game Object is removed from it.
+     *
+     * @method Phaser.GameObjects.Video#removedFromScene
+     * @since 3.20.0
+     */
     removedFromScene: function ()
     {
         this.scene.sys.updateList.remove(this);
@@ -669,7 +723,7 @@ var Video = new Class({
      * @method Phaser.GameObjects.Video#loadMediaStream
      * @since 3.50.0
      *
-     * @param {string} stream - The MediaStream object.
+     * @param {MediaStream} stream - The MediaStream object.
      * @param {boolean} [noAudio=false] - Does the video have an audio track? If not you can enable auto-playing on it.
      * @param {string} [crossOrigin] - The value to use for the `crossOrigin` property in the video load request.  Either undefined, `anonymous` or `use-credentials`. If no value is given, `crossorigin` will not be set in the request.
      *
@@ -777,14 +831,18 @@ var Video = new Class({
             video.src = url;
         }
 
-        this.addLoadEventHandlers();
-
         this.retry = 0;
         this.video = video;
 
         this._playCalled = false;
 
         video.load();
+
+        this.addLoadEventHandlers();
+
+        var texture = this.scene.sys.textures.get(this._key);
+
+        this.setTexture(texture);
 
         return this;
     },
@@ -844,7 +902,7 @@ var Video = new Class({
                 this.videoTexture = texture;
                 this.videoTextureSource = texture.source[0];
 
-                this.videoTextureSource.setFlipY(this.flipY);
+                this.videoTextureSource.setFlipY(this.glFlipY);
 
                 this.emit(Events.VIDEO_TEXTURE, this, texture);
             }
@@ -912,7 +970,18 @@ var Video = new Class({
 
         this._lastUpdate = currentTime;
 
-        this._rfvCallbackId = this.video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
+        if (this._getFrame)
+        {
+            this.removeEventHandlers();
+
+            video.pause();
+
+            this._getFrame = false;
+        }
+        else
+        {
+            this._rfvCallbackId = this.video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
+        }
     },
 
     /**
@@ -980,9 +1049,49 @@ var Video = new Class({
 
         if (!this._playCalled)
         {
+            this._getFrame = false;
+
             this._rfvCallbackId = video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
 
             this._playCalled = true;
+
+            this.createPlayPromise();
+        }
+
+        return this;
+    },
+
+    /**
+     * Attempts to get the first frame of the video by running the `requestVideoFrame` callback once,
+     * then stopping. This is useful if you need to grab the first frame of the video to display behind
+     * a 'play' button, without actually calling the 'play' method.
+     *
+     * If the video is already playing, or has been queued to play with `changeSource` then this method just returns.
+     *
+     * @method Phaser.GameObjects.Video#getFirstFrame
+     * @since 3.85.0
+     *
+     * @return {this} This Video Game Object for method chaining.
+     */
+    getFirstFrame: function ()
+    {
+        var video = this.video;
+
+        if (!video || this.isPlaying())
+        {
+            if (!video)
+            {
+                console.warn('Video not loaded');
+            }
+
+            return this;
+        }
+
+        if (!this._playCalled)
+        {
+            this._getFrame = true;
+
+            this._rfvCallbackId = video.requestVideoFrameCallback(this.requestVideoFrame.bind(this));
 
             this.createPlayPromise();
         }
@@ -1004,6 +1113,7 @@ var Video = new Class({
         {
             video.addEventListener('error', this._loadCallbackHandler);
             video.addEventListener('abort', this._loadCallbackHandler);
+            video.addEventListener('loadedmetadata', this._metadataCallbackHandler);
         }
     },
 
@@ -1213,7 +1323,7 @@ var Video = new Class({
      * @param {number} [width] - The width of the resulting CanvasTexture.
      * @param {number} [height] - The height of the resulting CanvasTexture.
      *
-     * @return {Phaser.Textures.CanvasTexture}
+     * @return {Phaser.Textures.CanvasTexture} The CanvasTexture the snapshot was drawn to.
      */
     snapshot: function (width, height)
     {
@@ -1240,7 +1350,7 @@ var Video = new Class({
      * @param {number} [destWidth] - The destination width of the grab, allowing you to resize it.
      * @param {number} [destHeight] - The destination height of the grab, allowing you to resize it.
      *
-     * @return {Phaser.Textures.CanvasTexture}
+     * @return {Phaser.Textures.CanvasTexture} The CanvasTexture the snapshot was drawn to.
      */
     snapshotArea: function (x, y, srcWidth, srcHeight, destWidth, destHeight)
     {
@@ -1455,13 +1565,73 @@ var Video = new Class({
     },
 
     /**
+     * This internal method is called automatically when the video metadata is available.
+     *
+     * @method Phaser.GameObjects.Video#metadataHandler
+     * @fires Phaser.GameObjects.Events#VIDEO_METADATA
+     * @since 3.80.0
+     *
+     * @param {Event} event - The loadedmetadata Event.
+     */
+    metadataHandler: function (event)
+    {
+        this.emit(Events.VIDEO_METADATA, this, event);
+    },
+
+    /**
+     * Sets the size of this Game Object to be that of the given Frame.
+     *
+     * This will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or call the
+     * `setDisplaySize` method, which is the same thing as changing the scale but allows you
+     * to do so by giving pixel values.
+     *
+     * If you have enabled this Game Object for input, changing the size will _not_ change the
+     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
+     *
+     * @method Phaser.GameObjects.Video#setSizeToFrame
+     * @since 3.0.0
+     *
+     * @param {Phaser.Textures.Frame|boolean} [frame] - The frame to base the size of this Game Object on.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setSizeToFrame: function (frame)
+    {
+        if (!frame) { frame = this.frame; }
+
+        this.width = frame.realWidth;
+        this.height = frame.realHeight;
+
+        if (this.scaleX !== 1)
+        {
+            this.scaleX = this.displayWidth / this.width;
+        }
+
+        if (this.scaleY !== 1)
+        {
+            this.scaleY = this.displayHeight / this.height;
+        }
+
+        var input = this.input;
+
+        if (input && !input.customHitArea)
+        {
+            input.hitArea.width = this.width;
+            input.hitArea.height = this.height;
+        }
+
+        return this;
+    },
+
+    /**
      * This internal method is called automatically if the video stalls, for whatever reason.
      *
      * @method Phaser.GameObjects.Video#stalledHandler
      * @fires Phaser.GameObjects.Events#VIDEO_STALLED
      * @since 3.60.0
      *
-     * @param {Event} event - The error Event.
+     * @param {Event} event - The stall Event.
      */
     stalledHandler: function (event)
     {
@@ -2066,20 +2236,20 @@ var Video = new Class({
      * by using the `Texture.add` method. After doing this, you can then allow Game Objects
      * to use a specific frame.
      *
-     * If you intend to save the texture so you can use it as the input for a Shader, you may need to set the
-     * `flipY` parameter to `true` if you find the video renders upside down in your shader.
+     * If you intend to save the texture so you can use it as the input for a Shader, you may need to toggle the
+     * `flipY` parameter if you find the video renders upside down in your shader.
      *
      * @method Phaser.GameObjects.Video#saveTexture
      * @since 3.20.0
      *
      * @param {string} key - The unique key to store the texture as within the global Texture Manager.
-     * @param {boolean} [flipY=false] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y` during upload?
+     * @param {boolean} [flipY=true] - Should the WebGL Texture set `UNPACK_MULTIPLY_FLIP_Y` during upload?
      *
      * @return {boolean} Returns `true` if the texture is available immediately, otherwise returns `false` and you should listen for the `TEXTURE_READY` event.
      */
     saveTexture: function (key, flipY)
     {
-        if (flipY === undefined) { flipY = false; }
+        if (flipY === undefined) { flipY = true; }
 
         if (this.videoTexture)
         {
@@ -2088,7 +2258,7 @@ var Video = new Class({
         }
 
         this._key = key;
-        this.flipY = flipY;
+        this.glFlipY = flipY;
 
         return (this.videoTexture) ? true : false;
     },

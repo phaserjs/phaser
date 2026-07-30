@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,10 +10,23 @@ var Image = require('../../gameobjects/image/Image');
 
 /**
  * @classdesc
- * An Arcade Physics Image is an Image with an Arcade Physics body and related components.
- * The body can be dynamic or static.
+ * An Arcade Physics Image is a standard Image Game Object with an Arcade Physics body and related
+ * physics components mixed in. It is the lightest-weight physics-enabled Game Object available in
+ * Arcade Physics, making it ideal for static scenery, collectibles, platforms, bullets, or any
+ * non-animated object that needs to participate in physics collisions and overlap checks.
  *
- * The main difference between an Arcade Image and an Arcade Sprite is that you cannot animate an Arcade Image.
+ * The physics body can be either dynamic (affected by velocity, acceleration, and gravity) or
+ * static (immovable, used for platforms and boundaries). Physics behaviour is controlled via the
+ * mixed-in Arcade Physics components such as Velocity, Acceleration, Bounce, Gravity, and so on.
+ *
+ * The key difference between an Arcade Image and an Arcade Sprite is that an Arcade Image cannot
+ * play texture-based animations. If you need frame animations, use `Phaser.Physics.Arcade.Sprite`
+ * instead. If you only need a static or programmatically-moved object without animations, the
+ * Arcade Image is the more efficient choice.
+ *
+ * You should not normally create an ArcadeImage directly. Instead, use the factory method
+ * `this.physics.add.image()` from within a Scene, which creates the image and adds its body
+ * to the Arcade Physics world automatically.
  *
  * @class Image
  * @extends Phaser.GameObjects.Image
@@ -24,6 +37,7 @@ var Image = require('../../gameobjects/image/Image');
  * @extends Phaser.Physics.Arcade.Components.Acceleration
  * @extends Phaser.Physics.Arcade.Components.Angular
  * @extends Phaser.Physics.Arcade.Components.Bounce
+ * @extends Phaser.Physics.Arcade.Components.Collision
  * @extends Phaser.Physics.Arcade.Components.Debug
  * @extends Phaser.Physics.Arcade.Components.Drag
  * @extends Phaser.Physics.Arcade.Components.Enable
@@ -41,8 +55,6 @@ var Image = require('../../gameobjects/image/Image');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
@@ -64,6 +76,7 @@ var ArcadeImage = new Class({
         Components.Acceleration,
         Components.Angular,
         Components.Bounce,
+        Components.Collision,
         Components.Debug,
         Components.Drag,
         Components.Enable,

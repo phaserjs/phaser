@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -36,8 +36,8 @@ var Shape = require('../Shape');
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [points=5] - The number of points on the star.
- * @param {number} [innerRadius=32] - The inner radius of the star.
- * @param {number} [outerRadius=64] - The outer radius of the star.
+ * @param {number} [innerRadius=32] - The inner radius of the star, in pixels.
+ * @param {number} [outerRadius=64] - The outer radius of the star, in pixels.
  * @param {number} [fillColor] - The color the star will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the star will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  */
@@ -113,7 +113,7 @@ var Star = new Class({
      * @method Phaser.GameObjects.Star#setPoints
      * @since 3.13.0
      *
-     * @param {number} value - The amount of points the Star will have.
+     * @param {number} value - The number of points the Star will have.
      *
      * @return {this} This Game Object instance.
      */
@@ -131,7 +131,7 @@ var Star = new Class({
      * @method Phaser.GameObjects.Star#setInnerRadius
      * @since 3.13.0
      *
-     * @param {number} value - The amount to set the inner radius to.
+     * @param {number} value - The inner radius of the star, in pixels.
      *
      * @return {this} This Game Object instance.
      */
@@ -149,7 +149,7 @@ var Star = new Class({
      * @method Phaser.GameObjects.Star#setOuterRadius
      * @since 3.13.0
      *
-     * @param {number} value - The amount to set the outer radius to.
+     * @param {number} value - The outer radius of the star, in pixels.
      *
      * @return {this} This Game Object instance.
      */
@@ -185,7 +185,7 @@ var Star = new Class({
     },
 
     /**
-     * The inner radius of the Star shape.
+     * The inner radius of the Star shape, in pixels.
      *
      * @name Phaser.GameObjects.Star#innerRadius
      * @type {number}
@@ -209,7 +209,7 @@ var Star = new Class({
     },
 
     /**
-     * The outer radius of the Star shape.
+     * The outer radius of the Star shape, in pixels.
      *
      * @name Phaser.GameObjects.Star#outerRadius
      * @type {number}

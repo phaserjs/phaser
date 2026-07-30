@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,7 +11,7 @@ var Vector2 = require('./Vector2');
  *
  * For example, in a 6 x 4 grid, index 16 would equal x: 4 y: 2.
  *
- * If the given index is out of range an empty Vector2 is returned.
+ * If the given index is out of range, a Vector2 with x and y set to zero is returned.
  *
  * @function Phaser.Math.ToXY
  * @since 3.19.0
@@ -21,7 +21,7 @@ var Vector2 = require('./Vector2');
  * @param {number} height - The height of the grid.
  * @param {Phaser.Math.Vector2} [out] - An optional Vector2 to store the result in. If not given, a new Vector2 instance will be created.
  *
- * @return {Phaser.Math.Vector2} A Vector2 where the x and y properties contain the given grid index.
+ * @return {Phaser.Math.Vector2} A Vector2 containing the x and y grid coordinates derived from the given index.
  */
 var ToXY = function (index, width, height, out)
 {

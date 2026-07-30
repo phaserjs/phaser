@@ -1,12 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var DistanceBetweenPoints = require('../../math/distance/DistanceBetweenPoints');
 var GetEaseFunction = require('../../tweens/builders/GetEaseFunction');
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Returns an array of `quantity` Points where each point is taken from the given Line,
@@ -33,15 +33,15 @@ var Point = require('../point/Point');
  * @function Phaser.Geom.Line.GetEasedPoints
  * @since 3.23.0
  *
- * @generic {Phaser.Geom.Point[]} O - [out,$return]
+ * @generic {Phaser.Math.Vector2[]} O - [out,$return]
  *
  * @param {Phaser.Geom.Line} line - The Line object.
  * @param {(string|function)} ease - The ease to use. This can be either a string from the EaseMap, or a custom function.
  * @param {number} quantity - The number of points to return. Note that if you provide a `collinearThreshold`, the resulting array may not always contain this number of points.
- * @param {number} [collinearThreshold=0] - An optional threshold. The final array is reduced so that each point is spaced out at least this distance apart. This helps reduce clustering in noisey eases.
+ * @param {number} [collinearThreshold=0] - An optional threshold. The final array is reduced so that each point is spaced out at least this distance apart. This helps reduce clustering in noisy eases.
  * @param {number[]} [easeParams] - An optional array of ease parameters to go with the ease.
  *
- * @return {Phaser.Geom.Point[]} An array of Geom.Points containing the coordinates of the points on the line.
+ * @return {Phaser.Math.Vector2[]} An array of Math.Vector2s containing the coordinates of the points on the line.
  */
 var GetEasedPoints = function (line, ease, quantity, collinearThreshold, easeParams)
 {
@@ -66,13 +66,13 @@ var GetEasedPoints = function (line, ease, quantity, collinearThreshold, easePar
     {
         v = easeFunc(i / q);
 
-        results.push(new Point(x1 + (spaceX * v), y1 + (spaceY * v)));
+        results.push(new Vector2(x1 + (spaceX * v), y1 + (spaceY * v)));
     }
 
     //  Always include the end of the line
     v = easeFunc(1);
 
-    results.push(new Point(x1 + (spaceX * v), y1 + (spaceY * v)));
+    results.push(new Vector2(x1 + (spaceX * v), y1 + (spaceY * v)));
 
     //  Remove collinear parts
     if (collinearThreshold > 0)

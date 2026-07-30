@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,10 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
- * A single Plugin Script File suitable for loading by the Loader.
+ * A single Plugin Script File suitable for loading by the Phaser Loader. A Plugin File represents an external
+ * JavaScript file that, once loaded, registers a Phaser plugin and makes it available to the Plugin Manager.
+ * The script is executed by appending it as a `<script>` element to the document head. The plugin can optionally
+ * be auto-started and injected into the current Scene under a given property key.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#plugin method and are not typically created directly.
  *
@@ -81,7 +84,12 @@ var PluginFile = new Class({
 
     /**
      * Called automatically by Loader.nextFile.
-     * This method controls what extra work this File does with its loaded data.
+     * Processes the loaded Plugin file and installs it into the Scene's Plugin Manager.
+     * If the plugin was provided directly as a class or function, it is installed immediately.
+     * Otherwise, a new `<script>` element is created containing the loaded JavaScript source,
+     * appended to the document head to execute it, and then the plugin is installed from the
+     * global scope using the file key. If a Scene mapping key or auto-start flag is set,
+     * the plugin is also injected into the current Scene and Scene Systems.
      *
      * @method Phaser.Loader.FileTypes.PluginFile#onProcess
      * @since 3.7.0

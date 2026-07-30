@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -209,8 +209,8 @@ var Bob = new Class({
      * @method Phaser.GameObjects.Bob#reset
      * @since 3.0.0
      *
-     * @param {number} x - The x position of the Bob. Bob coordinate are relative to the position of the Blitter object.
-     * @param {number} y - The y position of the Bob. Bob coordinate are relative to the position of the Blitter object.
+     * @param {number} x - The x position of the Bob. Bob coordinates are relative to the position of the Blitter object.
+     * @param {number} y - The y position of the Bob. Bob coordinates are relative to the position of the Blitter object.
      * @param {(string|number|Phaser.Textures.Frame)} [frame] - The Frame the Bob will use. It _must_ be part of the Texture the parent Blitter object is using.
      *
      * @return {this} This Bob Game Object.
@@ -242,8 +242,8 @@ var Bob = new Class({
      * @method Phaser.GameObjects.Bob#setPosition
      * @since 3.20.0
      *
-     * @param {number} x - The x position of the Bob. Bob coordinate are relative to the position of the Blitter object.
-     * @param {number} y - The y position of the Bob. Bob coordinate are relative to the position of the Blitter object.
+     * @param {number} x - The x position of the Bob. Bob coordinates are relative to the position of the Blitter object.
+     * @param {number} y - The y position of the Bob. Bob coordinates are relative to the position of the Blitter object.
      *
      * @return {this} This Bob Game Object.
      */
@@ -296,7 +296,7 @@ var Bob = new Class({
      * @since 3.0.0
      *
      * @param {boolean} x - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
-     * @param {boolean} y - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
+     * @param {boolean} y - The vertical flipped state. `false` for no flip, or `true` to be flipped.
      *
      * @return {this} This Bob Game Object.
      */
@@ -348,7 +348,10 @@ var Bob = new Class({
     },
 
     /**
-     * Sets the tint of this Bob.
+     * Sets the tint color applied to this Bob when it is rendered. The tint is a hex color value
+     * that is multiplied with the Bob's texture, allowing you to colorize it without needing a
+     * separate texture. A value of `0xffffff` (white) applies no tint. A value of `0xff0000` will
+     * tint the Bob red.
      *
      * @method Phaser.GameObjects.Bob#setTint
      * @since 3.20.0

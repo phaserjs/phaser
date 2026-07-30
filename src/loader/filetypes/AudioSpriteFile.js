@@ -1,16 +1,16 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var AudioFile = require('./AudioFile.js');
+var AudioFile = require('./AudioFile');
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var JSONFile = require('./JSONFile.js');
-var MultiFile = require('../MultiFile.js');
+var JSONFile = require('./JSONFile');
+var MultiFile = require('../MultiFile');
 
 /**
  * @classdesc
@@ -212,9 +212,9 @@ var AudioSpriteFile = new Class({
  * music.play('title');
  * ```
  *
- * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+ * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this file's
  * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
- * this is what you would use to retrieve the image from the Texture Manager.
+ * this is what you would use to retrieve the audio sprite from the Audio Cache.
  *
  * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
  *

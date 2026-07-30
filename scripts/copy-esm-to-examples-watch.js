@@ -2,9 +2,9 @@ let fs = require('fs-extra');
 
 let source = './build/phaser.esm.js';
 let sourceMap = './build/phaser.esm.js.map';
-let dest = '../phaser3-examples/public/build/dev.esm.js';
-let destDir = '../phaser3-examples/public/build/';
-let destMap = '../phaser3-examples/public/build/phaser.esm.js.map';
+let dest = '../examples/public/build/dev.esm.js';
+let destDir = '../examples/public/build/';
+let destMap = '../examples/public/build/phaser.esm.js.map';
 
 if (fs.existsSync(destDir))
 {
@@ -30,5 +30,5 @@ if (fs.existsSync(destDir))
 }
 else
 {
-    console.log('Copy-to-Examples failed: Phaser 3 Examples not present at ../phaser3-examples');
+    console.log('Copy-to-Examples failed: Phaser Examples not present at ../examples');
 }

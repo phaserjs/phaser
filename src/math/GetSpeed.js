@@ -1,19 +1,22 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Calculate a per-ms speed from a distance and time (given in seconds).
+ * Calculate the speed required to cover a given distance in a given time.
+ *
+ * The distance is assumed to be in pixels and the time is given in seconds.
+ * The result is returned as pixels per millisecond.
  *
  * @function Phaser.Math.GetSpeed
  * @since 3.0.0
  *
- * @param {number} distance - The distance.
- * @param {number} time - The time, in seconds.
+ * @param {number} distance - The distance to travel, in pixels.
+ * @param {number} time - The time allowed to cover the distance, in seconds.
  *
- * @return {number} The speed, in distance per ms.
+ * @return {number} The speed required, in pixels per millisecond.
  *
  * @example
  * // 400px over 1 second is 0.4 px/ms

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,6 +14,11 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 /**
  * @classdesc
  * A single Binary File suitable for loading by the Loader.
+ *
+ * Binary files are used to load raw binary data, such as custom level formats, game data archives, or any file
+ * whose contents must be handled as an `ArrayBuffer` rather than parsed text or an image. Once loaded, the data
+ * is stored in the Binary Cache and can optionally be cast to a typed array (e.g. `Uint8Array`) automatically
+ * by providing a `dataType` constructor.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#binary method and are not typically created directly.
  *
@@ -68,7 +73,9 @@ var BinaryFile = new Class({
 
     /**
      * Called automatically by Loader.nextFile.
-     * This method controls what extra work this File does with its loaded data.
+     * This method processes the raw XHR response: if a `dataType` constructor was specified (e.g. `Uint8Array`),
+     * it wraps the `ArrayBuffer` response in a new instance of that type; otherwise the raw `ArrayBuffer` is
+     * stored directly as the file's data.
      *
      * @method Phaser.Loader.FileTypes.BinaryFile#onProcess
      * @since 3.7.0

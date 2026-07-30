@@ -1,11 +1,16 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Provides methods used for setting the debug properties of an Arcade Physics Body.
+ * The Debug component is a mixin that provides methods and properties for controlling the
+ * debug visualization of an Arcade Physics Body. When Arcade Physics debug mode is enabled
+ * globally, individual bodies can render their collision outlines and velocity vectors to the
+ * display, making it easier to visualize physics shapes and movement during development.
+ * This component lets you toggle those visuals per body and customize the outline color.
+ * Debug rendering carries a performance overhead and should never be enabled in production builds.
  *
  * @namespace Phaser.Physics.Arcade.Components.Debug
  * @since 3.0.0

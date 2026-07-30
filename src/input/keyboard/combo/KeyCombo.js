@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -63,7 +63,7 @@ var KeyCombo = new Class({
         }
 
         /**
-         * A reference to the Keyboard Manager
+         * A reference to the Keyboard Plugin
          *
          * @name Phaser.Input.Keyboard.KeyCombo#manager
          * @type {Phaser.Input.Keyboard.KeyboardPlugin}
@@ -121,7 +121,7 @@ var KeyCombo = new Class({
         this.current = this.keyCodes[0];
 
         /**
-         * The current index of the key being waited for in the 'keys' string.
+         * The current index of the key being waited for in the `keyCodes` array.
          *
          * @name Phaser.Input.Keyboard.KeyCombo#index
          * @type {number}
@@ -170,11 +170,11 @@ var KeyCombo = new Class({
         this.timeMatched = 0;
 
         /**
-         * If they press the wrong key do we reset the combo?
+         * If the user presses an incorrect key, the combo sequence will be reset to the beginning.
          *
          * @name Phaser.Input.Keyboard.KeyCombo#resetOnWrongKey
          * @type {boolean}
-         * @default 0
+         * @default true
          * @since 3.0.0
          */
         this.resetOnWrongKey = GetFastValue(config, 'resetOnWrongKey', true);
@@ -190,7 +190,7 @@ var KeyCombo = new Class({
         this.maxKeyDelay = GetFastValue(config, 'maxKeyDelay', 0);
 
         /**
-         * If previously matched and they press the first key of the combo again, will it reset?
+         * If the combo has previously been matched and the user presses the first key of the combo again, the combo will reset.
          *
          * @name Phaser.Input.Keyboard.KeyCombo#resetOnMatch
          * @type {boolean}
@@ -200,7 +200,7 @@ var KeyCombo = new Class({
         this.resetOnMatch = GetFastValue(config, 'resetOnMatch', false);
 
         /**
-         * If the combo matches, will it delete itself?
+         * If the combo matches successfully, this KeyCombo instance will automatically destroy itself.
          *
          * @name Phaser.Input.Keyboard.KeyCombo#deleteOnMatch
          * @type {boolean}

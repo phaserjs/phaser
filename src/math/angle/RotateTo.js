@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,7 @@ var MATH_CONST = require('../const');
  *
  * @param {number} currentAngle - The current angle, in radians.
  * @param {number} targetAngle - The target angle to rotate to, in radians.
- * @param {number} [lerp=0.05] - The lerp value to add to the current angle.
+ * @param {number} [lerp=0.05] - The step size, in radians, to rotate by in this call. The angle will be rotated by this amount towards the target, either added or subtracted depending on the shortest rotation direction.
  *
  * @return {number} The adjusted angle.
  */
@@ -27,7 +27,7 @@ var RotateTo = function (currentAngle, targetAngle, lerp)
         return currentAngle;
     }
 
-    if (Math.abs(targetAngle - currentAngle) <= lerp || Math.abs(targetAngle - currentAngle) >= (MATH_CONST.PI2 - lerp))
+    if (Math.abs(targetAngle - currentAngle) <= lerp || Math.abs(targetAngle - currentAngle) >= (MATH_CONST.TAU - lerp))
     {
         currentAngle = targetAngle;
     }
@@ -37,11 +37,11 @@ var RotateTo = function (currentAngle, targetAngle, lerp)
         {
             if (targetAngle < currentAngle)
             {
-                targetAngle += MATH_CONST.PI2;
+                targetAngle += MATH_CONST.TAU;
             }
             else
             {
-                targetAngle -= MATH_CONST.PI2;
+                targetAngle -= MATH_CONST.TAU;
             }
         }
 

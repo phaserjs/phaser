@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,7 +9,16 @@ var Vector2 = require('../../../math/Vector2');
 
 /**
  * @classdesc
- * A zone that places particles randomly within a shapes area.
+ * A Random Zone is an Emit Zone that places particles at random positions within the area of a
+ * shape. The shape must provide a `getRandomPoint` method, which receives a Vector2 and populates
+ * it with a random coordinate from anywhere inside the shape.
+ *
+ * Phaser geometry objects such as `Phaser.Geom.Rectangle`, `Phaser.Geom.Circle`,
+ * `Phaser.Geom.Ellipse`, and `Phaser.Geom.Triangle` all implement this method and can be used
+ * directly as the source for this zone.
+ *
+ * Use this zone when you want particles to spawn at random positions distributed across the
+ * interior of a shape. To spawn particles along the edges of a shape instead, use an EdgeZone.
  *
  * @class RandomZone
  * @memberof Phaser.GameObjects.Particles.Zones

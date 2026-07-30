@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,11 +11,6 @@ var renderCanvas = NOOP;
 if (typeof WEBGL_RENDERER)
 {
     renderWebGL = require('./NineSliceWebGLRenderer');
-}
-
-if (typeof CANVAS_RENDERER)
-{
-    // renderCanvas = require('./MeshCanvasRenderer');
 }
 
 module.exports = {

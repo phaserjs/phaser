@@ -1,5 +1,5 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @author       Vladimir Agafonkin
  * @see          Based on Simplify.js mourner.github.io/simplify-js
  */

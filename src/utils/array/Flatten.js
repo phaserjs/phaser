@@ -1,11 +1,14 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Takes an array and flattens it, returning a shallow-copy flattened array.
+ * Takes an array and deeply flattens it, recursively unpacking any nested arrays into
+ * a single flat array. The original array is not modified. An optional output array
+ * can be provided to collect the results, which is useful when calling this function
+ * recursively or when appending to an existing array.
  *
  * @function Phaser.Utils.Array.Flatten
  * @since 3.60.0

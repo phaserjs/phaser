@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,7 @@
  * The line starts within, or ends within, the Rectangle.
  * The line segment intersects one of the 4 rectangle edges.
  *
- * The for the purposes of this function rectangles are considered 'solid'.
+ * For the purposes of this function rectangles are considered 'solid'.
  *
  * @function Phaser.Geom.Intersects.LineToRectangle
  * @since 3.0.0

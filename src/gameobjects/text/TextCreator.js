@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,6 +11,16 @@ var Text = require('./Text');
 
 /**
  * Creates a new Text Game Object and returns it.
+ *
+ * A Text Game Object renders a string of text to an internal Canvas texture, which is then
+ * used as the source for rendering to the game canvas. It supports a wide range of styling
+ * options including font family, size, weight, fill color, stroke, drop shadow, text alignment,
+ * word wrapping, padding, fixed dimensions, and right-to-left rendering. The text content and
+ * style can be updated at any time after creation.
+ *
+ * Unlike the factory method (`scene.add.text`), this creator method returns the Text Game Object
+ * without automatically adding it to the Scene's display list. Use the `add` property in the
+ * config object, or pass `true` as the `addToScene` argument, to add it to the Scene.
  *
  * Note: This method will only be available if the Text Game Object has been built into Phaser.
  *

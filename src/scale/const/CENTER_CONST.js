@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -53,7 +53,7 @@ module.exports = {
      * The game canvas is centered horizontally within the parent.
      * To do this, the parent has to have a bounds that can be calculated and not be empty.
      *
-     * Centering is achieved by setting the margin left and top properties of the
+     * Centering is achieved by setting the margin left property of the
      * game canvas, and does not factor in any other CSS styles you may have applied.
      *
      * @name Phaser.Scale.Center.CENTER_HORIZONTALLY
@@ -64,10 +64,10 @@ module.exports = {
     CENTER_HORIZONTALLY: 2,
 
     /**
-     * The game canvas is centered both vertically within the parent.
+     * The game canvas is centered vertically within the parent.
      * To do this, the parent has to have a bounds that can be calculated and not be empty.
      *
-     * Centering is achieved by setting the margin left and top properties of the
+     * Centering is achieved by setting the margin top property of the
      * game canvas, and does not factor in any other CSS styles you may have applied.
      *
      * @name Phaser.Scale.Center.CENTER_VERTICALLY

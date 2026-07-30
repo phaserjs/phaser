@@ -1,7 +1,7 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,7 +15,16 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * @classdesc
- * Web Audio API implementation of the Sound Manager.
+ * The Web Audio API implementation of the Phaser Sound Manager.
+ *
+ * This is the default Sound Manager used in Phaser when the browser supports the Web Audio API.
+ * It creates and manages an `AudioContext`, routes all sounds through a master gain node chain
+ * for global mute and volume control, and handles the browser autoplay policy by unlocking
+ * audio on the first user interaction.
+ *
+ * Use this manager to add, play, and control sounds in your game. It is accessed via
+ * `this.sound` from within a Scene. If the browser does not support the Web Audio API,
+ * Phaser will fall back to the `HTML5AudioSoundManager` instead.
  *
  * Not all browsers can play all audio formats.
  *
@@ -77,18 +86,50 @@ var WebAudioSoundManager = new Class({
          */
         this.destination = this.masterMuteNode;
 
-        this.locked = this.context.state === 'suspended' && ('ontouchstart' in window || 'onclick' in window);
+        this.locked = this.context.state === 'suspended';
 
         BaseSoundManager.call(this, game);
 
-        if (this.locked && game.isBooted)
+        if (this.locked)
         {
-            this.unlock();
+            if (game.isBooted)
+            {
+                this.unlock();
+            }
+            else
+            {
+                game.events.once(GameEvents.BOOT, this.unlock, this);
+            }
         }
-        else
+
+        game.events.on(GameEvents.VISIBLE, this.onGameVisible, this);
+    },
+
+    /**
+     * Internal handler for Phaser.Core.Events#VISIBLE.
+     * 
+     * Needed to handle resuming audio on iOS17/iOS18+ if you hide the browser, press
+     * the home button, etc. See https://github.com/phaserjs/phaser/issues/6829
+     *
+     * @method Phaser.Sound.WebAudioSoundManager#onGameVisible
+     * @private
+     * @since 3.88.0
+     */
+    onGameVisible: function ()
+    {
+        var context = this.context;
+
+        //  setTimeout to avoid weird audio artifacts (thanks Apple)
+        window.setTimeout(function ()
         {
-            game.events.once(GameEvents.BOOT, this.unlock, this);
-        }
+
+            if (context)
+            {
+                context.suspend();
+                context.resume();
+            }
+
+        }, 100);
     },
 
     /**
@@ -272,7 +313,7 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
-     * Sets the X and Y position of the Spatial Audio listener on this Web Audios context.
+     * Sets the X and Y position of the Spatial Audio listener on this Web Audio context.
      *
      * If you call this method with no parameters it will default to the center-point of
      * the game canvas. Depending on the type of game you're making, you may need to call
@@ -320,15 +361,18 @@ var WebAudioSoundManager = new Class({
                 {
                     bodyRemove('touchstart', unlockHandler);
                     bodyRemove('touchend', unlockHandler);
-                    bodyRemove('click', unlockHandler);
+                    bodyRemove('mousedown', unlockHandler);
+                    bodyRemove('mouseup', unlockHandler);
                     bodyRemove('keydown', unlockHandler);
 
                     _this.unlocked = true;
+
                 }, function ()
                 {
                     bodyRemove('touchstart', unlockHandler);
                     bodyRemove('touchend', unlockHandler);
-                    bodyRemove('click', unlockHandler);
+                    bodyRemove('mousedown', unlockHandler);
+                    bodyRemove('mouseup', unlockHandler);
                     bodyRemove('keydown', unlockHandler);
                 });
             }
@@ -338,7 +382,8 @@ var WebAudioSoundManager = new Class({
         {
             body.addEventListener('touchstart', unlockHandler, false);
             body.addEventListener('touchend', unlockHandler, false);
-            body.addEventListener('click', unlockHandler, false);
+            body.addEventListener('mousedown', unlockHandler, false);
+            body.addEventListener('mouseup', unlockHandler, false);
             body.addEventListener('keydown', unlockHandler, false);
         }
     },
@@ -394,11 +439,12 @@ var WebAudioSoundManager = new Class({
     {
         var listener = this.context.listener;
 
+        var x = GetFastValue(this.listenerPosition, 'x', null);
+        var y = GetFastValue(this.listenerPosition, 'y', null);
+
+
         if (listener && listener.positionX !== undefined)
         {
-            var x = GetFastValue(this.listenerPosition, 'x', null);
-            var y = GetFastValue(this.listenerPosition, 'y', null);
-
             if (x && x !== this._spatialx)
             {
                 this._spatialx = listener.positionX.value = x;
@@ -407,6 +453,24 @@ var WebAudioSoundManager = new Class({
             {
                 this._spatialy = listener.positionY.value = y;
             }
+        }
+
+        // Firefox doesn't currently implement positionX, positionY and positionZ properties on AudioListener,
+        // falling back on AudioListener.prototype.setPosition() method. @see https://developer.mozilla.org/en-US/docs/Web/API/AudioListener/setPosition
+        else if (listener)
+        {
+            if (x && x !== this._spatialx)
+            {
+                this._spatialx = x;
+            }
+            if (y && y !== this._spatialy)
+            {
+                this._spatialy = y;
+            }
+
+            var z = GetFastValue(listener, 'z', 0);
+
+            listener.setPosition(this._spatialx || 0, this._spatialy || 0, z);
         }
 
         BaseSoundManager.prototype.update.call(this, time, delta);
@@ -420,7 +484,7 @@ var WebAudioSoundManager = new Class({
 
     /**
      * Calls Phaser.Sound.BaseSoundManager#destroy method
-     * and cleans up all Web Audio API related stuff.
+     * and cleans up all Web Audio API related resources.
      *
      * @method Phaser.Sound.WebAudioSoundManager#destroy
      * @since 3.0.0
@@ -447,11 +511,13 @@ var WebAudioSoundManager = new Class({
             });
         }
 
+        this.game.events.off(GameEvents.VISIBLE, this.onGameVisible, this);
+
         BaseSoundManager.prototype.destroy.call(this);
     },
 
     /**
-     * Sets the muted state of all this Sound Manager.
+     * Sets the muted state of this Sound Manager.
      *
      * @method Phaser.Sound.WebAudioSoundManager#setMute
      * @fires Phaser.Sound.Events#GLOBAL_MUTE

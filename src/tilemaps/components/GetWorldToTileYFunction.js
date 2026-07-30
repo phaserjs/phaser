@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,14 +10,16 @@ var StaggeredWorldToTileY = require('./StaggeredWorldToTileY');
 var WorldToTileY = require('./WorldToTileY');
 
 /**
- * Gets the correct function to use to translate tiles, based on the map orientation.
+ * Returns the correct function to use for converting a world Y coordinate to a tile Y coordinate,
+ * based on the map orientation. Returns `WorldToTileY` for orthogonal maps, `StaggeredWorldToTileY`
+ * for staggered maps, and a NULL function for all other orientations.
  *
  * @function Phaser.Tilemaps.Components.GetWorldToTileYFunction
  * @since 3.50.0
  *
  * @param {number} orientation - The Tilemap orientation constant.
  *
- * @return {function} The function to use to translate tiles for the given map type.
+ * @return {function} The function to use to convert a world Y coordinate to a tile Y coordinate for the given map orientation.
  */
 var GetWorldToTileYFunction = function (orientation)
 {

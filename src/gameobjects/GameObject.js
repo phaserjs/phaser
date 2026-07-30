@@ -1,10 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../utils/Class');
+var Components = require('./components');
 var ComponentsToJSON = require('./components/ToJSON');
 var DataManager = require('../data/DataManager');
 var EventEmitter = require('eventemitter3');
@@ -13,9 +14,20 @@ var SceneEvents = require('../scene/events');
 
 /**
  * @classdesc
- * The base class that all Game Objects extend.
- * You don't create GameObjects directly and they cannot be added to the display list.
- * Instead, use them as the base for your own custom classes.
+ * The base class that all Game Objects in Phaser extend.
+ *
+ * A Game Object is anything that can be added to a Scene's display list and rendered to screen,
+ * such as a Sprite, Image, Text, or Graphics object. Game Objects are the building blocks of
+ * every Phaser game — they represent visual entities that live in a Scene, can be positioned,
+ * scaled, rotated, and interacted with.
+ *
+ * This class provides the core shared functionality used by all Game Objects: lifecycle management
+ * (active/destroy), data storage via the Data Manager, input handling, physics body attachment,
+ * display list and update list membership, and event emission.
+ *
+ * You do not instantiate `GameObject` directly. Instead, use it as the base class for your own
+ * custom Game Object types by extending it through Phaser's `Class` utility, or simply use one
+ * of the many built-in Game Object types provided by Phaser.
  *
  * @class GameObject
  * @memberof Phaser.GameObjects
@@ -23,12 +35,20 @@ var SceneEvents = require('../scene/events');
  * @constructor
  * @since 3.0.0
  *
+ * @extends Phaser.GameObjects.Components.Filters
+ * @extends Phaser.GameObjects.Components.RenderSteps
+ *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
  * @param {string} type - A textual representation of the type of Game Object, i.e. `sprite`.
  */
 var GameObject = new Class({
 
     Extends: EventEmitter,
+
+    Mixins: [
+        Components.Filters,
+        Components.RenderSteps
+    ],
 
     initialize:
 
@@ -173,6 +193,35 @@ var GameObject = new Class({
         this.cameraFilter = 0;
 
         /**
+         * The current vertex rounding mode of this Game Object.
+         * This is used by the WebGL Renderer to determine how to round the vertex positions.
+         * It can have several values:
+         *
+         * - `off` - No rounding is applied.
+         * - `safe` - Rounding is applied if the object is 'safe'.
+         * - `safeAuto` - Rounding is applied if the object is 'safe' and the camera has `roundPixels` enabled.
+         * - `full` - Rounding is always applied.
+         * - `fullAuto` - Rounding is always applied if the camera has `roundPixels` enabled.
+         *
+         * A 'safe' object is one that is not rotated or scaled
+         * by any transform matrix while rendering.
+         * The effective transform is a simple translation.
+         * In such cases, rounding will affect all vertices the same way.
+         *
+         * Using full rounding can cause vertices to wobble, because they might
+         * not be aligned to the pixel grid.
+         * Full rounding gives a janky look like PS1 games.
+         *
+         * You can use other values if you want to create your own custom rounding modes.
+         *
+         * @name Phaser.GameObjects.GameObject#vertexRoundMode
+         * @type {string}
+         * @default 'safeAuto'
+         * @since 4.0.0
+         */
+        this.vertexRoundMode = 'safeAuto';
+
+        /**
          * If this Game Object is enabled for input then this property will contain an InteractiveObject instance.
          * Not usually set directly. Instead call `GameObject.setInteractive()`.
          *
@@ -205,6 +254,30 @@ var GameObject = new Class({
          * @since 3.5.0
          */
         this.ignoreDestroy = false;
+
+        /**
+         * Whether this Game Object has been destroyed.
+         * Check this property to avoid bugs caused by calling methods on a
+         * destroyed Game Object, e.g. in a Tween or Timer.
+         *
+         * This is a read-only property that is automatically set to `true`
+         * when the Game Object is destroyed.
+         * You should not set this property directly.
+         * It is set before `preDestroy` is called or the DESTROY event is emitted.
+         *
+         * @name Phaser.GameObjects.GameObject#isDestroyed
+         * @type {boolean}
+         * @default false
+         * @readonly
+         * @since 4.0.0
+         */
+        this.isDestroyed = false;
+
+        // Initialize RenderSteps mixin.
+        if (this.addRenderStep)
+        {
+            this.addRenderStep(this.renderWebGL);
+        }
 
         this.on(Events.ADDED_TO_SCENE, this.addedToScene, this);
         this.on(Events.REMOVED_FROM_SCENE, this.removedFromScene, this);
@@ -338,7 +411,7 @@ var GameObject = new Class({
      * @genericUse {(string|T)} - [key]
      *
      * @param {(string|object)} key - The key to set the value for. Or an object of key value pairs. If an object the `data` argument is ignored.
-     * @param {*} [data] - The value to set for the given key. If an object is provided as the key this argument is ignored.
+     * @param {*} [value] - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
      * @return {this} This GameObject.
      */
@@ -355,7 +428,7 @@ var GameObject = new Class({
     },
 
     /**
-     * Increase a value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is increased from 0.
+     * Increase a value for the given key within this Game Object's Data Manager. If the key doesn't already exist in the Data Manager then it is created with a value of 0 before being increased.
      *
      * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
      * before setting the value.
@@ -367,28 +440,25 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#incData
      * @since 3.23.0
      *
-     * @generic {any} T
-     * @genericUse {(string|T)} - [key]
-     *
-     * @param {(string|object)} key - The key to increase the value for.
-     * @param {*} [data] - The value to increase for the given key.
+     * @param {string} key - The key to change the value for.
+     * @param {number} [amount=1] - The amount to increase the given key by. Pass a negative value to decrease the key.
      *
      * @return {this} This GameObject.
      */
-    incData: function (key, value)
+    incData: function (key, amount)
     {
         if (!this.data)
         {
             this.data = new DataManager(this);
         }
 
-        this.data.inc(key, value);
+        this.data.inc(key, amount);
 
         return this;
     },
 
     /**
-     * Toggle a boolean value for the given key within this Game Objects Data Manager. If the key doesn't already exist in the Data Manager then it is toggled from false.
+     * Toggle a boolean value for the given key within this Game Object's Data Manager. If the key doesn't already exist in the Data Manager then it is created with a value of `false` before being toggled to `true`.
      *
      * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
      * before setting the value.
@@ -400,10 +470,7 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#toggleData
      * @since 3.23.0
      *
-     * @generic {any} T
-     * @genericUse {(string|T)} - [key]
-     *
-     * @param {(string|object)} key - The key to toggle the value for.
+     * @param {string} key - The key to toggle the value for.
      *
      * @return {this} This GameObject.
      */
@@ -508,12 +575,16 @@ var GameObject = new Class({
      *
      * @method Phaser.GameObjects.GameObject#disableInteractive
      * @since 3.7.0
+     * 
+     * @param {boolean} [resetCursor=false] - Should the currently active Input cursor, if any, be reset to the default cursor?
      *
      * @return {this} This GameObject.
      */
-    disableInteractive: function ()
+    disableInteractive: function (resetCursor)
     {
-        this.scene.sys.input.disable(this);
+        if (resetCursor === undefined) { resetCursor = false; }
+
+        this.scene.sys.input.disable(this, resetCursor);
 
         return this;
     },
@@ -540,12 +611,21 @@ var GameObject = new Class({
      *
      * @method Phaser.GameObjects.GameObject#removeInteractive
      * @since 3.7.0
+     * 
+     * @param {boolean} [resetCursor=false] - Should the currently active Input cursor, if any, be reset to the default cursor?
      *
      * @return {this} This GameObject.
      */
-    removeInteractive: function ()
+    removeInteractive: function (resetCursor)
     {
+        if (resetCursor === undefined) { resetCursor = false; }
+
         this.scene.sys.input.clear(this);
+
+        if (resetCursor)
+        {
+            this.scene.sys.input.resetCursor();
+        }
 
         this.input = undefined;
 
@@ -555,7 +635,7 @@ var GameObject = new Class({
     /**
      * This callback is invoked when this Game Object is added to a Scene.
      *
-     * Can be overriden by custom Game Objects, but be aware of some Game Objects that
+     * Can be overridden by custom Game Objects, but be aware of some Game Objects that
      * will use this, such as Sprites, to add themselves into the Update List.
      *
      * You can also listen for the `ADDED_TO_SCENE` event from this Game Object.
@@ -570,8 +650,8 @@ var GameObject = new Class({
     /**
      * This callback is invoked when this Game Object is removed from a Scene.
      *
-     * Can be overriden by custom Game Objects, but be aware of some Game Objects that
-     * will use this, such as Sprites, to removed themselves from the Update List.
+     * Can be overridden by custom Game Objects, but be aware of some Game Objects that
+     * will use this, such as Sprites, to remove themselves from the Update List.
      *
      * You can also listen for the `REMOVED_FROM_SCENE` event from this Game Object.
      *
@@ -583,12 +663,18 @@ var GameObject = new Class({
     },
 
     /**
-     * To be overridden by custom GameObjects. Allows base objects to be used in a Pool.
+     * Override this method in your own custom Game Objects to perform per-frame update logic.
+     * This method is called by the Scene's Update List on every game frame, if the Game Object
+     * is on that list. It is not called automatically — the Game Object must be added to the
+     * Update List via `addToUpdateList` or by having a `preUpdate` method.
+     *
+     * This base implementation is intentionally empty, allowing Game Objects to be used in an
+     * Object Pool without requiring any update logic.
      *
      * @method Phaser.GameObjects.GameObject#update
      * @since 3.0.0
      *
-     * @param {...*} [args] - args
+     * @param {...*} [args] - Any arguments that are passed to the update method.
      */
     update: function ()
     {
@@ -623,6 +709,59 @@ var GameObject = new Class({
         var listWillRender = (this.displayList && this.displayList.active) ? this.displayList.willRender(camera) : true;
 
         return !(!listWillRender || GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
+    },
+
+    /**
+     * Checks if this Game Object should round its vertices,
+     * based on the given Camera and the `vertexRoundMode` of this Game Object.
+     * This is used by the WebGL Renderer to determine how to round the vertex positions.
+     *
+     * You can override this method in your own custom Game Object classes to provide
+     * custom logic for vertex rounding.
+     *
+     * @method Phaser.GameObjects.GameObject#willRoundVertices
+     * @since 4.0.0
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to check against this Game Object.
+     * @param {boolean} onlyTranslated - If true, the object is only translated, not scaled or rotated.
+     * @return {boolean} True if the Game Object should be rounded, otherwise false.
+     */
+    willRoundVertices: function (camera, onlyTranslated)
+    {
+        switch (this.vertexRoundMode)
+        {
+            case 'safe':
+                return onlyTranslated;
+            
+            case 'safeAuto':
+                return onlyTranslated && camera.roundPixels;
+
+            case 'full':
+                return true;
+
+            case 'fullAuto':
+                return camera.roundPixels;
+
+            case 'off':
+            default:
+                return false;
+        }
+    },
+
+    /**
+     * Sets the vertex round mode of this Game Object.
+     * This is used by the WebGL Renderer to determine how to round the vertex positions.
+     * @see {@link Phaser.GameObjects.GameObject#vertexRoundMode} for more details.
+     *
+     * @method Phaser.GameObjects.GameObject#setVertexRoundMode
+     * @since 4.0.0
+     * @param {string} mode - The vertex round mode to set. Can be 'off', 'safe', 'safeAuto', 'full' or 'fullAuto'.
+     * @return {this} This GameObject.
+     */
+    setVertexRoundMode: function (mode)
+    {
+        this.vertexRoundMode = mode;
+
+        return this;
     },
 
     /**
@@ -687,7 +826,7 @@ var GameObject = new Class({
      *
      * You can query which list it is on by looking at the `Phaser.GameObjects.GameObject#displayList` property.
      *
-     * If a Game Object isn't on any display list, it will not be rendered. If you just wish to temporarly
+     * If a Game Object isn't on any display list, it will not be rendered. If you just wish to temporarily
      * disable it from rendering, consider using the `setVisible` method, instead.
      *
      * @method Phaser.GameObjects.GameObject#addToDisplayList
@@ -729,10 +868,10 @@ var GameObject = new Class({
      * Adds this Game Object to the Update List belonging to the Scene.
      *
      * When a Game Object is added to the Update List it will have its `preUpdate` method called
-     * every game frame. This method is passed two parameters: `delta` and `time`.
+     * every game frame. This method is passed two parameters: `time` and `delta`.
      *
      * If you wish to run your own logic within `preUpdate` then you should always call
-     * `super.preUpdate(delta, time)` within it, or it may fail to process required operations,
+     * `super.preUpdate(time, delta)` within it, or it may fail to process required operations,
      * such as Sprite animations.
      *
      * @method Phaser.GameObjects.GameObject#addToUpdateList
@@ -753,12 +892,12 @@ var GameObject = new Class({
     /**
      * Removes this Game Object from the Display List it is currently on.
      *
-     * A Game Object can only exist on one Display List at any given time, but may move freely removed
+     * A Game Object can only exist on one Display List at any given time, but may be freely removed
      * and added back at a later stage.
      *
      * You can query which list it is on by looking at the `Phaser.GameObjects.GameObject#displayList` property.
      *
-     * If a Game Object isn't on any Display List, it will not be rendered. If you just wish to temporarly
+     * If a Game Object isn't on any Display List, it will not be rendered. If you just wish to temporarily
      * disable it from rendering, consider using the `setVisible` method, instead.
      *
      * @method Phaser.GameObjects.GameObject#removeFromDisplayList
@@ -814,6 +953,38 @@ var GameObject = new Class({
     },
 
     /**
+     * Returns a reference to the underlying display list _array_ that contains this Game Object,
+     * which will be either the Scene's Display List or the internal list belonging
+     * to its parent Container, if it has one.
+     * 
+     * If this Game Object is not on a display list or in a container, it will return `null`.
+     * 
+     * You should be very careful with this method, and understand that it returns a direct reference to the
+     * internal array used by the Display List. Mutating this array directly can cause all kinds of subtle
+     * and difficult to debug issues in your game.
+     *
+     * @method Phaser.GameObjects.GameObject#getDisplayList
+     * @since 3.85.0
+     *
+     * @return {?Phaser.GameObjects.GameObject[]} The internal Display List array of Game Objects, or `null`.
+     */
+    getDisplayList: function ()
+    {
+        var list = null;
+
+        if (this.parentContainer)
+        {
+            list = this.parentContainer.list;
+        }
+        else if (this.displayList)
+        {
+            list = this.displayList.list;
+        }
+
+        return list;
+    },
+
+    /**
      * Destroys this Game Object removing it from the Display List and Update List and
      * severing all ties to parent resources.
      *
@@ -842,6 +1013,8 @@ var GameObject = new Class({
 
         if (fromScene === undefined) { fromScene = false; }
 
+        this.isDestroyed = true;
+
         if (this.preDestroy)
         {
             this.preDestroy.call(this);
@@ -850,12 +1023,6 @@ var GameObject = new Class({
         this.emit(Events.DESTROY, this, fromScene);
 
         this.removeAllListeners();
-
-        if (this.postPipelines)
-        {
-            this.resetPostPipeline(true);
-        }
-
         this.removeFromDisplayList();
         this.removeFromUpdateList();
 
@@ -880,18 +1047,11 @@ var GameObject = new Class({
             this.body = undefined;
         }
 
-        if (this.preFX)
+        if (this.filterCamera)
         {
-            this.preFX.destroy();
+            this.filterCamera.destroy();
 
-            this.preFX = undefined;
-        }
-
-        if (this.postFX)
-        {
-            this.postFX.destroy();
-
-            this.postFX = undefined;
+            this.filterCamera = undefined;
         }
 
         this.active = false;

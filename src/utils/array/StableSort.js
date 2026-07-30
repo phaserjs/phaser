@@ -1,7 +1,7 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @author       Angry Bytes (and contributors)
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,9 +13,9 @@ var Device = require('../../device');
  * @ignore
  *
  * @param {*} a - The first item to test.
- * @param {*} b - The second itemt to test.
+ * @param {*} b - The second item to test.
  *
- * @return {boolean} True if they localCompare, otherwise false.
+ * @return {boolean} The numeric result of the locale comparison between the two string values.
  */
 function Compare (a, b)
 {
@@ -68,7 +68,7 @@ function Process (array, compare)
  *
  * @param {array} arr - The array to run the pass on.
  * @param {function} comp - The comparison function.
- * @param {number} chk - The number of iterations.
+ * @param {number} chk - The chunk size for this pass, i.e. the size of each partition being merged.
  * @param {array} result - The array to store the result in.
  */
 function RunPass (arr, comp, chk, result)

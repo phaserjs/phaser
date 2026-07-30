@@ -12,4 +12,5 @@
  * @property {Phaser.GameObjects.Container} [container] - Optional Container to which the Game Objects are added.
  * @property {(string|Phaser.Textures.Texture)} [key] - Optional key of a Texture to be used, as stored in the Texture Manager, or a Texture instance. If omitted, the object's gid's tileset key is used if available.
  * @property {(string|number)} [frame] - Optional name or index of the frame within the Texture. If omitted, the tileset index is used, assuming that spritesheet frames exactly match tileset indices & geometries -- if available.
+ * @property {boolean} [sortByY=false] - Sort objects in layer by their y position. Objects with a higher y are displayed above objects with a lower y.
  */

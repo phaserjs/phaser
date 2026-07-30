@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,6 +15,9 @@ module.exports = {
     BetweenPointsY: require('./BetweenPointsY'),
     BetweenY: require('./BetweenY'),
     CounterClockwise: require('./CounterClockwise'),
+    GetClockwiseDistance: require('./GetClockwiseDistance'),
+    GetCounterClockwiseDistance: require('./GetCounterClockwiseDistance'),
+    GetShortestDistance: require('./GetShortestDistance'),
     Normalize: require('./Normalize'),
     Random: require('./Random'),
     RandomDegrees: require('./RandomDegrees'),

@@ -10,6 +10,7 @@
  * @property {Phaser.Scale.ScaleModeType} [mode=Phaser.Scale.ScaleModes.NONE] - The scale mode.
  * @property {WidthHeight} [min] - The minimum width and height the canvas can be scaled down to.
  * @property {WidthHeight} [max] - The maximum width the canvas can be scaled up to.
+ * @property {WidthHeight} [snap] - Set the snapping values used by the Scale Manager when resizing the canvas. See `ScaleManager.setSnap` for details.
  * @property {boolean} [autoRound=false] - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
  * @property {Phaser.Scale.CenterType} [autoCenter=Phaser.Scale.Center.NO_CENTER] - Automatically center the canvas within the parent?
  * @property {number} [resizeInterval=500] - How many ms should elapse before checking if the browser size has changed?

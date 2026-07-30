@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,7 +9,13 @@ var Vector2 = require('../../math/Vector2');
 var point = new Vector2();
 
 /**
- * Checks if the given tile coordinate is within the isometric layer bounds, or not.
+ * Checks if the given tile coordinate is within the visible bounds of the camera for an isometric
+ * tilemap layer. This is used during tile culling to determine whether a tile should be rendered.
+ *
+ * The tile coordinate is first converted to world-space using the layer's tile-to-world transform.
+ * The resulting position is then tested against the camera's world view rectangle, expanded by the
+ * layer's `cullPaddingX` and `cullPaddingY` values (in tile units) to avoid tiles popping in at
+ * the edges of the viewport. The padding offsets are measured from the center of each tile.
  *
  * @function Phaser.Tilemaps.Components.CheckIsoBounds
  * @since 3.50.0

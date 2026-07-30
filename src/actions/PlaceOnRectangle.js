@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -21,7 +21,7 @@ var RotateRight = require('../utils/array/RotateRight');
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {Phaser.Geom.Rectangle} rect - The Rectangle to position the Game Objects on.
- * @param {number} [shift=0] - An optional positional offset.
+ * @param {number} [shift=0] - An optional starting offset, in number of steps. A positive value shifts the starting position clockwise around the perimeter, a negative value shifts it counter-clockwise.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that was passed to this Action.
  */

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -54,7 +54,7 @@ var ParticleBounds = new Class({
         ParticleProcessor.call(this, x, y, true);
 
         /**
-         * A rectangular boundary constraining particle movement. Use the Emitter properties `collideLeft`,
+         * A rectangular boundary constraining particle movement. Use the ParticleBounds properties `collideLeft`,
          * `collideRight`, `collideTop` and `collideBottom` to control if a particle will rebound off
          * the sides of this boundary, or not. This happens when the particles x/y coordinate hits
          * the boundary.
@@ -66,7 +66,7 @@ var ParticleBounds = new Class({
         this.bounds = new Rectangle(x, y, width, height);
 
         /**
-         * Whether particles interact with the left edge of the emitter {@link Phaser.GameObjects.Particles.ParticleEmitter#bounds}.
+         * Whether particles interact with the left edge of the {@link Phaser.GameObjects.Particles.ParticleBounds#bounds}.
          *
          * @name Phaser.GameObjects.Particles.ParticleBounds#collideLeft
          * @type {boolean}
@@ -107,7 +107,9 @@ var ParticleBounds = new Class({
     },
 
     /**
-     * Takes a Particle and updates it against the bounds.
+     * Checks the given Particle against the boundary rectangle. If the particle's world position
+     * crosses an active edge, its position is clamped back inside the boundary and its velocity
+     * along that axis is negated and scaled by the particle's `bounce` value, causing it to rebound.
      *
      * @method Phaser.GameObjects.Particles.ParticleBounds#update
      * @since 3.0.0

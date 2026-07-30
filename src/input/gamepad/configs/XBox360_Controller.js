@@ -1,11 +1,16 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * XBox 360 Gamepad Configuration.
+ * Button and axis index constants for the XBox 360 gamepad. Use these values
+ * with Phaser's Gamepad input system to identify specific buttons and analog
+ * sticks by name rather than raw index. For example, check
+ * `pad.buttons[Phaser.Input.Gamepad.Configs.XBOX_360.A]` to test the A button,
+ * or read `pad.axes[Phaser.Input.Gamepad.Configs.XBOX_360.LEFT_STICK_H]` for
+ * the left stick's horizontal axis value.
  *
  * @name Phaser.Input.Gamepad.Configs.XBOX_360
  * @namespace
@@ -174,7 +179,7 @@ module.exports = {
     LS: 10,
 
     /**
-     * Right stick press
+     * Right Stick press
      *
      * @name Phaser.Input.Gamepad.Configs.XBOX_360.RS
      * @const

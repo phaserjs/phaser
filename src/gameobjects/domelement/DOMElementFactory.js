@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -68,7 +68,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @param {number} x - The horizontal position of this DOM Element in the world.
  * @param {number} y - The vertical position of this DOM Element in the world.
  * @param {(HTMLElement|string)} [element] - An existing DOM element, or a string. If a string starting with a # it will do a `getElementById` look-up on the string (minus the hash). Without a hash, it represents the type of element to create, i.e. 'div'.
- * @param {(string|any)} [style] - If a string, will be set directly as the elements `style` property value. If a plain object, will be iterated and the values transferred. In both cases the values replacing whatever CSS styles may have been previously set.
+ * @param {(string|any)} [style] - If a string, will be set directly as the elements `style` property value. If a plain object, will be iterated and the values transferred. In both cases the values replace whatever CSS styles may have been previously set.
  * @param {string} [innerText] - If given, will be set directly as the elements `innerText` property value, replacing whatever was there before.
  *
  * @return {Phaser.GameObjects.DOMElement} The Game Object that was created.

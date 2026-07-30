@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -35,7 +35,7 @@ var Vector2 = require('../math/Vector2');
  * @param {(Phaser.Types.Math.Vector2Like[]|Phaser.GameObjects.GameObject[])} items - An array of Game Objects, or objects with public x and y positions. The contents of this array are updated by this Action.
  * @param {number} x - The x coordinate to place the head item at.
  * @param {number} y - The y coordinate to place the head item at.
- * @param {number} [direction=0] - The iteration direction. 0 = first to last and 1 = last to first.
+ * @param {number} [direction=0] - The iteration direction. 0 = last to first and 1 = first to last.
  * @param {Phaser.Types.Math.Vector2Like} [output] - An optional Vec2Like object to store the final position in.
  *
  * @return {Phaser.Types.Math.Vector2Like} The output vector.

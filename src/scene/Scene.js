@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,6 +10,11 @@ var Systems = require('./Systems');
 /**
  * @classdesc
  * A base Phaser.Scene class which can be extended for your own use.
+ *
+ * A Scene is the fundamental organizational unit in Phaser. Each Scene has its own
+ * display list, update loop, cameras, input handling, and loader. Multiple Scenes
+ * can run simultaneously (e.g., a game scene with a UI overlay scene). Scenes are
+ * managed by the SceneManager and communicate with each other via the ScenePlugin.
  *
  * You can also define the optional methods {@link Phaser.Types.Scenes.SceneInitCallback init()}, {@link Phaser.Types.Scenes.ScenePreloadCallback preload()}, and {@link Phaser.Types.Scenes.SceneCreateCallback create()}.
  *
@@ -27,7 +32,7 @@ var Scene = new Class({
     function Scene (config)
     {
         /**
-         * The Scene Systems. You must never overwrite this property, or all hell will break lose.
+         * The Scene Systems. You must never overwrite this property, or all hell will break loose.
          *
          * @name Phaser.Scene#sys
          * @type {Phaser.Scenes.Systems}
@@ -257,20 +262,6 @@ var Scene = new Class({
          */
         this.matter;
 
-        if (typeof PLUGIN_FBINSTANT)
-        {
-            /**
-             * The Facebook Instant Games Plugin.
-             *
-             * This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.
-             *
-             * @name Phaser.Scene#facebook
-             * @type {Phaser.FacebookInstantGamesPlugin}
-             * @since 3.12.0
-             */
-            this.facebook;
-        }
-
         /**
          * A reference to the global Scale Manager.
          *
@@ -305,9 +296,11 @@ var Scene = new Class({
     },
 
     /**
-     * This method should be overridden by your own Scenes.
+     * Override this method in your own Scene subclass to implement per-frame game logic.
      *
-     * This method is called once per game step while the scene is running.
+     * This method is called automatically once per game step while the scene is running.
+     * It is empty by default and is the primary place to put logic that needs to run every frame,
+     * such as updating game object positions, checking collisions, or reading input state.
      *
      * @method Phaser.Scene#update
      * @since 3.0.0

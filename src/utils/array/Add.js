@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,7 +9,7 @@
  *
  * Each item must be unique within the array.
  *
- * The array is modified in-place and returned.
+ * The array is modified in-place. The added item, or array of added items, is returned. Returns `null` if no items were added (e.g. the array is already at the limit, or all items already exist in the array).
  *
  * You can optionally specify a limit to the maximum size of the array. If the quantity of items being
  * added will take the array length over this limit, it will stop adding once the limit is reached.
@@ -25,7 +25,7 @@
  * @param {function} [callback] - A callback to be invoked for each item successfully added to the array.
  * @param {object} [context] - The context in which the callback is invoked.
  *
- * @return {array} The input array.
+ * @return {array} The item, or array of items, that were successfully added to the array, or `null` if nothing was added.
  */
 var Add = function (array, item, limit, callback, context)
 {

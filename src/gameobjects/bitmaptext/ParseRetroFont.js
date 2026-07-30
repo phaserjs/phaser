@@ -1,14 +1,22 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var GetValue = require('../../utils/object/GetValue');
 
 /**
- * Parses a Retro Font configuration object so you can pass it to the BitmapText constructor
- * and create a BitmapText object using a fixed-width retro font.
+ * Parses a Retro Font configuration object and builds a `BitmapFontData` structure that can
+ * be passed to the BitmapText constructor to render text using a fixed-width retro font.
+ *
+ * A retro font is a texture containing a uniform grid of characters, each cell being the same
+ * width and height. This function reads the configuration, looks up the source texture frame,
+ * then iterates over every character defined in `config.chars`, calculating its pixel position
+ * and normalised UV coordinates within the texture. The resulting data object maps each
+ * character code to its own glyph entry and is suitable for registering in the Bitmap Font cache.
+ *
+ * If `config.chars` is an empty string the function returns `undefined` without producing any data.
  *
  * @function Phaser.GameObjects.RetroFont.Parse
  * @since 3.0.0
@@ -16,7 +24,7 @@ var GetValue = require('../../utils/object/GetValue');
  * @param {Phaser.Scene} scene - A reference to the Phaser Scene.
  * @param {Phaser.Types.GameObjects.BitmapText.RetroFontConfig} config - The font configuration object.
  *
- * @return {Phaser.Types.GameObjects.BitmapText.BitmapFontData} A parsed Bitmap Font data entry for the Bitmap Font cache.
+ * @return {Phaser.Types.GameObjects.BitmapText.BitmapFontData} A parsed Bitmap Font data entry containing per-character glyph data and UV coordinates, ready for the Bitmap Font cache.
  */
 var ParseRetroFont = function (scene, config)
 {
@@ -77,9 +85,9 @@ var ParseRetroFont = function (scene, config)
         var charCode = letters.charCodeAt(i);
 
         var u0 = (textureX + x) / textureWidth;
-        var v0 = (textureY + y) / textureHeight;
+        var v0 = 1 - (textureY + y) / textureHeight;
         var u1 = (textureX + x + w) / textureWidth;
-        var v1 = (textureY + y + h) / textureHeight;
+        var v1 = 1 - (textureY + y + h) / textureHeight;
 
         data.chars[charCode] =
         {

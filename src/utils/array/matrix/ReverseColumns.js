@@ -1,11 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Reverses the columns in the given Array Matrix.
+ * Reverses the row order of the given Array Matrix, which has the effect of reversing
+ * the sequence of values within each column from top to bottom.
  *
  * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
  * have the same length. There must be at least two rows. This is an example matrix:
@@ -27,7 +28,7 @@
  * @generic T
  * @genericUse {T[][]} - [matrix,$return]
  *
- * @param {T[][]} [matrix] - The array matrix to reverse the columns for.
+ * @param {T[][]} [matrix] - The array matrix whose row order will be reversed.
  *
  * @return {T[][]} The column reversed matrix.
  */

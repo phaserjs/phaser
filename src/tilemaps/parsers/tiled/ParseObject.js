@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,11 +17,11 @@ var commonObjectProps = [ 'id', 'name', 'type', 'rotation', 'properties', 'visib
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseObject
  * @since 3.0.0
  *
- * @param {object} tiledObject - Tiled object to convert to an internal parsed object normalising and copying properties over.
+ * @param {object} tiledObject - The raw Tiled object data, as exported from the Tiled map editor.
  * @param {number} [offsetX=0] - Optional additional offset to apply to the object's x property. Defaults to 0.
  * @param {number} [offsetY=0] - Optional additional offset to apply to the object's y property. Defaults to 0.
  *
- * @return {object} The parsed object containing properties read from the Tiled object according to it's type with x and y values updated according to the given offsets.
+ * @return {object} The parsed object containing properties read from the Tiled object according to its type with x and y values updated according to the given offsets.
  */
 var ParseObject = function (tiledObject, offsetX, offsetY)
 {

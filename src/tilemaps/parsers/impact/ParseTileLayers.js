@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,11 +14,12 @@ var Tile = require('../../Tile');
  * @since 3.0.0
  *
  * @param {object} json - The Impact JSON object.
- * @param {boolean} insertNull - Controls how empty tiles, tiles with an index of -1, in the map
- * data are handled (see {@link Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled}).
+ * @param {boolean} insertNull - Controls how empty tiles (those with an index of -1) are stored in
+ * the LayerData. If `true`, empty tile positions are stored as `null`. If `false`, a Tile object
+ * with an index of -1 is created for each empty position instead.
  *
  * @return {Phaser.Tilemaps.LayerData[]} - An array of LayerData objects, one for each entry in
- * json.layers with the type 'tilelayer'.
+ * json.layer.
  */
 var ParseTileLayers = function (json, insertNull)
 {

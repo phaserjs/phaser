@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,7 +17,7 @@ var GetTileCorners = require('./GetTileCorners');
  *
  * @param {number} orientation - The Tilemap orientation constant.
  *
- * @return {function} The function to use to translate tiles for the given map type.
+ * @return {function} The function to use to get the tile corners for the given map orientation.
  */
 var GetTileCornersFunction = function (orientation)
 {

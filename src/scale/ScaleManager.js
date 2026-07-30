@@ -1,11 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CONST = require('./const');
 var Class = require('../utils/Class');
+var Clamp = require('../math/Clamp');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var GameEvents = require('../core/events');
@@ -431,12 +432,14 @@ var ScaleManager = new Class({
 
         this.fullscreen = game.device.fullscreen;
 
-        if (this.scaleMode !== CONST.SCALE_MODE.RESIZE)
+        var scaleMode = this.scaleMode;
+
+        if (scaleMode !== CONST.SCALE_MODE.RESIZE && scaleMode !== CONST.SCALE_MODE.EXPAND)
         {
-            this.displaySize.setAspectMode(this.scaleMode);
+            this.displaySize.setAspectMode(scaleMode);
         }
 
-        if (this.scaleMode === CONST.SCALE_MODE.NONE)
+        if (scaleMode === CONST.SCALE_MODE.NONE)
         {
             this.resize(this.width, this.height);
         }
@@ -584,6 +587,11 @@ var ScaleManager = new Class({
         //  The size used for the canvas style, factoring in the scale mode and parent and zoom value
         //  We just use the w/h here as this is what sets the aspect ratio (which doesn't then change)
         this.displaySize.setSize(width, height);
+
+        if (config.snapWidth > 0 || config.snapHeight > 0)
+        {
+            this.displaySize.setSnap(config.snapWidth, config.snapHeight);
+        }
 
         this.orientation = GetScreenOrientation(width, height);
     },
@@ -910,6 +918,36 @@ var ScaleManager = new Class({
     },
 
     /**
+     * By setting a Snap value, when the browser size is modified, its dimensions will automatically
+     * be snapped to the nearest grid slice, using floor. For example, if you have snap value of 16,
+     * and the width changes to 68, then it will snap down to 64 (the closest multiple of 16 when floored)
+     *
+     * This mode is best used with the `FIT` scale mode.
+     *
+     * Call this method with no arguments to reset the snap values.
+     *
+     * Calling this method automatically invokes `ScaleManager.refresh` which emits a `RESIZE` event.
+     *
+     * @method Phaser.Scale.ScaleManager#setSnap
+     * @fires Phaser.Scale.Events#RESIZE
+     * @since 3.80.0
+     *
+     * @param {number} [snapWidth=0] - The amount to snap the width to. If you don't want to snap the width, pass a value of zero.
+     * @param {number} [snapHeight=snapWidth] - The amount to snap the height to. If not provided it will use the `snapWidth` value. If you don't want to snap the height, pass a value of zero.
+     *
+     * @return {this} The Scale Manager instance.
+     */
+    setSnap: function (snapWidth, snapHeight)
+    {
+        if (snapWidth === undefined) { snapWidth = 0; }
+        if (snapHeight === undefined) { snapHeight = snapWidth; }
+
+        this.displaySize.setSnap(snapWidth, snapHeight);
+
+        return this.refresh();
+    },
+
+    /**
      * Refreshes the internal scale values, bounds sizes and orientation checks.
      *
      * Once finished, dispatches the resize event.
@@ -1047,6 +1085,67 @@ var ScaleManager = new Class({
             this.canvas.width = styleWidth;
             this.canvas.height = styleHeight;
         }
+        else if (this.scaleMode === CONST.SCALE_MODE.EXPAND)
+        {
+            // Expand canvas size to fit game size's width or height
+
+            var baseWidth = this.game.config.width;
+            var baseHeight = this.game.config.height;
+
+            var windowWidth = this.parentSize.width;
+            var windowHeight = this.parentSize.height;
+
+            var scaleX = windowWidth / baseWidth;
+            var scaleY = windowHeight / baseHeight;
+
+            var canvasWidth;
+            var canvasHeight;
+
+            if (scaleX < scaleY)
+            {
+                canvasWidth = baseWidth;
+                canvasHeight = (scaleX !== 0) ? windowHeight / scaleX : baseHeight;
+            }
+            else
+            {
+                canvasWidth = (scaleY !== 0) ? windowWidth / scaleY : baseWidth;
+                canvasHeight = baseHeight;
+            }
+
+            var clampedCanvasWidth = Clamp(canvasWidth, this.displaySize.minWidth, this.displaySize.maxWidth);
+            var clampedCanvasHeight = Clamp(canvasHeight, this.displaySize.minHeight, this.displaySize.maxHeight);
+
+            this.baseSize.setSize(clampedCanvasWidth, clampedCanvasHeight);
+
+            this.gameSize.setSize(clampedCanvasWidth, clampedCanvasHeight);
+            
+            if (autoRound)
+            {
+                clampedCanvasWidth = Math.floor(clampedCanvasWidth);
+                clampedCanvasHeight = Math.floor(clampedCanvasHeight);
+            }
+    
+            this.canvas.width = clampedCanvasWidth;
+            this.canvas.height = clampedCanvasHeight;
+
+            //  Resize to match parent, like RESIZE mode
+            var clampedWindowWidth = windowWidth * (clampedCanvasWidth / canvasWidth);
+            var clampedWindowHeight = windowHeight * (clampedCanvasHeight / canvasHeight);
+            this.displaySize.setSize(clampedWindowWidth, clampedWindowHeight);
+
+            styleWidth = this.displaySize.width;
+            styleHeight = this.displaySize.height;
+
+            if (autoRound)
+            {
+                styleWidth = Math.floor(styleWidth);
+                styleHeight = Math.floor(styleHeight);
+            }
+
+            style.width = styleWidth + 'px';
+            style.height = styleHeight + 'px';
+
+        }
         else
         {
             //  All other scale modes
@@ -1120,9 +1219,6 @@ var ScaleManager = new Class({
         var style = canvas.style;
 
         var bounds = canvas.getBoundingClientRect();
-
-        // var width = parseInt(canvas.style.width, 10) || canvas.width;
-        // var height = parseInt(canvas.style.height, 10) || canvas.height;
 
         var width = bounds.width;
         var height = bounds.height;
@@ -1351,7 +1447,6 @@ var ScaleManager = new Class({
      * Calling this method will cancel fullscreen mode, if the browser has entered it.
      *
      * @method Phaser.Scale.ScaleManager#stopFullscreen
-     * @fires Phaser.Scale.Events#LEAVE_FULLSCREEN
      * @fires Phaser.Scale.Events#FULLSCREEN_UNSUPPORTED
      * @since 3.16.0
      */
@@ -1372,7 +1467,17 @@ var ScaleManager = new Class({
         }
 
         this.removeFullscreenTarget();
+    },
 
+    /**
+     * The browser has successfully left fullscreen mode.
+     *
+     * @method Phaser.Scale.ScaleManager#leaveFullScreenSuccessHandler
+     * @fires Phaser.Scale.Events#LEAVE_FULLSCREEN
+     * @since 3.85.0
+     */
+    leaveFullScreenSuccessHandler: function ()
+    {
         //  Get the parent size again as it will have changed
         this.getParentBounds();
 
@@ -1387,7 +1492,7 @@ var ScaleManager = new Class({
      *
      * If the browser does not support this, a `FULLSCREEN_UNSUPPORTED` event will be emitted.
      *
-     * This method _must_ be called from a user-input gesture, such as `pointerdown`. You cannot launch
+     * This method _must_ be called from a `pointerup` user-input gesture (**not** `pointerdown`). You cannot launch
      * games fullscreen without this, as most browsers block it. Games within an iframe will also be blocked
      * from fullscreen unless the iframe has the `allowfullscreen` attribute.
      *
@@ -1429,17 +1534,33 @@ var ScaleManager = new Class({
 
             _this._checkOrientation = true;
             _this.dirty = true;
+
+            _this.refresh();
         };
 
         listeners.windowResize = function ()
         {
             _this.updateBounds();
 
+            // --- FIX START ---
+            // Recalculate parent container size and force Phaser to resize.
+            _this.getParentBounds();
+            _this.refresh();
+            // --- FIX END ---
+
             _this.dirty = true;
         };
 
+
         //  Only dispatched on mobile devices
-        window.addEventListener('orientationchange', listeners.orientationChange, false);
+        if (screen.orientation && screen.orientation.addEventListener)
+        {
+            screen.orientation.addEventListener('change', listeners.orientationChange, false);
+        }
+        else
+        {
+            window.addEventListener('orientationchange', listeners.orientationChange, false);
+        }
 
         window.addEventListener('resize', listeners.windowResize, false);
 
@@ -1486,6 +1607,7 @@ var ScaleManager = new Class({
         {
             //  They pressed ESC while in fullscreen mode
             this.stopFullscreen();
+            this.leaveFullScreenSuccessHandler();
         }
     },
 
@@ -1501,13 +1623,18 @@ var ScaleManager = new Class({
     },
 
     /**
-     * Get Rectange of visible area.
+     * Calculates and returns a Rectangle representing the currently visible area of the game canvas,
+     * accounting for the canvas position, parent bounds, and display scale. If the canvas extends
+     * beyond the visible area of the parent, the rectangle is clipped accordingly.
+     *
+     * An optional Camera can be provided, in which case the returned rectangle is further adjusted
+     * to account for the camera's zoom level and scroll position.
      *
      * @method Phaser.Scale.ScaleManager#getViewPort
      * @since 3.60.0
      *
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera this viewport is respond upon.
-     * @param {Phaser.Geom.Rectangle} [out] - The Rectangle of visible area.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The camera to factor into the viewport calculation. If provided, the rectangle is adjusted for the camera's zoom and scroll.
+     * @param {Phaser.Geom.Rectangle} [out] - An optional Rectangle to store the result in. If not provided, a new Rectangle is created.
      *
      * @return {Phaser.Geom.Rectangle} The Rectangle of visible area.
      */
@@ -1608,7 +1735,15 @@ var ScaleManager = new Class({
     {
         var listeners = this.domlisteners;
 
-        window.removeEventListener('orientationchange', listeners.orientationChange, false);
+        if (screen.orientation && screen.orientation.addEventListener)
+        {
+            screen.orientation.removeEventListener('change', listeners.orientationChange, false);
+        }
+        else
+        {
+            window.removeEventListener('orientationchange', listeners.orientationChange, false);
+        }
+        
         window.removeEventListener('resize', listeners.windowResize, false);
 
         var vendors = [ 'webkit', 'moz', '' ];

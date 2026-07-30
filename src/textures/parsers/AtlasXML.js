@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -59,12 +59,12 @@ var AtlasXML = function (texture, sourceIndex, xml)
             var frameHeight = parseInt(frame.frameHeight.value, 10);
 
             newFrame.setTrim(
-                width,
-                height,
+                frameWidth,
+                frameHeight,
                 frameX,
                 frameY,
-                frameWidth,
-                frameHeight
+                width,
+                height
             );
         }
     }

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -89,13 +89,11 @@ var TweenChain = new Class({
             this.setActiveState();
         }
 
-        this.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
-
         return this;
     },
 
     /**
-     * Create a sequence of Tweens, chained to one-another, and add them to this Tween Manager.
+     * Create a sequence of Tweens, chained to one-another, and add them to this TweenChain.
      *
      * The tweens are played in order, from start to finish. You can optionally set the chain
      * to repeat as many times as you like. Once the chain has finished playing, or repeating if set,
@@ -251,13 +249,13 @@ var TweenChain = new Class({
     },
 
     /**
-     * Re-initiases the given Tween and sets it to the Active state.
+     * Re-initialises the given Tween and sets it to the Active state.
      *
      * @method Phaser.Tweens.TweenChain#makeActive
      * @since 3.60.0
      * @override
      *
-     * @param {Phaser.Tweens.Tween} tween - The Tween to check.
+     * @param {Phaser.Tweens.Tween} tween - The Tween to re-initialise and set to the Active state.
      *
      * @return {this} This TweenChain instance.
      */
@@ -376,8 +374,7 @@ var TweenChain = new Class({
             data[i].reset(false);
         }
 
-        this.currentIndex = 0;
-        this.currentTween = data[0];
+        this.setCurrentTween(0);
     },
 
     /**
@@ -397,6 +394,13 @@ var TweenChain = new Class({
     {
         if (this.isPendingRemove() || this.isDestroyed())
         {
+            if (this.persist)
+            {
+                this.setFinishedState();
+
+                return false;
+            }
+                
             return true;
         }
         else if (this.isFinished() || this.paused)
@@ -404,20 +408,23 @@ var TweenChain = new Class({
             return false;
         }
 
-        //  The TweehChain.timeScale is applied within Tween.update, so doesn't need including here
+        //  The TweenChain.timeScale is applied within Tween.update, so doesn't need including here
         delta *= this.parent.timeScale;
 
         if (this.isLoopDelayed())
         {
             this.updateLoopCountdown(delta);
+
+            return false;
         }
         else if (this.isCompleteDelayed())
         {
             this.updateCompleteDelay(delta);
+
+            return false;
         }
-        else if (this.isStartDelayed())
+        else if (!this.hasStarted)
         {
-            //  Reset the delta so we always start progress from zero
             delta = this.updateStartCountdown(delta);
         }
 
@@ -427,14 +434,14 @@ var TweenChain = new Class({
         {
             if (this.currentTween.update(delta))
             {
-                //  This tween has finshed playback, so move to the next one
+                //  This tween has finished playback, so move to the next one
                 if (this.nextTween())
                 {
                     this.nextState();
                 }
             }
 
-            //  if nextState called onCompleteHandler then we're ready to be removed, unless we persist
+            //  If nextState called onCompleteHandler then it is ready to be removed, unless persist is set to true
             remove = this.isPendingRemove();
 
             if (remove && this.persist)
@@ -491,8 +498,6 @@ var TweenChain = new Class({
         this.currentTween = this.data[index];
 
         this.currentTween.setActiveState();
-
-        this.currentTween.dispatchEvent(Events.TWEEN_ACTIVE, 'onActive');
     },
 
     /**
@@ -517,7 +522,7 @@ var TweenChain = new Class({
     },
 
     /**
-     * Immediately destroys this TweenChain, nulling of all its references.
+     * Immediately destroys this TweenChain, nulling out all of its references.
      *
      * @method Phaser.Tweens.TweenChain#destroy
      * @since 3.60.0

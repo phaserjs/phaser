@@ -1,5 +1,5 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @copyright    2021 Photon Storm Ltd.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
@@ -17,10 +17,17 @@ var Merge = require('../../utils/object/Merge');
 var MultiAtlasFile = require('./MultiAtlasFile');
 var MultiFile = require('../MultiFile');
 var PVRParser = require('../../textures/parsers/PVRParser');
+var verifyCompressedTexture = require('../../textures/parsers/VerifyCompressedTexture');
 
 /**
  * @classdesc
- * A Compressed Texture File suitable for loading by the Loader.
+ * A Compressed Texture File is a special MultiFile that handles loading GPU-native compressed texture formats such
+ * as PVR and KTX container files. It supports a range of internal compression formats including ASTC, S3TC, ETC,
+ * PVRTC, and others, selecting the best format supported by the current GPU at load time.
+ *
+ * It can load a single compressed texture, a compressed texture with an accompanying JSON atlas, or a multi-atlas
+ * as exported by Texture Packer Pro. An `IMG` fallback entry may also be provided for browsers or GPUs that do
+ * not support any of the compressed formats.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#texture method and are not typically created directly.
  *
@@ -94,7 +101,11 @@ var CompressedTextureFile = new Class({
     },
 
     /**
-     * Called by each File when it finishes loading.
+     * Called by each File when it finishes loading. Decrements the pending file count and, when loading
+     * a multi-atlas configuration, parses the completed JSON manifest to dynamically queue additional
+     * BinaryFile instances for each texture referenced in the atlas, along with any associated normal maps.
+     * The loader's base URL, path, and prefix are temporarily adjusted to the multi-atlas settings during
+     * this process and then restored afterwards.
      *
      * @method Phaser.Loader.FileTypes.CompressedTextureFile#onFileComplete
      * @since 3.60.0
@@ -183,13 +194,23 @@ var CompressedTextureFile = new Class({
     },
 
     /**
-     * Adds this file to its target cache upon successful loading and processing.
+     * Adds this file to its target cache upon successful loading and processing. If the file is a
+     * multi-atlas it delegates to `addMultiToCache`. Otherwise, it parses the binary texture data
+     * using either the PVR or KTX parser, verifies that the texture dimensions meet the requirements
+     * of the compression format, and checks that the GPU supports the internal format. If all checks
+     * pass the texture is added to the Texture Manager, optionally with JSON atlas data if one was
+     * loaded alongside it. A console warning is issued for any texture that fails validation.
      *
      * @method Phaser.Loader.FileTypes.CompressedTextureFile#addToCache
      * @since 3.60.0
      */
     addToCache: function ()
     {
+        function compressionWarning (message)
+        {
+            console.warn('Compressed Texture Invalid: "' + image.key + '". ' + message);
+        }
+
         if (this.isReadyToProcess())
         {
             var entry = this.config;
@@ -214,9 +235,27 @@ var CompressedTextureFile = new Class({
                 else if (entry.type === 'KTX')
                 {
                     textureData = KTXParser(image.data);
+                    if (!textureData)
+                    {
+                        compressionWarning('KTX file contains unsupported format.');
+                    }
                 }
 
-                if (textureData && renderer.supportsCompressedTexture(entry.format, textureData.internalFormat))
+                // Check block size.
+                if (textureData && !verifyCompressedTexture(textureData))
+                {
+                    compressionWarning('Texture dimensions failed verification. Check the texture format specifications for ' + entry.format + ' 0x' + textureData.internalFormat.toString(16) + '.');
+                    textureData = null;
+                }
+
+                // Check texture compression.
+                if (textureData && !renderer.supportsCompressedTexture(entry.format, textureData.internalFormat))
+                {
+                    compressionWarning('Texture format ' + entry.format + ' with internal format ' + textureData.internalFormat + ' not supported by the GPU. Texture invalid. This is often due to the texture using sRGB instead of linear RGB.');
+                    textureData = null;
+                }
+
+                if (textureData)
                 {
                     textureData.format = renderer.getCompressedTextureName(entry.format, textureData.internalFormat);
 
@@ -231,7 +270,12 @@ var CompressedTextureFile = new Class({
     },
 
     /**
-     * Adds all of the multi-file entties to their target caches upon successful loading and processing.
+     * Adds all of the multi-file entries to their target caches upon successful loading and processing.
+     * Iterates over each binary texture file in the multi-atlas, parses it using the PVR or KTX parser,
+     * and matches it against its corresponding entry in the JSON manifest. Only textures whose compression
+     * format is supported by the current GPU are included. Any associated normal maps are collected and
+     * passed through as well. The resulting images, atlas data, and normal maps are registered together
+     * with the Texture Manager as a JSON array atlas.
      *
      * @method Phaser.Loader.FileTypes.CompressedTextureFile#addMultiToCache
      * @since 3.60.0
@@ -355,10 +399,10 @@ var CompressedTextureFile = new Class({
  *     const path = 'assets/compressed';
  *
  *     this.load.texture('yourAtlas', {
- *         'ASTC': { type: 'PVR', atlasURL: `${path}/textures.json` },
- *         'PVRTC': { type: 'PVR', atlasURL: `${path}/textures-pvrtc-4bpp-rgba.json` },
- *         'S3TC': { type: 'PVR', atlasURL: `${path}/textures-dxt5.json` },
- *         'IMG': { atlasURL: `${path}/textures.json` }
+ *         'ASTC': { type: 'PVR', multiAtlasURL: `${path}/textures.json`, multiPath: `${path}` },
+ *         'PVRTC': { type: 'PVR', multiAtlasURL: `${path}/textures-pvrtc-4bpp-rgba.json`, multiPath: `${path}` },
+ *         'S3TC': { type: 'PVR', multiAtlasURL: `${path}/textures-dxt5.json`, multiPath: `${path}` },
+ *         'IMG': { multiAtlasURL: `${path}/textures.json`, multiPath: `${path}` }
  *     });
  * }
  * ```
@@ -410,10 +454,26 @@ var CompressedTextureFile = new Class({
  *
  * Texture Packer (https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16)
  * PVRTexTool (https://developer.imaginationtech.com/pvrtextool/) - available for Windows, macOS and Linux.
- * Mali Texture Compression Tool (https://developer.arm.com/tools-and-software/graphics-and-gaming/mali-texture-compression-tool)
  * ASTC Encoder (https://github.com/ARM-software/astc-encoder)
  *
- * ASTCs must have a Channel Type of Unsigned Normalized Bytes (UNorm) and a Linear RGB Color Space.
+ * Compressed textures will appear darker than normal textures. This is because
+ * the Web uses sRGB colorspace, but compressed textures are sampled as linear
+ * colorspace. You must adjust your textures to be lighter before compression.
+ * See https://imagemagick.org/Usage/color_basics/#srgb for more details.
+ * You can do this with ImageMagick (https://imagemagick.org/index.php) using
+ * the following command:
+ *
+ * `magick input.png -set colorspace RGB -colorspace sRGB output.png`
+ *
+ * You must ensure that compressed textures meet the following standards for use
+ * in WebGL and Phaser:
+ *
+ * - PVRTC must have a power-of-two width and height.
+ * - MIPMaps, if present, must have a power-of-two width and height.
+ * - S3TC, S3TCSRGB, RGTC, and BPTC must have width and height divisible by 4.
+ * - ASTC must have a Channel Type of Unsigned Normalized Bytes (UNorm). In fact, all compressed textures should be UNorm, but ASTC presents many other options.
+ *
+ * If in doubt, a power-of-two resolution is always a safe bet.
  *
  * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
  * or if it's already running, when the next free load slot becomes available. This happens automatically if you
@@ -428,7 +488,7 @@ var CompressedTextureFile = new Class({
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
  * then remove it from the Texture Manager first, before loading a new one.
  *
- * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+ * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this file's
  * key. For example, if the prefix was `LEVEL1.` and the key was `Data` the final key will be `LEVEL1.Data` and
  * this is what you would use to retrieve the text from the Texture Manager.
  *

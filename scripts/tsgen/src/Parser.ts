@@ -31,6 +31,10 @@ export class Parser {
 
         this.resolveParents(docs);
 
+        console.log('------------------------------------------------------------------');
+        console.log('Add Integer Alias and Declare Module');
+        console.log('------------------------------------------------------------------');
+
         // add integer alias
         this.topLevel.push(dom.create.alias('integer', dom.type.number));
 
@@ -43,6 +47,10 @@ export class Parser {
     }
 
     emit(): string {
+
+        console.log('------------------------------------------------------------------');
+        console.log('Parser Emit');
+        console.log('------------------------------------------------------------------');
 
         let ignored = [];
 
@@ -83,16 +91,19 @@ export class Parser {
                 case 'Phaser.GameObjects.Components.ComputedSize':
                 case 'Phaser.GameObjects.Components.Crop':
                 case 'Phaser.GameObjects.Components.Depth':
+                case 'Phaser.GameObjects.Components.ElapseTimer':
+                case 'Phaser.GameObjects.Components.Filters':
                 case 'Phaser.GameObjects.Components.Flip':
-                case 'Phaser.GameObjects.Components.FX':
                 case 'Phaser.GameObjects.Components.GetBounds':
+                case 'Phaser.GameObjects.Components.Lighting':
                 case 'Phaser.GameObjects.Components.Mask':
                 case 'Phaser.GameObjects.Components.Origin':
                 case 'Phaser.GameObjects.Components.PathFollower':
-                case 'Phaser.GameObjects.Components.Pipeline':
-                case 'Phaser.GameObjects.Components.PostPipeline':
+                case 'Phaser.GameObjects.Components.RenderNodes':
+                case 'Phaser.GameObjects.Components.RenderSteps':
                 case 'Phaser.GameObjects.Components.ScrollFactor':
                 case 'Phaser.GameObjects.Components.Size':
+                case 'Phaser.GameObjects.Components.StencilModifier':
                 case 'Phaser.GameObjects.Components.Texture':
                 case 'Phaser.GameObjects.Components.TextureCrop':
                 case 'Phaser.GameObjects.Components.Tint':
@@ -104,6 +115,7 @@ export class Parser {
 
                 //  Because, sod you TypeScript
                 case 'Phaser.BlendModes':
+                case 'Phaser.TintModes':
                 case 'Phaser.ScaleModes':
                 case 'Phaser.Physics.Impact.TYPE':
                 case 'Phaser.Physics.Impact.COLLIDES':
@@ -112,6 +124,7 @@ export class Parser {
                 case 'Phaser.Scale.ScaleModes':
                 case 'Phaser.Scale.Zoom':
                 case 'Phaser.Textures.FilterMode':
+                case 'Phaser.Textures.WrapMode':
                 case 'Phaser.Tilemaps.Orientation':
                 case 'Phaser.Tweens.States':
                     // console.log('Forcing enum for ' + doclet.longname);
@@ -127,7 +140,7 @@ export class Parser {
 
             // console.log(`Name: ${doclet.longname} - Kind: ${doclet.kind}`);
 
-            let obj: dom.DeclarationBase;
+            let obj: dom.DeclarationBase | null = null;
             let container = this.objects;
 
             switch (doclet.kind) {
@@ -197,6 +210,8 @@ export class Parser {
         {
             let obj = (doclet.kind === 'namespace') ? this.namespaces[doclet.longname] : this.objects[doclet.longname];
 
+            // console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
+
             if (!obj)
             {
                 console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
@@ -219,6 +234,12 @@ export class Parser {
                 {
                     console.log(`${doclet.longname} - Kind: ${doclet.kind}`);
                     console.log(`PARENT WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
+                    continue;
+                }
+
+                if (!(parent as any).kind)
+                {
+                    console.log(`PARENT KIND WARNING: ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno} has parent '${doclet.memberof}' that is not defined.`);
                 }
 
                 if ((<any>parent).members)
@@ -258,6 +279,10 @@ export class Parser {
 
     private resolveInheritance(docs: any[])
     {
+        console.log('------------------------------------------------------------------');
+        console.log('Resolve Inheritance');
+        console.log('------------------------------------------------------------------');
+
         for (let doclet of docs)
         {
             let obj = doclet.kind === 'namespace' ? this.namespaces[doclet.longname] : this.objects[doclet.longname];
@@ -289,28 +314,43 @@ export class Parser {
         }
     }
 
-    private resolveParents(docs: any[]) {
-        for (let doclet of docs) {
+    private resolveParents(docs: any[])
+    {
+        console.log('------------------------------------------------------------------');
+        console.log('Resolve Parents');
+        console.log('------------------------------------------------------------------');
+
+        for (let doclet of docs)
+        {
             let obj = this.objects[doclet.longname];
+
             if (!obj || doclet.kind !== 'class') continue;
 
             let o = obj as dom.ClassDeclaration;
 
             // resolve augments
-            if (doclet.augments && doclet.augments.length) {
-                for (let augment of doclet.augments) {
+            if (doclet.augments && doclet.augments.length)
+            {
+                for (let augment of doclet.augments)
+                {
                     let name: string = this.prepareTypeName(augment);
 
-                    let wrappingName = name.match(/[^<]+/s)[0];//gets everything up to a first < (to handle augments with type parameters)
+                    let wrappingName = name.match(/[^<]+/s)![0];//gets everything up to a first < (to handle augments with type parameters)
 
                     let baseType = this.objects[wrappingName] as dom.ClassDeclaration | dom.InterfaceDeclaration;
 
-                    if (!baseType) {
+                    if (!baseType)
+                    {
                         console.log(`ERROR: Did not find base type: ${augment} for ${doclet.longname}`);
-                    } else {
-                        if (baseType.kind == 'class') {
+                    }
+                    else
+                    {
+                        if (baseType.kind == 'class')
+                        {
                             o.baseType = dom.create.class(name);
-                        } else {
+                        }
+                        else
+                        {
                             o.implements.push(dom.create.interface(name));
                         }
                     }
@@ -348,9 +388,9 @@ export class Parser {
     private createClass(doclet: any): dom.ClassDeclaration {
         let obj = dom.create.class(doclet.name);
 
-        let params = null;
+        let params: dom.Parameter[] = [];
         if (doclet.params) {
-            let ctor = dom.create.constructor(null);
+            let ctor = dom.create.constructor([]);
             this.setParams(doclet, ctor);
             params = ctor.parameters;
 
@@ -375,7 +415,7 @@ export class Parser {
 
         let obj = dom.create.property(doclet.name, type);
 
-        this.processGeneric(doclet, obj, null);
+        this.processGeneric(doclet, obj, []);
 
         this.processFlags(doclet, obj);
 
@@ -408,8 +448,12 @@ export class Parser {
             returnType = this.parseType(doclet.returns[0]);
         }
 
-        let obj = dom.create.function(doclet.name, null, returnType);
+        let obj = dom.create.function(doclet.name, [], returnType);
         this.setParams(doclet, obj);
+
+        if (doclet.returns?.length) {
+            obj.jsDocComment += `\n@returns ${doclet.returns[0]?.description}`;
+        }
 
         this.processGeneric(doclet, obj, obj.parameters);
 
@@ -420,10 +464,10 @@ export class Parser {
 
     private createTypedef(doclet: any): dom.TypeAliasDeclaration {
         const typeName = doclet.type.names[0];
-        let type = null;
+        let type: dom.Type;
 
         if (doclet.type.names[0] === 'object') {
-            let properties = [];
+            let properties: dom.PropertyDeclaration[] = [];
 
             for (let propDoc of doclet.properties) {
                 let prop = this.createMember(propDoc);
@@ -435,7 +479,7 @@ export class Parser {
             type = dom.create.objectType(properties);
 
             if (doclet.augments && doclet.augments.length) {
-                let intersectionTypes = [];
+                let intersectionTypes: dom.Type[] = [];
                 for (let i = 0; i < doclet.augments.length; i++) {
                     intersectionTypes.push(dom.create.namedTypeReference(doclet.augments[i]));
                 }
@@ -449,8 +493,8 @@ export class Parser {
                 if (doclet.returns) {
                     returnType = this.parseType(doclet.returns[0]);
                 }
-                type = dom.create.functionType(null, returnType);
-                this.setParams(doclet, type);
+                type = dom.create.functionType([], returnType);
+                this.setParams(doclet, type as unknown as dom.FunctionDeclaration);
             } else {
                 type = this.parseType(doclet);
             }
@@ -458,7 +502,7 @@ export class Parser {
 
         let alias = dom.create.alias(doclet.name, type);
 
-        this.processGeneric(doclet, alias, null);
+        this.processGeneric(doclet, alias, []);
 
         return alias;
     }
@@ -487,6 +531,7 @@ export class Parser {
                     console.log(`Docs Error in '${doclet.longname}' in ${doclet.meta.filename}@${doclet.meta.lineno}`);
 
                     console.info(paramDoc);
+                    continue;
                 }
 
                 if (paramDoc.name.indexOf('.') != -1) {
@@ -530,7 +575,7 @@ export class Parser {
         if (!typeDoc || !typeDoc.type) {
             return dom.type.any;
         } else {
-            let types = [];
+            let types: dom.Type[] = [];
             for (let name of typeDoc.type.names) {
 
                 name = this.prepareTypeName(name);
@@ -581,6 +626,17 @@ export class Parser {
                     return `{[key: string]: ${this.processTypeName(matches[1])}}`;
                 }
             }
+        } else if (name.startsWith('object<')) {
+            let matches = name.match(/^object<(.*)>$/);
+
+            if (matches && matches[1]) {
+                if (matches[1].indexOf(',') != -1) {
+                    let parts = matches[1].split(',');
+                    return `{[key: ${this.processTypeName(parts[0])}]: typeof ${this.processTypeName(parts[1])}}`;
+                } else {
+                    return `{[key: string]: typeof ${this.processTypeName(matches[1])}}`;
+                }
+            }
         }
 
         return name;
@@ -625,11 +681,12 @@ export class Parser {
                      * 1 = string | 2 = string | 3 = K | 4 = key
                      */
                     const matches = (<string>tag.value).match(/(?:(?:{)([^}=]+)(?:=)?([^}=]+)?(?:}))?\s?([^\s]+)(?:\s?-\s?(?:\[)(.+)(?:\]))?/);
+                    if (!matches) { continue; }
                     const [_, _type, _defaultType, _name, _paramsNames] = matches;
 
                     const typeParam = dom.create.typeParameter(
                         _name,
-                        _type == null ? null : dom.create.typeParameter(_type)
+                        _type == null ? undefined : dom.create.typeParameter(_type)
                     );
 
                     if(_defaultType != null) {
@@ -641,9 +698,12 @@ export class Parser {
 
                 } else if (tag.originalTitle === 'genericUse') {
                     let matches = (<string>tag.value).match(/(?:(?:{)([^}]+)(?:}))(?:\s?-\s?(?:\[)(.+)(?:\]))?/);
-                    let overrideType: string = this.prepareTypeName(matches[1]);
+                    if (matches)
+                    {
+                        let overrideType: string = this.prepareTypeName(matches[1]);
 
-                    handleOverrides(matches[2], this.processTypeName(overrideType));
+                        handleOverrides(matches[2], this.processTypeName(overrideType));
+                    }
                 }
             }
 

@@ -1,16 +1,17 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
-var Components = require('../../gameobjects/components');
 var DegToRad = require('../../math/DegToRad');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var Rectangle = require('../../geom/rectangle/Rectangle');
+var AlphaSingle = require('../../gameobjects/components/AlphaSingle');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
+var Visible = require('../../gameobjects/components/Visible');
 var ValueToColor = require('../../display/color/ValueToColor');
 var Vector2 = require('../../math/Vector2');
 
@@ -48,7 +49,7 @@ var Vector2 = require('../../math/Vector2');
  * @since 3.12.0
  *
  * @extends Phaser.Events.EventEmitter
- * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {number} x - The x position of the Camera, relative to the top-left of the game canvas.
@@ -61,8 +62,8 @@ var BaseCamera = new Class({
     Extends: EventEmitter,
 
     Mixins: [
-        Components.AlphaSingle,
-        Components.Visible
+        AlphaSingle,
+        Visible
     ],
 
     initialize:
@@ -185,7 +186,7 @@ var BaseCamera = new Class({
          *
          * A dirty Camera has had either its viewport size, bounds, scroll, rotation or zoom levels changed since the last frame.
          *
-         * This flag is cleared during the `postRenderCamera` method of the renderer.
+         * This flag is cleared during rendering with the new values.
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#dirty
          * @type {boolean}
@@ -346,7 +347,15 @@ var BaseCamera = new Class({
         this._rotation = 0;
 
         /**
-         * A local transform matrix used for internal calculations.
+         * A local transform matrix used to compute the camera view.
+         *
+         * In v3, this contained a combination of the external camera position,
+         * and the internal rotation and zoom.
+         * In v4, it instead contains the internal camera scroll, rotation, and zoom.
+         * Note that these are applied in the order of rotation, scale, then scroll.
+         * This makes it easier to apply scaleFactor to the scroll values.
+         *
+         * See also `matrixExternal` and `matrixCombined`.
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#matrix
          * @type {Phaser.GameObjects.Components.TransformMatrix}
@@ -354,6 +363,24 @@ var BaseCamera = new Class({
          * @since 3.0.0
          */
         this.matrix = new TransformMatrix();
+
+        /**
+         * A local transform matrix combining `matrix` and `matrixExternal`.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#matrixCombined
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 4.0.0
+         */
+        this.matrixCombined = new TransformMatrix();
+
+        /**
+         * A local transform matrix used to compute the camera location.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#matrixExternal
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 4.0.0
+         */
+        this.matrixExternal = new TransformMatrix();
 
         /**
          * Does this Camera have a transparent background?
@@ -472,7 +499,7 @@ var BaseCamera = new Class({
          * Set the mask using the `setMask` method. Remove the mask using the `clearMask` method.
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#mask
-         * @type {?(Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask)}
+         * @type {?Phaser.Display.Masks.GeometryMask}
          * @since 3.17.0
          */
         this.mask = null;
@@ -517,10 +544,40 @@ var BaseCamera = new Class({
          * @since 3.60.0
          */
         this.isSceneCamera = true;
+
+        /**
+         * Whether to force the camera to render via a framebuffer.
+         * This only applies when using the WebGL renderer.
+         * This makes the camera contents available to other WebGL processes,
+         * such as `CaptureFrame`.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#forceComposite
+         * @type {boolean}
+         * @default false
+         * @since 4.0.0
+         * @webglOnly
+         */
+        this.forceComposite = false;
+
+        /**
+         * Can this Camera render rounded pixel values?
+         *
+         * This property is updated during the `preRender` method and should not be
+         * set directly. It is set based on the `roundPixels` property of the Camera
+         * combined with the zoom level. If the zoom is an integer then the WebGL
+         * Renderer can apply rounding during rendering.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#renderRoundPixels
+         * @type {boolean}
+         * @readonly
+         * @default true
+         * @since 3.86.0
+         */
+        this.renderRoundPixels = true;
     },
 
     /**
-     * Adds the given Game Object to this cameras render list.
+     * Adds the given Game Object to this camera's render list.
      *
      * This is invoked during the rendering stage. Only objects that are actually rendered
      * will appear in the render list.
@@ -758,9 +815,6 @@ var BaseCamera = new Class({
             return renderableObjects;
         }
 
-        var mve = cameraMatrix[4];
-        var mvf = cameraMatrix[5];
-
         var scrollX = this.scrollX;
         var scrollY = this.scrollY;
         var cameraW = this.width;
@@ -790,10 +844,10 @@ var BaseCamera = new Class({
             var objectH = object.height;
             var objectX = (object.x - (scrollX * object.scrollFactorX)) - (objectW * object.originX);
             var objectY = (object.y - (scrollY * object.scrollFactorY)) - (objectH * object.originY);
-            var tx = (objectX * mva + objectY * mvc + mve);
-            var ty = (objectX * mvb + objectY * mvd + mvf);
-            var tw = ((objectX + objectW) * mva + (objectY + objectH) * mvc + mve);
-            var th = ((objectX + objectW) * mvb + (objectY + objectH) * mvd + mvf);
+            var tx = (objectX * mva + objectY * mvc);
+            var ty = (objectX * mvb + objectY * mvd);
+            var tw = ((objectX + objectW) * mva + (objectY + objectH) * mvc);
+            var th = ((objectX + objectW) * mvb + (objectY + objectH) * mvd);
 
             if ((tw > cullLeft && tx < cullRight) && (th > cullTop && ty < cullBottom))
             {
@@ -823,7 +877,7 @@ var BaseCamera = new Class({
     {
         if (output === undefined) { output = new Vector2(); }
 
-        var cameraMatrix = this.matrix.matrix;
+        var cameraMatrix = this.matrixCombined.matrix;
 
         var mva = cameraMatrix[0];
         var mvb = cameraMatrix[1];
@@ -852,21 +906,9 @@ var BaseCamera = new Class({
         var ime = (mvc * mvf - mvd * mve) * determinant;
         var imf = (mvb * mve - mva * mvf) * determinant;
 
-        var c = Math.cos(this.rotation);
-        var s = Math.sin(this.rotation);
-
-        var zoomX = this.zoomX;
-        var zoomY = this.zoomY;
-
-        var scrollX = this.scrollX;
-        var scrollY = this.scrollY;
-
-        var sx = x + ((scrollX * c - scrollY * s) * zoomX);
-        var sy = y + ((scrollX * s + scrollY * c) * zoomY);
-
-        //  Apply transform to point
-        output.x = (sx * ima + sy * imc) + ime;
-        output.y = (sx * imb + sy * imd) + imf;
+        // Apply transform to point
+        output.x = (x * ima + y * imc) + ime;
+        output.y = (x * imb + y * imd) + imf;
 
         return output;
     },
@@ -878,7 +920,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#ignore
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Layer|Phaser.GameObjects.Layer[])} entries - The Game Object, or array of Game Objects, to be ignored by this Camera.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group)} entries - The Game Object, or array of Game Objects, to be ignored by this Camera.
      *
      * @return {this} This Camera instance.
      */
@@ -910,70 +952,6 @@ var BaseCamera = new Class({
         }
 
         return this;
-    },
-
-    /**
-     * Internal preRender step.
-     *
-     * @method Phaser.Cameras.Scene2D.BaseCamera#preRender
-     * @protected
-     * @since 3.0.0
-     */
-    preRender: function ()
-    {
-        this.renderList.length = 0;
-
-        var width = this.width;
-        var height = this.height;
-
-        var halfWidth = width * 0.5;
-        var halfHeight = height * 0.5;
-
-        var zoomX = this.zoomX;
-        var zoomY = this.zoomY;
-        var matrix = this.matrix;
-
-        var originX = width * this.originX;
-        var originY = height * this.originY;
-
-        var sx = this.scrollX;
-        var sy = this.scrollY;
-
-        if (this.useBounds)
-        {
-            sx = this.clampX(sx);
-            sy = this.clampY(sy);
-        }
-
-        if (this.roundPixels)
-        {
-            originX = Math.round(originX);
-            originY = Math.round(originY);
-        }
-
-        //  Values are in pixels and not impacted by zooming the Camera
-        this.scrollX = sx;
-        this.scrollY = sy;
-
-        var midX = sx + halfWidth;
-        var midY = sy + halfHeight;
-
-        //  The center of the camera, in world space, so taking zoom into account
-        //  Basically the pixel value of what it's looking at in the middle of the cam
-        this.midPoint.set(midX, midY);
-
-        var displayWidth = width / zoomX;
-        var displayHeight = height / zoomY;
-
-        this.worldView.setTo(
-            midX - (displayWidth / 2),
-            midY - (displayHeight / 2),
-            displayWidth,
-            displayHeight
-        );
-
-        matrix.applyITRS(this.x + originX, this.y + originY, this.rotation, zoomX, zoomY);
-        matrix.translate(-originX, -originY);
     },
 
     /**
@@ -1072,7 +1050,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#setAngle
      * @since 3.0.0
      *
-     * @param {number} [value=0] - The cameras angle of rotation, given in degrees.
+     * @param {number} [value=0] - The camera's angle of rotation, given in degrees.
      *
      * @return {this} This Camera instance.
      */
@@ -1159,6 +1137,27 @@ var BaseCamera = new Class({
             this.scrollX = this.clampX(this.scrollX);
             this.scrollY = this.clampY(this.scrollY);
         }
+
+        return this;
+    },
+
+    /**
+     * Sets the `forceComposite` property of this Camera.
+     * This property is only used by the WebGL Renderer.
+     * If `true` the camera will render via a framebuffer,
+     * making it available to other WebGL systems.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#setForceComposite
+     * @since 4.0.0
+     * @webglOnly
+     *
+     * @param {boolean} value - The value to set the property to.
+     *
+     * @return {this} This Camera instance.
+     */
+    setForceComposite: function (value)
+    {
+        this.forceComposite = value;
 
         return this;
     },
@@ -1366,6 +1365,16 @@ var BaseCamera = new Class({
      * allowing you to create mini-cam style effects by creating and positioning a smaller Camera
      * viewport within your game.
      *
+     * Note that this is a limited method, and comes with several caveats:
+     *
+     * - The viewport is an axis-aligned rectangle, and cannot be rotated.
+     * - Filters and masks may appear in the wrong place if the viewport changes.
+     *
+     * It is more powerful and reliable to use a
+     * `RenderTexture` or `DynamicTexture` instead.
+     * Point its camera where you want the viewport,
+     * set its size, and then draw your game objects to it.
+     *
      * @method Phaser.Cameras.Scene2D.BaseCamera#setViewport
      * @since 3.0.0
      *
@@ -1430,9 +1439,9 @@ var BaseCamera = new Class({
     /**
      * Sets the mask to be applied to this Camera during rendering.
      *
-     * The mask must have been previously created and can be either a GeometryMask or a BitmapMask.
-     *
-     * Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+     * The mask must have been previously created and must be a GeometryMask.
+     * This only works in the Canvas Renderer.
+     * In WebGL, use a Mask filter instead (see {@link Phaser.GameObjects.Components.FilterList#addMask}).
      *
      * If a mask is already set on this Camera it will be immediately replaced.
      *
@@ -1442,7 +1451,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#setMask
      * @since 3.17.0
      *
-     * @param {(Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask)} mask - The mask this Camera will use when rendering.
+     * @param {Phaser.Display.Masks.GeometryMask} mask - The mask this Camera will use when rendering.
      * @param {boolean} [fixedPosition=true] - Should the mask translate along with the Camera, or be fixed in place and not impacted by the Cameras transform?
      *
      * @return {this} This Camera instance.
@@ -1548,8 +1557,8 @@ var BaseCamera = new Class({
     },
 
     /**
-     * Set if this Camera is being used as a Scene Camera, or a Texture
-     * Camera.
+     * Sets whether this Camera is being used as a Scene Camera (the default),
+     * or a Texture Camera used to render to a texture.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#setIsSceneCamera
      * @since 3.60.0
@@ -1616,6 +1625,8 @@ var BaseCamera = new Class({
         this.removeAllListeners();
 
         this.matrix.destroy();
+        this.matrixCombined.destroy();
+        this.matrixExternal.destroy();
 
         this.culledObjects = [];
 

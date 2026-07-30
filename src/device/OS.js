@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,7 @@
  * @typedef {object} Phaser.Device.OS
  * @since 3.0.0
  *
- * @property {boolean} android - Is running on android?
+ * @property {boolean} android - Is running on Android?
  * @property {boolean} chromeOS - Is running on chromeOS?
  * @property {boolean} cordova - Is the game running under Apache Cordova?
  * @property {boolean} crosswalk - Is the game running under the Intel Crosswalk XDK?
@@ -24,15 +24,15 @@
  * @property {boolean} iPad - Is running on iPad?
  * @property {boolean} iPhone - Is running on iPhone?
  * @property {boolean} kindle - Is running on an Amazon Kindle?
- * @property {boolean} linux - Is running on linux?
+ * @property {boolean} linux - Is running on Linux?
  * @property {boolean} macOS - Is running on macOS?
  * @property {boolean} node - Is the game running under Node.js?
  * @property {boolean} nodeWebkit - Is the game running under Node-Webkit?
  * @property {boolean} webApp - Set to true if running as a WebApp, i.e. within a WebView
- * @property {boolean} windows - Is running on windows?
+ * @property {boolean} windows - Is running on Windows?
  * @property {boolean} windowsPhone - Is running on a Windows Phone?
  * @property {number} iOSVersion - If running in iOS this will contain the major version number.
- * @property {number} pixelRatio - PixelRatio of the host device?
+ * @property {number} pixelRatio - The pixel ratio of the host device.
  */
 var OS = {
 
@@ -136,7 +136,7 @@ function init ()
         OS.desktop = true;
     }
 
-    //  Windows Phone / Table reset
+    //  Windows Phone / Tablet reset
     if (OS.windowsPhone || (((/Windows NT/i).test(ua)) && ((/Touch/i).test(ua))))
     {
         OS.desktop = false;

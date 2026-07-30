@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,9 +17,9 @@ var Browser = require('./Browser');
  *
  * @property {boolean} audioData - Can this device play HTML Audio tags?
  * @property {boolean} dolby - Can this device play EC-3 Dolby Digital Plus files?
- * @property {boolean} m4a - Can this device can play m4a files.
- * @property {boolean} aac - Can this device can play aac files.
- * @property {boolean} flac - Can this device can play flac files.
+ * @property {boolean} m4a - Can this device play m4a files?
+ * @property {boolean} aac - Can this device play aac files?
+ * @property {boolean} flac - Can this device play flac files?
  * @property {boolean} mp3 - Can this device play mp3 files?
  * @property {boolean} ogg - Can this device play ogg files?
  * @property {boolean} opus - Can this device play opus files?

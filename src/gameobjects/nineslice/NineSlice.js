@@ -1,14 +1,16 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var DefaultNineSliceNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultQuadNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var NineSliceRender = require('./NineSliceRender');
-var Vertex = require('../../geom/mesh/Vertex');
+var TintModes = require('../../renderer/TintModes');
+var Vertex = require('./NineSliceVertex');
 
 /**
  * @classdesc
@@ -79,7 +81,14 @@ var Vertex = require('../../geom/mesh/Vertex');
  * together and can co-exist with other Sprites and graphics on the display
  * list, without incurring any additional overhead.
  *
- * As of Phaser 3.60 this Game Object is WebGL only.
+ * This Game Object can now populate its values automatically
+ * if they have been set within Texture Packer 7.1.0 or above and exported with
+ * the atlas json. If this is the case, you can just create this Game Object without
+ * specifying anything more than the texture key and frame and it will pull the
+ * area data from the atlas.
+ *
+ * This object does not support trimmed textures from Texture Packer.
+ * Trimming interferes with the ability to stretch the texture correctly.
  *
  * @class NineSlice
  * @extends Phaser.GameObjects.GameObject
@@ -93,8 +102,7 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -109,8 +117,10 @@ var Vertex = require('../../geom/mesh/Vertex');
  * @param {number} [height=256] - The height of the Nine Slice Game Object. If this is a 3 slice object the height will be fixed to the height of the texture and cannot be changed.
  * @param {number} [leftWidth=10] - The size of the left vertical column (A).
  * @param {number} [rightWidth=10] - The size of the right vertical column (B).
- * @param {number} [topHeight=0] - The size of the top horiztonal row (C). Set to zero or undefined to create a 3 slice object.
- * @param {number} [bottomHeight=0] - The size of the bottom horiztonal row (D). Set to zero or undefined to create a 3 slice object.
+ * @param {number} [topHeight=0] - The size of the top horizontal row (C). Set to zero or undefined to create a 3 slice object.
+ * @param {number} [bottomHeight=0] - The size of the bottom horizontal row (D). Set to zero or undefined to create a 3 slice object.
+ * @param {boolean} [tileX=false] - When enabled, the scalable horizontal regions are repeated across the object instead of being stretched. Each tile is still slightly stretched so that it remains visible in full, which may cause minor distortion but far less than pure stretching. The texture should be seamless to avoid visible artifacts between tiles.
+ * @param {boolean} [tileY=false] - When enabled, the scalable vertical regions are repeated across the object instead of being stretched. Each tile is still slightly stretched so that it remains visible in full, which may cause minor distortion but far less than pure stretching. The texture should be seamless to avoid visible artifacts between tiles.
  */
 var NineSlice = new Class({
 
@@ -123,8 +133,7 @@ var NineSlice = new Class({
         Components.GetBounds,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Texture,
         Components.Transform,
@@ -134,15 +143,15 @@ var NineSlice = new Class({
 
     initialize:
 
-    function NineSlice (scene, x, y, texture, frame, width, height, leftWidth, rightWidth, topHeight, bottomHeight)
+    function NineSlice (scene, x, y, texture, frame, width, height, leftWidth, rightWidth, topHeight, bottomHeight, tileX, tileY)
     {
-        if (width === undefined) { width = 256; }
-        if (height === undefined) { height = 256; }
+        // if (width === undefined) { width = 256; }
+        // if (height === undefined) { height = 256; }
 
-        if (leftWidth === undefined) { leftWidth = 10; }
-        if (rightWidth === undefined) { rightWidth = 10; }
-        if (topHeight === undefined) { topHeight = 0; }
-        if (bottomHeight === undefined) { bottomHeight = 0; }
+        // if (leftWidth === undefined) { leftWidth = 10; }
+        // if (rightWidth === undefined) { rightWidth = 10; }
+        // if (topHeight === undefined) { topHeight = 0; }
+        // if (bottomHeight === undefined) { bottomHeight = 0; }
 
         GameObject.call(this, scene, 'NineSlice');
 
@@ -218,7 +227,7 @@ var NineSlice = new Class({
          * You should never modify this array once it has been populated.
          *
          * @name Phaser.GameObjects.NineSlice#vertices
-         * @type {Phaser.Geom.Mesh.Vertex[]}
+         * @type {Phaser.GameObjects.NineSliceVertex[]}
          * @since 3.60.0
          */
         this.vertices = [];
@@ -269,8 +278,51 @@ var NineSlice = new Class({
         this.bottomHeight;
 
         /**
-         * The tint value being applied to the top-left vertice of the Game Object.
-         * This value is interpolated from the corner to the center of the Game Object.
+         * Indicates whether the scalable horizontal regions of the Nine Slice
+         * are repeated across the object instead of being stretched. Each tile
+         * is still slightly stretched so that it remains visible in full.
+         *
+         * @name Phaser.GameObjects.NineSlice#tileX
+         * @type {boolean}
+         * @readonly
+         * @since 4.0.0
+         */
+        this.tileX = tileX || false;
+
+        /**
+         * Indicates whether the scalable vertical regions of the Nine Slice
+         * are repeated across the object instead of being stretched. Each tile
+         * is still slightly stretched so that it remains visible in full.
+         *
+         * @name Phaser.GameObjects.NineSlice#tileY
+         * @type {boolean}
+         * @readonly
+         * @since 4.0.0
+         */
+        this.tileY = tileY || false;
+
+        /**
+         * Internal horizontal repeat count. Do not modify directly.
+         *
+         * @name Phaser.GameObjects.NineSlice#_repeatCountX
+         * @private
+         * @type {number}
+         * @since 4.0.0
+         */
+        this._repeatCountX = 1;
+
+        /**
+         * Internal vertical repeat count. Do not modify directly.
+         *
+         * @name Phaser.GameObjects.NineSlice#_repeatCountY
+         * @private
+         * @type {number}
+         * @since 4.0.0
+         */
+        this._repeatCountY = 1;
+
+        /**
+         * The tint value being applied to the Game Object.
          * The value should be set as a hex number, i.e. 0xff0000 for red, or 0xff00ff for purple.
          *
          * @name Phaser.GameObjects.NineSlice#tint
@@ -281,17 +333,24 @@ var NineSlice = new Class({
         this.tint = 0xffffff;
 
         /**
-         * The tint fill mode.
+         * The tint mode to use when applying the tint to the texture.
          *
-         * `false` = An additive tint (the default), where vertices colors are blended with the texture.
-         * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
+         * Available modes are:
+         * - Phaser.TintModes.MULTIPLY (default)
+         * - Phaser.TintModes.FILL
+         * - Phaser.TintModes.ADD
+         * - Phaser.TintModes.SCREEN
+         * - Phaser.TintModes.OVERLAY
+         * - Phaser.TintModes.HARD_LIGHT
          *
-         * @name Phaser.GameObjects.NineSlice#tintFill
-         * @type {boolean}
-         * @default false
-         * @since 3.60.0
+         * @name Phaser.GameObjects.NineSlice#tintMode
+         * @type {Phaser.TintModes}
+         * @default Phaser.TintModes.MULTIPLY
+         * @since 4.0.0
          */
-        this.tintFill = false;
+        this.tintMode = TintModes.MULTIPLY;
+
+        var textureFrame = scene.textures.getFrame(texture, frame);
 
         /**
          * This property is `true` if this Nine Slice Game Object was configured
@@ -302,7 +361,13 @@ var NineSlice = new Class({
          * @type {boolean}
          * @since 3.60.0
          */
-        this.is3Slice = (topHeight === 0 && bottomHeight === 0);
+        this.is3Slice = (!topHeight && !bottomHeight);
+
+        if (textureFrame && textureFrame.scale9)
+        {
+            //  If we're using the scale9 data from the frame, override the values from above
+            this.is3Slice = textureFrame.is3Slice;
+        }
 
         var size = this.is3Slice ? 18 : 54;
 
@@ -315,12 +380,28 @@ var NineSlice = new Class({
 
         this.setTexture(texture, frame);
 
-        this.setSlices(width, height, leftWidth, rightWidth, topHeight, bottomHeight);
+        this.setSlices(width, height, leftWidth, rightWidth, topHeight, bottomHeight, false);
 
-        this.setOrigin(0.5, 0.5);
+        this.updateDisplayOrigin();
 
-        this.initPipeline();
-        this.initPostPipeline();
+        this.initRenderNodes(this._defaultRenderNodesMap);
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.NineSlice#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultNineSliceNodes;
+        }
     },
 
     /**
@@ -338,29 +419,64 @@ var NineSlice = new Class({
      * @param {number} [height=256] - The height of the Nine Slice Game Object. If this is a 3 slice object the height will be fixed to the height of the texture and cannot be changed.
      * @param {number} [leftWidth=10] - The size of the left vertical column (A).
      * @param {number} [rightWidth=10] - The size of the right vertical column (B).
-     * @param {number} [topHeight=0] - The size of the top horiztonal row (C). Set to zero or undefined to create a 3 slice object.
-     * @param {number} [bottomHeight=0] - The size of the bottom horiztonal row (D). Set to zero or undefined to create a 3 slice object.
+     * @param {number} [topHeight=0] - The size of the top horizontal row (C). Set to zero or undefined to create a 3 slice object.
+     * @param {number} [bottomHeight=0] - The size of the bottom horizontal row (D). Set to zero or undefined to create a 3 slice object.
+     * @param {boolean} [skipScale9=false] - If this Nine Slice was created from Texture Packer scale9 atlas data, set this property to use the given column sizes instead of those specified in the JSON.
      *
      * @return {this} This Game Object instance.
      */
-    setSlices: function (width, height, leftWidth, rightWidth, topHeight, bottomHeight)
+    setSlices: function (width, height, leftWidth, rightWidth, topHeight, bottomHeight, skipScale9)
     {
-        if (width === undefined) { width = 256; }
-        if (height === undefined) { height = 256; }
-
         if (leftWidth === undefined) { leftWidth = 10; }
         if (rightWidth === undefined) { rightWidth = 10; }
         if (topHeight === undefined) { topHeight = 0; }
         if (bottomHeight === undefined) { bottomHeight = 0; }
 
-        var is3Slice = (topHeight === 0 && bottomHeight === 0);
+        if (skipScale9 === undefined) { skipScale9 = false; }
 
-        if (this.is3Slice !== is3Slice)
+        var frame = this.frame;
+
+        var sliceChange = false;
+
+        if (this.is3Slice && skipScale9 && topHeight !== 0 && bottomHeight !== 0)
+        {
+            sliceChange = true;
+        }
+
+        if (sliceChange)
         {
             console.warn('Cannot change 9 slice to 3 slice');
         }
         else
         {
+            if (frame && frame.scale9 && !skipScale9)
+            {
+                var data = frame.data.scale9Borders;
+
+                var x = data.x;
+                var y = data.y;
+
+                leftWidth = x;
+                rightWidth = frame.width - data.w - x;
+                topHeight = y;
+                bottomHeight = frame.height - data.h - y;
+
+                if (width === undefined)
+                {
+                    width = frame.width;
+                }
+
+                if (height === undefined)
+                {
+                    height = frame.height;
+                }
+            }
+            else
+            {
+                if (width === undefined) { width = 256; }
+                if (height === undefined) { height = 256; }
+            }
+
             this._width = width;
             this._height = height;
 
@@ -371,7 +487,7 @@ var NineSlice = new Class({
 
             if (this.is3Slice)
             {
-                height = this.frame.height;
+                height = frame.height;
 
                 this._height = height;
                 this.topHeight = height;
@@ -386,10 +502,10 @@ var NineSlice = new Class({
     },
 
     /**
-     * Updates all of the vertice UV coordinates. This is called automatically
+     * Updates all of the vertex UV coordinates. This is called automatically
      * when the NineSlice Game Object is created, or if the texture frame changes.
      *
-     * Unlike with the `updateVertice` method, you do not need to call this
+     * Unlike with the `updateVertices` method, you do not need to call this
      * method if the Nine Slice changes size. Only if it changes texture frame.
      *
      * @method Phaser.GameObjects.NineSlice#updateUVs
@@ -405,28 +521,69 @@ var NineSlice = new Class({
         var width = this.frame.width;
         var height = this.frame.height;
 
-        this.updateQuadUVs(0, 0, 0, left / width, top / height);
-        this.updateQuadUVs(6, left / width, 0, 1 - (right / width), top / height);
-        this.updateQuadUVs(12, 1 - (right / width), 0, 1, top / height);
+        var uL = left / width;
+        var uR = 1 - right / width;
+        var vT = top / height;
+        var vB = 1 - bot / height;
 
-        if (!this.is3Slice)
+        var idx = 0;
+
+        if (this.is3Slice)
         {
-            this.updateQuadUVs(18, 0, top / height, left / width, 1 - (bot / height));
-            this.updateQuadUVs(24, left / width, top / height, 1 - right / width, 1 - (bot / height));
-            this.updateQuadUVs(30, 1 - right / width, top / height, 1, 1 - (bot / height));
-            this.updateQuadUVs(36, 0, 1 - bot / height, left / width, 1);
-            this.updateQuadUVs(42, left / width, 1 - bot / height, 1 - right / width, 1);
-            this.updateQuadUVs(48, 1 - right / width, 1 - bot / height, 1, 1);
+            this._updateUVRow(idx, uL, uR, 0, vT);
+        }
+        else
+        {
+            idx = this._updateUVRow(idx, uL, uR, 0, vT);
+
+            for (var j = 0; j < this._repeatCountY; j++)
+            {
+                idx = this._updateUVRow(idx, uL, uR, vT, vB);
+            }
+
+            this._updateUVRow(idx, uL, uR, vB, 1);
         }
     },
 
     /**
+     * Emits UVs for one row: left cap, `_repeatCountX` tiled middles, right cap.
+     *
+     * @method Phaser.GameObjects.NineSlice#_updateUVRow
+     * @private
+     * @since 4.0.0
+     *
+     * @param {number} idx - The starting vertex index.
+     * @param {number} uL - Middle tile U start.
+     * @param {number} uR - Middle tile U end.
+     * @param {number} vT - Row V top.
+     * @param {number} vB - Row V bottom.
+     *
+     * @return {number} The new vertex index after this row.
+     */
+    _updateUVRow: function (idx, uL, uR, vT, vB)
+    {
+        this.updateQuadUVs(idx, 0, vT, uL, vB);
+        idx += 6;
+
+        for (var i = 0; i < this._repeatCountX; i++)
+        {
+            this.updateQuadUVs(idx, uL, vT, uR, vB);
+            idx += 6;
+        }
+
+        this.updateQuadUVs(idx, uR, vT, 1, vB);
+        idx += 6;
+
+        return idx;
+    },
+
+    /**
      * Recalculates all of the vertices in this Nine Slice Game Object
-     * based on the `leftWidth`, `rightWidth`, `topHeight` and `bottomHeight`
-     * properties, combined with the Game Object size.
+     * based on the `leftWidth`, `rightWidth`, `topHeight`, `bottomHeight`,
+     * `tileX` and `tileY` properties, combined with the Game Object size.
      *
      * This method is called automatically when this object is created
-     * or if it's origin is changed.
+     * or if its origin is changed.
      *
      * You should not typically need to call this method directly, but it
      * is left public should you find a need to modify one of those properties
@@ -444,20 +601,156 @@ var NineSlice = new Class({
 
         var width = this.width;
         var height = this.height;
+        var frame = this.frame;
 
-        this.updateQuad(0, -0.5, 0.5, -0.5 + (left / width), 0.5 - (top / height));
-        this.updateQuad(6, -0.5 + (left / width), 0.5, 0.5 - (right / width), 0.5 - (top / height));
-        this.updateQuad(12, 0.5 - (right / width), 0.5, 0.5, 0.5 - (top / height));
+        var repeatCountX = this.tileX
+            ? this._calcRepeatCount(width - left - right, frame.width - left - right)
+            : 1;
 
-        if (!this.is3Slice)
+        var repeatCountY = (this.tileY && !this.is3Slice)
+            ? this._calcRepeatCount(height - top - bot, frame.height - top - bot)
+            : 1;
+
+        var needRebuild = this._rebuildVertexArray(repeatCountX, repeatCountY);
+
+        //  Key positions in normalized coordinates (-0.5 to 0.5)
+        var xL = -0.5;
+        var xML = -0.5 + left / width;
+        var xMR = 0.5 - right / width;
+        var xR = 0.5;
+
+        var yT = 0.5;
+        var yMT = 0.5 - top / height;
+
+        var tileWidth = (xMR - xML) / repeatCountX;
+        var idx = 0;
+
+        if (this.is3Slice)
         {
-            this.updateQuad(18, -0.5, 0.5 - (top / height), -0.5 + (left / width), -0.5 + (bot / height));
-            this.updateQuad(24, -0.5 + (left / width), 0.5 - (top / height), 0.5 - (right / width), -0.5 + (bot / height));
-            this.updateQuad(30, 0.5 - (right / width), 0.5 - (top / height), 0.5, -0.5 + (bot / height));
-            this.updateQuad(36, -0.5, -0.5 + (bot / height), -0.5 + (left / width), -0.5);
-            this.updateQuad(42, -0.5 + (left / width), -0.5 + (bot / height), 0.5 - (right / width), -0.5);
-            this.updateQuad(48, 0.5 - (right / width), -0.5 + (bot / height), 0.5, -0.5);
+            this._updateVertexRow(idx, xL, xML, xMR, xR, yT, yMT, tileWidth);
         }
+        else
+        {
+            var yMB = -0.5 + bot / height;
+            var yB = -0.5;
+            var tileHeight = (yMT - yMB) / repeatCountY;
+
+            idx = this._updateVertexRow(idx, xL, xML, xMR, xR, yT, yMT, tileWidth);
+
+            for (var j = 0; j < repeatCountY; j++)
+            {
+                var rowTop = yMT - j * tileHeight;
+                var rowBot = yMT - (j + 1) * tileHeight;
+
+                idx = this._updateVertexRow(idx, xL, xML, xMR, xR, rowTop, rowBot, tileWidth);
+            }
+
+            this._updateVertexRow(idx, xL, xML, xMR, xR, yMB, yB, tileWidth);
+        }
+
+        if (needRebuild)
+        {
+            this.updateUVs();
+        }
+    },
+
+    /**
+     * Returns the number of tile repeats that fit in the given scalable
+     * region, or 1 if the original size is zero.
+     *
+     * @method Phaser.GameObjects.NineSlice#_calcRepeatCount
+     * @private
+     * @since 4.0.0
+     *
+     * @param {number} scalableSize - The current scalable region size.
+     * @param {number} originalSize - The original (texture) scalable region size.
+     *
+     * @return {number} The repeat count (at least 1).
+     */
+    _calcRepeatCount: function (scalableSize, originalSize)
+    {
+        if (originalSize > 0)
+        {
+            return Math.max(1, Math.floor(scalableSize / originalSize));
+        }
+
+        return 1;
+    },
+
+    /**
+     * Rebuilds the vertex array if the repeat counts have changed.
+     * Updates `_repeatCountX` and `_repeatCountY` and resizes `vertices`.
+     *
+     * @method Phaser.GameObjects.NineSlice#_rebuildVertexArray
+     * @private
+     * @since 4.0.0
+     *
+     * @param {number} repeatCountX - Horizontal repeat count.
+     * @param {number} repeatCountY - Vertical repeat count.
+     *
+     * @return {boolean} `true` if the vertex array was rebuilt.
+     */
+    _rebuildVertexArray: function (repeatCountX, repeatCountY)
+    {
+        if (repeatCountX === this._repeatCountX && repeatCountY === this._repeatCountY)
+        {
+            return false;
+        }
+
+        this._repeatCountX = repeatCountX;
+        this._repeatCountY = repeatCountY;
+
+        var rowCount = this.is3Slice ? 1 : (repeatCountY + 2);
+        var size = (repeatCountX + 2) * rowCount * 6;
+        var verts = this.vertices;
+
+        if (verts.length !== size)
+        {
+            verts.length = 0;
+
+            for (var k = 0; k < size; k++)
+            {
+                verts.push(new Vertex());
+            }
+        }
+
+        return true;
+    },
+
+    /**
+     * Emits vertex positions for one row: left cap quad, `_repeatCountX`
+     * tiled middle quads, right cap quad.
+     *
+     * @method Phaser.GameObjects.NineSlice#_updateVertexRow
+     * @private
+     * @since 4.0.0
+     *
+     * @param {number} idx - The starting vertex index.
+     * @param {number} xL - Left edge X.
+     * @param {number} xML - Left middle edge X.
+     * @param {number} xMR - Right middle edge X.
+     * @param {number} xR - Right edge X.
+     * @param {number} yT - Row top Y.
+     * @param {number} yB - Row bottom Y.
+     * @param {number} tileWidth - Width of each middle tile.
+     *
+     * @return {number} The new vertex index after this row.
+     */
+    _updateVertexRow: function (idx, xL, xML, xMR, xR, yT, yB, tileWidth)
+    {
+        this.updateQuad(idx, xL, yT, xML, yB);
+        idx += 6;
+
+        for (var i = 0; i < this._repeatCountX; i++)
+        {
+            this.updateQuad(idx, xML + i * tileWidth, yT, xML + (i + 1) * tileWidth, yB);
+            idx += 6;
+        }
+
+        this.updateQuad(idx, xMR, yT, xR, yB);
+        idx += 6;
+
+        return idx;
     },
 
     /**
@@ -471,10 +764,10 @@ var NineSlice = new Class({
      * @since 3.60.0
      *
      * @param {number} offset - The offset in the vertices array of the quad to update.
-     * @param {number} x1 - The top-left quad coordinate.
-     * @param {number} y1 - The top-left quad coordinate.
-     * @param {number} x2 - The bottom-right quad coordinate.
-     * @param {number} y2 - The bottom-right quad coordinate.
+     * @param {number} x1 - The top-left X coordinate of the quad, in normalized space (-0.5 to 0.5).
+     * @param {number} y1 - The top-left Y coordinate of the quad, in normalized space (-0.5 to 0.5).
+     * @param {number} x2 - The bottom-right X coordinate of the quad, in normalized space (-0.5 to 0.5).
+     * @param {number} y2 - The bottom-right Y coordinate of the quad, in normalized space (-0.5 to 0.5).
      */
     updateQuad: function (offset, x1, y1, x2, y2)
     {
@@ -504,10 +797,10 @@ var NineSlice = new Class({
      * @since 3.60.0
      *
      * @param {number} offset - The offset in the vertices array of the quad to update.
-     * @param {number} u1 - The top-left UV coordinate.
-     * @param {number} v1 - The top-left UV coordinate.
-     * @param {number} u2 - The bottom-right UV coordinate.
-     * @param {number} v2 - The bottom-right UV coordinate.
+     * @param {number} u1 - The top-left U coordinate of the quad, in the range 0 to 1.
+     * @param {number} v1 - The top-left V coordinate of the quad, in the range 0 to 1.
+     * @param {number} u2 - The bottom-right U coordinate of the quad, in the range 0 to 1.
+     * @param {number} v2 - The bottom-right V coordinate of the quad, in the range 0 to 1.
      */
     updateQuadUVs: function (offset, u1, v1, u2, v2)
     {
@@ -549,7 +842,7 @@ var NineSlice = new Class({
     /**
      * Clears all tint values associated with this Game Object.
      *
-     * Immediately sets the color values back to 0xffffff and the tint type to 'additive',
+     * Immediately sets the color values back to 0xffffff and the tint type to 'multiply',
      * which results in no visible change to the texture.
      *
      * @method Phaser.GameObjects.NineSlice#clearTint
@@ -561,22 +854,22 @@ var NineSlice = new Class({
     clearTint: function ()
     {
         this.setTint(0xffffff);
+        this.setTintMode();
 
         return this;
     },
 
     /**
-     * Sets an additive tint on this Game Object.
+     * Sets a tint on this Game Object.
      *
-     * The tint works by taking the pixel color values from the Game Objects texture, and then
-     * multiplying it by the color value of the tint.
+     * The tint applies a color to the pixel color values
+     * from the GameObject's texture in one of several modes,
+     * set with `setTintMode` or the `tintMode` property.
      *
      * To modify the tint color once set, either call this method again with new values or use the
      * `tint` property.
      *
      * To remove a tint call `clearTint`, or call this method with no parameters.
-     *
-     * To swap this from being an additive tint to a fill based tint set the property `tintFill` to `true`.
      *
      * @method Phaser.GameObjects.NineSlice#setTint
      * @webglOnly
@@ -592,46 +885,43 @@ var NineSlice = new Class({
 
         this.tint = color;
 
-        this.tintFill = false;
-
         return this;
     },
 
     /**
-     * Sets a fill-based tint on this Game Object.
+     * Sets the tint mode for this Game Object.
      *
-     * Unlike an additive tint, a fill-tint literally replaces the pixel colors from the texture
-     * with those in the tint. You can use this for effects such as making a player flash 'white'
-     * if hit by something. The whole Game Object will be rendered in the given color.
+     * The tint mode applies a color to the pixel color values
+     * from the GameObject's texture in one of several modes:
      *
-     * To modify the tint color once set, either call this method again with new values or use the
-     * `tint` property.
+     * - Phaser.TintModes.MULTIPLY (default)
+     * - Phaser.TintModes.FILL
+     * - Phaser.TintModes.ADD
+     * - Phaser.TintModes.SCREEN
+     * - Phaser.TintModes.OVERLAY
+     * - Phaser.TintModes.HARD_LIGHT
      *
-     * To remove a tint call `clearTint`, or call this method with no parameters.
-     *
-     * To swap this from being a fill-tint to an additive tint set the property `tintFill` to `false`.
-     *
-     * @method Phaser.GameObjects.NineSlice#setTintFill
+     * @method Phaser.GameObjects.NineSlice#setTintMode
      * @webglOnly
-     * @since 3.60.0
+     * @since 4.0.0
      *
-     * @param {number} [color=0xffffff] - The tint being applied to the entire Game Object.
+     * @param {Phaser.TintModes} [mode=Phaser.TintModes.MULTIPLY] - The tint mode to use.
      *
      * @return {this} This Game Object instance.
-     */
-    setTintFill: function (color)
+    */
+    setTintMode: function (mode)
     {
-        this.setTint(color);
+        if (mode === undefined) { mode = TintModes.MULTIPLY; }
 
-        this.tintFill = true;
-
+        this.tintMode = mode;
         return this;
     },
 
     /**
      * Does this Game Object have a tint applied?
      *
-     * It checks to see if the tint property is set to a value other than 0xffffff.
+     * It checks to see if the tint property is set to a value other than 0xffffff
+     * or the tint mode is not the default Phaser.TintModes.MULTIPLY.
      * This indicates that a Game Object is tinted.
      *
      * @name Phaser.GameObjects.NineSlice#isTinted
@@ -644,7 +934,7 @@ var NineSlice = new Class({
 
         get: function ()
         {
-            return (this.tint !== 0xffffff);
+            return (this.tint !== 0xffffff || this.tintMode !== TintModes.MULTIPLY);
         }
 
     },
@@ -791,6 +1081,8 @@ var NineSlice = new Class({
         this.width = width;
         this.height = height;
 
+        this.updateDisplayOrigin();
+
         var input = this.input;
 
         if (input && !input.customHitArea)
@@ -900,10 +1192,12 @@ var NineSlice = new Class({
     },
 
     /**
-     * This method is included but does nothing for the Nine Slice Game Object,
-     * because the size of the object isn't based on the texture frame.
+     * Resets the size of this Nine Slice Game Object to match the current texture frame.
      *
-     * You should not call this method.
+     * For a 3-slice object, this sets the height to match the frame height and refreshes
+     * the UV coordinates. For a 9-slice object, only the UVs are refreshed. This is called
+     * automatically when the texture frame changes and should not normally need to be
+     * called directly.
      *
      * @method Phaser.GameObjects.NineSlice#setSizeToFrame
      * @since 3.60.0

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,9 +12,14 @@ var FuzzyEqual = require('../math/fuzzy/Equal');
 
 /**
  * @classdesc
- * A representation of a vector in 2D space.
+ * A representation of a vector in 2D space, defined by an `x` and `y` component.
  *
- * A two-component vector.
+ * Vector2 is used throughout Phaser for positions, directions, velocities, and other
+ * quantities that have both magnitude and direction. It provides methods for common
+ * vector operations such as addition, subtraction, scaling, normalization, dot and
+ * cross products, linear interpolation, and rotation. Many Phaser APIs accept a
+ * `Vector2Like` object (any object with `x` and `y` number properties), making
+ * Vector2 easy to integrate across the framework.
  *
  * @class Vector2
  * @memberof Phaser.Math
@@ -114,7 +119,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Set the `x` and `y` components of the this Vector to the given `x` and `y` values.
+     * Set the `x` and `y` components of this Vector to the given `x` and `y` values.
      *
      * @method Phaser.Math.Vector2#set
      * @since 3.0.0
@@ -149,24 +154,69 @@ var Vector2 = new Class({
     {
         return this.set(x, y);
     },
+    
+    /**
+     * Runs the x and y components of this Vector2 through Math.ceil and then sets them.
+     *
+     * @method Phaser.Math.Vector2#ceil
+     * @since 4.0.0
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    ceil: function ()
+    {
+        this.x = Math.ceil(this.x);
+        this.y = Math.ceil(this.y);
+
+        return this;
+    },
 
     /**
-     * Sets the `x` and `y` values of this object from a given polar coordinate.
+     * Runs the x and y components of this Vector2 through Math.floor and then sets them.
+     *
+     * @method Phaser.Math.Vector2#floor
+     * @since 4.0.0
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    floor: function ()
+    {
+        this.x = Math.floor(this.x);
+        this.y = Math.floor(this.y);
+
+        return this;
+    },
+
+    /**
+     * Swaps the x and y components of this Vector2.
+     *
+     * @method Phaser.Math.Vector2#invert
+     * @since 4.0.0
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    invert: function ()
+    {
+        return this.set(this.y, this.x);
+    },
+
+    /**
+     * Sets the x and y components of this Vector from the given angle and length.
      *
      * @method Phaser.Math.Vector2#setToPolar
      * @since 3.0.0
      *
-     * @param {number} azimuth - The angular coordinate, in radians.
-     * @param {number} [radius=1] - The radial coordinate (length).
+     * @param {number} angle - The angle from the positive x-axis, in radians.
+     * @param {number} [length=1] - The distance from the origin.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
-    setToPolar: function (azimuth, radius)
+    setToPolar: function (angle, length)
     {
-        if (radius == null) { radius = 1; }
+        if (length == null) { length = 1; }
 
-        this.x = Math.cos(azimuth) * radius;
-        this.y = Math.sin(azimuth) * radius;
+        this.x = Math.cos(angle) * length;
+        this.y = Math.sin(angle) * length;
 
         return this;
     },
@@ -417,7 +467,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#setLength
      * @since 3.23.0
      *
-     * @param {number} length
+     * @param {number} length - The new magnitude of this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -562,7 +612,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Transform this Vector with the given Matrix.
+     * Transform this Vector with the given Matrix3.
      *
      * @method Phaser.Math.Vector2#transformMat3
      * @since 3.0.0
@@ -584,7 +634,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Transform this Vector with the given Matrix.
+     * Transform this Vector with the given Matrix4.
      *
      * @method Phaser.Math.Vector2#transformMat4
      * @since 3.0.0
@@ -708,6 +758,33 @@ var Vector2 = new Class({
         var scalar = this.dot(src) / src.dot(src);
 
         return this.copy(src).scale(scalar);
+    },
+
+    /**
+     * Calculates the vector projection of this Vector2 onto the non-zero `vecB`. This is the
+     * orthogonal projection of this vector onto a straight line parallel to `vecB`.
+     *
+     * @method Phaser.Math.Vector2#projectUnit
+     * @since 4.0.0
+     *
+     * @param {Phaser.Math.Vector2} vecB - The vector to project onto.
+     * @param {Phaser.Math.Vector2} [out] - The Vector2 object to store the position in. If not given, a new Vector2 instance is created.
+     *
+     * @return {Phaser.Math.Vector2} The `out` Vector2 containing the projected values.
+     */
+    projectUnit: function (vecB, out)
+    {
+        if (out === undefined) { out = new Vector2(); }
+
+        var amt = ((this.x * vecB.x) + (this.y * vecB.y));
+    
+        if (amt !== 0)
+        {
+            out.x = amt * vecB.x;
+            out.y = amt * vecB.y;
+        }
+    
+        return out;
     }
 
 });

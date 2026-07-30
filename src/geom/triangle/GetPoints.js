@@ -1,26 +1,29 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Length = require('../line/Length');
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * Returns an array of evenly spaced points on the perimeter of a Triangle.
  *
+ * The points are placed along the triangle's three edges in order (A, B, then C),
+ * with their positions calculated proportionally based on the total perimeter length.
+ *
  * @function Phaser.Geom.Triangle.GetPoints
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Triangle} triangle - The Triangle to get the points from.
  * @param {number} quantity - The number of evenly spaced points to return. Set to 0 to return an arbitrary number of points based on the `stepRate`.
- * @param {number} stepRate - If `quantity` is 0, the distance between each returned point.
- * @param {(array|Phaser.Geom.Point[])} [out] - An array to which the points should be appended.
+ * @param {number} stepRate - If `quantity` is 0, the distance in pixels between each returned point along the perimeter.
+ * @param {Phaser.Math.Vector2[]} [out] - An array to which the points should be appended.
  *
- * @return {(array|Phaser.Geom.Point[])} The modified `out` array, or a new array if none was provided.
+ * @return {Phaser.Math.Vector2[]} The modified `out` array, or a new array if none was provided.
  */
 var GetPoints = function (triangle, quantity, stepRate, out)
 {
@@ -47,7 +50,7 @@ var GetPoints = function (triangle, quantity, stepRate, out)
         var p = perimeter * (i / quantity);
         var localPosition = 0;
 
-        var point = new Point();
+        var point = new Vector2();
 
         //  Which line is it on?
 

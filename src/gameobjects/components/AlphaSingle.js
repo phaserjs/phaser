@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,6 +11,8 @@ var _FLAG = 2; // 0010
 
 /**
  * Provides methods used for setting the alpha property of a Game Object.
+ * Unlike the full Alpha component, which supports individual alpha values for each corner
+ * of a Game Object, this component applies a single uniform alpha across the whole object.
  * Should be applied as a mixin and not used directly.
  *
  * @namespace Phaser.GameObjects.Components.AlphaSingle
@@ -31,9 +33,9 @@ var AlphaSingle = {
     _alpha: 1,
 
     /**
-     * Clears all alpha values associated with this Game Object.
+     * Clears the alpha value associated with this Game Object.
      *
-     * Immediately sets the alpha levels back to 1 (fully opaque).
+     * Immediately sets the alpha back to 1 (fully opaque).
      *
      * @method Phaser.GameObjects.Components.AlphaSingle#clearAlpha
      * @since 3.0.0
@@ -69,6 +71,8 @@ var AlphaSingle = {
      * The alpha value of the Game Object.
      *
      * This is a global value, impacting the entire Game Object, not just a region of it.
+     * The value is clamped to the range [0, 1]. Setting alpha to 0 also clears the render
+     * flag, preventing the Game Object from being drawn until the alpha is raised above 0 again.
      *
      * @name Phaser.GameObjects.Components.AlphaSingle#alpha
      * @type {number}

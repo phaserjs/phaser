@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,10 @@ var SetCenterY = require('../../bounds/SetCenterY');
 var SetLeft = require('../../bounds/SetLeft');
 
 /**
- * Takes given Game Object and aligns it so that it is positioned in the left center of the other.
+ * Takes a given Game Object and aligns it so that its left edge is flush with the left edge of the `alignIn`
+ * Game Object, and its vertical center matches the vertical center of `alignIn`. This places the Game Object
+ * at the left-center interior position of the reference object. An optional offset can be applied to adjust
+ * the final position along either axis.
  *
  * @function Phaser.Display.Align.In.LeftCenter
  * @since 3.0.0

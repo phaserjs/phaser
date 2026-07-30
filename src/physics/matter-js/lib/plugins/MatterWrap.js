@@ -26,7 +26,7 @@ var MatterWrap = {
      * This is called automatically by the plugin.
      * @function MatterWrap.Engine.update
      * @param {Matter.Engine} engine The engine to update.
-     * @returns {void} No return value.
+     * @return {void} No return value.
      */
     update: function(engine) {
       var world = engine.world,
@@ -57,7 +57,7 @@ var MatterWrap = {
      * @function MatterWrap.Bounds.wrap
      * @param {Matter.Bounds} objectBounds The bounds of the object to wrap inside the bounds.
      * @param {Matter.Bounds} bounds The bounds to wrap the body inside.
-     * @returns {?Matter.Vector} A translation vector (only if wrapping is required).
+     * @return {?Matter.Vector} A translation vector (only if wrapping is required).
      */
     wrap: function(objectBounds, bounds) {
       var x = null,
@@ -97,7 +97,7 @@ var MatterWrap = {
      * @function MatterWrap.Body.wrap
      * @param {Matter.Body} body The body to wrap.
      * @param {Matter.Bounds} bounds The bounds to wrap the body inside.
-     * @returns {?Matter.Vector} The translation vector that was applied (only if wrapping was required).
+     * @return {?Matter.Vector} The translation vector that was applied (only if wrapping was required).
      */
     wrap: function(body, bounds) {
       var translation = MatterWrap.Bounds.wrap(body.bounds, bounds);
@@ -116,7 +116,7 @@ var MatterWrap = {
      * (not accounting for constraints).
      * @function MatterWrap.Composite.bounds
      * @param {Matter.Composite} composite The composite.
-     * @returns {Matter.Bounds} The composite bounds.
+     * @return {Matter.Bounds} The composite bounds.
      */
     bounds: function(composite) {
       var bodies = Matter.Composite.allBodies(composite),
@@ -138,7 +138,7 @@ var MatterWrap = {
      * @function MatterWrap.Composite.wrap
      * @param {Matter.Composite} composite The composite to wrap.
      * @param {Matter.Bounds} bounds The bounds to wrap the composite inside.
-     * @returns {?Matter.Vector} The translation vector that was applied (only if wrapping was required).
+     * @return {?Matter.Vector} The translation vector that was applied (only if wrapping was required).
      */
     wrap: function(composite, bounds) {
       var translation = MatterWrap.Bounds.wrap(

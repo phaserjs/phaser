@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,11 +9,13 @@
  *
  * @function Phaser.Math.Rotate
  * @since 3.0.0
+ * 
+ * @generic {Phaser.Types.Math.Vector2Like} T - [point,$return]
  *
- * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
- * @param {number} angle - The angle to be rotated by in an anticlockwise direction.
+ * @param {Phaser.Types.Math.Vector2Like} point - The point to be rotated.
+ * @param {number} angle - The angle to rotate by, in radians, in an anti-clockwise direction.
  *
- * @return {Phaser.Geom.Point} The given point, rotated by the given angle in an anticlockwise direction.
+ * @return {Phaser.Types.Math.Vector2Like} The given point, rotated by the given angle in an anti-clockwise direction.
  */
 var Rotate = function (point, angle)
 {

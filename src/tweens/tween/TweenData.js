@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -39,9 +39,9 @@ var Events = require('../events');
  * @param {function} delay - Function that returns the time in milliseconds before tween will start.
  * @param {number} duration - The duration of the tween in milliseconds.
  * @param {boolean} yoyo - Determines whether the tween should return back to its start value after hold has expired.
- * @param {number} hold - Function that returns the time in milliseconds the tween will pause before repeating or returning to its starting value if yoyo is set to true.
- * @param {number} repeat - Function that returns the number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
- * @param {number} repeatDelay - Function that returns the time in milliseconds before the repeat will start.
+ * @param {number} hold - The time in milliseconds the tween will pause before repeating or returning to its starting value if yoyo is set to true.
+ * @param {number} repeat - The number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
+ * @param {number} repeatDelay - The time in milliseconds before the repeat will start.
  * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
  * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
  * @param {?function} interpolation - The interpolation function to be used for arrays of data. Defaults to 'null'.
@@ -71,7 +71,7 @@ var TweenData = new Class({
          * A function that returns what to set the target property to,
          * the moment the TweenData is invoked.
          *
-         * This is called when this TweenData is inititalised or reset.
+         * This is called when this TweenData is initialised or reset.
          *
          * @name Phaser.Tweens.TweenData#getActiveValue
          * @type {?Phaser.Types.Tweens.GetActiveCallback}
@@ -115,7 +115,7 @@ var TweenData = new Class({
         this.ease = ease;
 
         /**
-         * The targets starting value, as returned by `getStartValue`.
+         * The target's starting value, as returned by `getStartValue`.
          *
          * @name Phaser.Tweens.TweenData#start
          * @type {number}
@@ -124,7 +124,7 @@ var TweenData = new Class({
         this.start = 0;
 
         /**
-         * The target value from the previous step.
+         * The target's value from the previous step.
          *
          * @name Phaser.Tweens.TweenData#previous
          * @type {number}
@@ -133,7 +133,7 @@ var TweenData = new Class({
         this.previous = 0;
 
         /**
-         * The targets current value, as recorded in the most recent step.
+         * The target's current value, as recorded in the most recent step.
          *
          * @name Phaser.Tweens.TweenData#current
          * @type {number}
@@ -142,7 +142,7 @@ var TweenData = new Class({
         this.current = 0;
 
         /**
-         * The targets ending value, as returned by `getEndValue`.
+         * The target's ending value, as returned by `getEndValue`.
          *
          * @name Phaser.Tweens.TweenData#end
          * @type {number}
@@ -225,7 +225,7 @@ var TweenData = new Class({
         var key = this.key;
 
         //  Bail out if we don't have a target to act upon
-        if (!target)
+        if (!target || target.isDestroyed)
         {
             this.setCompleteState();
 
@@ -305,13 +305,33 @@ var TweenData = new Class({
             this.progress = progress;
             this.previous = this.current;
 
+            if (!forward)
+            {
+                progress = 1 - progress;
+            }
+
+            var v = this.ease(progress);
+
+            if (this.interpolation)
+            {
+                this.current = this.interpolation(this.interpolationData, v);
+            }
+            else
+            {
+                this.current = this.start + ((this.end - this.start) * v);
+            }
+
+            target[key] = this.current;
+
             if (complete)
             {
                 if (forward)
                 {
-                    this.current = this.end;
-
-                    target[key] = this.end;
+                    if (tween.isNumberTween)
+                    {
+                        this.current = this.end;
+                        target[key] = this.current;
+                    }
 
                     if (this.hold > 0)
                     {
@@ -326,32 +346,14 @@ var TweenData = new Class({
                 }
                 else
                 {
-                    this.current = this.start;
-
-                    target[key] = this.start;
+                    if (tween.isNumberTween)
+                    {
+                        this.current = this.start;
+                        target[key] = this.current;
+                    }
 
                     this.setStateFromStart(diff);
                 }
-            }
-            else
-            {
-                if (!forward)
-                {
-                    progress = 1 - progress;
-                }
-
-                var v = this.ease(progress);
-
-                if (this.interpolation)
-                {
-                    this.current = this.interpolation(this.interpolationData, v);
-                }
-                else
-                {
-                    this.current = this.start + ((this.end - this.start) * v);
-                }
-
-                target[key] = this.current;
             }
 
             this.dispatchEvent(Events.TWEEN_UPDATE, 'onUpdate');
@@ -395,7 +397,7 @@ var TweenData = new Class({
     },
 
     /**
-     * Immediately destroys this TweenData, nulling of all its references.
+     * Immediately destroys this TweenData, nulling out all of its references.
      *
      * @method Phaser.Tweens.TweenData#destroy
      * @since 3.60.0

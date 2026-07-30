@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -49,7 +49,7 @@ var TimerEvent = new Class({
         this.repeat = 0;
 
         /**
-         * If repeating this contains the current repeat count.
+         * If repeating, this value contains the current countdown of how many repeats are still to come. It starts at the value of {@link #repeat} and counts down to zero each time the Timer Event fires.
          *
          * @name Phaser.Time.TimerEvent#repeatCount
          * @type {number}
@@ -97,7 +97,7 @@ var TimerEvent = new Class({
         this.args;
 
         /**
-         * Scale the time causing this TimerEvent to update.
+         * A time scale factor applied to the elapsed time used to update this Timer Event. Values greater than 1 will cause the event to fire sooner, while values less than 1 will delay it. This is independent of, and multiplied with, the Clock's own time scale.
          *
          * @name Phaser.Time.TimerEvent#timeScale
          * @type {number}
@@ -107,7 +107,7 @@ var TimerEvent = new Class({
         this.timeScale = 1;
 
         /**
-         * Start this many MS into the elapsed (useful if you want a long duration with repeat, but for the first loop to fire quickly)
+         * The number of milliseconds into the elapsed time to start the Timer Event from. This allows a long-duration repeating Timer Event to fire sooner on its first iteration without affecting the duration of subsequent repeats.
          *
          * @name Phaser.Time.TimerEvent#startAt
          * @type {number}
@@ -188,7 +188,7 @@ var TimerEvent = new Class({
         this.hasDispatched = false;
         this.repeatCount = (this.repeat === -1 || this.loop) ? 999999999999 : this.repeat;
 
-        if (this.delay === 0 && (this.repeat > 0 || this.loop))
+        if (this.delay <= 0 && this.repeatCount > 0)
         {
             throw new Error('TimerEvent infinite loop created via zero delay');
         }

@@ -1,11 +1,16 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Creates a new Interactive Object.
+ *
+ * An Interactive Object is a plain data object that stores all of the input-related state for
+ * a Game Object. This includes its hit area geometry, drag state, local pointer coordinates,
+ * and references to the camera and any drop zone target. It is not a class instance, but a
+ * plain object literal returned by this function.
  *
  * This is called automatically by the Input Manager when you enable a Game Object for input.
  *
@@ -54,6 +59,7 @@ var CreateInteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         dragStartY: 0,
         dragStartXGlobal: 0,
         dragStartYGlobal: 0,
+        dragStartCamera: null,
 
         dragX: 0,
         dragY: 0

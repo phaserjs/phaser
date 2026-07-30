@@ -1,12 +1,14 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Adds the given element to the DOM. If a parent is provided the element is added as a child of the parent, providing it was able to access it.
- * If no parent was given it falls back to using `document.body`.
+ * Adds the given element to the DOM. If a parent is provided, the element is added as a child of the parent element, resolved either by
+ * passing a string ID to `getElementById` or by using the HTMLElement directly. If no parent is given and the element already has an
+ * existing `parentElement`, or if `parent` is explicitly `null`, the element is returned immediately without modification. If no valid
+ * target parent can be resolved, the element is appended to `document.body` as a fallback.
  *
  * @function Phaser.DOM.AddToDOM
  * @since 3.0.0
@@ -14,7 +16,7 @@
  * @param {HTMLElement} element - The element to be added to the DOM. Usually a Canvas object.
  * @param {(string|HTMLElement)} [parent] - The parent in which to add the element. Can be a string which is passed to `getElementById` or an actual DOM object.
  *
- * @return {HTMLElement} The element that was added to the DOM.
+ * @return {HTMLElement} The element that was passed to this function.
  */
 var AddToDOM = function (element, parent)
 {

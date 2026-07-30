@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,7 +11,11 @@ var GetValue = require('../../utils/object/GetValue');
  * @classdesc
  * A Fixed Key Camera Control.
  *
- * This allows you to control the movement and zoom of a camera using the defined keys.
+ * This allows you to control the movement and zoom of a camera using keyboard keys. Unlike
+ * the `SmoothedKeyControl`, this control applies movement and zoom changes directly each
+ * update tick with no easing or smoothing. The camera responds instantly when a key is
+ * pressed and stops instantly when it is released, making it suitable for grid-based or
+ * precision camera navigation.
  *
  * ```javascript
  * var camControl = new FixedKeyControl({
@@ -110,7 +114,7 @@ var FixedKeyControl = new Class({
         this.zoomOut = GetValue(config, 'zoomOut', null);
 
         /**
-         * The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
+         * The amount by which the camera zoom level is changed on each update tick when the `zoomIn` or `zoomOut` keys are pressed. Unlike the scroll speed, this value is not scaled by delta time.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#zoomSpeed
          * @type {number}
@@ -140,7 +144,7 @@ var FixedKeyControl = new Class({
         this.maxZoom = GetValue(config, 'maxZoom', 1000);
 
         /**
-         * The horizontal speed the camera will move.
+         * The horizontal speed at which the camera will scroll, in pixels per millisecond.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#speedX
          * @type {number}
@@ -150,7 +154,7 @@ var FixedKeyControl = new Class({
         this.speedX = 0;
 
         /**
-         * The vertical speed the camera will move.
+         * The vertical speed at which the camera will scroll, in pixels per millisecond.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#speedY
          * @type {number}
@@ -302,7 +306,8 @@ var FixedKeyControl = new Class({
     },
 
     /**
-     * Destroys this Key Control.
+     * Destroys this Key Control, nulling its camera and key references to allow for garbage collection.
+     * This Key Control cannot be used again after being destroyed.
      *
      * @method Phaser.Cameras.Controls.FixedKeyControl#destroy
      * @since 3.0.0

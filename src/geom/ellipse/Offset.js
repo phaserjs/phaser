@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,7 +12,7 @@
  *
  * @generic {Phaser.Geom.Ellipse} O - [ellipse,$return]
  *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to be offset (translated.)
+ * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to be offset (translated).
  * @param {number} x - The amount to horizontally offset the Ellipse by.
  * @param {number} y - The amount to vertically offset the Ellipse by.
  *

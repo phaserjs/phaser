@@ -1,10 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var AnimationState = require('../../animations/AnimationState');
+var DefaultImageNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultImageNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
@@ -33,10 +34,10 @@ var SpriteRender = require('./SpriteRender');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.TextureCrop
@@ -60,10 +61,10 @@ var Sprite = new Class({
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Lighting,
         Components.Mask,
         Components.Origin,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.ScrollFactor,
         Components.Size,
         Components.TextureCrop,
@@ -106,17 +107,49 @@ var Sprite = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOriginFromFrame();
-        this.initPipeline();
-        this.initPostPipeline(true);
+        this.initRenderNodes(this._defaultRenderNodesMap);
     },
 
-    //  Overrides Game Object method
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.Sprite#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultImageNodes;
+        }
+    },
+
+    /**
+     * Called automatically by Phaser when this Sprite is added to a Scene.
+     *
+     * Registers this Sprite with the Scene's update list so that its `preUpdate` method
+     * is called each game step, allowing animations to advance each frame.
+     *
+     * @method Phaser.GameObjects.Sprite#addedToScene
+     * @since 3.53.0
+     */
     addedToScene: function ()
     {
         this.scene.sys.updateList.add(this);
     },
 
-    //  Overrides Game Object method
+    /**
+     * Called automatically by Phaser when this Sprite is removed from a Scene.
+     *
+     * Unregisters this Sprite from the Scene's update list so that its `preUpdate` method
+     * is no longer called each game step.
+     *
+     * @method Phaser.GameObjects.Sprite#removedFromScene
+     * @since 3.53.0
+     */
     removedFromScene: function ()
     {
         this.scene.sys.updateList.remove(this);

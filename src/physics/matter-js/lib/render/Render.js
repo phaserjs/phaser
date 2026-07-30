@@ -548,15 +548,19 @@ var Vector = require('../geometry/Vector');
             elapsedHistory = timing.elapsedHistory,
             timestampElapsedHistory = timing.timestampElapsedHistory,
             engineDeltaHistory = timing.engineDeltaHistory,
+            engineUpdatesHistory = timing.engineUpdatesHistory,
             engineElapsedHistory = timing.engineElapsedHistory,
+            lastEngineUpdatesPerFrame = engine.timing.lastUpdatesPerFrame,
             lastEngineDelta = engine.timing.lastDelta;
         
         var deltaMean = _mean(deltaHistory),
             elapsedMean = _mean(elapsedHistory),
             engineDeltaMean = _mean(engineDeltaHistory),
+            engineUpdatesMean = _mean(engineUpdatesHistory),
             engineElapsedMean = _mean(engineElapsedHistory),
             timestampElapsedMean = _mean(timestampElapsedHistory),
             rateMean = (timestampElapsedMean / deltaMean) || 0,
+            neededUpdatesPerFrame = Math.round(deltaMean / lastEngineDelta),
             fps = (1000 / deltaMean) || 0;
 
         var graphHeight = 4,
@@ -568,7 +572,7 @@ var Vector = require('../geometry/Vector');
 
         // background
         context.fillStyle = '#0e0f19';
-        context.fillRect(0, 50, gap * 4 + width * 5 + 22, height);
+        context.fillRect(0, 50, gap * 5 + width * 6 + 22, height);
 
         // show FPS
         Render.status(
@@ -586,17 +590,23 @@ var Vector = require('../geometry/Vector');
             function(i) { return (engineDeltaHistory[i] / engineDeltaMean) - 1; }
         );
 
+        Render.status(
+            context, x + (gap + width) * 2, y, width, graphHeight, engineUpdatesHistory.length,
+            lastEngineUpdatesPerFrame + ' upf', 
+            Math.pow(Common.clamp((engineUpdatesMean / neededUpdatesPerFrame) || 1, 0, 1), 4),
+            function(i) { return (engineUpdatesHistory[i] / engineUpdatesMean) - 1; }
+        );
         // show engine update time
         Render.status(
-            context, x + (gap + width) * 2, y, width, graphHeight, engineElapsedHistory.length,
+            context, x + (gap + width) * 3, y, width, graphHeight, engineElapsedHistory.length,
             engineElapsedMean.toFixed(2) + ' ut', 
-            1 - (engineElapsedMean / Render._goodFps),
+            1 - (lastEngineUpdatesPerFrame * engineElapsedMean / Render._goodFps),
             function(i) { return (engineElapsedHistory[i] / engineElapsedMean) - 1; }
         );
 
         // show render time
         Render.status(
-            context, x + (gap + width) * 3, y, width, graphHeight, elapsedHistory.length,
+            context, x + (gap + width) * 4, y, width, graphHeight, elapsedHistory.length,
             elapsedMean.toFixed(2) + ' rt', 
             1 - (elapsedMean / Render._goodFps),
             function(i) { return (elapsedHistory[i] / elapsedMean) - 1; }
@@ -604,7 +614,7 @@ var Vector = require('../geometry/Vector');
 
         // show effective speed
         Render.status(
-            context, x + (gap + width) * 4, y, width, graphHeight, timestampElapsedHistory.length, 
+            context, x + (gap + width) * 5, y, width, graphHeight, timestampElapsedHistory.length, 
             rateMean.toFixed(2) + ' x', 
             rateMean * rateMean * rateMean,
             function(i) { return (((timestampElapsedHistory[i] / deltaHistory[i]) / rateMean) || 0) - 1; }
@@ -1205,8 +1215,8 @@ var Vector = require('../geometry/Vector');
                 continue;
 
             collision = pair.collision;
-            for (j = 0; j < pair.activeContacts.length; j++) {
-                var contact = pair.activeContacts[j],
+            for (j = 0; j < pair.contactCount; j++) {
+                var contact = pair.contacts[j],
                     vertex = contact.vertex;
                 c.rect(vertex.x - 1.5, vertex.y - 1.5, 3.5, 3.5);
             }
@@ -1230,13 +1240,13 @@ var Vector = require('../geometry/Vector');
 
             collision = pair.collision;
 
-            if (pair.activeContacts.length > 0) {
-                var normalPosX = pair.activeContacts[0].vertex.x,
-                    normalPosY = pair.activeContacts[0].vertex.y;
+            if (pair.contactCount > 0) {
+                var normalPosX = pair.contacts[0].vertex.x,
+                    normalPosY = pair.contacts[0].vertex.y;
 
-                if (pair.activeContacts.length === 2) {
-                    normalPosX = (pair.activeContacts[0].vertex.x + pair.activeContacts[1].vertex.x) / 2;
-                    normalPosY = (pair.activeContacts[0].vertex.y + pair.activeContacts[1].vertex.y) / 2;
+                if (pair.contactCount === 2) {
+                    normalPosX = (pair.contacts[0].vertex.x + pair.contacts[1].vertex.x) / 2;
+                    normalPosY = (pair.contacts[0].vertex.y + pair.contacts[1].vertex.y) / 2;
                 }
 
                 if (collision.bodyB === collision.supports[0].body || collision.bodyA.isStatic === true) {
@@ -1429,6 +1439,8 @@ var Vector = require('../geometry/Vector');
         timing.timestampElapsedHistory.unshift(timing.timestampElapsed);
         timing.timestampElapsedHistory.length = Math.min(timing.timestampElapsedHistory.length, historySize);
 
+        timing.engineUpdatesHistory.unshift(engine.timing.lastUpdatesPerFrame);
+        timing.engineUpdatesHistory.length = Math.min(timing.engineUpdatesHistory.length, historySize);
         timing.engineElapsedHistory.unshift(engine.timing.lastElapsed);
         timing.engineElapsedHistory.length = Math.min(timing.engineElapsedHistory.length, historySize);
 

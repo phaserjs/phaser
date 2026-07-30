@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,11 @@ var Extend = require('../utils/object/Extend');
 
 /**
  * @classdesc
- * A Frame is a section of a Texture.
+ * A Frame is a section of a Texture. It defines a rectangular sub-region within a
+ * Texture Source, storing its position, dimensions, UV coordinates, and optional trim
+ * data (for packed atlas frames with whitespace removed). Frames are the primary unit
+ * of texture addressing used by Game Objects -- when a Sprite displays a particular
+ * image, it references a Frame.
  *
  * @class Frame
  * @memberof Phaser.Textures
@@ -67,16 +71,6 @@ var Frame = new Class({
          * @since 3.0.0
          */
         this.sourceIndex = sourceIndex;
-
-        /**
-         * A reference to the Texture Source WebGL Texture that this Frame is using.
-         *
-         * @name Phaser.Textures.Frame#glTexture
-         * @type {?WebGLTexture}
-         * @default null
-         * @since 3.11.0
-         */
-        this.glTexture = this.source.glTexture;
 
         /**
          * X position within the source image to cut from.
@@ -223,7 +217,7 @@ var Frame = new Class({
         /**
          * **CURRENTLY UNSUPPORTED**
          *
-         * Is this frame is rotated or not in the Texture?
+         * Is this frame rotated or not in the Texture?
          * Rotation allows you to use rotated frames in texture atlas packing.
          * It has nothing to do with Sprite rotation.
          *
@@ -235,7 +229,7 @@ var Frame = new Class({
         this.rotated = false;
 
         /**
-         * Over-rides the Renderer setting.
+         * Overrides the Renderer setting.
          * -1 = use Renderer Setting
          * 0 = No rounding
          * 1 = Round
@@ -332,10 +326,59 @@ var Frame = new Class({
                 y: 0,
                 width: 0,
                 height: 0
+            },
+            is3Slice: false,
+            scale9: false,
+            scale9Borders: {
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0
             }
         };
 
         this.setSize(width, height, x, y);
+    },
+
+    /**
+     * Sets the x and y position within the source image to cut from.
+     *
+     * @method Phaser.Textures.Frame#setCutPosition
+     * @since 3.85.0
+     *
+     * @param {number} [x=0] - X position within the source image to cut from.
+     * @param {number} [y=0] - Y position within the source image to cut from.
+     *
+     * @return {this} This Frame object.
+     */
+    setCutPosition: function (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        this.cutX = x;
+        this.cutY = y;
+
+        return this.updateUVs();
+    },
+
+    /**
+     * Sets the width and height of the area in the source image to cut.
+     *
+     * @method Phaser.Textures.Frame#setCutSize
+     * @since 3.85.0
+     *
+     * @param {number} width - The width of the area in the source image to cut.
+     * @param {number} height - The height of the area in the source image to cut.
+     *
+     * @return {this} This Frame object.
+     */
+    setCutSize: function (width, height)
+    {
+        this.cutWidth = width;
+        this.cutHeight = height;
+
+        return this.updateUVs();
     },
 
     /**
@@ -359,10 +402,8 @@ var Frame = new Class({
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
 
-        this.cutX = x;
-        this.cutY = y;
-        this.cutWidth = width;
-        this.cutHeight = height;
+        this.setCutPosition(x, y);
+        this.setCutSize(width, height);
 
         this.width = width;
         this.height = height;
@@ -452,9 +493,43 @@ var Frame = new Class({
     },
 
     /**
+     * Sets the scale9 center rectangle values.
+     *
+     * Scale9 is a feature of Texture Packer, allowing you to define a nine-slice scaling grid.
+     *
+     * This is set automatically by the JSONArray and JSONHash parsers.
+     *
+     * @method Phaser.Textures.Frame#setScale9
+     * @since 3.70.0
+     *
+     * @param {number} x - The left coordinate of the center scale9 rectangle.
+     * @param {number} y - The top coordinate of the center scale9 rectangle.
+     * @param {number} width - The width of the center scale9 rectangle.
+     * @param {number} height - The height of the center scale9 rectangle.
+     *
+     * @return {this} This Frame object.
+     */
+    setScale9: function (x, y, width, height)
+    {
+        var data = this.data;
+
+        data.scale9 = true;
+        data.is3Slice = (y === 0 && height === this.height);
+
+        data.scale9Borders.x = x;
+        data.scale9Borders.y = y;
+        data.scale9Borders.w = width;
+        data.scale9Borders.h = height;
+
+        return this;
+    },
+
+    /**
      * Takes a crop data object and, based on the rectangular region given, calculates the
      * required UV coordinates in order to crop this Frame for WebGL and Canvas rendering.
      *
+     * The crop size as well as coordinates can not exceed the size of the frame.
+     * 
      * This is called directly by the Game Object Texture Components `setCrop` method.
      * Please use that method to crop a Game Object.
      *
@@ -502,8 +577,8 @@ var Frame = new Class({
             //  Need to check for intersection between the cut area and the crop area
             //  If there is none, we set UV to be empty, otherwise set it to be the intersection area
 
-            width = Clamp(width, 0, cw - x);
-            height = Clamp(height, 0, ch - y);
+            width = Clamp(width, 0, ss.x + cw - x);
+            height = Clamp(height, 0, ss.y + ch - y);
 
             var cropRight = x + width;
             var cropBottom = y + height;
@@ -571,9 +646,9 @@ var Frame = new Class({
         //  Map the given coordinates into UV space, clamping to the 0-1 range.
 
         crop.u0 = Math.max(0, ox / tw);
-        crop.v0 = Math.max(0, oy / th);
+        crop.v0 = 1 - Math.max(0, oy / th);
         crop.u1 = Math.min(1, (ox + ow) / tw);
-        crop.v1 = Math.min(1, (oy + oh) / th);
+        crop.v1 = 1 - Math.min(1, (oy + oh) / th);
 
         crop.x = x;
         crop.y = y;
@@ -676,16 +751,18 @@ var Frame = new Class({
         var th = this.source.height;
 
         this.u0 = cx / tw;
-        this.v0 = cy / th;
+        this.v0 = 1 - cy / th;
 
         this.u1 = (cx + cw) / tw;
-        this.v1 = (cy + ch) / th;
+        this.v1 = 1 - (cy + ch) / th;
 
         return this;
     },
 
     /**
-     * Updates the internal WebGL UV cache.
+     * Updates the internal WebGL UV cache for a rotated frame, swapping the width and height
+     * axes so that the UV coordinates map correctly to a frame that has been rotated 90 degrees
+     * in the texture atlas.
      *
      * @method Phaser.Textures.Frame#updateUVsInverted
      * @since 3.0.0
@@ -698,10 +775,10 @@ var Frame = new Class({
         var th = this.source.height;
 
         this.u0 = (this.cutX + this.cutHeight) / tw;
-        this.v0 = this.cutY / th;
+        this.v0 = 1 - this.cutY / th;
 
         this.u1 = this.cutX / tw;
-        this.v1 = (this.cutY + this.cutWidth) / th;
+        this.v1 = 1 - (this.cutY + this.cutWidth) / th;
 
         return this;
     },
@@ -745,19 +822,33 @@ var Frame = new Class({
     },
 
     /**
-     * Destroys this Frame by nulling its reference to the parent Texture and and data objects.
+     * Destroys this Frame by nulling its reference to the parent Texture and data objects.
      *
      * @method Phaser.Textures.Frame#destroy
      * @since 3.0.0
      */
     destroy: function ()
     {
-        this.source.glTexture = null;
-        this.source = null;
         this.texture = null;
-        this.glTexture = null;
+        this.source = null;
         this.customData = null;
         this.data = null;
+    },
+
+    /**
+     * A reference to the Texture Source WebGL Texture that this Frame is using.
+     * 
+     * @name Phaser.Textures.Frame#glTexture
+     * @type {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
+     * @readonly
+     * @since 3.11.0
+     */
+    glTexture: {
+
+        get: function ()
+        {
+            return this.source.glTexture;
+        }
     },
 
     /**
@@ -826,6 +917,40 @@ var Frame = new Class({
         get: function ()
         {
             return this.data.trim;
+        }
+
+    },
+
+    /**
+     * Does the Frame have scale9 border data?
+     *
+     * @name Phaser.Textures.Frame#scale9
+     * @type {boolean}
+     * @readonly
+     * @since 3.70.0
+     */
+    scale9: {
+
+        get: function ()
+        {
+            return this.data.scale9;
+        }
+
+    },
+
+    /**
+     * If the Frame has scale9 border data, is it 3-slice or 9-slice data?
+     *
+     * @name Phaser.Textures.Frame#is3Slice
+     * @type {boolean}
+     * @readonly
+     * @since 3.70.0
+     */
+    is3Slice: {
+
+        get: function ()
+        {
+            return this.data.is3Slice;
         }
 
     },

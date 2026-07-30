@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@
  * The Post-Render Event.
  *
  * This event is dispatched by the Renderer when all rendering, for all cameras in all Scenes,
- * has completed, but before any pending snap shots have been taken.
+ * has completed, but before any pending snapshots have been taken.
  *
  * @event Phaser.Renderer.Events#POST_RENDER
  * @type {string}

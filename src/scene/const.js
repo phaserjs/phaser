@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,7 @@
 var CONST = {
 
     /**
-     * Scene state.
+     * Scene has been added to the Scene Manager but has not yet been started or initialized.
      *
      * @name Phaser.Scenes.PENDING
      * @readonly
@@ -23,7 +23,7 @@ var CONST = {
     PENDING: 0,
 
     /**
-     * Scene state.
+     * Scene is currently being initialized by the Scene Manager. The init method is being called.
      *
      * @name Phaser.Scenes.INIT
      * @readonly
@@ -33,7 +33,7 @@ var CONST = {
     INIT: 1,
 
     /**
-     * Scene state.
+     * Scene is starting up. The create method has not yet been called.
      *
      * @name Phaser.Scenes.START
      * @readonly
@@ -43,7 +43,7 @@ var CONST = {
     START: 2,
 
     /**
-     * Scene state.
+     * Scene is loading assets via its Loader Plugin. The create method will be called after loading completes.
      *
      * @name Phaser.Scenes.LOADING
      * @readonly
@@ -53,7 +53,7 @@ var CONST = {
     LOADING: 3,
 
     /**
-     * Scene state.
+     * Scene is executing its create method.
      *
      * @name Phaser.Scenes.CREATING
      * @readonly
@@ -63,7 +63,7 @@ var CONST = {
     CREATING: 4,
 
     /**
-     * Scene state.
+     * Scene is fully running. Both the update and render methods are being called each frame.
      *
      * @name Phaser.Scenes.RUNNING
      * @readonly
@@ -73,7 +73,7 @@ var CONST = {
     RUNNING: 5,
 
     /**
-     * Scene state.
+     * Scene has been paused via the Scene Manager or Scene Plugin. The update method is not being called, but the scene is still rendering.
      *
      * @name Phaser.Scenes.PAUSED
      * @readonly
@@ -83,7 +83,7 @@ var CONST = {
     PAUSED: 6,
 
     /**
-     * Scene state.
+     * Scene has been put to sleep. Neither the update nor the render methods are being called, but the scene is not shut down.
      *
      * @name Phaser.Scenes.SLEEPING
      * @readonly
@@ -93,7 +93,7 @@ var CONST = {
     SLEEPING: 7,
 
     /**
-     * Scene state.
+     * Scene is being shut down. All Game Objects and plugins belonging to it are being destroyed.
      *
      * @name Phaser.Scenes.SHUTDOWN
      * @readonly
@@ -103,7 +103,7 @@ var CONST = {
     SHUTDOWN: 8,
 
     /**
-     * Scene state.
+     * Scene has been fully destroyed. It can no longer be started or used.
      *
      * @name Phaser.Scenes.DESTROYED
      * @readonly

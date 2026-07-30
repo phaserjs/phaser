@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -21,7 +21,7 @@ var Shape = require('../Shape');
  * the color of the top, left and right faces of the rectangle respectively. You can also choose
  * which of the faces are rendered via the `showTop`, `showLeft` and `showRight` properties.
  *
- * You cannot view an IsoBox from under-neath, however you can change the 'angle' by setting
+ * You cannot view an IsoBox from underneath, however you can change the 'angle' by setting
  * the `projection` property.
  *
  * @class IsoBox
@@ -99,7 +99,7 @@ var IsoBox = new Class({
         this.fillRight = fillRight;
 
         /**
-         * Controls if the top-face of the iso box be rendered.
+         * Controls whether the top face of the iso box will be rendered.
          *
          * @name Phaser.GameObjects.IsoBox#showTop
          * @type {boolean}
@@ -109,7 +109,7 @@ var IsoBox = new Class({
         this.showTop = true;
 
         /**
-         * Controls if the left-face of the iso box be rendered.
+         * Controls whether the left face of the iso box will be rendered.
          *
          * @name Phaser.GameObjects.IsoBox#showLeft
          * @type {boolean}
@@ -119,7 +119,7 @@ var IsoBox = new Class({
         this.showLeft = true;
 
         /**
-         * Controls if the right-face of the iso box be rendered.
+         * Controls whether the right face of the iso box will be rendered.
          *
          * @name Phaser.GameObjects.IsoBox#showRight
          * @type {boolean}

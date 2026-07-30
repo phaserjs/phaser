@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,7 @@ var TransposeMatrix = require('./TransposeMatrix');
 /**
  * Rotates the array matrix based on the given rotation value.
  *
- * The value can be given in degrees: 90, -90, 270, -270 or 180,
+ * The value can be given in degrees: 90, -90, 270, -270, 180 or -180,
  * or a string command: `rotateLeft`, `rotateRight` or `rotate180`.
  *
  * Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
@@ -36,9 +36,9 @@ var TransposeMatrix = require('./TransposeMatrix');
  * @genericUse {T[][]} - [matrix,$return]
  *
  * @param {T[][]} [matrix] - The array to rotate.
- * @param {(number|string)} [direction=90] - The amount to rotate the matrix by.
+ * @param {(number|string)} [direction=90] - The amount to rotate the matrix by. Must be a degree value of 90, -90, 270, -270, 180 or -180, or a string command of `rotateLeft`, `rotateRight` or `rotate180`. If an unrecognized value is given the matrix will not be rotated.
  *
- * @return {T[][]} The rotated matrix array. The source matrix should be discard for the returned matrix.
+ * @return {T[][]} The rotated matrix array. The source matrix should be discarded for the returned matrix.
  */
 var RotateMatrix = function (matrix, direction)
 {

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,7 +17,7 @@ var SortByDigits = require('../utils/array/SortByDigits');
  * A Frame based Animation.
  *
  * Animations in Phaser consist of a sequence of `AnimationFrame` objects, which are managed by
- * this class, along with properties that impact playback, such as the animations frame rate
+ * this class, along with properties that impact playback, such as the animation's frame rate
  * or delay.
  *
  * This class contains all of the properties and methods needed to handle playback of the animation
@@ -61,7 +61,7 @@ var Animation = new Class({
         this.key = key;
 
         /**
-         * A frame based animation (as opposed to a bone based animation)
+         * A frame-based animation (as opposed to a bone-based animation).
          *
          * @name Phaser.Animations.Animation#type
          * @type {string}
@@ -71,7 +71,7 @@ var Animation = new Class({
         this.type = 'frame';
 
         /**
-         * Extract all the frame data into the frames array.
+         * An array of AnimationFrame objects that make up this animation.
          *
          * @name Phaser.Animations.Animation#frames
          * @type {Phaser.Animations.AnimationFrame[]}
@@ -106,7 +106,7 @@ var Animation = new Class({
         this.duration = GetValue(config, 'duration', null);
 
         /**
-         * How many ms per frame, not including frame specific modifiers.
+         * How many ms per frame, not including frame-specific modifiers.
          *
          * @name Phaser.Animations.Animation#msPerFrame
          * @type {number}
@@ -115,7 +115,7 @@ var Animation = new Class({
         this.msPerFrame;
 
         /**
-         * Skip frames if the time lags, or always advanced anyway?
+         * Skip frames if the time lags, or always advance anyway?
          *
          * @name Phaser.Animations.Animation#skipMissedFrames
          * @type {boolean}
@@ -145,7 +145,7 @@ var Animation = new Class({
         this.repeat = GetValue(config, 'repeat', 0);
 
         /**
-         * The delay in ms before the a repeat play starts.
+         * The delay in ms before a repeat play starts.
          *
          * @name Phaser.Animations.Animation#repeatDelay
          * @type {number}
@@ -294,7 +294,7 @@ var Animation = new Class({
     },
 
     /**
-     * Add frame/s into the animation.
+     * Inserts one or more frames into the animation at the specified index.
      *
      * @method Phaser.Animations.Animation#addFrameAt
      * @since 3.0.0
@@ -361,8 +361,8 @@ var Animation = new Class({
     {
         //  When is the first update due?
         state.accumulator = 0;
-
-        state.nextTick = state.msPerFrame + state.currentFrame.duration;
+        
+        state.nextTick = state.frameRate === state.currentAnim.frameRate ? state.currentFrame.duration || state.msPerFrame : state.msPerFrame;
     },
 
     /**
@@ -515,7 +515,7 @@ var Animation = new Class({
     {
         state.accumulator -= state.nextTick;
 
-        state.nextTick = state.msPerFrame + state.currentFrame.duration;
+        state.nextTick = state.frameRate === state.currentAnim.frameRate ? state.currentFrame.duration || state.msPerFrame : state.msPerFrame;
     },
 
     /**
@@ -621,7 +621,7 @@ var Animation = new Class({
     },
 
     /**
-     * Returns the animation last frame.
+     * Returns the last frame in this animation.
      *
      * @method Phaser.Animations.Animation#getLastFrame
      * @since 3.12.0
@@ -739,7 +739,7 @@ var Animation = new Class({
     },
 
     /**
-     * Called internally during playback. Forces the animation to repeat, providing there are enough counts left
+     * Called internally during playback. Forces the animation to repeat, provided there are enough counts left
      * in the repeat counter.
      *
      * @method Phaser.Animations.Animation#repeatAnimation

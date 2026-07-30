@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,7 +17,7 @@ var PointLight = require('./PointLight');
  * @method Phaser.GameObjects.GameObjectCreator#pointlight
  * @since 3.50.0
  *
- * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {object} config - The configuration object this Game Object will use to create itself. Supported properties include `color` (hex color of the light, default `0xffffff`), `radius` (radius of the light in pixels, default `128`), `intensity` (brightness of the light, default `1`), and `attenuation` (rate at which the light falls off toward the edges, default `0.1`).
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.PointLight} The Game Object that was created.

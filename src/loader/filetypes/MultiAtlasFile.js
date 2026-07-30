@@ -1,20 +1,24 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var ImageFile = require('./ImageFile.js');
+var ImageFile = require('./ImageFile');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var JSONFile = require('./JSONFile.js');
-var MultiFile = require('../MultiFile.js');
+var JSONFile = require('./JSONFile');
+var MultiFile = require('../MultiFile');
 
 /**
  * @classdesc
- * A single Multi Texture Atlas File suitable for loading by the Loader.
+ * A Multi Texture Atlas File is a composite file type that loads a Texture Packer multi-atlas JSON file along with
+ * all of the texture image files it references. A multi-atlas is useful when your sprite sheet assets are too large
+ * to fit into a single texture and have been split across multiple image files, each described by a shared JSON
+ * data file. Phaser parses the JSON, then automatically queues and loads each referenced image (and any associated
+ * normal maps) before adding the complete atlas to the Texture Manager under a single key.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#multiatlas method and are not typically created directly.
  *
@@ -73,7 +77,11 @@ var MultiAtlasFile = new Class({
     },
 
     /**
-     * Called by each File when it finishes loading.
+     * Called by each File when it finishes loading. When the JSON atlas file completes, this method
+     * inspects its `textures` array and dynamically creates and queues an ImageFile for every texture
+     * referenced within it. If any texture entry also defines a `normalMap`, a linked ImageFile is
+     * created for that too. The Loader's baseURL, path, and prefix are temporarily overridden to those
+     * specified in the MultiAtlasFile config during this process, then restored afterwards.
      *
      * @method Phaser.Loader.FileTypes.MultiAtlasFile#onFileComplete
      * @since 3.7.0
@@ -274,7 +282,7 @@ var MultiAtlasFile = new Class({
  * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
  *
  * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
- * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+ * and no URL is given then the Loader will set the URL to be "alien.json". It will always add `.json` as the extension, although
  * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
  *
  * Note: The ability to load this type of file will only be available if the Multi Atlas File type has been built into Phaser.

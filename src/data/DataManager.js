@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18,9 +18,15 @@ var Events = require('./events');
 
 /**
  * @classdesc
- * The Data Manager Component features a means to store pieces of data specific to a Game Object, System or Plugin.
- * You can then search, query it, and retrieve the data. The parent must either extend EventEmitter,
- * or have a property called `events` that is an instance of it.
+ * The Data Manager provides a way to store, retrieve, and manage arbitrary key-value data on any
+ * Game Object, System, or Plugin. Each entry is stored by a string key and can hold any value type.
+ *
+ * Data changes are communicated through events: a `setdata` event fires when a new key is created,
+ * and `changedata` / `changedata-key` events fire when an existing value is updated. This makes the
+ * Data Manager well suited for driving UI, triggering game logic, or syncing state between systems.
+ *
+ * The parent object must either extend `EventEmitter` directly, or expose a property called `events`
+ * that is an instance of `EventEmitter`.
  *
  * @class DataManager
  * @memberof Phaser.Data
@@ -84,7 +90,7 @@ var DataManager = new Class({
          * this.data.values.gold += 1000;
          * ```
          *
-         * Doing so will emit a `setdata` event from the parent of this Data Manager.
+         * Doing so will emit a `changedata` event from the parent of this Data Manager.
          *
          * Do not modify this object directly. Adding properties directly to this object will not
          * emit any events. Always use `DataManager.set` to create new items the first time around.
@@ -283,9 +289,10 @@ var DataManager = new Class({
     },
 
     /**
-     * Increase a value for the given key. If the key doesn't already exist in the Data Manager then it is increased from 0.
+     * Increases a value for the given key. If the key doesn't already exist in the Data Manager then it is created with a value of 0 before being increased.
      *
-     * When the value is first set, a `setdata` event is emitted.
+     * When the key is first created, a `setdata` event is emitted. If the key already exists, a `changedata` event
+     * and a `changedata-key` event are emitted instead, where `key` is replaced with the actual key name.
      *
      * @method Phaser.Data.DataManager#inc
      * @fires Phaser.Data.Events#SET_DATA
@@ -293,24 +300,21 @@ var DataManager = new Class({
      * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.23.0
      *
-     * @generic {any} T
-     * @genericUse {(string|T)} - [key]
-     *
-     * @param {(string|object)} key - The key to increase the value for.
-     * @param {number} [data=1] - The amount to increase the given key by. Pass a negative value to decrease the key.
+     * @param {string} key - The key to change the value for.
+     * @param {number} [amount=1] - The amount to increase the given key by. Pass a negative value to decrease the key.
      *
      * @return {this} This Data Manager instance.
      */
-    inc: function (key, data)
+    inc: function (key, amount)
     {
         if (this._frozen)
         {
             return this;
         }
 
-        if (data === undefined)
+        if (amount === undefined)
         {
-            data = 1;
+            amount = 1;
         }
 
         var value = this.get(key);
@@ -320,15 +324,16 @@ var DataManager = new Class({
             value = 0;
         }
 
-        this.set(key, (value + data));
+        this.set(key, (value + amount));
 
         return this;
     },
 
     /**
-     * Toggle a boolean value for the given key. If the key doesn't already exist in the Data Manager then it is toggled from false.
+     * Toggles a boolean value for the given key. If the key doesn't already exist in the Data Manager then it is created with a value of `false` before being toggled.
      *
-     * When the value is first set, a `setdata` event is emitted.
+     * When the key is first created, a `setdata` event is emitted. If the key already exists, a `changedata` event
+     * and a `changedata-key` event are emitted instead, where `key` is replaced with the actual key name.
      *
      * @method Phaser.Data.DataManager#toggle
      * @fires Phaser.Data.Events#SET_DATA
@@ -336,10 +341,7 @@ var DataManager = new Class({
      * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.23.0
      *
-     * @generic {any} T
-     * @genericUse {(string|T)} - [key]
-     *
-     * @param {(string|object)} key - The key to toggle the value for.
+     * @param {string} key - The key to toggle the value for.
      *
      * @return {this} This Data Manager instance.
      */
@@ -423,7 +425,9 @@ var DataManager = new Class({
     },
 
     /**
-     * Passes all data entries to the given callback.
+     * Passes all data entries to the given callback. The callback is invoked for every entry in the
+     * Data Manager, receiving the parent object, the key, the value, and any additional arguments
+     * provided to this method.
      *
      * @method Phaser.Data.DataManager#each
      * @since 3.0.0
@@ -642,7 +646,9 @@ var DataManager = new Class({
     },
 
     /**
-     * Destroy this data manager.
+     * Destroys this Data Manager. All stored data is deleted, all event listeners are removed,
+     * and the reference to the parent object is cleared. This is called automatically when the
+     * parent emits a `destroy` event.
      *
      * @method Phaser.Data.DataManager#destroy
      * @since 3.0.0

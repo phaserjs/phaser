@@ -1,0 +1,99 @@
+# Version 4.0.0 - Release Candidate 7
+
+## New Features
+
+- `Actions.AddEffectBloom` allows you to quickly set up a bloom effect, using several filters, on a target Camera or GameObject.
+- `Actions.AddEffectShine` allows you to quickly set up a shine effect, using a new Gradient and filters, on a target Camera or GameObject.
+- `Actions.AddMaskShape` allows you to quickly add shapes to a target Camera or GameObject as Masks. Blurred edges and inversion are supported.
+- `Actions.FitToRegion` transforms an object to fit a region, such as the screen.
+- `Display.Color`: several helper methods now support modifying an existing `Color` object instead of creating a new one.
+  - `HSLToColor`
+  - `HexStringToColor`
+  - `IntegerToColor`
+  - `ObjectToColor`
+  - `RGBStringToColor`
+  - `ValueToColor`
+- `Display.Color.Interpolate`: an extra interpolation mode is available.
+  - `HSVWithHSV`: new method to interpolate HSV values, in HSV space.
+  - `ColorWithColor` has new parameters to allow it to operate in HSV space.
+    - `hsv` flag sets it to operate in HSV space.
+    - `hsvSign` flag can force it to interpolate hue either ascending or descending. Default behavior picks the shortest angle.
+- `Display.ColorBand` describes a transition between two colors. Intended for use in gradients.
+- `Display.ColorRamp` describes a range of colors using ColorBands. Intended for use in gradients.
+- `GameObject#isDestroyed` flag helps you avoid errors when accessing an object that might have removed expected properties during destruction.
+- `GameObjects.Gradient` is a new game object which renders gradients.
+  - Gradient shapes include:
+    - `LINEAR`
+    - `BILINEAR`
+    - `RADIAL`
+    - `CONIC_SYMMETRIC`
+    - `CONIC_ASYMMETRIC`
+  - Gradient repeat modes include:
+    - `EXTEND`: flat colors extend from start and end.
+    - `TRUNCATE`: transparency extends from start and end.
+    - `SAWTOOTH`: gradient starts over every time it completes.
+    - `TRIANGULAR`: gradient reverses direction every time it gets to the end or start.
+  - Optional Interleaved Gradient Noise based dithering to eliminate banding.
+- `GameObjects.NineSlice` has two new parameters: `tileX`, `tileY`, which allow non-corner regions of the NineSlice to tile instead of stretch. Some stretching is still applied to keep the tile count a whole number. Thanks to @skhoroshavin for this contribution!
+- `GameObjects.Noise` renders noise patterns.
+  - Control value power curve.
+  - Select from trigonometric or PCG algorithms.
+  - Output grayscale, random color, or random normals.
+- Cellular noise objects: `GameObjects.NoiseCell2D`, `NoiseCell3D` and `NoiseCell4D` provide cellular/Worley/Voronoi noise.
+  - Render cellular noise with sharp or smooth edges, or random flat colors.
+  - Smoothly animate scroll through the XY plane or evolve the pattern through Z or ZW axes.
+  - Add octaves of detail.
+  - Supports rendering as a texture or normal map for use in other effects.
+- Simplex noise objects: `GameObjects.NoiseSimplex2D` and `NoiseSimplex3D` provide simplex noise.
+  - Render simplex noise, the successor to Perlin Noise.
+  - Use gradient flow to smoothly loop noise animation.
+  - Add octaves of detail.
+  - Apply turbulence and output shaping for a variety of effects.
+  - Supports rendering as a texture or normal map for use in other effects.
+- `Tint` is overhauled.
+  - `tint` and `setTint()` now purely affect the color settings.
+    - Previously, both would silently deactivate fill mode.
+  - `tintFill` and `setTintFill()` are removed.
+  - New property `tintMode` and new method `setTintMode()` now set the tint fill mode.
+  - `Phaser.TintModes` enumerates valid tint modes.
+    - `MULTIPLY`
+    - `FILL`
+    - `ADD`
+    - `SCREEN`
+    - `OVERLAY`
+    - `HARD_LIGHT`
+  - FILL mode now treats partial alpha correctly.
+  - BitmapText tinting now works correctly.
+  - Conversion tip: `foo.setTintFill(color)` becomes `foo.setTint(color).setTintMode(Phaser.TintModes.FILL)`.
+- `CombineColorMatrix` filter for remixing alpha and other channels between images.
+- `GradientMap` filter for recoloring images using a gradient and their own brightness.
+- `Key` filter for removing or isolating colors.
+- `ImageLight` filter for image-based lighting, a soft, highly realistic form of illumination.
+- `PanoramaBlur` filter for adjusting images for `ImageLight`.
+- `NormalTools` filter for manipulating normal maps.
+- `Quantize` filter for reducing colors and dithering.
+- `Vignette` filter returns from Phaser 3.
+  - Now sets a configurable border color instead of erasing alpha.
+  - Also supports limited blend modes.
+- `Wipe` filter returns from Phaser 3.
+  - Now allows you to set the texture displayed in wiped-away regions.
+  - Now provides helper functions to set directional reveal/wipe effects.
+- `Math.Hash` provides fast hashes of 1, 2, 3, or 4 dimensional input, using trigonometric or PCG methods.
+- `Math.HashCell` provides hashes of 1, 2, 3, or 4 dimensional input, using hash results in a Worley noise field. This produces a continuous but lumpy field.
+- `Math.HashSimplex` provides hashes of 1, 2, or 3 dimensional input, using a simplex noise implementation. This produces a continuous, smooth field.
+- `Texture#setSource` method for updating the source of a texture. Note that, while the source will update, derived values such as object sizes will not. It's advisable to switch between textures of identical size to avoid unexpected transforms.
+- `Texture#setDataSource` method already existed, but has been changed to be more useful like `setSource`.
+- `TextureManager#addFlatColor` method for creating a flat texture with custom color, alpha, width, and height. This is intended to act as a temporary stand-in for textures you might not have loaded yet.
+- `TextureSource#updateSource` method for switching sources directly.
+- New `Phaser.Types.Textures.TextureSource` and `Phaser.Types.Textures.TextureSourceElement` types to simplify the increasing number of sources for a texture.
+
+## Fixes
+
+- Fix `TimeStep#stepLimitFPS` to drop fewer frames, running much more smoothly at the target frame rate. Thanks to @Flow and @Antriel for discussing the topic.
+  - Documentation in `FPSConfig#limit` now clarifies that frame limits are only necessary when artificially slowing the game below the display refresh rate.
+- Fix `Shape` not respecting lights even though it had the lighting component.
+- Fix `SpriteGPULayer` creation time handling getting confused by 0.
+- Fix blend modes leaking onto siblings within a `Container`. Thanks to @saintflow47, @tickle-monster and @leemanhopeter for reporting this.
+- Fix texture offsets in `ParseXMLBitmapFont`. Thanks to @leemanhopeter.
+- Fix `DynamicTexture` turning black if it initially has a power-of-two resolution and is resized to a non-power-of-two resolution. Now any WebGL texture resize will wrap with REPEAT if it is power of two, or CLAMP_TO_EDGE if not. Thanks to @x-wk for reporting this.
+- Fix `TextureManager.addUint8Array` method, which got premultiplied alpha wrong and flipY wrong.

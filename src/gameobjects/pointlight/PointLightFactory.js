@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18,14 +18,14 @@ var PointLight = require('./PointLight');
  * The difference is that the Point Light renders using a custom shader, designed to give the
  * impression of a point light source, of variable radius, intensity and color, in your game.
  * However, unlike the Light Game Object, it does not impact any other Game Objects, or use their
- * normal maps for calcuations. This makes them extremely fast to render compared to Lights
+ * normal maps for calculations. This makes them extremely fast to render compared to Lights
  * and perfect for special effects, such as flickering torches or muzzle flashes.
  *
  * For maximum performance you should batch Point Light Game Objects together. This means
  * ensuring they follow each other consecutively on the display list. Ideally, use a Layer
  * Game Object and then add just Point Lights to it, so that it can batch together the rendering
  * of the lights. You don't _have_ to do this, and if you've only a handful of Point Lights in
- * your game then it's perfectly safe to mix them into the dislay list as normal. However, if
+ * your game then it's perfectly safe to mix them into the display list as normal. However, if
  * you're using a large number of them, please consider how they are mixed into the display list.
  *
  * The renderer will automatically cull Point Lights. Those with a radius that does not intersect
@@ -44,7 +44,7 @@ var PointLight = require('./PointLight');
  * @param {number} [color=0xffffff] - The color of the Point Light, given as a hex value.
  * @param {number} [radius=128] - The radius of the Point Light.
  * @param {number} [intensity=1] - The intensity, or color blend, of the Point Light.
- * @param {number} [attenuation=0.1] - The attenuation  of the Point Light. This is the reduction of light from the center point.
+ * @param {number} [attenuation=0.1] - The attenuation of the Point Light. This is the reduction of light from the center point.
  *
  * @return {Phaser.GameObjects.PointLight} The Game Object that was created.
  */

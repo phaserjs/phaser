@@ -1,14 +1,15 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Find the angle of a segment from (x1, y1) -> (x2, y2).
  *
- * The difference between this method and {@link Phaser.Math.Angle.Between} is that this assumes the y coordinate
- * travels down the screen.
+ * The difference between this method and {@link Phaser.Math.Angle.Between} is that it measures the angle from
+ * the Y axis rather than the X axis. This means a result of zero indicates the segment points straight down (along
+ * the positive Y axis), making it suitable for use with sprites that face upward by default.
  *
  * @function Phaser.Math.Angle.BetweenY
  * @since 3.0.0

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@ var Rectangle = require('./Rectangle');
 var MATH_CONST = require('../../math/const');
 
 /**
- * Constructs new Rectangle or repositions and resizes an existing Rectangle so that all of the given points are on or within its bounds.
+ * Constructs a new Rectangle or repositions and resizes an existing Rectangle so that all of the given points are on or within its bounds.
  *
  * The `points` parameter is an array of Point-like objects:
  *

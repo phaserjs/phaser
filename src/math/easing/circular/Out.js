@@ -1,18 +1,20 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Circular ease-out.
+ * Applies a circular ease-out effect to `v`, based on the equation of a unit circle.
+ * The motion starts at full speed and decelerates smoothly to a stop, following the
+ * curve of a quarter-circle. `v` should be in the range 0 to 1.
  *
  * @function Phaser.Math.Easing.Circular.Out
  * @since 3.0.0
  *
- * @param {number} v - The value to be tweened.
+ * @param {number} v - The value to be eased, in the range 0 to 1.
  *
- * @return {number} The tweened value.
+ * @return {number} The eased value, in the range 0 to 1.
  */
 var Out = function (v)
 {

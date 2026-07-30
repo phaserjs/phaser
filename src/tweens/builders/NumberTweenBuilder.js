@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,6 +9,7 @@ var Defaults = require('../tween/Defaults');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GetBoolean = require('./GetBoolean');
 var GetEaseFunction = require('./GetEaseFunction');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var GetNewValue = require('./GetNewValue');
 var GetValue = require('../../utils/object/GetValue');
 var GetValueOp = require('./GetValueOp');
@@ -16,7 +17,14 @@ var MergeRight = require('../../utils/object/MergeRight');
 var Tween = require('../tween/Tween');
 
 /**
- * Creates a new Number Tween.
+ * Creates a new Number Tween, also known as a counter tween.
+ *
+ * Unlike a standard tween, a Number Tween does not target a Game Object's properties.
+ * Instead, it interpolates a plain numeric value between a `from` and a `to` value over
+ * the course of the tween. The current interpolated value can be read at any time via
+ * `tween.getValue()`. This makes Number Tweens ideal for driving custom animations,
+ * UI counters, shader uniforms, or any other value that needs to change smoothly over
+ * time without being tied directly to a Game Object property.
  *
  * @function Phaser.Tweens.Builders.NumberTweenBuilder
  * @since 3.0.0
@@ -55,14 +63,14 @@ var NumberTweenBuilder = function (parent, config, defaults)
     //
     //  tween.getValue()
 
-    var from = GetValue(config, 'from', 0);
-    var to = GetValue(config, 'to', 1);
+    var from = GetFastValue(config, 'from', 0);
+    var to = GetFastValue(config, 'to', 1);
 
     var targets = [ { value: from } ];
 
-    var delay = GetValue(config, 'delay', defaults.delay);
-    var easeParams = GetValue(config, 'easeParams', defaults.easeParams);
-    var ease = GetValue(config, 'ease', defaults.ease);
+    var delay = GetFastValue(config, 'delay', defaults.delay);
+    var easeParams = GetFastValue(config, 'easeParams', defaults.easeParams);
+    var ease = GetFastValue(config, 'ease', defaults.ease);
 
     var ops = GetValueOp('value', to);
 
@@ -74,13 +82,13 @@ var NumberTweenBuilder = function (parent, config, defaults)
         ops.getEnd,
         ops.getStart,
         ops.getActive,
-        GetEaseFunction(GetValue(config, 'ease', ease), GetValue(config, 'easeParams', easeParams)),
+        GetEaseFunction(GetFastValue(config, 'ease', ease), GetFastValue(config, 'easeParams', easeParams)),
         GetNewValue(config, 'delay', delay),
-        GetValue(config, 'duration', defaults.duration),
+        GetFastValue(config, 'duration', defaults.duration),
         GetBoolean(config, 'yoyo', defaults.yoyo),
-        GetValue(config, 'hold', defaults.hold),
-        GetValue(config, 'repeat', defaults.repeat),
-        GetValue(config, 'repeatDelay', defaults.repeatDelay),
+        GetFastValue(config, 'hold', defaults.hold),
+        GetFastValue(config, 'repeat', defaults.repeat),
+        GetFastValue(config, 'repeatDelay', defaults.repeatDelay),
         false,
         false
     );
@@ -93,6 +101,7 @@ var NumberTweenBuilder = function (parent, config, defaults)
     tween.loopDelay = Math.round(GetAdvancedValue(config, 'loopDelay', 0));
     tween.paused = GetBoolean(config, 'paused', false);
     tween.persist = GetBoolean(config, 'persist', false);
+    tween.isNumberTween = true;
 
     //  Set the Callbacks
     tween.callbackScope = GetValue(config, 'callbackScope', tween);

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,7 +12,7 @@ var Render = require('./DynamicBitmapTextRender');
  * @classdesc
  * BitmapText objects work by taking a texture file and an XML or JSON file that describes the font structure.
  *
- * During rendering for each letter of the text is rendered to the display, proportionally spaced out and aligned to
+ * During rendering, each letter of the text is rendered to the display, proportionally spaced out and aligned to
  * match the font structure.
  *
  * Dynamic Bitmap Text objects are different from Static Bitmap Text in that they invoke a callback for each
@@ -118,7 +118,7 @@ var DynamicBitmapText = new Class({
 
         /**
          * The data object that is populated during rendering, then passed to the displayCallback.
-         * You should modify this object then return it back from the callback. It's updated values
+         * You should modify this object then return it back from the callback. Its updated values
          * will be used to render the specific glyph.
          *
          * Please note that if you need a reference to this object locally in your game code then you

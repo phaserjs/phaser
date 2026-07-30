@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,14 +15,12 @@ var GridRender = require('./GridRender');
  * it for input or physics. It provides a quick and easy way for you to render this shape in your
  * game without using a texture, while still taking advantage of being fully batched in WebGL.
  *
- * This shape supports only fill colors and cannot be stroked.
- *
  * A Grid Shape allows you to display a grid in your game, where you can control the size of the
  * grid as well as the width and height of the grid cells. You can set a fill color for each grid
  * cell as well as an alternate fill color. When the alternate fill color is set then the grid
  * cells will alternate the fill colors as they render, creating a chess-board effect. You can
- * also optionally have an outline fill color. If set, this draws lines between the grid cells
- * in the given color. If you specify an outline color with an alpha of zero, then it will draw
+ * also optionally have a stroke fill color. If set, this draws lines between the grid cells
+ * in the given color. If you specify a stroke color with an alpha of zero, then it will draw
  * the cells spaced out, but without the lines between them.
  *
  * @class Grid
@@ -40,8 +38,8 @@ var GridRender = require('./GridRender');
  * @param {number} [cellHeight=32] - The height of one cell in the grid.
  * @param {number} [fillColor] - The color the grid cells will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the grid cells will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
- * @param {number} [outlineFillColor] - The color of the lines between the grid cells. See the `setOutline` method.
- * @param {number} [outlineFillAlpha] - The alpha of the lines between the grid cells.
+ * @param {number} [strokeFillColor] - The color of the lines between the grid cells. See the `setStrokeStyle` method.
+ * @param {number} [strokeFillAlpha] - The alpha of the lines between the grid cells.
  */
 var Grid = new Class({
 
@@ -53,7 +51,7 @@ var Grid = new Class({
 
     initialize:
 
-    function Grid (scene, x, y, width, height, cellWidth, cellHeight, fillColor, fillAlpha, outlineFillColor, outlineFillAlpha)
+    function Grid (scene, x, y, width, height, cellWidth, cellHeight, fillColor, fillAlpha, strokeFillColor, strokeFillAlpha)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -85,43 +83,8 @@ var Grid = new Class({
         this.cellHeight = cellHeight;
 
         /**
-         * Will the grid render its cells in the `fillColor`?
-         *
-         * @name Phaser.GameObjects.Grid#showCells
-         * @type {boolean}
-         * @since 3.13.0
-         */
-        this.showCells = true;
-
-        /**
-         * The color of the lines between each grid cell.
-         *
-         * @name Phaser.GameObjects.Grid#outlineFillColor
-         * @type {number}
-         * @since 3.13.0
-         */
-        this.outlineFillColor = 0;
-
-        /**
-         * The alpha value for the color of the lines between each grid cell.
-         *
-         * @name Phaser.GameObjects.Grid#outlineFillAlpha
-         * @type {number}
-         * @since 3.13.0
-         */
-        this.outlineFillAlpha = 0;
-
-        /**
-         * Will the grid display the lines between each cell when it renders?
-         *
-         * @name Phaser.GameObjects.Grid#showOutline
-         * @type {boolean}
-         * @since 3.13.0
-         */
-        this.showOutline = true;
-
-        /**
-         * Will the grid render the alternating cells in the `altFillColor`?
+         * Controls whether the grid renders alternating cells using the `altFillColor` and `altFillAlpha` values.
+         * Set this via the `setAltFillStyle` method.
          *
          * @name Phaser.GameObjects.Grid#showAltCells
          * @type {boolean}
@@ -148,53 +111,53 @@ var Grid = new Class({
          */
         this.altFillAlpha;
 
+        /**
+         * The padding around each cell. The effective gutter between cells is
+         * twice this value.
+         *
+         * @name Phaser.GameObjects.Grid#cellPadding
+         * @type {number}
+         * @since 4.0.0
+         * @default 0.5
+         */
+        this.cellPadding = 0.5;
+
+        /**
+         * Whether to stroke on the outside edges of the Grid object.
+         *
+         * @name Phaser.GameObjects.Grid#strokeOutside
+         * @type {boolean}
+         * @since 4.0.0
+         * @default false
+         */
+        this.strokeOutside = false;
+
+        /**
+         * Whether to stroke on the outside edges of the Grid object
+         * when the cell is incomplete, e.g. the grid size does not
+         * evenly fit the cell size.
+         *
+         * This only has an effect if `strokeOutside` is `true`.
+         * It will affect the right and bottom edges of the grid.
+         *
+         * @name Phaser.GameObjects.Grid#strokeOutsideIncomplete
+         * @type {boolean}
+         * @since 4.0.0
+         * @default true
+         */
+        this.strokeOutsideIncomplete = true;
+
         this.setPosition(x, y);
         this.setSize(width, height);
 
         this.setFillStyle(fillColor, fillAlpha);
 
-        if (outlineFillColor !== undefined)
+        if (strokeFillColor !== undefined)
         {
-            this.setOutlineStyle(outlineFillColor, outlineFillAlpha);
+            this.setStrokeStyle(1, strokeFillColor, strokeFillAlpha);
         }
 
         this.updateDisplayOrigin();
-    },
-
-    /**
-     * Sets the fill color and alpha level the grid cells will use when rendering.
-     *
-     * If this method is called with no values then the grid cells will not be rendered,
-     * however the grid lines and alternating cells may still be.
-     *
-     * Also see the `setOutlineStyle` and `setAltFillStyle` methods.
-     *
-     * This call can be chained.
-     *
-     * @method Phaser.GameObjects.Grid#setFillStyle
-     * @since 3.13.0
-     *
-     * @param {number} [fillColor] - The color the grid cells will be filled with, i.e. 0xff0000 for red.
-     * @param {number} [fillAlpha=1] - The alpha the grid cells will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setFillStyle: function (fillColor, fillAlpha)
-    {
-        if (fillAlpha === undefined) { fillAlpha = 1; }
-
-        if (fillColor === undefined)
-        {
-            this.showCells = false;
-        }
-        else
-        {
-            this.fillColor = fillColor;
-            this.fillAlpha = fillAlpha;
-            this.showCells = true;
-        }
-
-        return this;
     },
 
     /**
@@ -202,7 +165,7 @@ var Grid = new Class({
      *
      * If this method is called with no values then alternating grid cells will not be rendered in a different color.
      *
-     * Also see the `setOutlineStyle` and `setFillStyle` methods.
+     * Also see the `setStrokeStyle` and `setFillStyle` methods.
      *
      * This call can be chained.
      *
@@ -233,36 +196,46 @@ var Grid = new Class({
     },
 
     /**
-     * Sets the fill color and alpha level that the lines between each grid cell will use.
+     * Sets the cell padding for the grid.
+     * The cell padding is the space around each cell, between the cells.
+     * The effective gutter between cells is twice this value.
      *
-     * If this method is called with no values then the grid lines will not be rendered at all, however
-     * the cells themselves may still be if they have colors set.
-     *
-     * Also see the `setFillStyle` and `setAltFillStyle` methods.
+     * If this method is called with no value then the cell padding is set to zero.
      *
      * This call can be chained.
      *
-     * @method Phaser.GameObjects.Grid#setOutlineStyle
-     * @since 3.13.0
-     *
-     * @param {number} [fillColor] - The color the lines between the grid cells will be filled with, i.e. 0xff0000 for red.
-     * @param {number} [fillAlpha=1] - The alpha the lines between the grid cells will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
-     *
+     * @method Phaser.GameObjects.Grid#setCellPadding
+     * @since 4.0.0
+     * @param {number} [value] - The cell padding value.
      * @return {this} This Game Object instance.
      */
-    setOutlineStyle: function (fillColor, fillAlpha)
+    setCellPadding: function (value)
     {
-        if (fillAlpha === undefined) { fillAlpha = 1; }
+        this.cellPadding = value || 0;
 
-        if (fillColor === undefined)
+        return this;
+    },
+
+    /**
+     * Controls whether a stroke is drawn around the outer perimeter of the entire Grid object,
+     * in addition to the lines drawn between cells. Optionally, you can also control whether the
+     * outer edge is stroked on partial cells, i.e. where the grid dimensions do not divide evenly
+     * by the cell dimensions, leaving an incomplete cell on the right or bottom edge.
+     *
+     * This call can be chained.
+     *
+     * @method Phaser.GameObjects.Grid#setStrokeOutside
+     * @since 4.0.0
+     * @param {boolean} strokeOutside - Whether to stroke the outside edges of the Grid object.
+     * @param {boolean} [strokeOutsideIncomplete] - Whether to stroke the outside edges of the Grid object when the cell is incomplete.
+     */
+    setStrokeOutside: function (strokeOutside, strokeOutsideIncomplete)
+    {
+        this.strokeOutside = strokeOutside;
+
+        if (strokeOutsideIncomplete !== undefined)
         {
-            this.showOutline = false;
-        }
-        else
-        {
-            this.outlineFillColor = fillColor;
-            this.outlineFillAlpha = fillAlpha;
-            this.showOutline = true;
+            this.strokeOutsideIncomplete = strokeOutsideIncomplete;
         }
 
         return this;

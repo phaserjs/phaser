@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,13 +10,19 @@ var ContainsArray = require('../triangle/ContainsArray');
 var Decompose = require('../rectangle/Decompose');
 
 /**
- * Checks for intersection between Rectangle shape and Triangle shape.
+ * Checks for intersection between a Rectangle and a Triangle shape.
+ *
+ * The test is performed in multiple stages of increasing cost. First, the bounding
+ * boxes of the two shapes are compared for a quick early-out. If they overlap, the
+ * test checks whether any triangle vertex lies inside the rectangle, then whether any
+ * edge of the triangle intersects any edge of the rectangle, and finally whether any
+ * corner of the rectangle lies inside the triangle.
  *
  * @function Phaser.Geom.Intersects.RectangleToTriangle
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Rectangle} rect - Rectangle object to test.
- * @param {Phaser.Geom.Triangle} triangle - Triangle object to test.
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to test.
+ * @param {Phaser.Geom.Triangle} triangle - The Triangle to test.
  *
  * @return {boolean} A value of `true` if objects intersect; otherwise `false`.
  */

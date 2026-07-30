@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,7 +17,7 @@ var IsInLayerBounds = require('./IsInLayerBounds');
  * @param {number} tileY - Y position to get the tile from (given in tile units, not pixels).
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
- * @return {?boolean} Returns a boolean, or null if the layer given was invalid.
+ * @return {?boolean} Returns `true` if a valid tile (with an index greater than -1) exists at the given coordinates, or `false` if the coordinates are out of bounds, the tile is null, or the tile index is -1.
  */
 var HasTileAt = function (tileX, tileY, layer)
 {

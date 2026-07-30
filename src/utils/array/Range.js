@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -38,7 +38,6 @@ var BuildChunk = function (a, b, qty)
  * a1, a2, a3, b1, b2, b3, c1, c2, c3, a1, a2, a3, b1, b2, b3, c1, c2, c3
  *
  * Range ([a,b], [1,2], repeat -1 = endless, max = 14) =
- * Maybe if max is set then repeat goes to -1 automatically?
  * a1, a2, b1, b2, a1, a2, b1, b2, a1, a2, b1, b2, a1, a2 (capped at 14 elements)
  *
  * Range ([a], [1,2,3,4,5], random = true) =
@@ -61,9 +60,9 @@ var BuildChunk = function (a, b, qty)
  *
  * @param {array} a - The first array of range elements.
  * @param {array} b - The second array of range elements.
- * @param {object} [options] - A range configuration object. Can contain: repeat, random, randomB, yoyo, max, qty.
+ * @param {object} [options] - A range configuration object. Supports the following properties: `qty` (number of times each pair is duplicated, default 1), `repeat` (number of times the entire range is repeated, use -1 for endless), `random` (shuffle the full output array), `randomB` (shuffle array `b` before building pairs), `yoyo` (append the range in reverse after the forward pass), `max` (cap the total number of elements in the output).
  *
- * @return {array} An array of arranged elements.
+ * @return {array} An array of `{ a, b }` pair objects built from the cartesian product of the two input arrays, arranged according to the given options.
  */
 var Range = function (a, b, options)
 {

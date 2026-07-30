@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20,7 +20,7 @@ var Velocity = {
      * @method Phaser.Physics.Matter.Components.Velocity#setVelocityX
      * @since 3.0.0
      *
-     * @param {number} x - The horizontal velocity value.
+     * @param {number} x - The horizontal velocity value, in pixels per second.
      *
      * @return {this} This Game Object instance.
      */
@@ -34,12 +34,12 @@ var Velocity = {
     },
 
     /**
-     * Sets vertical velocity of the physics body.
+     * Sets the vertical velocity of the physics body.
      *
      * @method Phaser.Physics.Matter.Components.Velocity#setVelocityY
      * @since 3.0.0
      *
-     * @param {number} y - The vertical velocity value.
+     * @param {number} y - The vertical velocity value, in pixels per second.
      *
      * @return {this} This Game Object instance.
      */
@@ -141,7 +141,7 @@ var Velocity = {
      * @method Phaser.Physics.Matter.Components.Velocity#getAngularSpeed
      * @since 3.60.0
      *
-     * @return {number} The current angular velocity of the body.
+     * @return {number} The current angular speed of the body.
      */
     getAngularSpeed: function ()
     {

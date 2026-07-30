@@ -1,8 +1,8 @@
 /**
  * @author       Joachim Grill <joachim@codeandweb.com>
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @copyright    2018 CodeAndWeb GmbH
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,8 +13,13 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var Vertices = require('./lib/geometry/Vertices');
 
 /**
- * Use PhysicsEditorParser.parseBody() to build a Matter body object, based on a physics data file
- * created and exported with PhysicsEditor (https://www.codeandweb.com/physicseditor).
+ * A namespace containing methods for parsing body and fixture data exported from PhysicsEditor
+ * (https://www.codeandweb.com/physicseditor), a visual collision shape editor for game sprites.
+ *
+ * Use `PhysicsEditorParser.parseBody()` to build a compound Matter.js body from a physics data file
+ * created and exported by PhysicsEditor. The exported JSON describes the body's fixtures (child
+ * bodies), each of which can be a circle or a set of convex polygon vertices. The parser assembles
+ * all fixtures into a single compound Matter.js body positioned at the given world coordinates.
  *
  * @namespace Phaser.Physics.Matter.PhysicsEditorParser
  * @since 3.10.0
@@ -22,7 +27,11 @@ var Vertices = require('./lib/geometry/Vertices');
 var PhysicsEditorParser = {
 
     /**
-     * Parses a body element exported by PhysicsEditor.
+     * Parses a body configuration exported by PhysicsEditor and creates a compound Matter.js body
+     * from it. Each fixture definition in the configuration is parsed and converted into a child
+     * body (either a circle or a convex polygon), and all child bodies are combined into a single
+     * compound body positioned at the given world coordinates. Additional Matter.js body properties
+     * can be supplied via the `options` argument and will be merged into the body configuration.
      *
      * @function Phaser.Physics.Matter.PhysicsEditorParser.parseBody
      * @since 3.10.0
@@ -68,7 +77,10 @@ var PhysicsEditorParser = {
     },
 
     /**
-     * Parses an element of the "fixtures" list exported by PhysicsEditor
+     * Parses a single fixture entry from the "fixtures" list exported by PhysicsEditor. A fixture
+     * can describe either a circle (defined by a centre position and radius) or a set of convex
+     * polygon vertex lists. The appropriate Matter.js body or bodies are created and returned as
+     * an array so they can be combined into a compound body by the caller.
      *
      * @function Phaser.Physics.Matter.PhysicsEditorParser.parseFixture
      * @since 3.10.0
@@ -102,7 +114,11 @@ var PhysicsEditorParser = {
     },
 
     /**
-     * Parses the "vertices" lists exported by PhysicsEditor.
+     * Parses one or more vertex sets exported by PhysicsEditor and creates a Matter.js body for
+     * each set. Before creating each body, the vertices are sorted into clockwise winding order
+     * and the body is positioned at the centroid of the vertex set. After all bodies are created,
+     * coincident edges between adjacent parts are flagged so that Matter.js can handle them
+     * correctly during collision detection.
      *
      * @function Phaser.Physics.Matter.PhysicsEditorParser.parseVertices
      * @since 3.10.0

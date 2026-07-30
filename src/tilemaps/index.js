@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -29,7 +29,9 @@ var Tilemaps = {
     TilemapCreator: require('./TilemapCreator'),
     TilemapFactory: require('./TilemapFactory'),
     Tileset: require('./Tileset'),
+    TilemapLayerBase: require('./TilemapLayerBase'),
     TilemapLayer: require('./TilemapLayer'),
+    TilemapGPULayer: require('./TilemapGPULayer'),
     Orientation: require('./const/ORIENTATION_CONST'),
 
     LayerData: require('./mapdata/LayerData'),

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,16 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
- * A single Audio File suitable for loading by the Loader.
+ * A single Audio File suitable for loading by the Loader via the Web Audio API.
+ *
+ * This file type loads audio data as an ArrayBuffer over XHR and then decodes it into an AudioBuffer
+ * using the Web Audio API's `decodeAudioData` method. The resulting AudioBuffer is stored in the
+ * Phaser Audio Cache, ready for use by the Sound Manager.
+ *
+ * If the device does not support the Web Audio API, or if Web Audio has been disabled in the game
+ * configuration, an `HTML5AudioFile` will be created instead. You do not need to choose between them
+ * manually — use `Phaser.Loader.LoaderPlugin#audio` and Phaser will select the correct file type
+ * automatically based on device capabilities.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#audio method and are not typically created directly.
  *
@@ -66,7 +75,11 @@ var AudioFile = new Class({
 
     /**
      * Called automatically by Loader.nextFile.
-     * This method controls what extra work this File does with its loaded data.
+     * This method decodes the raw audio ArrayBuffer loaded via XHR using the Web Audio API's
+     * `decodeAudioData` method. On success, the resulting AudioBuffer is stored in `this.data`
+     * and `onProcessComplete` is called to advance the load queue. On failure, an error is logged
+     * to the console and `onProcessError` is called. The AudioContext reference is released after
+     * decoding begins to avoid retaining it unnecessarily.
      *
      * @method Phaser.Loader.FileTypes.AudioFile#onProcess
      * @since 3.0.0
@@ -99,6 +112,25 @@ var AudioFile = new Class({
 
 });
 
+/**
+ * Static factory method that creates the correct type of audio file for the current device.
+ *
+ * Inspects the game's audio configuration and device capabilities to decide whether to return
+ * a Web Audio API-based `AudioFile` or a fallback `HTML5AudioFile`. It first calls
+ * `AudioFile.getAudioURL` to find a suitable URL from the provided list that the browser can
+ * play. If no compatible URL is found, a warning is logged and `null` is returned.
+ *
+ * @function Phaser.Loader.FileTypes.AudioFile.create
+ * @since 3.0.0
+ *
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Types.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|string[]|Phaser.Types.Loader.FileTypes.AudioFileURLConfig|Phaser.Types.Loader.FileTypes.AudioFileURLConfig[])} [urls] - The absolute or relative URL(s) to load the audio from.
+ * @param {any} [config] - An object containing an `instances` property for HTML5Audio. Defaults to 1.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ *
+ * @return {?(Phaser.Loader.FileTypes.AudioFile|Phaser.Loader.FileTypes.HTML5AudioFile)} The created audio file instance, or `null` if no supported URL was found.
+ */
 AudioFile.create = function (loader, key, urls, config, xhrSettings)
 {
     var game = loader.systems.game;
@@ -116,7 +148,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
 
     if (!urlConfig)
     {
-        console.warn('No audio URLs for "%s" matched this device', key);
+        console.warn('No audio URLs for "%s" can play on this device', key);
 
         return null;
     }
@@ -134,6 +166,23 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
     }
 };
 
+/**
+ * Takes an array of audio URLs and returns a URL config object for the first entry that
+ * the current device is capable of playing, based on the audio format indicated by the
+ * file extension or an explicit `type` property on the URL config object.
+ *
+ * Blob and data URIs are always accepted and returned immediately regardless of format.
+ * For regular URLs, the extension is extracted from the filename and checked against
+ * `game.device.audio`. If no supported URL is found, `null` is returned.
+ *
+ * @function Phaser.Loader.FileTypes.AudioFile.getAudioURL
+ * @since 3.0.0
+ *
+ * @param {Phaser.Game} game - A reference to the Phaser Game instance.
+ * @param {(string|string[]|Phaser.Types.Loader.FileTypes.AudioFileURLConfig|Phaser.Types.Loader.FileTypes.AudioFileURLConfig[])} urls - One or more audio URLs to test for browser support.
+ *
+ * @return {?Phaser.Types.Loader.FileTypes.AudioFileURLConfig} A URL config object with `url` and `type` properties for the first supported audio URL, or `null` if none are supported.
+ */
 AudioFile.getAudioURL = function (game, urls)
 {
     if (!Array.isArray(urls))

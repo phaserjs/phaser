@@ -1,12 +1,19 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var types = {};
 
 /**
+ * The FileTypesManager is a static object containing a registry of file type loader functions.
+ *
+ * Each file type (such as `image`, `audio`, `tilemapTiledJSON`, etc.) registers itself here
+ * via the `register` method. When a LoaderPlugin is instantiated, it calls `install` to copy
+ * all registered file type methods onto itself, making them available as `this.load.image()`,
+ * `this.load.audio()`, and so on within a Scene.
+ *
  * @namespace Phaser.Loader.FileTypesManager
  */
 
@@ -48,7 +55,7 @@ var FileTypesManager = {
     },
 
     /**
-     * Removed all associated file types.
+     * Removes all associated file types.
      *
      * @method Phaser.Loader.FileTypesManager.destroy
      * @since 3.0.0

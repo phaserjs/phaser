@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,16 +10,18 @@ var Sprite = require('../sprite/Sprite');
 
 /**
  * @classdesc
- * A PathFollower Game Object.
+ * A PathFollower is a Sprite that automatically moves along a {@link Phaser.Curves.Path}, making it ideal
+ * for cutscenes, enemy patrol routes, moving platforms, projectile arcs, or any Game Object that should
+ * travel a predefined course through the world.
  *
- * A PathFollower is a Sprite Game Object with some extra helpers to allow it to follow a Path automatically.
+ * It extends Sprite, so everything available on a standard Sprite — animations, tinting, scaling,
+ * alpha, blend modes, and so on — works identically here.
  *
- * Anything you can do with a standard Sprite can be done with this PathFollower, such as animate it, tint it,
- * scale it and so on.
- *
- * PathFollowers are bound to a single Path at any one time and can traverse the length of the Path, from start
- * to finish, forwards or backwards, or from any given point on the Path to its end. They can optionally rotate
- * to face the direction of the path, be offset from the path coordinates or rotate independently of the Path.
+ * A PathFollower is bound to a single Path at any one time and can traverse the full length of that
+ * Path from start to finish, in either direction, or from any given point along it to the end.
+ * Playback speed and duration are controlled via a tween-like configuration object passed to
+ * `startFollow`. The follower can optionally rotate to face the direction of travel, be offset
+ * from the path coordinates, or rotate independently of the Path.
  *
  * @class PathFollower
  * @extends Phaser.GameObjects.Sprite

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,7 +12,7 @@
  * this implementation.
  *
  * Note that we're not guaranteed that there will be any 'normal' tiles if the only
- * thing in the tilset are wangtile definitions, so this has to be parsed separately.
+ * things in the tileset are wangtile definitions, so this has to be parsed separately.
  *
  * See https://doc.mapeditor.org/en/latest/manual/using-wang-tiles/ for more information.
  *
@@ -20,9 +20,7 @@
  * @since 3.53.0
  *
  * @param {Array.<object>} wangsets - The array of wangset objects (parsed from JSON)
- * @param {object} datas - The field into which to put wangset data from Tiled.
- *
- * @return {object} An object containing the tileset and image collection data.
+ * @param {object} datas - The object into which wangset data from Tiled is stored, keyed by tile ID.
  */
 var ParseWangsets = function (wangsets, datas)
 {

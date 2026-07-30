@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -19,10 +19,9 @@ var PluginCache = {};
  */
 
 /**
- * Static method called directly by the Core internal Plugins.
- * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
- * Plugin is the object to instantiate to create the plugin
- * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
+ * Registers a core plugin with the PluginCache. This is called directly by Phaser's internal
+ * core plugins during setup. The plugin is stored as the source constructor and is not
+ * instantiated at this stage.
  *
  * @method Phaser.Plugins.PluginCache.register
  * @since 3.8.0
@@ -117,7 +116,8 @@ PluginCache.getCustom = function (key)
 };
 
 /**
- * Returns an object from the custom cache based on the given key that can be instantiated.
+ * Returns the plugin constructor function from the custom plugin cache based on the given key,
+ * or `null` if no entry for that key exists.
  *
  * @method Phaser.Plugins.PluginCache.getCustomClass
  * @since 3.8.0
@@ -185,6 +185,9 @@ PluginCache.destroyCorePlugins = function ()
 
 /**
  * Removes all Custom Plugins.
+ *
+ * This removes any plugins that were registered by the developer via the Plugin Manager,
+ * but does not affect the core internal plugins that Phaser requires to run.
  *
  * @method Phaser.Plugins.PluginCache.destroyCustomPlugins
  * @since 3.12.0

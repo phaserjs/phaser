@@ -1,9 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
+
+var CONST = require('../../const');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -16,11 +18,15 @@
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
  * @param {Phaser.GameObjects.Container} container - The Game Object being rendered in this call.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+ * @param {number} renderStep - The index of this function in the Game Object's list of render processes. Used to support multiple rendering functions.
+ * @param {Phaser.GameObjects.GameObject[]} displayList - The display list which is currently being rendered.
+ * @param {number} displayListIndex - The index of the Game Object within the display list.
  */
-var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix)
+var ContainerWebGLRenderer = function (renderer, container, drawingContext, parentMatrix, renderStep, displayList, displayListIndex)
 {
+    var camera = drawingContext.camera;
     camera.addToRenderList(container);
 
     var children = container.list;
@@ -30,6 +36,8 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
     {
         return;
     }
+
+    var baseContext = drawingContext;
 
     var transformMatrix = container.localTransform;
 
@@ -46,15 +54,17 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
         transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
     }
 
-    renderer.pipelines.preBatch(container);
-
     var containerHasBlendMode = (container.blendMode !== -1);
 
-    if (!containerHasBlendMode)
+    if (!containerHasBlendMode && baseContext.blendMode !== 0)
     {
         //  If Container is SKIP_TEST then set blend mode to be Normal
-        renderer.setBlendMode(0);
+        baseContext = baseContext.getClone();
+        baseContext.setBlendMode(0);
+        baseContext.use();
     }
+
+    var currentContext = baseContext;
 
     var alpha = container.alpha;
 
@@ -95,52 +105,51 @@ var ContainerWebGLRenderer = function (renderer, container, camera, parentMatrix
         var childScrollFactorX = child.scrollFactorX;
         var childScrollFactorY = child.scrollFactorY;
 
-        if (!containerHasBlendMode && child.blendMode !== renderer.currentBlendMode)
+        if (
+            !containerHasBlendMode &&
+            child.blendMode !== currentContext.blendMode &&
+            child.blendMode !== CONST.BlendModes.SKIP_CHECK
+        )
         {
             //  If Container doesn't have its own blend mode, then a child can have one
-            renderer.setBlendMode(child.blendMode);
+            currentContext = baseContext.getClone();
+            currentContext.setBlendMode(child.blendMode);
+            currentContext.use();
         }
-
-        var mask = child.mask;
-
-        if (mask)
-        {
-            mask.preRenderWebGL(renderer, child, camera);
-        }
-
-        var type = child.type;
-
-        if (type !== renderer.currentType)
-        {
-            renderer.newType = true;
-            renderer.currentType = type;
-        }
-
-        renderer.nextTypeMatch = (i < childCount - 1) ? (children[i + 1].type === renderer.currentType) : false;
 
         //  Set parent values
-        child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
 
-        child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
+        if (child.setScrollFactor)
+        {
+            child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
+        }
+
+        if (child.setAlpha)
+        {
+            child.setAlpha(childAlphaTopLeft * alpha, childAlphaTopRight * alpha, childAlphaBottomLeft * alpha, childAlphaBottomRight * alpha);
+        }
 
         //  Render
-        child.renderWebGL(renderer, child, camera, transformMatrix, container);
+        child.renderWebGLStep(renderer, child, currentContext, transformMatrix, undefined, children, i);
 
         //  Restore original values
 
-        child.setAlpha(childAlphaTopLeft, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
-
-        child.setScrollFactor(childScrollFactorX, childScrollFactorY);
-
-        if (mask)
+        if (child.setAlpha)
         {
-            mask.postRenderWebGL(renderer, camera);
+            child.setAlpha(childAlphaTopLeft, childAlphaTopRight, childAlphaBottomLeft, childAlphaBottomRight);
         }
 
-        renderer.newType = false;
+        if (child.setScrollFactor)
+        {
+            child.setScrollFactor(childScrollFactorX, childScrollFactorY);
+        }
     }
 
-    renderer.pipelines.postBatch(container);
+    // Release any remaining context.
+    if (currentContext !== drawingContext)
+    {
+        currentContext.release();
+    }
 };
 
 module.exports = ContainerWebGLRenderer;

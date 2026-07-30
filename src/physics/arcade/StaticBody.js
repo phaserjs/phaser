@@ -1,13 +1,15 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
+var CollisionComponent = require('./components/Collision');
 var CONST = require('./const');
 var RectangleContains = require('../../geom/rectangle/Contains');
+var SetCollisionObject = require('./SetCollisionObject');
 var Vector2 = require('../../math/Vector2');
 
 /**
@@ -19,6 +21,10 @@ var Vector2 = require('../../math/Vector2');
  *
  * A Static Body can collide with other Bodies, but is never moved by collisions.
  *
+ * Static Bodies are ideal for platforms, walls, floors, and other immovable environmental
+ * elements. Unlike Dynamic Bodies, they have no velocity, acceleration, or gravity,
+ * and are not moved by collisions.
+ *
  * Its dynamic counterpart is {@link Phaser.Physics.Arcade.Body}.
  *
  * @class StaticBody
@@ -26,10 +32,16 @@ var Vector2 = require('../../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
+ * @extends Phaser.Physics.Arcade.Components.Collision
+ *
  * @param {Phaser.Physics.Arcade.World} world - The Arcade Physics simulation this Static Body belongs to.
  * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object this Body belongs to. As of Phaser 3.60 this is now optional.
  */
 var StaticBody = new Class({
+
+    Mixins: [
+        CollisionComponent
+    ],
 
     initialize:
 
@@ -314,7 +326,7 @@ var StaticBody = new Class({
          * colliding body. If that body is also not pushable, then the separation will be split
          * between them evenly.
          *
-         * If you want your body to never move or seperate at all, see the `setImmovable` method.
+         * If you want your body to never move or separate at all, see the `setImmovable` method.
          *
          * By default, Static Bodies are not pushable.
          *
@@ -399,13 +411,13 @@ var StaticBody = new Class({
         this.collideWorldBounds = false;
 
         /**
-         * Whether this StaticBody is checked for collisions and for which directions. You can set `checkCollision.none = false` to disable collision checks.
+         * Whether this StaticBody is checked for collisions and for which directions. You can set `checkCollision.none = true` to disable collision checks.
          *
          * @name Phaser.Physics.Arcade.StaticBody#checkCollision
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
-        this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
+        this.checkCollision = SetCollisionObject(false);
 
         /**
          * This property is kept for compatibility with Dynamic Bodies.
@@ -415,7 +427,7 @@ var StaticBody = new Class({
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
-        this.touching = { none: true, up: false, down: false, left: false, right: false };
+        this.touching = SetCollisionObject(true);
 
         /**
          * This property is kept for compatibility with Dynamic Bodies.
@@ -426,7 +438,7 @@ var StaticBody = new Class({
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
-        this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
+        this.wasTouching = SetCollisionObject(true);
 
         /**
          * This property is kept for compatibility with Dynamic Bodies.
@@ -436,7 +448,7 @@ var StaticBody = new Class({
          * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
-        this.blocked = { none: true, up: false, down: false, left: false, right: false };
+        this.blocked = SetCollisionObject(true);
 
         /**
          * The StaticBody's physics type (static by default).
@@ -447,6 +459,30 @@ var StaticBody = new Class({
          * @since 3.0.0
          */
         this.physicsType = CONST.STATIC_BODY;
+
+        /**
+         * The Arcade Physics Body Collision Category.
+         *
+         * This can be set to any valid collision bitfield value.
+         *
+         * See the `setCollisionCategory` method for more details.
+         *
+         * @name Phaser.Physics.Arcade.StaticBody#collisionCategory
+         * @type {number}
+         * @since 3.70.0
+         */
+        this.collisionCategory = 0x0001;
+
+        /**
+         * The Arcade Physics Body Collision Mask.
+         *
+         * See the `setCollidesWith` method for more details.
+         *
+         * @name Phaser.Physics.Arcade.StaticBody#collisionMask
+         * @type {number}
+         * @since 3.70.0
+         */
+        this.collisionMask = 1;
 
         /**
          * The calculated change in the Static Body's horizontal position during the current step.
@@ -475,36 +511,63 @@ var StaticBody = new Class({
 
     /**
      * Changes the Game Object this Body is bound to.
+     * 
      * First it removes its reference from the old Game Object, then sets the new one.
+     * 
+     * This body will be resized to match the frame dimensions of the given Game Object, if it has a texture frame.
      * You can optionally update the position and dimensions of this Body to reflect that of the new Game Object.
      *
      * @method Phaser.Physics.Arcade.StaticBody#setGameObject
      * @since 3.1.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - The new Game Object that will own this Body.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to assign this Body to.
      * @param {boolean} [update=true] - Reposition and resize this Body to match the new Game Object?
+     * @param {boolean} [enable=true] - Automatically enable this Body for physics.
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      *
      * @see Phaser.Physics.Arcade.StaticBody#updateFromGameObject
      */
-    setGameObject: function (gameObject, update)
+    setGameObject: function (gameObject, update, enable)
     {
-        if (gameObject && gameObject !== this.gameObject)
+        if (update === undefined) { update = true; }
+        if (enable === undefined) { enable = true; }
+
+        if (!gameObject || !gameObject.hasTransformComponent)
         {
-            //  Remove this body from the old game object
-            this.gameObject.body = null;
-
-            gameObject.body = this;
-
-            //  Update our reference
-            this.gameObject = gameObject;
+            //  We need a valid Game Object to continue
+            return this;
         }
+
+        var world = this.world;
+
+        if (this.gameObject && this.gameObject.body)
+        {
+            world.disable(this.gameObject);
+
+            //  Disconnect the current Game Object
+            this.gameObject.body = null;
+        }
+
+        if (gameObject.body)
+        {
+            //  Remove the body from the world, but don't disable the Game Object
+            world.disable(gameObject);
+        }
+
+        this.gameObject = gameObject;
+
+        gameObject.body = this;
+
+        //  This will remove the body from the tree, if it's in there and add the new one in
+        this.setSize();
 
         if (update)
         {
             this.updateFromGameObject();
         }
+
+        this.enable = enable;
 
         return this;
     },
@@ -716,6 +779,9 @@ var StaticBody = new Class({
 
         gameObject.getTopLeft(this.position);
 
+        this.position.x += this.offset.x;
+        this.position.y += this.offset.y;
+
         this.updateCenter();
 
         this.world.staticTree.insert(this);
@@ -812,7 +878,7 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#deltaX
      * @since 3.0.0
      *
-     * @return {number} The change in this StaticBody's velocity from the previous step. Always zero.
+     * @return {number} The change in horizontal position since the last step, in pixels. Always zero for a Static Body.
      */
     deltaX: function ()
     {
@@ -825,7 +891,7 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#deltaY
      * @since 3.0.0
      *
-     * @return {number} The change in this StaticBody's velocity from the previous step. Always zero.
+     * @return {number} The change in vertical position since the last step, in pixels. Always zero for a Static Body.
      */
     deltaY: function ()
     {
@@ -855,7 +921,7 @@ var StaticBody = new Class({
     {
         this.enable = false;
 
-        this.world.pendingDestroy.set(this);
+        this.world.pendingDestroy.add(this);
     },
 
     /**

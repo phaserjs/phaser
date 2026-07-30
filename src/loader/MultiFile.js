@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,10 +10,12 @@ var Events = require('./events');
 
 /**
  * @classdesc
- * A MultiFile is a special kind of parent that contains two, or more, Files as children and looks after
- * the loading and processing of them all. It is commonly extended and used as a base class for file types such as AtlasJSON or BitmapFont.
- *
- * You shouldn't create an instance of a MultiFile directly, but should extend it with your own class, setting a custom type and processing methods.
+ * A MultiFile is a composite file that groups two or more individual File objects as children and
+ * coordinates their loading and processing as a single unit. When all child files have loaded, the
+ * MultiFile's `addToCache` method is called to combine the results (e.g., associating a texture
+ * image with its JSON atlas data). It is commonly extended as a base class for file types such as
+ * AtlasJSON, BitmapFont, and AudioSprite. You should not create an instance directly, but extend
+ * it and override `addToCache`.
  *
  * @class MultiFile
  * @memberof Phaser.Loader
@@ -61,13 +63,20 @@ var MultiFile = new Class({
         this.type = type;
 
         /**
-         * Unique cache key (unique within its file type)
+         * Unique cache key (unique within its file type).
          *
          * @name Phaser.Loader.MultiFile#key
          * @type {string}
          * @since 3.7.0
          */
         this.key = key;
+
+        var loadKey = this.key;
+
+        if (loader.prefix && loader.prefix !== '')
+        {
+            this.key = loader.prefix + loadKey;
+        }
 
         /**
          * The current index being used by multi-file loaders to avoid key clashes.
@@ -108,7 +117,9 @@ var MultiFile = new Class({
         this.complete = false;
 
         /**
-         * The number of files to load.
+         * The number of child files still pending completion. Starts at the total number of child
+         * files and is decremented each time a child file finishes loading. When it reaches zero,
+         * all children have finished and the MultiFile may be processed.
          *
          * @name Phaser.Loader.MultiFile#pending
          * @type {number}
@@ -192,7 +203,7 @@ var MultiFile = new Class({
      * @method Phaser.Loader.MultiFile#addToMultiFile
      * @since 3.7.0
      *
-     * @param {Phaser.Loader.File} files - The File to add to this MultiFile.
+     * @param {Phaser.Loader.File} file - The File to add to this MultiFile.
      *
      * @return {Phaser.Loader.MultiFile} This MultiFile instance.
      */
@@ -249,8 +260,8 @@ var MultiFile = new Class({
     },
 
     /**
-     * Called once all children of this multi file have been added to their caches and is now
-     * ready for deletion from the Loader.
+     * Called once all children of this MultiFile have been added to their caches and the
+     * MultiFile is now ready for deletion from the Loader.
      *
      * It will emit a `filecomplete` event from the LoaderPlugin.
      *

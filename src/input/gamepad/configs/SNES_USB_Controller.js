@@ -1,12 +1,17 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Tatar SNES USB Controller Gamepad Configuration.
- * USB Gamepad  (STANDARD GAMEPAD Vendor: 0079 Product: 0011)
+ * Button index constants for the Tatar SNES USB Controller gamepad
+ * (USB Gamepad, STANDARD GAMEPAD Vendor: 0079 Product: 0011).
+ *
+ * Use these constants with Phaser's Gamepad input system to identify specific
+ * buttons on this controller by their standard gamepad API index. For example,
+ * pass `Phaser.Input.Gamepad.Configs.SNES_USB.B` as the button index when
+ * checking button state on a connected gamepad of this type.
  *
  * @name Phaser.Input.Gamepad.Configs.SNES_USB
  * @namespace
@@ -115,7 +120,7 @@ module.exports = {
     X: 3,
 
     /**
-     * Left bumper
+     * Left shoulder button (L)
      *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.LEFT_SHOULDER
      * @const
@@ -125,7 +130,7 @@ module.exports = {
     LEFT_SHOULDER: 4,
 
     /**
-     * Right bumper
+     * Right shoulder button (R)
      *
      * @name Phaser.Input.Gamepad.Configs.SNES_USB.RIGHT_SHOULDER
      * @const

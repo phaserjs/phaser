@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -62,15 +62,16 @@ var Set = function (b1, b2, ov)
     body2OnLeft = !body1OnLeft;
     body2FullImpact = v1 - v2 * body2.bounce.x;
 
-    //  negative delta = up, positive delta = down (inc. gravity)
+    //  negative delta = left, positive delta = right (inc. gravity)
     overlap = Math.abs(ov);
 
     return BlockCheck();
 };
 
 /**
- * Blocked Direction checks, because it doesn't matter if an object can be pushed
- * or not, blocked is blocked.
+ * Checks whether either body is blocked in the direction of travel and, if so,
+ * applies the full impact velocity to the moving body and returns the blocked state.
+ * A body that is blocked cannot be separated further regardless of whether it is pushable.
  *
  * @function Phaser.Physics.Arcade.ProcessX.BlockCheck
  * @ignore
@@ -88,7 +89,7 @@ var BlockCheck = function ()
         return 1;
     }
 
-    //  Body1 is moving up and Body2 is blocked from going up any further
+    //  Body1 is moving left and Body2 is blocked from going left any further
     if (body1MovingLeft && body2OnLeft && body2.blocked.left)
     {
         body1.processX(overlap, body1FullImpact, true);
@@ -104,7 +105,7 @@ var BlockCheck = function ()
         return 2;
     }
 
-    //  Body2 is moving up and Body1 is blocked from going up any further
+    //  Body2 is moving left and Body1 is blocked from going left any further
     if (body2MovingLeft && body1OnLeft && body1.blocked.left)
     {
         body2.processX(overlap, body2FullImpact, true);
@@ -116,7 +117,9 @@ var BlockCheck = function ()
 };
 
 /**
- * The main check function. Runs through one of the four possible tests and returns the results.
+ * Calculates the mass-adjusted impact velocities for both bodies, then determines
+ * which of the four horizontal collision scenarios applies (body1 or body2 moving
+ * left or right into the other) and delegates to `Run` with the corresponding side value.
  *
  * @function Phaser.Physics.Arcade.ProcessX.Check
  * @ignore
@@ -167,7 +170,11 @@ var Check = function ()
 };
 
 /**
- * The main check function. Runs through one of the four possible tests and returns the results.
+ * Executes the horizontal separation and velocity exchange for the two bodies based
+ * on the collision side determined by `Check`. Handles all combinations of pushable
+ * and non-pushable bodies: both pushable (equal mass-based rebound), only one pushable
+ * (full impact applied to the pushable body), or neither pushable (overlap split based
+ * on movement direction and relative velocity).
  *
  * @function Phaser.Physics.Arcade.ProcessX.Run
  * @ignore
@@ -319,7 +326,7 @@ var Run = function (side)
             else
             {
                 //  Body1 moving same direction as Body2
-                body1.processX(halfOverlap, body2.velocity.y, true);
+                body1.processX(halfOverlap, body2.velocity.x, true);
                 body2.processX(-halfOverlap, null, false, true);
             }
         }
@@ -329,7 +336,11 @@ var Run = function (side)
 };
 
 /**
- * This function is run when Body1 is Immovable and Body2 is not.
+ * Handles horizontal separation when Body1 is immovable and Body2 is not. Pushes
+ * Body2 out of the overlap and applies the full impact velocity to it. If Body1 is
+ * a moving platform (i.e. `body1.moves` is `true`), Body2's vertical position is
+ * also adjusted using Body1's vertical friction, allowing Body2 to ride along with
+ * the platform.
  *
  * @function Phaser.Physics.Arcade.ProcessX.RunImmovableBody1
  * @ignore
@@ -357,13 +368,19 @@ var RunImmovableBody1 = function (blockedState)
     //  This is special case code that handles things like vertically moving platforms you can ride
     if (body1.moves)
     {
-        body2.y += (body1.y - body1.prev.y) * body1.friction.y;
+        var body1Distance = body1.directControl ? (body1.y - body1.autoFrame.y) : (body1.y - body1.prev.y);
+
+        body2.y += body1Distance * body1.friction.y;
         body2._dy = body2.y - body2.prev.y;
     }
 };
 
 /**
- * This function is run when Body2 is Immovable and Body1 is not.
+ * Handles horizontal separation when Body2 is immovable and Body1 is not. Pushes
+ * Body1 out of the overlap and applies the full impact velocity to it. If Body2 is
+ * a moving platform (i.e. `body2.moves` is `true`), Body1's vertical position is
+ * also adjusted using Body2's vertical friction, allowing Body1 to ride along with
+ * the platform.
  *
  * @function Phaser.Physics.Arcade.ProcessX.RunImmovableBody2
  * @ignore
@@ -391,7 +408,9 @@ var RunImmovableBody2 = function (blockedState)
     //  This is special case code that handles things like vertically moving platforms you can ride
     if (body2.moves)
     {
-        body1.y += (body2.y - body2.prev.y) * body2.friction.y;
+        var body2Distance = body2.directControl ? (body2.y - body2.autoFrame.y) : (body2.y - body2.prev.y);
+
+        body1.y += body2Distance * body2.friction.y;
         body1._dy = body1.y - body1.prev.y;
     }
 };

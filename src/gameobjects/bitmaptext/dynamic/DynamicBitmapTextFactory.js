@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,7 +12,7 @@ var GameObjectFactory = require('../../GameObjectFactory');
  * 
  * BitmapText objects work by taking a texture file and an XML or JSON file that describes the font structure.
  * 
- * During rendering for each letter of the text is rendered to the display, proportionally spaced out and aligned to
+ * During rendering, each letter of the text is rendered to the display, proportionally spaced out and aligned to
  * match the font structure.
  * 
  * Dynamic Bitmap Text objects are different from Static Bitmap Text in that they invoke a callback for each
@@ -21,7 +21,7 @@ var GameObjectFactory = require('../../GameObjectFactory');
  * like jiggling text, which can't be done with Static text. This means that Dynamic Text takes more processing
  * time, so only use them if you require the callback ability they have.
  *
- * BitmapText objects are less flexible than Text objects, in that they have less features such as shadows, fills and the ability
+ * BitmapText objects are less flexible than Text objects, in that they have fewer features such as shadows, fills and the ability
  * to use Web Fonts, however you trade this flexibility for rendering speed. You can also create visually compelling BitmapTexts by
  * processing the font texture in an image editor, applying fills and any other effects required.
  *

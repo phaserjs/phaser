@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,12 +14,16 @@ var GetValue = require('../../utils/object/GetValue');
 var HasValue = require('../../utils/object/HasValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 var Range = require('../../utils/array/Range');
-var Set = require('../../structs/Set');
 var Sprite = require('../sprite/Sprite');
 
 /**
  * @classdesc
  * A Group is a way for you to create, manipulate, or recycle similar Game Objects.
+ *
+ * Groups are commonly used to implement object pools, where a fixed set of Game Objects
+ * are created up front and then recycled by toggling their `active` and `visible` states,
+ * avoiding the overhead of repeated construction and garbage collection. This pattern is
+ * especially useful for frequently spawned objects such as bullets, particles, or enemies.
  *
  * Group membership is non-exclusive. A Game Object can belong to several groups, one group, or none.
  *
@@ -96,7 +100,7 @@ var Group = new Class({
          * Members of this group.
          *
          * @name Phaser.GameObjects.Group#children
-         * @type {Phaser.Structs.Set.<Phaser.GameObjects.GameObject>}
+         * @type {Set.<Phaser.GameObjects.GameObject>}
          * @since 3.0.0
          */
         this.children = new Set();
@@ -124,6 +128,8 @@ var Group = new Class({
 
         /**
          * The class to create new group members from.
+         *
+         * The constructor arguments must match `(scene, x, y, texture, frame)`.
          *
          * @name Phaser.GameObjects.Group#classType
          * @type {function}
@@ -258,13 +264,25 @@ var Group = new Class({
         this.on(Events.REMOVED_FROM_SCENE, this.removedFromScene, this);
     },
 
-    //  Overrides Game Object method
+    /**
+     * Called when this Group is added to a Scene. Registers this Group with the Scene's update list
+     * so that its `preUpdate` method is called each game step.
+     *
+     * @method Phaser.GameObjects.Group#addedToScene
+     * @since 3.0.0
+     */
     addedToScene: function ()
     {
         this.scene.sys.updateList.add(this);
     },
 
-    //  Overrides Game Object method
+    /**
+     * Called when this Group is removed from a Scene. Unregisters this Group from the Scene's
+     * update list so that its `preUpdate` method is no longer called each game step.
+     *
+     * @method Phaser.GameObjects.Group#removedFromScene
+     * @since 3.0.0
+     */
     removedFromScene: function ()
     {
         this.scene.sys.updateList.remove(this);
@@ -558,18 +576,13 @@ var Group = new Class({
             return;
         }
 
-        //  Because a Group child may mess with the length of the Group during its update
-        var temp = this.children.entries.slice();
-
-        for (var i = 0; i < temp.length; i++)
+        this.children.forEach(function (child)
         {
-            var item = temp[i];
-
-            if (item.active)
+            if (child.active)
             {
-                item.update(time, delta);
+                child.update(time, delta);
             }
-        }
+        });
     },
 
     /**
@@ -594,7 +607,7 @@ var Group = new Class({
             return this;
         }
 
-        this.children.set(child);
+        this.children.add(child);
 
         if (this.internalCreateCallback)
         {
@@ -664,7 +677,7 @@ var Group = new Class({
         if (removeFromScene === undefined) { removeFromScene = false; }
         if (destroyChild === undefined) { destroyChild = false; }
 
-        if (!this.children.contains(child))
+        if (!this.children.has(child))
         {
             return this;
         }
@@ -716,10 +729,8 @@ var Group = new Class({
 
         var children = this.children;
 
-        for (var i = 0; i < children.size; i++)
+        children.forEach(function (gameObject)
         {
-            var gameObject = children.entries[i];
-
             gameObject.off(Events.DESTROY, this.remove, this);
 
             if (destroyChild)
@@ -731,9 +742,9 @@ var Group = new Class({
                 gameObject.removeFromDisplayList();
                 gameObject.removeFromUpdateList();
             }
-        }
+        }, this);
 
-        this.children.clear();
+        children.clear();
 
         return this;
     },
@@ -750,7 +761,7 @@ var Group = new Class({
      */
     contains: function (child)
     {
-        return this.children.contains(child);
+        return this.children.has(child);
     },
 
     /**
@@ -763,7 +774,7 @@ var Group = new Class({
      */
     getChildren: function ()
     {
-        return this.children.entries;
+        return Array.from(this.children);
     },
 
     /**
@@ -772,7 +783,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#getLength
      * @since 3.0.0
      *
-     * @return {number}
+     * @return {number} The total number of members in this Group.
      */
     getLength: function ()
     {
@@ -800,7 +811,7 @@ var Group = new Class({
      */
     getMatching: function (property, value, startIndex, endIndex)
     {
-        return GetAll(this.children.entries, property, value, startIndex, endIndex);
+        return GetAll(Array.from(this.children), property, value, startIndex, endIndex);
     },
 
     /**
@@ -847,7 +858,7 @@ var Group = new Class({
      * @param {(string|number)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
-     * @return {?any} The first matching group member, or a newly created member, or null.
+     * @return {?any} The nth matching group member, or a newly created member, or null.
      */
     getFirstNth: function (nth, state, createIfNull, x, y, key, frame, visible)
     {
@@ -872,7 +883,7 @@ var Group = new Class({
      * @param {(string|number)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
-     * @return {?any} The first matching group member, or a newly created member, or null.
+     * @return {?any} The last matching group member, or a newly created member, or null.
      */
     getLast: function (state, createIfNull, x, y, key, frame, visible)
     {
@@ -898,7 +909,7 @@ var Group = new Class({
      * @param {(string|number)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
-     * @return {?any} The first matching group member, or a newly created member, or null.
+     * @return {?any} The nth matching group member (searching from the end), or a newly created member, or null.
      */
     getLastNth: function (nth, state, createIfNull, x, y, key, frame, visible)
     {
@@ -937,7 +948,7 @@ var Group = new Class({
 
         var i;
         var total = 0;
-        var children = this.children.entries;
+        var children = Array.from(this.children);
 
         if (forwards)
         {
@@ -1082,7 +1093,7 @@ var Group = new Class({
     },
 
     /**
-     * {@link Phaser.GameObjects.Components.Animation#play Plays} an animation for all members of this group.
+     * {@link Phaser.Animations.AnimationState#play Plays} an animation for all members of this group.
      *
      * @method Phaser.GameObjects.Group#playAnimation
      * @since 3.0.0
@@ -1094,13 +1105,13 @@ var Group = new Class({
      */
     playAnimation: function (key, startFrame)
     {
-        Actions.PlayAnimation(this.children.entries, key, startFrame);
+        Actions.PlayAnimation(Array.from(this.children), key, startFrame);
 
         return this;
     },
 
     /**
-     * Whether this group's size at its {@link Phaser.GameObjects.Group#maxSize maximum}.
+     * Whether this group's size is at its {@link Phaser.GameObjects.Group#maxSize maximum}.
      *
      * @method Phaser.GameObjects.Group#isFull
      * @since 3.0.0
@@ -1135,13 +1146,13 @@ var Group = new Class({
 
         var total = 0;
 
-        for (var i = 0; i < this.children.size; i++)
+        this.children.forEach(function (child)
         {
-            if (this.children.entries[i].active === value)
+            if (child.active === value)
             {
                 total++;
             }
-        }
+        });
 
         return total;
     },
@@ -1167,7 +1178,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#getTotalFree
      * @since 3.0.0
      *
-     * @return {number} maxSize minus the number of active group numbers; or a large number (if maxSize is -1).
+     * @return {number} maxSize minus the number of active group members; or a large number (if maxSize is -1).
      */
     getTotalFree: function ()
     {
@@ -1229,7 +1240,7 @@ var Group = new Class({
      */
     propertyValueSet: function (key, value, step, index, direction)
     {
-        Actions.PropertyValueSet(this.children.entries, key, value, step, index, direction);
+        Actions.PropertyValueSet(Array.from(this.children), key, value, step, index, direction);
 
         return this;
     },
@@ -1241,7 +1252,7 @@ var Group = new Class({
      * @since 3.21.0
      *
      * @param {string} key - The property to be updated.
-     * @param {number} value - The amount to set the property to.
+     * @param {number} value - The amount to add to the property.
      * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter.
      * @param {number} [index=0] - An optional offset to start searching from within the items array.
      * @param {number} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
@@ -1250,7 +1261,7 @@ var Group = new Class({
      */
     propertyValueInc: function (key, value, step, index, direction)
     {
-        Actions.PropertyValueInc(this.children.entries, key, value, step, index, direction);
+        Actions.PropertyValueInc(Array.from(this.children), key, value, step, index, direction);
 
         return this;
     },
@@ -1268,7 +1279,7 @@ var Group = new Class({
      */
     setX: function (value, step)
     {
-        Actions.SetX(this.children.entries, value, step);
+        Actions.SetX(Array.from(this.children), value, step);
 
         return this;
     },
@@ -1286,7 +1297,7 @@ var Group = new Class({
      */
     setY: function (value, step)
     {
-        Actions.SetY(this.children.entries, value, step);
+        Actions.SetY(Array.from(this.children), value, step);
 
         return this;
     },
@@ -1306,7 +1317,7 @@ var Group = new Class({
      */
     setXY: function (x, y, stepX, stepY)
     {
-        Actions.SetXY(this.children.entries, x, y, stepX, stepY);
+        Actions.SetXY(Array.from(this.children), x, y, stepX, stepY);
 
         return this;
     },
@@ -1324,7 +1335,7 @@ var Group = new Class({
      */
     incX: function (value, step)
     {
-        Actions.IncX(this.children.entries, value, step);
+        Actions.IncX(Array.from(this.children), value, step);
 
         return this;
     },
@@ -1342,7 +1353,7 @@ var Group = new Class({
      */
     incY: function (value, step)
     {
-        Actions.IncY(this.children.entries, value, step);
+        Actions.IncY(Array.from(this.children), value, step);
 
         return this;
     },
@@ -1362,7 +1373,7 @@ var Group = new Class({
      */
     incXY: function (x, y, stepX, stepY)
     {
-        Actions.IncXY(this.children.entries, x, y, stepX, stepY);
+        Actions.IncXY(Array.from(this.children), x, y, stepX, stepY);
 
         return this;
     },
@@ -1384,25 +1395,25 @@ var Group = new Class({
      */
     shiftPosition: function (x, y, direction)
     {
-        Actions.ShiftPosition(this.children.entries, x, y, direction);
+        Actions.ShiftPosition(Array.from(this.children), x, y, direction);
 
         return this;
     },
 
     /**
-     * Sets the angle of each group member.
+     * Adds the given value to the angle of each group member.
      *
      * @method Phaser.GameObjects.Group#angle
      * @since 3.21.0
      *
-     * @param {number} value - The amount to set the angle to, in degrees.
+     * @param {number} value - The amount to add to the angle, in degrees.
      * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter.
      *
      * @return {this} This Group object.
      */
     angle: function (value, step)
     {
-        Actions.Angle(this.children.entries, value, step);
+        Actions.Angle(Array.from(this.children), value, step);
 
         return this;
     },
@@ -1420,7 +1431,7 @@ var Group = new Class({
      */
     rotate: function (value, step)
     {
-        Actions.Rotate(this.children.entries, value, step);
+        Actions.Rotate(Array.from(this.children), value, step);
 
         return this;
     },
@@ -1438,7 +1449,7 @@ var Group = new Class({
      */
     rotateAround: function (point, angle)
     {
-        Actions.RotateAround(this.children.entries, point, angle);
+        Actions.RotateAround(Array.from(this.children), point, angle);
 
         return this;
     },
@@ -1457,7 +1468,7 @@ var Group = new Class({
      */
     rotateAroundDistance: function (point, angle, distance)
     {
-        Actions.RotateAroundDistance(this.children.entries, point, angle, distance);
+        Actions.RotateAroundDistance(Array.from(this.children), point, angle, distance);
 
         return this;
     },
@@ -1475,7 +1486,7 @@ var Group = new Class({
      */
     setAlpha: function (value, step)
     {
-        Actions.SetAlpha(this.children.entries, value, step);
+        Actions.SetAlpha(Array.from(this.children), value, step);
 
         return this;
     },
@@ -1495,7 +1506,7 @@ var Group = new Class({
      */
     setTint: function (topLeft, topRight, bottomLeft, bottomRight)
     {
-        Actions.SetTint(this.children.entries, topLeft, topRight, bottomLeft, bottomRight);
+        Actions.SetTint(Array.from(this.children), topLeft, topRight, bottomLeft, bottomRight);
 
         return this;
     },
@@ -1515,7 +1526,7 @@ var Group = new Class({
      */
     setOrigin: function (originX, originY, stepX, stepY)
     {
-        Actions.SetOrigin(this.children.entries, originX, originY, stepX, stepY);
+        Actions.SetOrigin(Array.from(this.children), originX, originY, stepX, stepY);
 
         return this;
     },
@@ -1533,7 +1544,7 @@ var Group = new Class({
      */
     scaleX: function (value, step)
     {
-        Actions.ScaleX(this.children.entries, value, step);
+        Actions.ScaleX(Array.from(this.children), value, step);
 
         return this;
     },
@@ -1551,7 +1562,7 @@ var Group = new Class({
      */
     scaleY: function (value, step)
     {
-        Actions.ScaleY(this.children.entries, value, step);
+        Actions.ScaleY(Array.from(this.children), value, step);
 
         return this;
     },
@@ -1562,8 +1573,8 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#scaleXY
      * @since 3.21.0
      *
-     * @param {number} scaleX - The amount to be added to the `scaleX` property.
-     * @param {number} [scaleY] - The amount to be added to the `scaleY` property. If `undefined` or `null` it uses the `scaleX` value.
+     * @param {number} scaleX - The amount to set the `scaleX` property to.
+     * @param {number} [scaleY] - The amount to set the `scaleY` property to. If `undefined` or `null` it uses the `scaleX` value.
      * @param {number} [stepX=0] - This is added to the `scaleX` amount, multiplied by the iteration counter.
      * @param {number} [stepY=0] - This is added to the `scaleY` amount, multiplied by the iteration counter.
      *
@@ -1571,7 +1582,7 @@ var Group = new Class({
      */
     scaleXY: function (scaleX, scaleY, stepX, stepY)
     {
-        Actions.ScaleXY(this.children.entries, scaleX, scaleY, stepX, stepY);
+        Actions.ScaleXY(Array.from(this.children), scaleX, scaleY, stepX, stepY);
 
         return this;
     },
@@ -1589,7 +1600,7 @@ var Group = new Class({
      */
     setDepth: function (value, step)
     {
-        Actions.SetDepth(this.children.entries, value, step);
+        Actions.SetDepth(Array.from(this.children), value, step);
 
         return this;
     },
@@ -1600,13 +1611,13 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#setBlendMode
      * @since 3.21.0
      *
-     * @param {number} value - The amount to set the property to.
+     * @param {number} value - The blend mode value to set. See `Phaser.BlendModes` for valid values.
      *
      * @return {this} This Group object.
      */
     setBlendMode: function (value)
     {
-        Actions.SetBlendMode(this.children.entries, value);
+        Actions.SetBlendMode(Array.from(this.children), value);
 
         return this;
     },
@@ -1624,7 +1635,7 @@ var Group = new Class({
      */
     setHitArea: function (hitArea, hitAreaCallback)
     {
-        Actions.SetHitArea(this.children.entries, hitArea, hitAreaCallback);
+        Actions.SetHitArea(Array.from(this.children), hitArea, hitAreaCallback);
 
         return this;
     },
@@ -1639,7 +1650,7 @@ var Group = new Class({
      */
     shuffle: function ()
     {
-        Actions.Shuffle(this.children.entries);
+        Actions.Shuffle(Array.from(this.children));
 
         return this;
     },
@@ -1654,7 +1665,7 @@ var Group = new Class({
      */
     kill: function (gameObject)
     {
-        if (this.children.contains(gameObject))
+        if (this.children.has(gameObject))
         {
             gameObject.setActive(false);
         }
@@ -1670,7 +1681,7 @@ var Group = new Class({
      */
     killAndHide: function (gameObject)
     {
-        if (this.children.contains(gameObject))
+        if (this.children.has(gameObject))
         {
             gameObject.setActive(false);
             gameObject.setVisible(false);
@@ -1678,7 +1689,7 @@ var Group = new Class({
     },
 
     /**
-     * Sets the visible of each group member.
+     * Sets the visibility of each group member.
      *
      * @method Phaser.GameObjects.Group#setVisible
      * @since 3.21.0
@@ -1691,7 +1702,7 @@ var Group = new Class({
      */
     setVisible: function (value, index, direction)
     {
-        Actions.SetVisible(this.children.entries, value, index, direction);
+        Actions.SetVisible(Array.from(this.children), value, index, direction);
 
         return this;
     },
@@ -1706,7 +1717,7 @@ var Group = new Class({
      */
     toggleVisible: function ()
     {
-        Actions.ToggleVisible(this.children.entries);
+        Actions.ToggleVisible(Array.from(this.children));
 
         return this;
     },

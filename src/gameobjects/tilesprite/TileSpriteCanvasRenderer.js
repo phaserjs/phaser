@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24,7 +24,7 @@ var TileSpriteCanvasRenderer = function (renderer, src, camera, parentMatrix)
 
     camera.addToRenderList(src);
 
-    renderer.batchSprite(src, src.frame, camera, parentMatrix);
+    renderer.batchSprite(src, src.displayFrame, camera, parentMatrix);
 };
 
 module.exports = TileSpriteCanvasRenderer;

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -32,7 +32,7 @@ var GameObjectFactory = require('../../GameObjectFactory');
  * @param {number} [radius=128] - The radius of the arc.
  * @param {number} [startAngle=0] - The start angle of the arc, in degrees.
  * @param {number} [endAngle=360] - The end angle of the arc, in degrees.
- * @param {boolean} [anticlockwise=false] - The winding order of the start and end angles.
+ * @param {boolean} [anticlockwise=false] - Whether the arc is drawn anticlockwise between the start and end angles. When `false` the arc is drawn clockwise.
  * @param {number} [fillColor] - The color the arc will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the arc will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  *
@@ -46,7 +46,7 @@ GameObjectFactory.register('arc', function (x, y, radius, startAngle, endAngle, 
 /**
  * Creates a new Circle Shape Game Object and adds it to the Scene.
  *
- * A Circle is an Arc with no defined start and end angle, making it render as a complete circle.
+ * A Circle is an Arc with a fixed start angle of 0 and end angle of 360 degrees, so it always renders as a complete circle. Use the `arc` factory method if you need control over the start and end angles.
  *
  * Note: This method will only be available if the Arc Game Object has been built into Phaser.
  *

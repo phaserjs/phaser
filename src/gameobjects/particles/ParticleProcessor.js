@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@ var Class = require('../../utils/Class');
 
 /**
  * @classdesc
- * This class provides the structured required for all Particle Processors.
+ * This class provides the structure required for all Particle Processors.
  *
  * You should extend it and add the functionality required for your processor,
  * including tidying up any resources this may create in the `destroy` method.
@@ -39,7 +39,7 @@ var ParticleProcessor = new Class({
          * This is set automatically when the Processor is added to an Emitter
          * and nulled when removed or destroyed.
          *
-         * @name Phaser.GameObjects.Particles.ParticleProcessor#manager
+         * @name Phaser.GameObjects.Particles.ParticleProcessor#emitter
          * @type {Phaser.GameObjects.Particles.ParticleEmitter}
          * @since 3.60.0
          */
@@ -77,7 +77,7 @@ var ParticleProcessor = new Class({
     },
 
     /**
-     * The Particle Processor update method should be overriden by your own
+     * The Particle Processor update method should be overridden by your own
      * method and handle the processing of the particles, typically modifying
      * their velocityX/Y values based on the criteria of this processor.
      *

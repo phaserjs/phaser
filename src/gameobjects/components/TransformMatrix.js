@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,13 @@ var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
- * A Matrix used for display transformations for rendering.
+ * A TransformMatrix is a 3x3 affine transformation matrix used to encode
+ * the position, rotation, scale, and skew of a Game Object for rendering.
+ *
+ * It is used internally by Phaser during the render pipeline to accumulate
+ * parent-child transform chains and apply camera transformations. You will
+ * typically interact with it when writing custom renderers or working with
+ * the camera or display list transform pipeline.
  *
  * It is represented like so:
  *
@@ -294,7 +300,7 @@ var TransformMatrix = new Class({
             {
                 // var s = Math.sqrt(c * c + d * d);
 
-                return MATH_CONST.TAU - ((d > 0) ? Math.acos(-c / this.scaleY) : -Math.acos(c / this.scaleY));
+                return MATH_CONST.PI_OVER_2 - ((d > 0) ? Math.acos(-c / this.scaleY) : -Math.acos(c / this.scaleY));
             }
             else
             {
@@ -484,7 +490,7 @@ var TransformMatrix = new Class({
      * Multiply this Matrix by the matrix given, including the offset.
      *
      * The offsetX is added to the tx value: `offsetX * a + offsetY * c + tx`.
-     * The offsetY is added to the ty value: `offsetY * b + offsetY * d + ty`.
+     * The offsetY is added to the ty value: `offsetX * b + offsetY * d + ty`.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#multiplyWithOffset
      * @since 3.11.0
@@ -675,6 +681,41 @@ var TransformMatrix = new Class({
     },
 
     /**
+     * Set the values of this Matrix to copy those of the matrix given,
+     * combined with a camera scroll factor.
+     *
+     * This is used in many render functions.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyWithScrollFactorFrom
+     * @since 4.0.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} src - The source Matrix to copy from.
+     * @param {number} scrollX - The horizontal scroll value to factor in.
+     * @param {number} scrollY - The vertical scroll value to factor in.
+     * @param {number} scrollFactorX - The horizontal scroll factor to apply.
+     * @param {number} scrollFactorY - The vertical scroll factor to apply.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    copyWithScrollFactorFrom: function (src, scrollX, scrollY, scrollFactorX, scrollFactorY)
+    {
+        var matrix = this.matrix;
+
+        matrix[0] = src.a;
+        matrix[1] = src.b;
+        matrix[2] = src.c;
+        matrix[3] = src.d;
+
+        var sx = scrollX * (1.0 - scrollFactorX);
+        var sy = scrollY * (1.0 - scrollFactorY);
+
+        matrix[4] = src.a * sx + src.c * sy + src.e;
+        matrix[5] = src.b * sx + src.d * sy + src.f;
+
+        return this;
+    },
+
+    /**
      * Copy the values from this Matrix to the given Canvas Rendering Context.
      * This will use the Context.transform method.
      *
@@ -707,9 +748,8 @@ var TransformMatrix = new Class({
      */
     setToContext: function (ctx)
     {
-        var matrix = this.matrix;
-
-        ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+        // using old way for old browser compatibility #6965
+        ctx.setTransform(this.a, this.b, this.c, this.d, this.e, this.f);
 
         return ctx;
     },
@@ -907,7 +947,7 @@ var TransformMatrix = new Class({
 
     /**
      * Performs the 8 calculations required to create the vertices of
-     * a quad based on this matrix and the given x/y/xw/yh values.
+     * a quad based on this matrix and the given vertex coordinates.
      *
      * The result is stored in `TransformMatrix.quad`, which is returned
      * from this method.
@@ -915,16 +955,15 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#setQuad
      * @since 3.60.0
      *
-     * @param {number} x - The x value.
-     * @param {number} y - The y value.
-     * @param {number} xw - The xw value.
-     * @param {number} yh - The yh value.
-     * @param {boolean} roundPixels - Pass the results via Math.round?
-     * @param {Float32Array} [quad] - Optional Float32Array to store the results in. Otherwises uses the local quad array.
+     * @param {number} x - The x value of the top-left vertex of the quad.
+     * @param {number} y - The y value of the top-left vertex of the quad.
+     * @param {number} xw - The x value of the bottom-right vertex of the quad. This is the x + width.
+     * @param {number} yh - The y value of the bottom-right vertex of the quad. This is the y + height.
+     * @param {Float32Array} [quad] - Optional Float32Array to store the results in. Otherwise uses the local quad array.
      *
      * @return {Float32Array} The quad Float32Array.
      */
-    setQuad: function (x, y, xw, yh, roundPixels, quad)
+    setQuad: function (x, y, xw, yh, quad)
     {
         if (quad === undefined) { quad = this.quad; }
 
@@ -948,14 +987,6 @@ var TransformMatrix = new Class({
 
         quad[6] = xw * a + y * c + e;
         quad[7] = xw * b + y * d + f;
-
-        if (roundPixels)
-        {
-            quad.forEach(function (value, index)
-            {
-                quad[index] = Math.round(value);
-            });
-        }
 
         return quad;
     },
@@ -1014,7 +1045,7 @@ var TransformMatrix = new Class({
 
         if (round)
         {
-            v = Math.round(v);
+            v = Math.floor(v + 0.5);
         }
 
         return v;
@@ -1040,7 +1071,7 @@ var TransformMatrix = new Class({
 
         if (round)
         {
-            v = Math.round(v);
+            v = Math.floor(v + 0.5);
         }
 
         return v;

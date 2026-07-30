@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,7 @@ var PropertyValueSet = require('./PropertyValueSet');
  * Takes an array of Game Objects, or any objects that have the public property `alpha`
  * and then sets it to the given value.
  *
- * The optional `step` property is applied incrementally, multiplied by each item in the array.
+ * The optional `step` property is applied incrementally, multiplied by the iteration index and added to `value`.
  *
  * To use this with a Group: `SetAlpha(group.getChildren(), value, step)`
  *
@@ -20,7 +20,7 @@ var PropertyValueSet = require('./PropertyValueSet');
  * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be updated by this action.
- * @param {number} value - The amount to set the property to.
+ * @param {number} value - The alpha value to set on each item. Should be in the range 0 (fully transparent) to 1 (fully opaque).
  * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter.
  * @param {number} [index=0] - An optional offset to start searching from within the items array.
  * @param {number} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.

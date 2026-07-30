@@ -1,7 +1,7 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,13 +14,14 @@ var Events = require('../events');
 var GetBlendModes = require('./utils/GetBlendModes');
 var ScaleEvents = require('../../scale/events');
 var TextureEvents = require('../../textures/events');
+var GameEvents = require('../../core/events');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
 /**
  * @classdesc
  * The Canvas Renderer is responsible for managing 2D canvas rendering contexts,
- * including the one used by the Games canvas. It tracks the internal state of a
- * given context and can renderer textured Game Objects to it, taking into
+ * including the one used by the Game's canvas. It tracks the internal state of a
+ * given context and can render textured Game Objects to it, taking into
  * account alpha, blending, and scaling.
  *
  * @class CanvasRenderer
@@ -54,7 +55,8 @@ var CanvasRenderer = new Class({
             clearBeforeRender: gameConfig.clearBeforeRender,
             backgroundColor: gameConfig.backgroundColor,
             antialias: gameConfig.antialias,
-            roundPixels: gameConfig.roundPixels
+            roundPixels: gameConfig.roundPixels,
+            transparent: gameConfig.transparent
         };
 
         /**
@@ -113,8 +115,8 @@ var CanvasRenderer = new Class({
         this.gameCanvas = game.canvas;
 
         var contextOptions = {
-            alpha: game.config.transparent,
-            desynchronized: game.config.desynchronized,
+            alpha: gameConfig.transparent,
+            desynchronized: gameConfig.desynchronized,
             willReadFrequently: false
         };
 
@@ -143,7 +145,7 @@ var CanvasRenderer = new Class({
          * @type {boolean}
          * @since 3.20.0
          */
-        this.antialias = game.config.antialias;
+        this.antialias = gameConfig.antialias;
 
         /**
          * The blend modes supported by the Canvas Renderer.
@@ -219,14 +221,34 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * Prepares the game canvas for rendering.
+     * Sets up the event listeners required by the renderer. Specifically, it
+     * listens for the Game BOOT event to fill the background color on the canvas,
+     * and waits for the Texture Manager's READY event before completing the boot
+     * sequence and registering the Scale Manager resize handler.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#init
      * @since 3.0.0
      */
     init: function ()
     {
-        this.game.textures.once(TextureEvents.READY, this.boot, this);
+        var game = this.game;
+
+        game.events.once(GameEvents.BOOT, function ()
+        {
+            var config = this.config;
+
+            if (!config.transparent)
+            {
+                var ctx = this.gameContext;
+                var gameCanvas = this.gameCanvas;
+
+                ctx.fillStyle = config.backgroundColor.rgba;
+                ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+            }
+
+        }, this);
+
+        game.textures.once(TextureEvents.READY, this.boot, this);
     },
 
     /**
@@ -271,7 +293,9 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * Resize the main game canvas.
+     * Updates the internal width and height values of the renderer to the given
+     * dimensions and emits the RESIZE event. This is called automatically when the
+     * Scale Manager detects a canvas size change.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#resize
      * @fires Phaser.Renderer.Events#RESIZE
@@ -351,9 +375,15 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * Called at the start of the render loop.
+     * Called at the start of each render loop. Resets the game context's global
+     * alpha, composite operation, and transform to their defaults. If the renderer
+     * is configured to clear the canvas before each render, it clears the viewport
+     * and, if the background is not transparent, fills it with the configured
+     * background color. Saves the context state and resets the draw count before
+     * emitting the PRE_RENDER_CLEAR and PRE_RENDER events.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#preRender
+     * @fires Phaser.Renderer.Events#PRE_RENDER_CLEAR
      * @fires Phaser.Renderer.Events#PRE_RENDER
      * @since 3.0.0
      */
@@ -368,6 +398,8 @@ var CanvasRenderer = new Class({
         ctx.globalAlpha = 1;
         ctx.globalCompositeOperation = 'source-over';
         ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        this.emit(Events.PRE_RENDER_CLEAR);
 
         if (config.clearBeforeRender)
         {
@@ -590,7 +622,7 @@ var CanvasRenderer = new Class({
      * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
      * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
      *
-     * @return {this} This WebGL Renderer.
+     * @return {this} This Canvas Renderer.
      */
     snapshot: function (callback, type, encoderOptions)
     {
@@ -619,7 +651,7 @@ var CanvasRenderer = new Class({
      * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
      * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
      *
-     * @return {this} This WebGL Renderer.
+     * @return {this} This Canvas Renderer.
      */
     snapshotArea: function (x, y, width, height, callback, type, encoderOptions)
     {
@@ -656,7 +688,7 @@ var CanvasRenderer = new Class({
      * @param {number} y - The y coordinate of the pixel to get.
      * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot pixel data is extracted.
      *
-     * @return {this} This WebGL Renderer.
+     * @return {this} This Canvas Renderer.
      */
     snapshotPixel: function (x, y, callback)
     {
@@ -787,30 +819,24 @@ var CanvasRenderer = new Class({
 
         spriteMatrix.applyITRS(gx, gy, sprite.rotation, sprite.scaleX * flipX, sprite.scaleY * flipY);
 
-        camMatrix.copyFrom(camera.matrix);
+        camMatrix.copyWithScrollFactorFrom(
+            camera.matrixCombined,
+            camera.scrollX, camera.scrollY,
+            sprite.scrollFactorX, sprite.scrollFactorY
+        );
 
         if (parentTransformMatrix)
         {
-            //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * sprite.scrollFactorX, -camera.scrollY * sprite.scrollFactorY);
-
-            //  Undo the camera scroll
-            spriteMatrix.e = gx;
-            spriteMatrix.f = gy;
-        }
-        else
-        {
-            spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
-            spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
+            camMatrix.multiply(parentTransformMatrix);
         }
 
         //  Multiply by the Sprite matrix
         camMatrix.multiply(spriteMatrix);
 
-        if (camera.roundPixels)
+        if (camera.renderRoundPixels)
         {
-            camMatrix.e = Math.round(camMatrix.e);
-            camMatrix.f = Math.round(camMatrix.f);
+            camMatrix.e = Math.floor(camMatrix.e + 0.5);
+            camMatrix.f = Math.floor(camMatrix.f + 0.5);
         }
 
         ctx.save();
@@ -830,7 +856,24 @@ var CanvasRenderer = new Class({
 
         if (frameWidth > 0 && frameHeight > 0)
         {
-            ctx.drawImage(frame.source.image, frameX, frameY, frameWidth, frameHeight, x, y, frameWidth / res, frameHeight / res);
+            var fw = frameWidth / res;
+            var fh = frameHeight / res;
+
+            if (camera.roundPixels)
+            {
+                x = Math.floor(x + 0.5);
+                y = Math.floor(y + 0.5);
+                fw += 0.5;
+                fh += 0.5;
+            }
+
+            ctx.drawImage(
+                frame.source.image,
+                frameX, frameY,
+                frameWidth, frameHeight,
+                x, y,
+                fw, fh
+            );
         }
 
         if (sprite.mask)
@@ -842,7 +885,8 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * Destroys all object references in the Canvas Renderer.
+     * Removes all event listeners and nullifies all object references in the
+     * Canvas Renderer, allowing it to be garbage collected.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#destroy
      * @since 3.0.0

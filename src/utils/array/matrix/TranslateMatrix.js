@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,8 +8,13 @@ var RotateLeft = require('../RotateLeft');
 var RotateRight = require('../RotateRight');
 
 /**
- * Translates the given Array Matrix by shifting each column and row the
- * amount specified.
+ * Translates the given Array Matrix by shifting its rows and the elements within
+ * each row by the amounts specified. The translation wraps cyclically: elements
+ * shifted off one edge of the matrix reappear on the opposite edge.
+ *
+ * A positive `x` value shifts elements within each row to the right, and a negative
+ * value shifts them to the left. A positive `y` value shifts rows downward, and a
+ * negative value shifts them upward.
  *
  * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
  * have the same length. There must be at least two rows. This is an example matrix:

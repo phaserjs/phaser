@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24,11 +24,19 @@ function hasGetterOrSetter (def)
 }
 
 /**
- * A Matter Game Object is a generic object that allows you to combine any Phaser Game Object,
- * including those you have extended or created yourself, with all of the Matter Components.
+ * A factory function that mixes all Matter.js physics components into any existing Phaser Game
+ * Object, including those you have extended or created yourself. This enables you to give any
+ * Game Object full Matter physics capabilities without requiring it to extend a specific class.
  *
- * This enables you to use component methods such as `setVelocity` or `isSensor` directly from
- * this Game Object.
+ * The following components are mixed directly onto the Game Object: Bounce, Collision, Force,
+ * Friction, Gravity, Mass, Sensor, SetBody, Sleep, Static, Transform, and Velocity. This means
+ * methods such as `setVelocity`, `setFriction`, and `isSensor` become available directly on the
+ * Game Object after this function is called.
+ *
+ * If `options` is an existing Matter Body instance (i.e. its `type` property equals `'body'`),
+ * that body is attached via `setExistingBody`. Otherwise, `options` is treated as a
+ * `MatterBodyConfig` and a new body is created via `setBody`, defaulting to a rectangle shape
+ * if no `shape` property is provided.
  *
  * @function Phaser.Physics.Matter.MatterGameObject
  * @since 3.3.0
@@ -38,7 +46,7 @@ function hasGetterOrSetter (def)
  * @param {(Phaser.Types.Physics.Matter.MatterBodyConfig|MatterJS.Body)} [options] - A Matter Body configuration object, or an instance of a Matter Body.
  * @param {boolean} [addToWorld=true] - Should the newly created body be immediately added to the World?
  *
- * @return {Phaser.GameObjects.GameObject} The Game Object that was created with the Matter body.
+ * @return {Phaser.GameObjects.GameObject} The Game Object that was passed in, now enhanced with Matter physics components.
  */
 var MatterGameObject = function (world, gameObject, options, addToWorld)
 {

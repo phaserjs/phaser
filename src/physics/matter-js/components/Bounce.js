@@ -1,11 +1,17 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * A component to set restitution on objects.
+ * The Bounce component is a mixin for Matter.js physics-enabled Game Objects that provides
+ * control over the restitution (elasticity) of a physics body. Restitution determines how
+ * much kinetic energy a body retains after a collision — a higher value results in a bouncier
+ * object, while a value of zero produces collisions with no bounce at all.
+ *
+ * This component is automatically mixed into Game Objects that use Matter.js physics when
+ * the physics body is created.
  *
  * @namespace Phaser.Physics.Matter.Components.Bounce
  * @since 3.0.0
@@ -13,7 +19,8 @@
 var Bounce = {
 
     /**
-     * Sets the restitution on the physics object.
+     * Sets the restitution (bounciness) of this Game Object's Matter.js physics body.
+     * This controls how much of the body's kinetic energy is preserved after a collision.
      *
      * @method Phaser.Physics.Matter.Components.Bounce#setBounce
      * @since 3.0.0

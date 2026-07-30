@@ -1,11 +1,17 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Keyboard Codes.
+ * A mapping of keyboard key names to their corresponding browser key codes, as reported by
+ * `KeyboardEvent.keyCode`. Use these constants with `Phaser.Input.Keyboard.KeyboardPlugin`
+ * methods such as `addKey` and `addKeys`, or when checking the state of `Phaser.Input.Keyboard.Key`
+ * objects, to avoid hard-coding numeric values in your game code.
+ *
+ * Some entries include browser-specific variants (e.g. `SEMICOLON_FIREFOX`) to handle historical
+ * differences in key code reporting across browsers.
  *
  * @namespace Phaser.Input.Keyboard.KeyCodes
  * @memberof Phaser.Input.Keyboard
@@ -294,7 +300,7 @@ var KeyCodes = {
     NINE: 57,
 
     /**
-     * The NUMPAD_ZERO key.
+     * The numeric keypad 0 key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO
      * @type {number}
@@ -303,7 +309,7 @@ var KeyCodes = {
     NUMPAD_ZERO: 96,
 
     /**
-     * The NUMPAD_ONE key.
+     * The numeric keypad 1 key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE
      * @type {number}
@@ -312,7 +318,7 @@ var KeyCodes = {
     NUMPAD_ONE: 97,
 
     /**
-     * The NUMPAD_TWO key.
+     * The numeric keypad 2 key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO
      * @type {number}
@@ -321,7 +327,7 @@ var KeyCodes = {
     NUMPAD_TWO: 98,
 
     /**
-     * The NUMPAD_THREE key.
+     * The numeric keypad 3 key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE
      * @type {number}
@@ -330,7 +336,7 @@ var KeyCodes = {
     NUMPAD_THREE: 99,
 
     /**
-     * The NUMPAD_FOUR key.
+     * The numeric keypad 4 key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR
      * @type {number}
@@ -339,7 +345,7 @@ var KeyCodes = {
     NUMPAD_FOUR: 100,
 
     /**
-     * The NUMPAD_FIVE key.
+     * The numeric keypad 5 key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE
      * @type {number}
@@ -348,7 +354,7 @@ var KeyCodes = {
     NUMPAD_FIVE: 101,
 
     /**
-     * The NUMPAD_SIX key.
+     * The numeric keypad 6 key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX
      * @type {number}
@@ -357,7 +363,7 @@ var KeyCodes = {
     NUMPAD_SIX: 102,
 
     /**
-     * The NUMPAD_SEVEN key.
+     * The numeric keypad 7 key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_SEVEN
      * @type {number}
@@ -366,7 +372,7 @@ var KeyCodes = {
     NUMPAD_SEVEN: 103,
 
     /**
-     * The NUMPAD_EIGHT key.
+     * The numeric keypad 8 key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT
      * @type {number}
@@ -375,7 +381,7 @@ var KeyCodes = {
     NUMPAD_EIGHT: 104,
 
     /**
-     * The NUMPAD_NINE key.
+     * The numeric keypad 9 key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE
      * @type {number}
@@ -843,7 +849,8 @@ var KeyCodes = {
     CLOSED_BRACKET: 221,
 
     /**
-     * The SEMICOLON_FIREFOX key.
+     * The Firefox-specific alternate key code for the SEMICOLON (;) key. Firefox historically
+     * reported key code 59 for this key, whereas other browsers use 186 (see `SEMICOLON`).
      *
      * @name Phaser.Input.Keyboard.KeyCodes.SEMICOLON_FIREFOX
      * @type {number}
@@ -852,7 +859,7 @@ var KeyCodes = {
     SEMICOLON_FIREFOX: 59,
 
     /**
-     * The COLON key.
+     * The COLON (:) key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.COLON
      * @type {number}
@@ -861,7 +868,7 @@ var KeyCodes = {
     COLON: 58,
 
     /**
-     * The COMMA_FIREFOX_WINDOWS key.
+     * The Firefox on Windows-specific alternate key code for the less-than sign (<) key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.COMMA_FIREFOX_WINDOWS
      * @type {number}
@@ -870,7 +877,7 @@ var KeyCodes = {
     COMMA_FIREFOX_WINDOWS: 60,
 
     /**
-     * The COMMA_FIREFOX key.
+     * The Firefox-specific alternate key code for the greater-than sign (>) key.
      *
      * @name Phaser.Input.Keyboard.KeyCodes.COMMA_FIREFOX
      * @type {number}
@@ -879,7 +886,8 @@ var KeyCodes = {
     COMMA_FIREFOX: 62,
 
     /**
-     * The BRACKET_RIGHT_FIREFOX key.
+     * The Firefox-specific alternate key code for the right bracket (]) key. Firefox historically
+     * reported key code 174 for this key, whereas other browsers use 221 (see `CLOSED_BRACKET`).
      *
      * @name Phaser.Input.Keyboard.KeyCodes.BRACKET_RIGHT_FIREFOX
      * @type {number}
@@ -888,7 +896,8 @@ var KeyCodes = {
     BRACKET_RIGHT_FIREFOX: 174,
 
     /**
-     * The BRACKET_LEFT_FIREFOX key.
+     * The Firefox-specific alternate key code for the left bracket ([) key. Firefox historically
+     * reported key code 175 for this key, whereas other browsers use 219 (see `OPEN_BRACKET`).
      *
      * @name Phaser.Input.Keyboard.KeyCodes.BRACKET_LEFT_FIREFOX
      * @type {number}

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -86,7 +86,7 @@ var ImageFile = new Class({
             loader.addFile(normalMap);
         }
 
-        this.useImageElementLoad = loader.imageLoadType === 'HTMLImageElement';
+        this.useImageElementLoad = (loader.imageLoadType === 'HTMLImageElement') || this.base64;
 
         if (this.useImageElementLoad)
         {
@@ -96,8 +96,11 @@ var ImageFile = new Class({
     },
 
     /**
-     * Called automatically by Loader.nextFile.
-     * This method controls what extra work this File does with its loaded data.
+     * Called automatically by `Loader.nextFile` as part of the XHR loading path.
+     * Creates an HTMLImageElement and assigns the XHR blob response as its source via an object URL,
+     * triggering the browser to decode the image. On success, calls `onProcessComplete`; on failure,
+     * calls `onProcessError`. This method is only used when images are loaded via XHR (the default).
+     * When `loader.imageLoadType` is set to `"HTMLImageElement"`, the `onProcessImage` method is used instead.
      *
      * @method Phaser.Loader.FileTypes.ImageFile#onProcess
      * @since 3.7.0
@@ -165,36 +168,33 @@ var ImageFile = new Class({
 
         this.src = GetURL(this, this.loader.baseURL);
 
-        if (this.src.indexOf('data:') === 0)
+        this.data = new Image();
+
+        this.data.crossOrigin = this.crossOrigin;
+
+        var _this = this;
+
+        this.data.onload = function ()
         {
-            console.warn('Local data URIs are not supported: ' + this.key);
-        }
-        else
+            _this.state = CONST.FILE_LOADED;
+
+            _this.loader.nextFile(_this, true);
+        };
+
+        this.data.onerror = function ()
         {
-            this.data = new Image();
+            _this.loader.nextFile(_this, false);
+        };
 
-            this.data.crossOrigin = this.crossOrigin;
-
-            var _this = this;
-
-            this.data.onload = function ()
-            {
-                _this.state = CONST.FILE_LOADED;
-
-                _this.loader.nextFile(_this, true);
-            };
-
-            this.data.onerror = function ()
-            {
-                _this.loader.nextFile(_this, false);
-            };
-
-            this.data.src = this.src;
-        }
+        this.data.src = this.src;
     },
 
     /**
-     * Adds this file to its target cache upon successful loading and processing.
+     * Adds this file to the Texture Manager upon successful loading and processing.
+     *
+     * If this image has a linked normal map file, the method waits until both files have completed
+     * loading before adding them together as a pair via `cache.addImage`. If no normal map is present,
+     * the image is added to the Texture Manager on its own.
      *
      * @method Phaser.Loader.FileTypes.ImageFile#addToCache
      * @since 3.7.0
@@ -209,8 +209,11 @@ var ImageFile = new Class({
             //  We do, but has it loaded?
             if (linkFile.state >= CONST.FILE_COMPLETE)
             {
-                //  Both files have loaded
-                if (this.type === 'normalMap')
+                if (linkFile.type === 'spritesheet')
+                {
+                    linkFile.addToCache();
+                }
+                else if (this.type === 'normalMap')
                 {
                     //  linkFile.data = Image
                     //  this.data = Normal Map
@@ -310,7 +313,7 @@ var ImageFile = new Class({
  * });
  * ```
  *
- * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+ * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORS and XHR Settings.
  * Normal maps are a WebGL only feature.
  *
  * In Phaser 3.60 a new property was added that allows you to control how images are loaded. By default, images are loaded via XHR as Blobs.

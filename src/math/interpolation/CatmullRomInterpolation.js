@@ -1,19 +1,25 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var CatmullRom = require('../CatmullRom');
 
 /**
- * A Catmull-Rom interpolation method.
+ * Performs a Catmull-Rom spline interpolation over an array of values, producing a smooth
+ * curve that passes through every control point. The `k` parameter (0 to 1) determines
+ * the position along the full curve.
+ *
+ * If the first and last values in `v` are equal, the curve is treated as closed (looping),
+ * and the interpolation wraps around seamlessly. Otherwise, the curve is treated as open,
+ * and values of `k` outside the 0 to 1 range will extrapolate beyond the endpoints.
  *
  * @function Phaser.Math.Interpolation.CatmullRom
  * @since 3.0.0
  *
- * @param {number[]} v - The input array of values to interpolate between.
- * @param {number} k - The percentage of interpolation, between 0 and 1.
+ * @param {number[]} v - The input array of control point values to interpolate between.
+ * @param {number} k - The percentage of interpolation, between 0 and 1. Values outside this range extrapolate on an open curve, or wrap on a closed curve.
  *
  * @return {number} The interpolated value.
  */

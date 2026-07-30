@@ -1,12 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
-var JSONFile = require('./JSONFile.js');
+var JSONFile = require('./JSONFile');
 var LoaderEvents = require('../events');
 
 /**
@@ -113,7 +113,7 @@ var AnimationJSONFile = new Class({
  *
  * See the documentation for `Phaser.Types.Loader.FileTypes.JSONFileConfig` for more details.
  *
- * Once the file has finished loading it will automatically be passed to the global Animation Managers `fromJSON` method.
+ * Once the file has finished loading it will automatically be passed to the global Animation Manager's `fromJSON` method.
  * This will parse all of the JSON data and create animation data from it. This process happens at the very end
  * of the Loader, once every other file in the load queue has finished. The reason for this is to allow you to load
  * both animation data and the images it relies upon in the same load call.
@@ -155,7 +155,7 @@ var AnimationJSONFile = new Class({
  * }
  * ```
  *
- * And if you only wanted to create animations from the `boss` data, then you could pass `level1.baddies.boss`as the `dataKey`.
+ * And if you only wanted to create animations from the `boss` data, then you could pass `level1.baddies.boss` as the `dataKey`.
  *
  * Note: The ability to load this type of file will only be available if the JSON File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.

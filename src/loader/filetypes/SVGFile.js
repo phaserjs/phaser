@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,6 +14,10 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 /**
  * @classdesc
  * A single SVG File suitable for loading by the Loader.
+ *
+ * SVG files are loaded as text, optionally resized according to a width, height, or scale factor, then rasterized
+ * to a bitmap image and stored in the Texture Manager. Once loaded, the resulting texture can be used by any
+ * Game Object that accepts a texture key, just like a PNG or JPEG image.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#svg method and are not typically created directly.
  *
@@ -72,7 +76,10 @@ var SVGFile = new Class({
 
     /**
      * Called automatically by Loader.nextFile.
-     * This method controls what extra work this File does with its loaded data.
+     * This method parses the raw SVG text response, optionally resizes the SVG by modifying its width, height,
+     * or viewBox attributes according to the file's svgConfig, then serializes the result into a Blob and loads
+     * it into an HTMLImageElement. On browsers that do not support object URLs (such as older versions of Safari),
+     * it falls back to a data URI. Once the image has loaded, `onProcessComplete` is called to finalize the file.
      *
      * @method Phaser.Loader.FileTypes.SVGFile#onProcess
      * @since 3.7.0
@@ -244,7 +251,7 @@ var SVGFile = new Class({
  * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
  *
  * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
- * and no URL is given then the Loader will set the URL to be "alien.html". It will always add `.html` as the extension, although
+ * and no URL is given then the Loader will set the URL to be "alien.svg". It will always add `.svg` as the extension, although
  * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
  *
  * You can optionally pass an SVG Resize Configuration object when you load an SVG file. By default the SVG will be rendered to a texture

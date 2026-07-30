@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,7 +11,13 @@ var Sprite = require('../../gameobjects/sprite/Sprite');
 /**
  * @classdesc
  * An Arcade Physics Sprite is a Sprite with an Arcade Physics body and related components.
- * The body can be dynamic or static.
+ * Arcade Physics provides a lightweight, fast AABB (axis-aligned bounding box) and circle-based
+ * collision system suited for most 2D game needs.
+ *
+ * The physics body can be either dynamic (affected by velocity, acceleration, and gravity) or
+ * static (fixed in place, immovable by other bodies). Once the sprite is added to an Arcade Physics
+ * group or the world, its `body` property is populated and you can control movement, apply forces,
+ * set collision bounds, and respond to overlap and collider callbacks.
  *
  * The main difference between an Arcade Sprite and an Arcade Image is that you cannot animate an Arcade Image.
  * If you do not require animation then you can safely use Arcade Images instead of Arcade Sprites.
@@ -25,6 +31,7 @@ var Sprite = require('../../gameobjects/sprite/Sprite');
  * @extends Phaser.Physics.Arcade.Components.Acceleration
  * @extends Phaser.Physics.Arcade.Components.Angular
  * @extends Phaser.Physics.Arcade.Components.Bounce
+ * @extends Phaser.Physics.Arcade.Components.Collision
  * @extends Phaser.Physics.Arcade.Components.Debug
  * @extends Phaser.Physics.Arcade.Components.Drag
  * @extends Phaser.Physics.Arcade.Components.Enable
@@ -42,8 +49,6 @@ var Sprite = require('../../gameobjects/sprite/Sprite');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
@@ -65,6 +70,7 @@ var ArcadeSprite = new Class({
         Components.Acceleration,
         Components.Angular,
         Components.Bounce,
+        Components.Collision,
         Components.Debug,
         Components.Drag,
         Components.Enable,
@@ -84,7 +90,11 @@ var ArcadeSprite = new Class({
         Sprite.call(this, scene, x, y, texture, frame);
 
         /**
-         * This Game Object's Physics Body.
+         * The Arcade Physics Body attached to this Game Object. This is set automatically when
+         * the sprite is added to an Arcade Physics group or enabled via `physics.add.existing`.
+         * Use this reference to apply velocity, acceleration, gravity, and other physics properties.
+         * It will be either a dynamic `Body` (the default) or a `StaticBody` if the sprite was
+         * created as a static physics object.
          *
          * @name Phaser.Physics.Arcade.Sprite#body
          * @type {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody)}

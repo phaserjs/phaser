@@ -1,11 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Offset a line by the given amount.
+ * Translates both endpoints of the given Line by the specified horizontal and vertical amounts, effectively moving the line to a new position in 2D space while preserving its length and angle.
  *
  * @function Phaser.Geom.Line.Offset
  * @since 3.0.0
@@ -16,7 +16,7 @@
  * @param {number} x - The horizontal offset to add to the line.
  * @param {number} y - The vertical offset to add to the line.
  *
- * @return {Phaser.Geom.Line} The offset line.
+ * @return {Phaser.Geom.Line} The modified Line object, with both endpoints moved by the given offset.
  */
 var Offset = function (line, x, y)
 {

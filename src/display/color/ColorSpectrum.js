@@ -1,19 +1,21 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var GetColor = require('./GetColor');
 
 /**
- * Return an array of Colors in a Color Spectrum.
+ * Returns an array of Color Objects representing a full color spectrum.
  *
- * The spectrum colors flow in the order: red, yellow, green, blue.
+ * The spectrum colors cycle through the hue wheel in the order: red, yellow, green, cyan, blue, violet, and back to red.
  *
- * By default this function will return an array with 1024 elements in.
+ * By default this function will return an array with 1024 elements.
  *
- * However, you can reduce this to a smaller quantity if needed, by specitying the `limit` parameter.
+ * However, you can reduce this to a smaller quantity if needed, by specifying the `limit` parameter.
+ * When a limit smaller than 1024 is given, the colors are sampled evenly across the full spectrum so
+ * the hue distribution remains uniform regardless of the array size.
  *
  * @function Phaser.Display.Color.ColorSpectrum
  * @since 3.50.0

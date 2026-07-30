@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -130,7 +130,7 @@ var Shake = new Class({
         this._onUpdate;
 
         /**
-         * On Complete callback scope.
+         * The context in which the `_onUpdate` callback is invoked.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Shake#_onUpdateScope
          * @type {any}

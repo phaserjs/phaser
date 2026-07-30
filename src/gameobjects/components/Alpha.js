@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,8 +10,15 @@ var Clamp = require('../../math/Clamp');
 var _FLAG = 2; // 0010
 
 /**
- * Provides methods used for setting the alpha properties of a Game Object.
- * Should be applied as a mixin and not used directly.
+ * Provides methods and properties for managing the alpha (opacity) of a Game Object.
+ * Alpha values range from 0 (fully transparent) to 1 (fully opaque).
+ *
+ * Under WebGL, alpha can be set independently for each of the four corners of the
+ * Game Object, allowing gradient transparency effects. Under Canvas, only a single
+ * global alpha value is used.
+ *
+ * This component is designed to be applied as a mixin to Game Objects and should
+ * not be used directly.
  *
  * @namespace Phaser.GameObjects.Components.Alpha
  * @since 3.0.0
@@ -127,9 +134,11 @@ var Alpha = {
     },
 
     /**
-     * The alpha value of the Game Object.
+     * The alpha value of the Game Object, between 0 (fully transparent) and 1 (fully opaque).
      *
-     * This is a global value, impacting the entire Game Object, not just a region of it.
+     * This is a global value that impacts the entire Game Object. Setting it also updates
+     * all four corner alpha values (`alphaTopLeft`, `alphaTopRight`, `alphaBottomLeft`,
+     * `alphaBottomRight`) to the same value. The input is clamped to the range [0, 1].
      *
      * @name Phaser.GameObjects.Components.Alpha#alpha
      * @type {number}

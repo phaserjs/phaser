@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -172,7 +172,7 @@ var CanvasTexture = new Class({
 
     /**
      * This re-creates the `imageData` from the current context.
-     * It then re-builds the ArrayBuffer, the `data` Uint8ClampedArray reference and the `pixels` Int32Array.
+     * It then re-builds the ArrayBuffer, the `data` Uint8ClampedArray reference and the `pixels` Uint32Array.
      *
      * Warning: This is a very expensive operation, so use it sparingly.
      *
@@ -296,8 +296,8 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#setPixel
      * @since 3.16.0
      *
-     * @param {number} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {number} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} x - The x coordinate of the pixel to set. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {number} y - The y coordinate of the pixel to set. Must lay within the dimensions of this CanvasTexture and be an integer.
      * @param {number} red - The red color value. A number between 0 and 255.
      * @param {number} green - The green color value. A number between 0 and 255.
      * @param {number} blue - The blue color value. A number between 0 and 255.
@@ -339,7 +339,7 @@ var CanvasTexture = new Class({
      * @param {number} x - The x coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
      * @param {number} y - The y coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
      * @param {number} [dirtyX=0] - Horizontal position (x coordinate) of the top-left corner from which the image data will be extracted.
-     * @param {number} [dirtyY=0] - Vertical position (x coordinate) of the top-left corner from which the image data will be extracted.
+     * @param {number} [dirtyY=0] - Vertical position (y coordinate) of the top-left corner from which the image data will be extracted.
      * @param {number} [dirtyWidth] - Width of the rectangle to be painted. Defaults to the width of the image data.
      * @param {number} [dirtyHeight] - Height of the rectangle to be painted. Defaults to the height of the image data.
      *
@@ -491,7 +491,7 @@ var CanvasTexture = new Class({
      * @param {number} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
      * @param {number} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
      *
-     * @return {number}
+     * @return {number} The index of the pixel in the image data array, or -1 if the coordinates are out of bounds.
      */
     getIndex: function (x, y)
     {

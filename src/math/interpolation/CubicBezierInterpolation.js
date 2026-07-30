@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -41,7 +41,11 @@ function P3 (t, p)
 }
 
 /**
- * A cubic bezier interpolation method.
+ * Calculates a cubic bezier interpolated value for a given parameter `t`, based on four
+ * control points. The curve passes through `p0` at `t=0` and `p3` at `t=1`, while `p1`
+ * and `p2` act as pull points that shape the curve between those endpoints without
+ * necessarily being on it. This makes cubic bezier interpolation well-suited for smooth,
+ * art-directed transitions in animations, camera paths, and procedural movement.
  *
  * https://medium.com/@adrian_cooney/bezier-interpolation-13b68563313a
  *

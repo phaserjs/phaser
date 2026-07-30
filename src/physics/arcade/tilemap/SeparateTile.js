@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,7 +9,13 @@ var TileCheckY = require('./TileCheckY');
 var TileIntersectsBody = require('./TileIntersectsBody');
 
 /**
- * The core separation function to separate a physics body and a tile.
+ * The core separation function to separate a physics body from a tile, resolving any overlap
+ * between them. It determines which axis to process first based on the body's current velocity:
+ * if the body is moving faster horizontally the X axis is checked first, and vice versa. When
+ * moving diagonally into a tile with colliding faces on both axes, the axis of least overlap is
+ * prioritized. Separation is performed by calling `TileCheckX` and/or `TileCheckY` as appropriate,
+ * and the check short-circuits early if the first axis separation is sufficient to fully resolve
+ * the intersection.
  *
  * @function Phaser.Physics.Arcade.Tilemap.SeparateTile
  * @since 3.0.0
@@ -19,7 +25,7 @@ var TileIntersectsBody = require('./TileIntersectsBody');
  * @param {Phaser.Tilemaps.Tile} tile - The tile to collide against.
  * @param {Phaser.Geom.Rectangle} tileWorldRect - A rectangle-like object defining the dimensions of the tile.
  * @param {Phaser.Tilemaps.TilemapLayer} tilemapLayer - The tilemapLayer to collide against.
- * @param {number} tileBias - The tile bias value. Populated by the `World.TILE_BIAS` constant.
+ * @param {number} tileBias - The tile bias value, defined by the `World.TILE_BIAS` constant. Used to prevent fast-moving bodies from tunneling through thin tiles.
  * @param {boolean} isLayer - Is this check coming from a TilemapLayer or an array of tiles?
  *
  * @return {boolean} `true` if the body was separated, otherwise `false`.

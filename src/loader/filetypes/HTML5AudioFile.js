@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,12 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
- * A single Audio File suitable for loading by the Loader.
+ * A single audio file loaded via the HTML5 Audio API, suitable for loading by the Loader.
+ *
+ * Unlike `WebAudioFile`, which uses the Web Audio API, this file type creates standard HTML `Audio` elements.
+ * It is used as a fallback when the Web Audio API is unavailable, or when the game is configured to use
+ * HTML5 audio exclusively. Multiple instances of the audio element can be created to allow the same sound
+ * to play concurrently without interruption.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#audio method and are not typically created directly.
  *
@@ -28,7 +33,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [urlConfig] - The absolute or relative URL to load this file from.
- * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {object} [audioConfig] - The AudioContext config object.
  */
 var HTML5AudioFile = new Class({
 
@@ -102,7 +107,7 @@ var HTML5AudioFile = new Class({
     },
 
     /**
-     * Called during the file load progress. Is sent a DOM ProgressEvent.
+     * Called when an individual Audio element fires its `canplaythrough` event, indicating it is ready to play.
      *
      * @method Phaser.Loader.FileTypes.HTML5AudioFile#onProgress
      * @fires Phaser.Loader.Events#FILE_PROGRESS
@@ -129,7 +134,8 @@ var HTML5AudioFile = new Class({
 
     /**
      * Called by the Loader, starts the actual file downloading.
-     * During the load the methods onLoad, onError and onProgress are called, based on the XHR events.
+     * Creates one or more HTML Audio elements (based on the configured instance count) and assigns the source URL to each.
+     * During the load the methods onLoad, onError and onProgress are called, based on the Audio element events.
      * You shouldn't normally call this method directly, it's meant to be invoked by the Loader.
      *
      * @method Phaser.Loader.FileTypes.HTML5AudioFile#load

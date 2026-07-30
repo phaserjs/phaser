@@ -1,7 +1,7 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,7 +12,20 @@ var Clamp = require('../../math/Clamp');
 
 /**
  * @classdesc
- * HTML5 Audio implementation of the sound.
+ * HTML5AudioSound is the HTML5 Audio API implementation of a sound within Phaser.
+ *
+ * It is used automatically by the HTML5AudioSoundManager when the Web Audio API is unavailable,
+ * typically in environments that do not support it or where it has been disabled. Unlike the
+ * WebAudioSound class, HTML5AudioSound relies on native `<audio>` elements for playback, which
+ * means it has more limited capabilities, such as no support for audio panning.
+ *
+ * Each sound maintains a pool of `HTMLAudioElement` tags loaded via `Loader.audio`. Because HTML5
+ * Audio cannot share a single element across simultaneous playbacks, you must load multiple
+ * instances of the asset if you want to play the same sound more than once at the same time.
+ *
+ * You do not create instances of this class directly. Instead, use
+ * `this.sound.add(key)` from within a Scene, which will return the correct sound type based on
+ * the audio system in use.
  *
  * @class HTML5AudioSound
  * @extends Phaser.Sound.BaseSound
@@ -506,7 +519,7 @@ var HTML5AudioSound = new Class({
 
     /**
      * Calls Phaser.Sound.BaseSound#destroy method
-     * and cleans up all HTML5 Audio related stuff.
+     * and cleans up all HTML5 Audio related resources.
      *
      * @method Phaser.Sound.HTML5AudioSound#destroy
      * @since 3.0.0
@@ -655,7 +668,7 @@ var HTML5AudioSound = new Class({
      * @fires Phaser.Sound.Events#VOLUME
      * @since 3.4.0
      *
-     * @param {number} value - The volume of the sound.
+     * @param {number} value - The volume of the sound. A value between 0 (silence) and 1 (full volume).
      *
      * @return {this} This Sound instance.
      */
@@ -669,7 +682,7 @@ var HTML5AudioSound = new Class({
     /**
      * Rate at which this Sound will be played.
      * Value of 1.0 plays the audio at full speed, 0.5 plays the audio at half speed
-     * and 2.0 doubles the audios playback speed.
+     * and 2.0 doubles the audio's playback speed.
      *
      * @name Phaser.Sound.HTML5AudioSound#rate
      * @type {number}
@@ -706,13 +719,13 @@ var HTML5AudioSound = new Class({
      * Sets the playback rate of this Sound.
      *
      * For example, a value of 1.0 plays the audio at full speed, 0.5 plays the audio at half speed
-     * and 2.0 doubles the audios playback speed.
+     * and 2.0 doubles the audio's playback speed.
      *
      * @method Phaser.Sound.HTML5AudioSound#setRate
      * @fires Phaser.Sound.Events#RATE
      * @since 3.3.0
      *
-     * @param {number} value - The playback rate at of this Sound.
+     * @param {number} value - The playback rate of this Sound.
      *
      * @return {this} This Sound instance.
      */
@@ -844,7 +857,7 @@ var HTML5AudioSound = new Class({
      * @fires Phaser.Sound.Events#SEEK
      * @since 3.4.0
      *
-     * @param {number} value - The point in the sound to seek to.
+     * @param {number} value - The point in the sound to seek to, in seconds.
      *
      * @return {this} This Sound instance.
      */

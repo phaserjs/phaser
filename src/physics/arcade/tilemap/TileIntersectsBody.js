@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,7 @@
  * @param {{ left: number, right: number, top: number, bottom: number }} tileWorldRect - A rectangle object that defines the tile placement in the world.
  * @param {Phaser.Physics.Arcade.Body} body - The body to check for intersection against.
  *
- * @return {boolean} Returns `true` of the tile intersects with the body, otherwise `false`.
+ * @return {boolean} Returns `true` if the tile intersects with the body, otherwise `false`.
  */
 var TileIntersectsBody = function (tileWorldRect, body)
 {

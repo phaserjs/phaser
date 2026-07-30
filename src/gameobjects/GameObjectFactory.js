@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,6 +12,7 @@ var SceneEvents = require('../scene/events');
  * @classdesc
  * The Game Object Factory is a Scene plugin that allows you to quickly create many common
  * types of Game Objects and have them automatically registered with the Scene.
+ * It is accessible via `this.add` from within a Scene.
  *
  * Game Objects directly register themselves with the Factory and inject their own creation
  * methods into the class.
@@ -183,17 +184,15 @@ var GameObjectFactory = new Class({
 });
 
 /**
- * Static method called directly by the Game Object factory functions.
- * With this method you can register a custom GameObject factory in the GameObjectFactory,
- * providing a name (`factoryType`) and the constructor (`factoryFunction`) in order
- * to be called when you call to Phaser.Scene.add[ factoryType ] method.
+ * Registers a Game Object factory function on the GameObjectFactory prototype,
+ * making it available for creating Game Objects via the Scene's add property.
  *
  * @method Phaser.GameObjects.GameObjectFactory.register
  * @static
  * @since 3.0.0
  *
- * @param {string} factoryType - The key of the factory that you will use to call to Phaser.Scene.add[ factoryType ] method.
- * @param {function} factoryFunction - The constructor function to be called when you invoke to the Phaser.Scene.add method.
+ * @param {string} factoryType - The key under which the factory will be registered, accessible as `Phaser.Scene.add[factoryType]`.
+ * @param {function} factoryFunction - The factory function to be called when `Phaser.Scene.add[factoryType]` is invoked.
  */
 GameObjectFactory.register = function (factoryType, factoryFunction)
 {
@@ -204,9 +203,7 @@ GameObjectFactory.register = function (factoryType, factoryFunction)
 };
 
 /**
- * Static method called directly by the Game Object factory functions.
- * With this method you can remove a custom GameObject factory registered in the GameObjectFactory,
- * providing a its `factoryType`.
+ * Removes a Game Object factory function from the GameObjectFactory prototype.
  *
  * @method Phaser.GameObjects.GameObjectFactory.remove
  * @static

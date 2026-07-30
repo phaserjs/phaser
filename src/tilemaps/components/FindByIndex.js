@@ -1,13 +1,13 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Searches the entire map layer for the first tile matching the given index, then returns that Tile
  * object. If no match is found, it returns null. The search starts from the top-left tile and
- * continues horizontally until it hits the end of the row, then it drops down to the next column.
+ * continues horizontally until it hits the end of the row, then it drops down to the next row.
  * If the reverse boolean is true, it scans starting from the bottom-right corner traveling up to
  * the top-left.
  *

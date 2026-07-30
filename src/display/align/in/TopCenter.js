@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,7 @@ var SetCenterX = require('../../bounds/SetCenterX');
 var SetTop = require('../../bounds/SetTop');
 
 /**
- * Takes given Game Object and aligns it so that it is positioned in the top center of the other.
+ * Takes a given Game Object and aligns it so that its top edge is flush with the top edge of the `alignIn` Game Object, centered horizontally.
  *
  * @function Phaser.Display.Align.In.TopCenter
  * @since 3.0.0

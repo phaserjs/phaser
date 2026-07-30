@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,7 +15,7 @@ var Body = require('./lib/body/Body');
  * ```javascript
  * preload ()
  * {
- *   this.load.json('ninjas', 'assets/ninjas.json);
+ *   this.load.json('ninjas', 'assets/ninjas.json');
  * }
  *
  * create ()
@@ -28,7 +28,7 @@ var Body = require('./lib/body/Body');
  *
  * Do not pass the entire JSON file to this method, but instead pass one of the shapes contained within it.
  *
- * If you pas in an `options` object, any settings in there will override those in the config object.
+ * If you pass in an `options` object, any settings in there will override those in the config object.
  *
  * The structure of the JSON file is as follows:
  *

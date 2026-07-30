@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,12 +8,15 @@ var Class = require('../utils/Class');
 
 /**
  * @classdesc
- * A single frame in an Animation sequence.
+ * A single frame within an Animation sequence.
  *
- * An AnimationFrame consists of a reference to the Texture it uses for rendering, references to other
- * frames in the animation, and index data. It also has the ability to modify the animation timing.
+ * An AnimationFrame holds a reference to the Texture Frame it uses for rendering, links to the
+ * previous and next frames in the sequence, its position index, and playback progress data.
+ * It can also carry an optional per-frame duration that overrides the parent Animation's default
+ * frame rate, and can be flagged as a keyframe to mark significant moments in the sequence.
  *
- * AnimationFrames are generated automatically by the Animation class.
+ * AnimationFrames are created and managed automatically by the Animation class when an animation
+ * is built via the Animation Manager. You would not typically instantiate AnimationFrame directly.
  *
  * @class AnimationFrame
  * @memberof Phaser.Animations
@@ -115,8 +118,7 @@ var AnimationFrame = new Class({
         this.nextFrame = null;
 
         /**
-         * Additional time (in ms) that this frame should appear for during playback.
-         * The value is added onto the msPerFrame set by the animation.
+         * The duration, in ms, of this frame of the animation.
          *
          * @name Phaser.Animations.AnimationFrame#duration
          * @type {number}
@@ -126,8 +128,9 @@ var AnimationFrame = new Class({
         this.duration = 0;
 
         /**
-         * What % through the animation does this frame come?
-         * This value is generated when the animation is created and cached here.
+         * The normalized progress of this frame within the animation, in the range 0 to 1.
+         * A value of 0 means the very start of the animation and 1 means the very end.
+         * This value is calculated when the animation is created and cached here.
          *
          * @name Phaser.Animations.AnimationFrame#progress
          * @type {number}
@@ -166,7 +169,7 @@ var AnimationFrame = new Class({
     },
 
     /**
-     * Destroys this object by removing references to external resources and callbacks.
+     * Destroys this object by removing references to external resources.
      *
      * @method Phaser.Animations.AnimationFrame#destroy
      * @since 3.0.0

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -33,11 +33,6 @@ if (typeof FEATURE_SOUND)
     var SoundManagerCreator = require('../sound/SoundManagerCreator');
 }
 
-if (typeof PLUGIN_FBINSTANT)
-{
-    var FacebookInstantGamesPlugin = require('../../plugins/fbinstant/src/FacebookInstantGamesPlugin');
-}
-
 /**
  * @classdesc
  * The Phaser.Game instance is the main controller for the entire Phaser game. It is responsible
@@ -57,7 +52,7 @@ if (typeof PLUGIN_FBINSTANT)
  * @fires Phaser.Core.Events#VISIBLE
  * @since 3.0.0
  *
- * @param {Phaser.Types.Core.GameConfig} [GameConfig] - The configuration object for your Phaser Game instance.
+ * @param {Phaser.Types.Core.GameConfig} [config] - The configuration object for your Phaser Game instance.
  */
 var Game = new Class({
 
@@ -284,21 +279,6 @@ var Game = new Class({
          */
         this.plugins = new PluginManager(this, this.config);
 
-        if (typeof PLUGIN_FBINSTANT)
-        {
-            /**
-             * An instance of the Facebook Instant Games Plugin.
-             *
-             * This will only be available if the plugin has been built into Phaser,
-             * or you're using the special Facebook Instant Games custom build.
-             *
-             * @name Phaser.Game#facebook
-             * @type {Phaser.FacebookInstantGamesPlugin}
-             * @since 3.13.0
-             */
-            this.facebook = new FacebookInstantGamesPlugin(this);
-        }
-
         /**
          * Is this Game pending destruction at the start of the next frame?
          *
@@ -407,7 +387,7 @@ var Game = new Class({
      *
      * @method Phaser.Game#texturesReady
      * @private
-     * @fires Phaser.Game#READY
+     * @fires Phaser.Core.Events#READY
      * @since 3.12.0
      */
     texturesReady: function ()
@@ -533,8 +513,8 @@ var Game = new Class({
      * This process emits `prerender` and `postrender` events, even though nothing actually displays.
      *
      * @method Phaser.Game#headlessStep
-     * @fires Phaser.Game#PRE_RENDER
-     * @fires Phaser.Game#POST_RENDER
+     * @fires Phaser.Core.Events#PRE_RENDER
+     * @fires Phaser.Core.Events#POST_RENDER
      * @since 3.2.0
      *
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
@@ -630,7 +610,7 @@ var Game = new Class({
     {
         this.loop.resume();
 
-        this.events.emit(Events.RESUME);
+        this.events.emit(Events.RESUME, this.loop.pauseDuration);
     },
 
     /**
@@ -650,7 +630,7 @@ var Game = new Class({
 
         if (wasPaused)
         {
-            this.events.emit(Events.RESUME);
+            this.events.emit(Events.RESUME, 0);
         }
     },
 
@@ -717,9 +697,9 @@ var Game = new Class({
      *
      * It will wait until the current frame has completed and then call `runDestroy` internally.
      *
-     * If you need to react to the games eventual destruction, listen for the `DESTROY` event.
+     * If you need to react to the game's eventual destruction, listen for the `DESTROY` event.
      *
-     * If you **do not** need to run Phaser again on the same web page you can set the `noReturn` argument to `true` and it will free-up
+     * If you **do not** need to run Phaser again on the same web page you can set the `noReturn` argument to `true` and it will free up
      * memory being held by the core Phaser plugins. If you do need to create another game instance on the same page, leave this as `false`.
      *
      * @method Phaser.Game#destroy
@@ -769,7 +749,7 @@ var Game = new Class({
             }
         }
 
-        if (this.domContainer)
+        if (this.domContainer && this.domContainer.parentNode)
         {
             this.domContainer.parentNode.removeChild(this.domContainer);
         }

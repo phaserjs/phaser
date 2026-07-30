@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,9 @@ var Pad = require('../../string/Pad');
 var CheckMatrix = require('./CheckMatrix');
 
 /**
- * Generates a string (which you can pass to console.log) from the given Array Matrix.
+ * Generates a formatted string representation of the given Array Matrix, suitable for
+ * logging to the console via `console.log`. Each row is rendered on its own line with
+ * cell values separated by ` |`, and rows are divided by a `---+` separator line.
  *
  * A matrix is a two-dimensional array (array of arrays), where all sub-arrays (rows)
  * have the same length. There must be at least two rows. This is an example matrix:
@@ -30,9 +32,9 @@ var CheckMatrix = require('./CheckMatrix');
  * @generic T
  * @genericUse {T[][]} - [matrix]
  *
- * @param {T[][]} [matrix] - A 2-dimensional array.
+ * @param {T[][]} [matrix] - A 2-dimensional array representing the matrix to convert.
  *
- * @return {string} A string representing the matrix.
+ * @return {string} A formatted string representing the matrix, with columns separated by ` |` and rows separated by `---+` divider lines. Returns an empty string if the matrix is invalid.
  */
 var MatrixToString = function (matrix)
 {

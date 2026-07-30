@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24,6 +24,7 @@ module.exports = {
     READY: require('./READY_EVENT'),
     RESUME: require('./RESUME_EVENT'),
     STEP: require('./STEP_EVENT'),
+    SYSTEM_READY: require('./SYSTEM_READY_EVENT'),
     VISIBLE: require('./VISIBLE_EVENT')
 
 };

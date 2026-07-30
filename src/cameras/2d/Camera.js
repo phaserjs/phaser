@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,7 +17,10 @@ var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
- * A Camera.
+ * A Camera provides a view into your game world and is the primary way scenes are rendered in Phaser.
+ * Every Scene has at least one Camera (the main camera), and you can add additional cameras via the
+ * Camera Manager. Cameras can be scrolled, zoomed, rotated, and fitted with special effects such as
+ * fade, flash, shake, pan, and zoom transitions.
  *
  * The Camera is the way in which all games are rendered in Phaser. They provide a view into your game world,
  * and can be positioned, rotated, zoomed and scrolled accordingly.
@@ -28,6 +31,11 @@ var Vector2 = require('../../math/Vector2');
  * created the same size as your game, but their position and size can be set to anything. This means if you
  * wanted to create a camera that was 320x200 in size, positioned in the bottom-right corner of your game,
  * you'd adjust the viewport to do that (using methods like `setViewport` and `setSize`).
+ * However, the viewport is limited to being an axis-aligned rectangle, and cannot be rotated.
+ * It is more powerful and reliable to use a
+ * `RenderTexture` or `DynamicTexture` instead.
+ * Point its camera where you want the viewport,
+ * set its size, and then draw your game objects to it.
  *
  * If you wish to change where the Camera is looking in your game, then you scroll it. You can do this
  * via the properties `scrollX` and `scrollY` or the method `setScroll`. Scrolling has no impact on the
@@ -38,13 +46,17 @@ var Vector2 = require('../../math/Vector2');
  *
  * A Camera also has built-in special effects including Fade, Flash and Camera Shake.
  *
+ * You can apply full-camera filters.
+ * Some filters need off-screen data, such as Blur;
+ * use `camera.getPaddingWrapper()` to get a proxy for working with
+ * cameras with padding applied.
+ *
  * @class Camera
  * @memberof Phaser.Cameras.Scene2D
  * @constructor
  * @since 3.0.0
  *
  * @extends Phaser.Cameras.Scene2D.BaseCamera
- * @extends Phaser.GameObjects.Components.PostPipeline
  *
  * @param {number} x - The x position of the Camera, relative to the top-left of the game canvas.
  * @param {number} y - The y position of the Camera, relative to the top-left of the game canvas.
@@ -55,17 +67,39 @@ var Camera = new Class({
 
     Extends: BaseCamera,
 
-    Mixins: [
-        Components.PostPipeline
-    ],
-
     initialize:
 
     function Camera (x, y, width, height)
     {
         BaseCamera.call(this, x, y, width, height);
 
-        this.initPostPipeline();
+        /**
+         * The filters for this camera.
+         * Filters control special effects and masks.
+         *
+         * This object contains two lists of filters: `internal` and `external`.
+         * See {@link Phaser.GameObjects.Components.FilterList} for more information.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#filters
+         * @type {Phaser.Types.GameObjects.FiltersInternalExternal}
+         * @since 4.0.0
+         */
+        this.filters = {
+            internal: new Components.FilterList(this),
+            external: new Components.FilterList(this)
+        };
+
+        /**
+         * Is this Camera for Game Object transform inversion?
+         * This is used by the `Filters` component to cancel out the transform
+         * of the Game Object when rendering the object for filtering.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#isObjectInversion
+         * @type {boolean}
+         * @default false
+         * @since 4.0.0
+         */
+        this.isObjectInversion = false;
 
         /**
          * Does this Camera allow the Game Objects it renders to receive input events?
@@ -129,7 +163,7 @@ var Camera = new Class({
 
         /**
          * The Camera Zoom effect handler.
-         * To zoom this camera see the `Camera.zoom` method.
+         * To zoom this camera see the `Camera.zoomTo` method.
          *
          * @name Phaser.Cameras.Scene2D.Camera#zoomEffect
          * @type {Phaser.Cameras.Scene2D.Effects.Zoom}
@@ -142,7 +176,7 @@ var Camera = new Class({
          *
          * Can also be set via `setLerp` or as part of the `startFollow` call.
          *
-         * The default values of 1 means the camera will instantly snap to the target coordinates.
+         * The default value of 1 means the camera will instantly snap to the target coordinates.
          * A lower value, such as 0.1 means the camera will more slowly track the target, giving
          * a smooth transition. You can set the horizontal and vertical values independently, and also
          * adjust this value in real-time during your game.
@@ -433,27 +467,26 @@ var Camera = new Class({
     },
 
     /**
-     * This effect will rotate the Camera so that the viewport finishes at the given angle in radians,
-     * over the duration and with the ease specified.
+     * Rotate the Camera to the given angle over the duration and with the ease specified.
      *
      * @method Phaser.Cameras.Scene2D.Camera#rotateTo
      * @since 3.23.0
      *
-     * @param {number} radians - The destination angle in radians to rotate the Camera viewport to. If the angle is positive then the rotation is clockwise else anticlockwise
-     * @param {boolean} [shortestPath=false] - If shortest path is set to true the camera will rotate in the quickest direction clockwise or anti-clockwise.
+     * @param {number} angle - The destination angle in radians to rotate the Camera view to.
+     * @param {boolean} [shortestPath=false] - If true, take the shortest distance to the destination. This adjusts the destination angle to be within one half turn of the start angle.
      * @param {number} [duration=1000] - The duration of the effect in milliseconds.
-     * @param {(string|function)} [ease='Linear'] - The ease to use for the rotation. Can be any of the Phaser Easing constants or a custom function.
+     * @param {(string|function)} [ease='Linear'] - The ease to use. Can be any of the Phaser Easing constants or a custom function.
      * @param {boolean} [force=false] - Force the rotation effect to start immediately, even if already running.
-     * @param {CameraRotateCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
-     * It is sent four arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
-     * the current camera rotation angle in radians.
+     * @param {Phaser.Types.Cameras.Scene2D.CameraRotateCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
+     * It is sent three arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
+     * and the current camera rotation.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
-    rotateTo: function (radians, shortestPath, duration, ease, force, callback, context)
+    rotateTo: function (angle, shortestPath, duration, ease, force, callback, context)
     {
-        return this.rotateToEffect.start(radians, shortestPath, duration, ease, force, callback, context);
+        return this.rotateToEffect.start(angle, shortestPath, duration, ease, force, callback, context);
     },
 
     /**
@@ -466,11 +499,11 @@ var Camera = new Class({
      *
      * @param {number} zoom - The target Camera zoom value.
      * @param {number} [duration=1000] - The duration of the effect in milliseconds.
-     * @param {(string|function)} [ease='Linear'] - The ease to use for the pan. Can be any of the Phaser Easing constants or a custom function.
-     * @param {boolean} [force=false] - Force the pan effect to start immediately, even if already running.
-     * @param {Phaser.Types.Cameras.Scene2D.CameraPanCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
-     * It is sent four arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
-     * the current camera scroll x coordinate and the current camera scroll y coordinate.
+     * @param {(string|function)} [ease='Linear'] - The ease to use for the zoom. Can be any of the Phaser Easing constants or a custom function.
+     * @param {boolean} [force=false] - Force the zoom effect to start immediately, even if already running.
+     * @param {Phaser.Types.Cameras.Scene2D.CameraZoomCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
+     * It is sent three arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
+     * and the current camera zoom value.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
      * @return {this} This Camera instance.
@@ -481,10 +514,9 @@ var Camera = new Class({
     },
 
     /**
-     * Internal preRender step.
+     * Updates camera matrix. Also resets any active effects on this Camera (such as shake, flash and fade) and quickly clears them all.
      *
      * @method Phaser.Cameras.Scene2D.Camera#preRender
-     * @protected
      * @since 3.0.0
      */
     preRender: function ()
@@ -497,8 +529,10 @@ var Camera = new Class({
         var halfWidth = width * 0.5;
         var halfHeight = height * 0.5;
 
-        var zoom = this.zoom;
-        var matrix = this.matrix;
+        var zoomX = this.zoomX;
+        var zoomY = this.zoomY;
+
+        this.renderRoundPixels = (this.roundPixels && Number.isInteger(zoomX) && Number.isInteger(zoomY));
 
         var originX = width * this.originX;
         var originY = height * this.originY;
@@ -516,24 +550,12 @@ var Camera = new Class({
 
         var emitFollowEvent = false;
 
-        if (this.roundPixels)
-        {
-            originX = Math.floor(originX);
-            originY = Math.floor(originY);
-        }
-
         if (follow && !this.panEffect.isRunning)
         {
             var lerp = this.lerp;
 
             var fx = follow.x - this.followOffset.x;
             var fy = follow.y - this.followOffset.y;
-
-            if (this.roundPixels)
-            {
-                fx = Math.floor(fx);
-                fy = Math.floor(fy);
-            }
 
             if (deadzone)
             {
@@ -570,12 +592,6 @@ var Camera = new Class({
             sy = this.clampY(sy);
         }
 
-        if (this.roundPixels)
-        {
-            sx = Math.floor(sx);
-            sy = Math.floor(sy);
-        }
-
         //  Values are in pixels and not impacted by zooming the Camera
         this.scrollX = sx;
         this.scrollY = sy;
@@ -587,29 +603,163 @@ var Camera = new Class({
         //  Basically the pixel value of what it's looking at in the middle of the cam
         this.midPoint.set(midX, midY);
 
-        var displayWidth = width / zoom;
-        var displayHeight = height / zoom;
+        var displayWidth = width / zoomX;
+        var displayHeight = height / zoomY;
 
         var vwx = midX - (displayWidth / 2);
         var vwy = midY - (displayHeight / 2);
 
-        if (this.roundPixels)
-        {
-            vwx = Math.floor(vwx);
-            vwy = Math.floor(vwy);
-        }
-
         this.worldView.setTo(vwx, vwy, displayWidth, displayHeight);
 
-        matrix.applyITRS(Math.floor(this.x + originX), Math.floor(this.y + originY), this.rotation, zoom, zoom);
-        matrix.translate(-originX, -originY);
+        var matrix = this.matrix;
+        var matrixExternal = this.matrixExternal;
+
+        if (this.isObjectInversion)
+        {
+            // Game Object filter camera
+            matrix.loadIdentity();
+            matrix.translate(originX, originY);
+            matrix.scale(zoomX, zoomY);
+            matrix.rotate(this.rotation);
+            matrix.translate(-sx - originX, -sy - originY);
+        }
+        else
+        {
+            // Regular camera
+            // Apply view transforms in order ITRS.
+            matrix.applyITRS(originX, originY, this.rotation, zoomX, zoomY);
+            matrix.translate(-sx - originX, -sy - originY);
+        }
+
+
+        matrixExternal.applyITRS(this.x, this.y, 0, 1, 1);
 
         this.shakeEffect.preRender();
+
+        matrixExternal.multiply(matrix, this.matrixCombined);
 
         if (emitFollowEvent)
         {
             this.emit(Events.FOLLOW_UPDATE, this, follow);
         }
+    },
+
+    /**
+     * Returns the view matrix of the camera. This is used internally.
+     *
+     * This is `matrix` if the camera is intended to render to a framebuffer,
+     * and `matrixCombined` otherwise.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#getViewMatrix
+     * @webglonly
+     * @since 4.0.0
+     * @param {boolean} [forceComposite=false] - If `true`, the view matrix will always be `matrix`. This is typically used when rendering to a framebuffer, so the external matrix is irrelevant.
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The view matrix of the camera.
+     */
+    getViewMatrix: function (forceComposite)
+    {
+        if (
+            forceComposite || this.forceComposite ||
+            this.filters.external.length > 0 ||
+            this.filters.internal.length > 0
+        )
+        {
+            return this.matrix;
+        }
+        else
+        {
+            return this.matrixCombined;
+        }
+    },
+
+    /**
+     * Return a proxy for managing camera padding.
+     *
+     * Camera padding enlarges the camera, adding to each side of the region.
+     * This is useful when you need data from just outside the normal
+     * camera region, e.g. when using a Blur filter.
+     *
+     * Use the proxy in place of the camera.
+     * It conceals the complicated parts, so you can carry on using the camera
+     * just as before.
+     * You can still use the original camera to see the adjusted values.
+     *
+     * Padding affects the following properties on the original camera:
+     *
+     * - Subtracts from `x`, `y`, `scrollX`, `scrollY`.
+     * - Adds double to `width`, height`.
+     *
+     * Padding increases the rendered region, so it can have a performance cost.
+     * If you don't need the extra data at some time, set padding to 0.
+     *
+     * You can't use more than one such proxy at a time. If you try,
+     * they fight and nobody wins.
+     *
+     * @example
+     * // Create a padding proxy with 16 pixels of padding.
+     * var proxy = this.cameras.main.getPaddingWrapper(16);
+     * console.log(proxy.scrollX, this.cameras.main.scrollX); // 0, -16
+     *
+     * // Adjust proxy scroll.
+     * proxy.scrollX += 4;
+     * console.log(proxy.scrollX, this.cameras.main.scrollX); // 4, -12
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#getPaddingWrapper
+     * @since 4.0.0
+     * @param {number} [padding=0] - Initial padding value.
+     * @return {Phaser.Types.Cameras.Scene2D.CameraPaddingWrapper} The proxy for the camera.
+     */
+    getPaddingWrapper: function (padding)
+    {
+        var data = { padding: 0 };
+
+        var handler = {
+            get: function (target, prop)
+            {
+                switch (prop)
+                {
+                    case 'padding': return data.padding;
+                    case 'x':
+                    case 'y':
+                    case 'scrollX':
+                    case 'scrollY': return target[prop] + data.padding;
+                    case 'width':
+                    case 'height': return target[prop] - data.padding * 2;
+                    default: return target[prop];
+                }
+            },
+            set: function (target, prop, value)
+            {
+                switch (prop)
+                {
+                    case 'padding': {
+                        var currentPadding = data.padding;
+                        data.padding = value;
+                        var d = data.padding - currentPadding;
+                        target.x -= d;
+                        target.y -= d;
+                        target.width += d * 2;
+                        target.height += d * 2;
+                        target.scrollX -= d;
+                        target.scrollY -= d;
+                        return padding;
+                    }
+                    case 'x':
+                    case 'y':
+                    case 'scrollX':
+                    case 'scrollY': return target[prop] = value - data.padding;
+                    case 'width':
+                    case 'height': return target[prop] = value + data.padding * 2;
+                    default: return target[prop] = value;
+                }
+            }
+        };
+
+        var proxy = new Proxy(this, handler);
+
+        proxy.padding = padding || 0;
+
+        return proxy;
     },
 
     /**
@@ -625,8 +775,8 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setLerp
      * @since 3.9.0
      *
-     * @param {number} [x=1] - The amount added to the horizontal linear interpolation of the follow target.
-     * @param {number} [y=1] - The amount added to the vertical linear interpolation of the follow target.
+     * @param {number} [x=1] - The horizontal linear interpolation value for the follow target. A value between 0 and 1.
+     * @param {number} [y=1] - The vertical linear interpolation value for the follow target. A value between 0 and 1.
      *
      * @return {this} This Camera instance.
      */
@@ -798,6 +948,9 @@ var Camera = new Class({
     destroy: function ()
     {
         this.resetFX();
+
+        this.filters.internal.destroy();
+        this.filters.external.destroy();
 
         BaseCamera.prototype.destroy.call(this);
 

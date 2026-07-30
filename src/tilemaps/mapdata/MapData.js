@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,7 +11,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 /**
  * @classdesc
  * A class for representing data about a map. Maps are parsed from CSV, Tiled, etc. into this
- * format. A Tilemap object get a copy of this data and then unpacks the needed properties into
+ * format. A Tilemap object gets a copy of this data and then unpacks the needed properties into
  * itself.
  *
  * @class MapData
@@ -39,7 +39,7 @@ var MapData = new Class({
         this.name = GetFastValue(config, 'name', 'map');
 
         /**
-         * The width of the entire tilemap.
+         * The width of the entire tilemap, in tiles.
          *
          * @name Phaser.Tilemaps.MapData#width
          * @type {number}
@@ -48,7 +48,7 @@ var MapData = new Class({
         this.width = GetFastValue(config, 'width', 0);
 
         /**
-         * The height of the entire tilemap.
+         * The height of the entire tilemap, in tiles.
          *
          * @name Phaser.Tilemaps.MapData#height
          * @type {number}
@@ -66,7 +66,7 @@ var MapData = new Class({
         this.infinite = GetFastValue(config, 'infinite', false);
 
         /**
-         * The width of the tiles.
+         * The width of the tiles, in pixels.
          *
          * @name Phaser.Tilemaps.MapData#tileWidth
          * @type {number}
@@ -75,7 +75,7 @@ var MapData = new Class({
         this.tileWidth = GetFastValue(config, 'tileWidth', 0);
 
         /**
-         * The height of the tiles.
+         * The height of the tiles, in pixels.
          *
          * @name Phaser.Tilemaps.MapData#tileHeight
          * @type {number}
@@ -120,7 +120,7 @@ var MapData = new Class({
         this.orientation = GetFastValue(config, 'orientation', CONST.ORTHOGONAL);
 
         /**
-         * Determines the draw order of tilemap. Default is right-down
+         * Determines the draw order of the tilemap. Default is right-down.
          *
          * 0, or 'right-down'
          * 1, or 'left-down'
@@ -143,7 +143,7 @@ var MapData = new Class({
         this.version = GetFastValue(config, 'version', '1');
 
         /**
-         * Map specific properties (can be specified in Tiled)
+         * Map specific properties (can be specified in Tiled).
          *
          * @name Phaser.Tilemaps.MapData#properties
          * @type {object}
@@ -152,7 +152,7 @@ var MapData = new Class({
         this.properties = GetFastValue(config, 'properties', {});
 
         /**
-         * An array with all the layers configured to the MapData.
+         * An array of all the layers belonging to this MapData.
          *
          * @name Phaser.Tilemaps.MapData#layers
          * @type {(Phaser.Tilemaps.LayerData[]|Phaser.Tilemaps.ObjectLayer)}
@@ -170,7 +170,7 @@ var MapData = new Class({
         this.images = GetFastValue(config, 'images', []);
 
         /**
-         * An object of Tiled Object Layers.
+         * An array of Tiled Object Layers.
          *
          * @name Phaser.Tilemaps.MapData#objects
          * @type {Phaser.Types.Tilemaps.ObjectLayerConfig[]}
@@ -185,7 +185,7 @@ var MapData = new Class({
         }
 
         /**
-         * An object of collision data. Must be created as physics object or will return undefined.
+         * An object containing collision data for the map. Only populated when the map is created with a physics system enabled.
          *
          * @name Phaser.Tilemaps.MapData#collision
          * @type {object}
@@ -203,7 +203,7 @@ var MapData = new Class({
         this.tilesets = GetFastValue(config, 'tilesets', []);
 
         /**
-         * The collection of images the map uses(specified in Tiled)
+         * The collection of images the map uses (specified in Tiled).
          *
          * @name Phaser.Tilemaps.MapData#imageCollections
          * @type {array}

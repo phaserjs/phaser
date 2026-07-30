@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -56,7 +56,7 @@ var InputEvents = require('../events');
  * @constructor
  * @since 3.10.0
  *
- * @param {Phaser.Input.InputPlugin} sceneInputPlugin - A reference to the Scene Input Plugin that the KeyboardPlugin belongs to.
+ * @param {Phaser.Input.InputPlugin} sceneInputPlugin - A reference to the Scene Input Plugin that the GamepadPlugin belongs to.
  */
 var GamepadPlugin = new Class({
 
@@ -87,7 +87,7 @@ var GamepadPlugin = new Class({
         this.settings = this.scene.sys.settings;
 
         /**
-         * A reference to the Scene Input Plugin that created this Keyboard Plugin.
+         * A reference to the Scene Input Plugin that created this Gamepad Plugin.
          *
          * @name Phaser.Input.Gamepad.GamepadPlugin#sceneInputPlugin
          * @type {Phaser.Input.InputPlugin}
@@ -298,9 +298,14 @@ var GamepadPlugin = new Class({
 
         this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update);
 
-        for (var i = 0; i < this.gamepads.length; i++)
+        var gamepads = this.gamepads;
+
+        for (var i = 0; i < gamepads.length; i++)
         {
-            this.gamepads[i].removeAllListeners();
+            if (gamepads[i])
+            {
+                gamepads[i].removeAllListeners();
+            }
         }
     },
 
@@ -312,9 +317,14 @@ var GamepadPlugin = new Class({
      */
     disconnectAll: function ()
     {
-        for (var i = 0; i < this.gamepads.length; i++)
+        var gamepads = this.gamepads;
+
+        for (var i = 0; i < gamepads.length; i++)
         {
-            this.gamepads[i].pad.connected = false;
+            if (gamepads[i])
+            {
+                gamepads[i].pad.connected = false;
+            }
         }
     },
 
@@ -419,7 +429,7 @@ var GamepadPlugin = new Class({
     },
 
     /**
-     * Looks-up a single Gamepad based on the given index value.
+     * Looks up a single Gamepad based on the given index value.
      *
      * @method Phaser.Input.Gamepad.GamepadPlugin#getPad
      * @since 3.10.0
@@ -549,7 +559,7 @@ var GamepadPlugin = new Class({
      * A reference to the first connected Gamepad.
      *
      * This will be undefined if either no pads are connected, or the browser
-     * has not yet issued a gamepadconnect, which can happen even if a Gamepad
+     * has not yet issued a gamepadconnected, which can happen even if a Gamepad
      * is plugged in, but hasn't yet had any buttons pressed on it.
      *
      * @name Phaser.Input.Gamepad.GamepadPlugin#pad1
@@ -569,7 +579,7 @@ var GamepadPlugin = new Class({
      * A reference to the second connected Gamepad.
      *
      * This will be undefined if either no pads are connected, or the browser
-     * has not yet issued a gamepadconnect, which can happen even if a Gamepad
+     * has not yet issued a gamepadconnected, which can happen even if a Gamepad
      * is plugged in, but hasn't yet had any buttons pressed on it.
      *
      * @name Phaser.Input.Gamepad.GamepadPlugin#pad2
@@ -589,7 +599,7 @@ var GamepadPlugin = new Class({
      * A reference to the third connected Gamepad.
      *
      * This will be undefined if either no pads are connected, or the browser
-     * has not yet issued a gamepadconnect, which can happen even if a Gamepad
+     * has not yet issued a gamepadconnected, which can happen even if a Gamepad
      * is plugged in, but hasn't yet had any buttons pressed on it.
      *
      * @name Phaser.Input.Gamepad.GamepadPlugin#pad3
@@ -609,7 +619,7 @@ var GamepadPlugin = new Class({
      * A reference to the fourth connected Gamepad.
      *
      * This will be undefined if either no pads are connected, or the browser
-     * has not yet issued a gamepadconnect, which can happen even if a Gamepad
+     * has not yet issued a gamepadconnected, which can happen even if a Gamepad
      * is plugged in, but hasn't yet had any buttons pressed on it.
      *
      * @name Phaser.Input.Gamepad.GamepadPlugin#pad4
@@ -629,7 +639,7 @@ var GamepadPlugin = new Class({
 
 /**
  * An instance of the Gamepad Plugin class, if enabled via the `input.gamepad` Scene or Game Config property.
- * Use this to create access Gamepads connected to the browser and respond to gamepad buttons.
+ * Use this to access Gamepads connected to the browser and respond to gamepad buttons.
  *
  * @name Phaser.Input.InputPlugin#gamepad
  * @type {?Phaser.Input.Gamepad.GamepadPlugin}

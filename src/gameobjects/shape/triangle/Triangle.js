@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -79,7 +79,7 @@ var Triangle = new Class({
     },
 
     /**
-     * Sets the data for the lines that make up this Triangle shape.
+     * Sets the positions of the three vertices of this Triangle shape and updates its internal path data for rendering.
      *
      * @method Phaser.GameObjects.Triangle#setTo
      * @since 3.13.0

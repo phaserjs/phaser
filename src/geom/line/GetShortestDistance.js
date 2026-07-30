@@ -1,12 +1,14 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Richard Davey <rich@phaser.io>
  * @author       Florian Mertens
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Get the shortest distance from a Line to the given Point.
+ * Calculates the shortest (perpendicular) distance from an infinite line, defined by the two
+ * endpoints of the given Line object, to the given Point. If the line has zero length (both
+ * endpoints are identical), this function returns `false`.
  *
  * @function Phaser.Geom.Line.GetShortestDistance
  * @since 3.16.0
@@ -14,7 +16,7 @@
  * @param {Phaser.Geom.Line} line - The line to get the distance from.
  * @param {Phaser.Types.Math.Vector2Like} point - The point to get the shortest distance to.
  *
- * @return {(boolean|number)} The shortest distance from the line to the point, or `false`.
+ * @return {(boolean|number)} The shortest perpendicular distance from the line to the point, or `false` if the line has zero length.
  */
 var GetShortestDistance = function (line, point)
 {

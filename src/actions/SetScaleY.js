@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,7 @@ var PropertyValueSet = require('./PropertyValueSet');
  * Takes an array of Game Objects, or any objects that have the public property `scaleY`
  * and then sets it to the given value.
  *
- * The optional `step` property is applied incrementally, multiplied by each item in the array.
+ * The optional `step` property is applied incrementally, multiplied by the iteration counter.
  *
  * To use this with a Group: `SetScaleY(group.getChildren(), value, step)`
  *

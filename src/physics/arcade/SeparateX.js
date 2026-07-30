@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,7 +12,7 @@ var ProcessX = require('./ProcessX');
  *
  * Separation involves moving two overlapping bodies so they don't overlap anymore and adjusting their velocities based on their mass. This is a core part of collision detection.
  *
- * The bodies won't be separated if there is no horizontal overlap between them, if they are static, or if either one uses custom logic for its separation.
+ * The bodies won't be separated if there is no horizontal overlap between them, if both are immovable, or if either one uses custom separation logic via `customSeparateX`.
  *
  * @function Phaser.Physics.Arcade.SeparateX
  * @since 3.0.0
@@ -23,7 +23,7 @@ var ProcessX = require('./ProcessX');
  * @param {number} bias - A value to add to the delta value during overlap checking. Used to prevent sprite tunneling.
  * @param {number} [overlap] - If given then this value will be used as the overlap and no check will be run.
  *
- * @return {boolean} `true` if the two bodies overlap vertically, otherwise `false`.
+ * @return {boolean} `true` if the two bodies overlap horizontally, otherwise `false`.
  */
 var SeparateX = function (body1, body2, overlapOnly, bias, overlap)
 {

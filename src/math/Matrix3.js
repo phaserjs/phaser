@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,7 +11,10 @@ var Class = require('../utils/Class');
 
 /**
  * @classdesc
- * A three-dimensional matrix.
+ * A 3x3 column-major matrix stored as a Float32Array of 9 values. Used for 2D affine
+ * transformations, extracting the upper-left 3x3 portion of a Matrix4, and computing
+ * normal matrices for lighting calculations. Values are stored in column-major order
+ * to match WebGL conventions.
  *
  * Defaults to the identity matrix when instantiated.
  *
@@ -68,7 +71,7 @@ var Matrix3 = new Class({
      * @method Phaser.Math.Matrix3#set
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix3} src - The Matrix to set the values of this Matrix's from.
+     * @param {Phaser.Math.Matrix3} src - The Matrix to set the values of this Matrix from.
      *
      * @return {Phaser.Math.Matrix3} This Matrix3.
      */
@@ -106,7 +109,9 @@ var Matrix3 = new Class({
     },
 
     /**
-     * Copy the values of a given Matrix4 into this Matrix3.
+     * Copies the upper-left 3x3 values of a Matrix4 into this Matrix3, discarding
+     * the fourth row and column. This is useful when you need the rotation and scale
+     * portion of a transformation matrix without its translation component.
      *
      * @method Phaser.Math.Matrix3#fromMat4
      * @since 3.0.0
@@ -211,12 +216,13 @@ var Matrix3 = new Class({
     },
 
     /**
-     * Invert this Matrix.
+     * Invert this Matrix. Returns `null` if the matrix is not invertible
+     * (i.e. its determinant is zero).
      *
      * @method Phaser.Math.Matrix3#invert
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3.
+     * @return {Phaser.Math.Matrix3} This Matrix3, or `null` if the matrix cannot be inverted.
      */
     invert: function ()
     {
@@ -508,14 +514,17 @@ var Matrix3 = new Class({
     },
 
     /**
-     * Set the values of this Matrix3 to be normalized from the given Matrix4.
+     * Derives a normal matrix from the given Matrix4. The normal matrix is the
+     * transpose of the inverse of the Matrix4, and is used in lighting calculations
+     * to correctly transform surface normals when non-uniform scaling is applied.
+     * Returns `null` if the Matrix4 is not invertible (i.e. its determinant is zero).
      *
      * @method Phaser.Math.Matrix3#normalFromMat4
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} m - The Matrix4 to normalize the values from.
+     * @param {Phaser.Math.Matrix4} m - The Matrix4 to derive the normal matrix from.
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3.
+     * @return {Phaser.Math.Matrix3} This Matrix3, or `null` if the Matrix4 cannot be inverted.
      */
     normalFromMat4: function (m)
     {

@@ -1,12 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
-var JSONFile = require('./JSONFile.js');
+var JSONFile = require('./JSONFile');
 var TILEMAP_FORMATS = require('../../tilemaps/Formats');
 
 /**
@@ -18,7 +18,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#tilemapTiledJSON.
  *
  * @class TilemapJSONFile
- * @extends Phaser.Loader.File
+ * @extends Phaser.Loader.FileTypes.JSONFile
  * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.0.0
@@ -83,7 +83,7 @@ var TilemapJSONFile = new Class({
  * The key must be a unique String. It is used to add the file to the global Tilemap Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the Tilemap Cache.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
- * then remove it from the Text Cache first, before loading a new one.
+ * then remove it from the Tilemap Cache first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
  *
@@ -106,7 +106,7 @@ var TilemapJSONFile = new Class({
  *
  * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
  * key. For example, if the prefix was `LEVEL1.` and the key was `Story` the final key will be `LEVEL1.Story` and
- * this is what you would use to retrieve the text from the Tilemap Cache.
+ * this is what you would use to retrieve the map from the Tilemap Cache.
  *
  * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
  *

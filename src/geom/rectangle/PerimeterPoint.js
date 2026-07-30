@@ -1,29 +1,29 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 var DegToRad = require('../../math/DegToRad');
 
 /**
- * Returns a Point from the perimeter of a Rectangle based on the given angle.
+ * Returns a point from the perimeter of a Rectangle based on the given angle, measured in degrees from the center of the Rectangle.
  *
  * @function Phaser.Geom.Rectangle.PerimeterPoint
  * @since 3.0.0
  *
- * @generic {Phaser.Geom.Point} O - [out,$return]
+ * @generic {Phaser.Math.Vector2} O - [out,$return]
  *
  * @param {Phaser.Geom.Rectangle} rectangle - The Rectangle to get the perimeter point from.
  * @param {number} angle - The angle of the point, in degrees.
- * @param {Phaser.Geom.Point} [out] - The Point object to store the position in. If not given, a new Point instance is created.
+ * @param {Phaser.Math.Vector2} [out] - The Vector2 object to store the position in. If not given, a new Vector2 instance is created.
  *
- * @return {Phaser.Geom.Point} A Point object holding the coordinates of the Rectangle perimeter.
+ * @return {Phaser.Math.Vector2} A Vector2 object holding the coordinates of the point on the Rectangle's perimeter.
  */
 var PerimeterPoint = function (rectangle, angle, out)
 {
-    if (out === undefined) { out = new Point(); }
+    if (out === undefined) { out = new Vector2(); }
 
     angle = DegToRad(angle);
 

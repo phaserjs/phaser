@@ -1,13 +1,13 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var SafeRange = require('./SafeRange');
 
 /**
- * Removes the item within the given range in the array.
+ * Removes all items within the given index range from the array.
  *
  * The array is modified in-place.
  *
@@ -18,8 +18,8 @@ var SafeRange = require('./SafeRange');
  *
  * @param {array} array - The array to be modified.
  * @param {number} startIndex - The start index to remove from.
- * @param {number} endIndex - The end index to remove to.
- * @param {function} [callback] - A callback to be invoked for the item removed from the array.
+ * @param {number} endIndex - The end index to remove up to (exclusive).
+ * @param {function} [callback] - A callback to be invoked for each item successfully removed from the array.
  * @param {object} [context] - The context in which the callback is invoked.
  *
  * @return {Array.<*>} An array of items that were removed.

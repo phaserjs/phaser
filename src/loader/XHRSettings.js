@@ -1,11 +1,19 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
  * Creates an XHRSettings Object with default values.
+ *
+ * The XHRSettings object is used by the Phaser Loader when making XMLHttpRequest calls
+ * to fetch external assets such as images, audio, JSON, and other files. You can pass a
+ * custom XHRSettings object to individual file load calls (e.g., `this.load.image`) to
+ * override the default request configuration on a per-file basis, or set global defaults
+ * via the Loader's `xhr` property. This is useful when loading from servers that require
+ * authentication credentials, custom headers, a specific MIME type override, or a
+ * non-default response type.
  *
  * @function Phaser.Loader.XHRSettings
  * @since 3.0.0
@@ -14,7 +22,7 @@
  * @param {boolean} [async=true] - Should the XHR request use async or not?
  * @param {string} [user=''] - Optional username for the XHR request.
  * @param {string} [password=''] - Optional password for the XHR request.
- * @param {number} [timeout=0] - Optional XHR timeout value.
+ * @param {number} [timeout=0] - Optional XHR timeout value, in milliseconds. A value of 0 disables the timeout.
  * @param {boolean} [withCredentials=false] - Optional XHR withCredentials value.
  *
  * @return {Phaser.Types.Loader.XHRSettingsObject} The XHRSettings object as used by the Loader.

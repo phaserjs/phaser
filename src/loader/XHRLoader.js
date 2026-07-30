@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,7 @@ var MergeXHRSettings = require('./MergeXHRSettings');
 
 /**
  * Creates a new XMLHttpRequest (xhr) object based on the given File and XHRSettings
- * and starts the download of it. It uses the Files own XHRSettings and merges them
+ * and starts the download of it. It uses the File's own XHRSettings and merges them
  * with the global XHRSettings object to set the xhr values before download.
  *
  * @function Phaser.Loader.XHRLoader
@@ -17,11 +17,38 @@ var MergeXHRSettings = require('./MergeXHRSettings');
  * @param {Phaser.Loader.File} file - The File to download.
  * @param {Phaser.Types.Loader.XHRSettingsObject} globalXHRSettings - The global XHRSettings object.
  *
- * @return {XMLHttpRequest} The XHR object.
+ * @return {XMLHttpRequest} The XHR object. For base64 files, `file.onBase64Load` is called directly and this function returns `undefined`.
  */
 var XHRLoader = function (file, globalXHRSettings)
 {
     var config = MergeXHRSettings(globalXHRSettings, file.xhrSettings);
+
+    if (file.base64)
+    {
+        var base64Data = file.url.split(';base64,').pop() || file.url.split(',').pop();
+
+        var fakeXHR;
+
+        if (file.xhrSettings.responseType === 'arraybuffer')
+        {
+            fakeXHR = {
+                response: Uint8Array.from(atob(base64Data), function (c)
+                {
+                    return c.charCodeAt(0);
+                }).buffer
+            };
+        }
+        else
+        {
+            fakeXHR = {
+                responseText: atob(base64Data)
+            };
+        }
+
+        file.onBase64Load(fakeXHR);
+
+        return;
+    }
 
     var xhr = new XMLHttpRequest();
 
@@ -63,6 +90,7 @@ var XHRLoader = function (file, globalXHRSettings)
     xhr.onload = file.onLoad.bind(file, xhr);
     xhr.onerror = file.onError.bind(file, xhr);
     xhr.onprogress = file.onProgress.bind(file);
+    xhr.ontimeout = file.onError.bind(file, xhr);
 
     //  This is the only standard method, the ones above are browser additions (maybe not universal?)
     // xhr.onreadystatechange

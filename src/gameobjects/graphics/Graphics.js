@@ -1,15 +1,16 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
-var BaseCamera = require('../../cameras/2d/BaseCamera.js');
+var BaseCamera = require('../../cameras/2d/BaseCamera');
 var Class = require('../../utils/Class');
 var Commands = require('./Commands');
 var Components = require('../components');
 var Ellipse = require('../../geom/ellipse/Ellipse');
 var GameObject = require('../GameObject');
+var DefaultGraphicsNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultGraphicsNodes.js');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
@@ -53,6 +54,11 @@ var Render = require('./GraphicsRender');
  * updates frequently then you should avoid doing this, as it will constantly generate new textures, which will consume
  * memory.
  *
+ * Under WebGL, Graphics uses its own shader which will batch drawing operations.
+ * Try to keep Graphics objects grouped together so they can be batched together.
+ * Avoid mixing object types where possible, as each batch will be flushed,
+ * costing performance.
+ *
  * As you can tell, Graphics objects are a bit of a trade-off. While they are extremely useful, you need to be careful
  * in their complexity and quantity of them in your game.
  *
@@ -65,9 +71,9 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.AlphaSingle
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Lighting
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  * @extends Phaser.GameObjects.Components.ScrollFactor
@@ -83,9 +89,9 @@ var Graphics = new Class({
         Components.AlphaSingle,
         Components.BlendMode,
         Components.Depth,
+        Components.Lighting,
         Components.Mask,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
@@ -102,8 +108,7 @@ var Graphics = new Class({
         GameObject.call(this, scene, 'Graphics');
 
         this.setPosition(x, y);
-        this.initPipeline();
-        this.initPostPipeline();
+        this.initRenderNodes(this._defaultRenderNodesMap);
 
         /**
          * The horizontal display origin of the Graphics.
@@ -205,10 +210,48 @@ var Graphics = new Class({
          */
         this._lineWidth = 1;
 
+        /**
+         * Path detail threshold for the WebGL renderer, in pixels.
+         * Path segments will be combined until the path is complete
+         * or the segment length is above the threshold.
+         *
+         * If the value is negative, the threshold will be taken from the
+         * game config `render.pathDetailThreshold` property.
+         *
+         * This threshold can greatly improve performance on complex shapes.
+         * It is calculated at render time and does not affect the original
+         * path data.
+         * The threshold is evaluated in screen pixels, so if the object is
+         * scaled up, fine detail will emerge.
+         *
+         * @name Phaser.GameObjects.Graphics#pathDetailThreshold
+         * @type {number}
+         * @default -1
+         * @since 4.0.0
+         */
+        this.pathDetailThreshold = -1;
+
         this.lineStyle(1, 0, 0);
         this.fillStyle(0, 0);
 
         this.setDefaultStyles(options);
+    },
+
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.Graphics#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultGraphicsNodes;
+        }
     },
 
     /**
@@ -356,10 +399,10 @@ var Graphics = new Class({
      * @since 3.12.0
      *
      * @param {number} lineWidth - The stroke width.
-     * @param {number} topLeft - The tint being applied to the top-left of the Game Object.
-     * @param {number} topRight - The tint being applied to the top-right of the Game Object.
-     * @param {number} bottomLeft - The tint being applied to the bottom-left of the Game Object.
-     * @param {number} bottomRight - The tint being applied to the bottom-right of the Game Object.
+     * @param {number} topLeft - The stroke color for the top-left of the gradient.
+     * @param {number} topRight - The stroke color for the top-right of the gradient.
+     * @param {number} bottomLeft - The stroke color for the bottom-left of the gradient.
+     * @param {number} bottomRight - The stroke color for the bottom-right of the gradient.
      * @param {number} [alpha=1] - The fill alpha.
      *
      * @return {this} This Game Object.
@@ -529,7 +572,7 @@ var Graphics = new Class({
     fillCircle: function (x, y, radius)
     {
         this.beginPath();
-        this.arc(x, y, radius, 0, MATH_CONST.PI2);
+        this.arc(x, y, radius, 0, MATH_CONST.TAU);
         this.fillPath();
 
         return this;
@@ -550,7 +593,7 @@ var Graphics = new Class({
     strokeCircle: function (x, y, radius)
     {
         this.beginPath();
-        this.arc(x, y, radius, 0, MATH_CONST.PI2);
+        this.arc(x, y, radius, 0, MATH_CONST.TAU);
         this.strokePath();
 
         return this;
@@ -698,44 +741,44 @@ var Graphics = new Class({
 
         if (convexTR)
         {
-            this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
+            this.arc(x + width - tr, y + tr, tr, -MATH_CONST.PI_OVER_2, 0);
         }
         else
         {
-            this.arc(x + width, y, tr, Math.PI, MATH_CONST.TAU, true);
+            this.arc(x + width, y, tr, Math.PI, MATH_CONST.PI_OVER_2, true);
         }
 
         this.lineTo(x + width, y + height - br);
 
         if (convexBR)
         {
-            this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
+            this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.PI_OVER_2);
         }
         else
         {
-            this.arc(x + width, y + height, br, -MATH_CONST.TAU, Math.PI, true);
+            this.arc(x + width, y + height, br, -MATH_CONST.PI_OVER_2, Math.PI, true);
         }
 
         this.lineTo(x + bl, y + height);
 
         if (convexBL)
         {
-            this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
+            this.arc(x + bl, y + height - bl, bl, MATH_CONST.PI_OVER_2, Math.PI);
         }
         else
         {
-            this.arc(x, y + height, bl, 0, -MATH_CONST.TAU, true);
+            this.arc(x, y + height, bl, 0, -MATH_CONST.PI_OVER_2, true);
         }
 
         this.lineTo(x, y + tl);
 
         if (convexTL)
         {
-            this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
+            this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.PI_OVER_2);
         }
         else
         {
-            this.arc(x, y, tl, MATH_CONST.TAU, 0, true);
+            this.arc(x, y, tl, MATH_CONST.PI_OVER_2, 0, true);
         }
 
         this.fillPath();
@@ -793,11 +836,11 @@ var Graphics = new Class({
 
         if (convexTR)
         {
-            this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
+            this.arc(x + width - tr, y + tr, tr, -MATH_CONST.PI_OVER_2, 0);
         }
         else
         {
-            this.arc(x + width, y, tr, Math.PI, MATH_CONST.TAU, true);
+            this.arc(x + width, y, tr, Math.PI, MATH_CONST.PI_OVER_2, true);
         }
 
         this.lineTo(x + width, y + height - br);
@@ -805,11 +848,11 @@ var Graphics = new Class({
 
         if (convexBR)
         {
-            this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
+            this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.PI_OVER_2);
         }
         else
         {
-            this.arc(x + width, y + height, br, -MATH_CONST.TAU, Math.PI, true);
+            this.arc(x + width, y + height, br, -MATH_CONST.PI_OVER_2, Math.PI, true);
         }
 
         this.lineTo(x + bl, y + height);
@@ -817,11 +860,11 @@ var Graphics = new Class({
 
         if (convexBL)
         {
-            this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
+            this.arc(x + bl, y + height - bl, bl, MATH_CONST.PI_OVER_2, Math.PI);
         }
         else
         {
-            this.arc(x, y + height, bl, 0, -MATH_CONST.TAU, true);
+            this.arc(x, y + height, bl, 0, -MATH_CONST.PI_OVER_2, true);
         }
 
         this.lineTo(x, y + tl);
@@ -829,11 +872,11 @@ var Graphics = new Class({
 
         if (convexTL)
         {
-            this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
+            this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.PI_OVER_2);
         }
         else
         {
-            this.arc(x, y, tl, MATH_CONST.TAU, 0, true);
+            this.arc(x, y, tl, MATH_CONST.PI_OVER_2, 0, true);
         }
 
         this.strokePath();
@@ -849,7 +892,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#fillPointShape
      * @since 3.0.0
      *
-     * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - The point to fill.
+     * @param {Phaser.Math.Vector2} point - The point to fill.
      * @param {number} [size=1] - The size of the square to draw.
      *
      * @return {this} This Game Object.
@@ -1065,7 +1108,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#strokePoints
      * @since 3.0.0
      *
-     * @param {(array|Phaser.Geom.Point[])} points - The points to stroke.
+     * @param {Phaser.Math.Vector2[]} points - The points to stroke.
      * @param {boolean} [closeShape=false] - When `true`, the shape is closed by joining the last point to the first point.
      * @param {boolean} [closePath=false] - When `true`, the path is closed before being stroked.
      * @param {number} [endIndex] - The index of `points` to stop drawing at. Defaults to `points.length`.
@@ -1112,9 +1155,9 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#fillPoints
      * @since 3.0.0
      *
-     * @param {(array|Phaser.Geom.Point[])} points - The points to fill.
+     * @param {Phaser.Math.Vector2[]} points - The points to fill.
      * @param {boolean} [closeShape=false] - When `true`, the shape is closed by joining the last point to the first point.
-     * @param {boolean} [closePath=false] - When `true`, the path is closed before being stroked.
+     * @param {boolean} [closePath=false] - When `true`, the path is closed before being filled.
      * @param {number} [endIndex] - The index of `points` to stop at. Defaults to `points.length`.
      *
      * @return {this} This Game Object.
@@ -1470,7 +1513,7 @@ var Graphics = new Class({
      * If `key` is a string it'll generate a new texture using it and add it into the
      * Texture Manager (assuming no key conflict happens).
      *
-     * If `key` is a Canvas it will draw the texture to that canvas context. Note that it will NOT
+     * If `key` is a Canvas it will draw the Graphics to that canvas context. Note that it will NOT
      * automatically upload it to the GPU in WebGL mode.
      *
      * Please understand that the texture is created via the Canvas API of the browser, therefore some

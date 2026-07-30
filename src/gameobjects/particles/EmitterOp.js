@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -31,7 +31,7 @@ var Wrap = require('../../math/Wrap');
  * @since 3.0.0
  *
  * @param {string} key - The name of the property.
- * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType} defaultValue - The default value of the property.
+ * @param {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType} defaultValue - The default value of the property.
  * @param {boolean} [emitOnly=false] - Whether the property can only be modified when a Particle is emitted.
  */
 var EmitterOp = new Class({
@@ -58,7 +58,7 @@ var EmitterOp = new Class({
          * configuration object.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#propertyValue
-         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType}
          * @since 3.0.0
          */
         this.propertyValue = defaultValue;
@@ -70,7 +70,7 @@ var EmitterOp = new Class({
          * configuration object.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#defaultValue
-         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType}
+         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitType|Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateType}
          * @since 3.0.0
          */
         this.defaultValue = defaultValue;
@@ -97,7 +97,7 @@ var EmitterOp = new Class({
         this.counter = 0;
 
         /**
-         * When the step counter reaches it's maximum, should it then
+         * When the step counter reaches its maximum, should it then
          * yoyo back to the start again, or flip over to it?
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#yoyo
@@ -469,6 +469,7 @@ var EmitterOp = new Class({
             case 3:
                 this._onEmit = value;
                 onEmit = this.proxyEmit;
+                current = this.defaultValue;
                 break;
 
             //  Stepped start/end
@@ -522,6 +523,7 @@ var EmitterOp = new Class({
                 this._onUpdate = (this.has(value, 'onUpdate')) ? value.onUpdate : this.defaultUpdate;
                 onEmit = this.proxyEmit;
                 onUpdate = this.proxyUpdate;
+                current = this.defaultValue;
                 break;
 
             //  Interpolation
@@ -594,24 +596,20 @@ var EmitterOp = new Class({
     },
 
     /**
-     * The returned value sets what the property will be at the START of the particles life, on emit.
+     * The returned value sets what the property will be at the START of the particle's life, on emit.
      *
      * @method Phaser.GameObjects.Particles.EmitterOp#defaultEmit
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Particles.Particle} particle - The particle.
-     * @param {string} key - The name of the property.
-     * @param {number} [value] - The current value of the property.
-     *
      * @return {number} The new value of the property.
      */
-    defaultEmit: function (particle, key, value)
+    defaultEmit: function ()
     {
-        return value;
+        return this.defaultValue;
     },
 
     /**
-     * The returned value updates the property for the duration of the particles life.
+     * The returned value updates the property for the duration of the particle's life.
      *
      * @method Phaser.GameObjects.Particles.EmitterOp#defaultUpdate
      * @since 3.0.0
@@ -629,7 +627,7 @@ var EmitterOp = new Class({
     },
 
     /**
-     * The returned value sets what the property will be at the START of the particles life, on emit.
+     * The returned value sets what the property will be at the START of the particle's life, on emit.
      *
      * This method is only used when you have provided a custom emit callback.
      *
@@ -652,7 +650,7 @@ var EmitterOp = new Class({
     },
 
     /**
-     * The returned value updates the property for the duration of the particles life.
+     * The returned value updates the property for the duration of the particle's life.
      *
      * This method is only used when you have provided a custom update callback.
      *
@@ -746,7 +744,7 @@ var EmitterOp = new Class({
     },
 
     /**
-     * An `onEmit` callback that returns a value between the {@link Phaser.GameObjects.Particles.EmitterOp#start} and
+     * An `onEmit` callback that returns a random integer value between the {@link Phaser.GameObjects.Particles.EmitterOp#start} and
      * {@link Phaser.GameObjects.Particles.EmitterOp#end} range.
      *
      * @method Phaser.GameObjects.Particles.EmitterOp#randomRangedIntEmit

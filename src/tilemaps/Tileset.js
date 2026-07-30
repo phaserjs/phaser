@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,8 +9,10 @@ var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
- * A Tileset is a combination of a single image containing the tiles and a container for data about
- * each tile.
+ * A Tileset is a combination of a single image containing the tiles and a container for data
+ * about each tile. It maps tile indexes (GIDs) to positions within the tileset image, stores
+ * per-tile properties and collision data, and supports tile spacing and margin. Tilesets are
+ * created automatically when parsing Tiled map data and are used by TilemapLayer during rendering.
  *
  * @class Tileset
  * @memberof Phaser.Tilemaps
@@ -90,7 +92,7 @@ var Tileset = new Class({
         this.tileMargin = tileMargin;
 
         /**
-         * The spacing between each the tile in the sheet (in pixels). Use `setSpacing` to change.
+         * The spacing between each tile in the sheet (in pixels). Use `setSpacing` to change.
          *
          * @name Phaser.Tilemaps.Tileset#tileSpacing
          * @type {number}
@@ -148,14 +150,14 @@ var Tileset = new Class({
          * The gl texture used by the WebGL renderer.
          *
          * @name Phaser.Tilemaps.Tileset#glTexture
-         * @type {?WebGLTexture}
+         * @type {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
          * @readonly
          * @since 3.11.0
          */
         this.glTexture = null;
 
         /**
-         * The number of tile rows in the the tileset.
+         * The number of tile rows in the tileset.
          *
          * @name Phaser.Tilemaps.Tileset#rows
          * @type {number}
@@ -194,10 +196,67 @@ var Tileset = new Class({
          * @since 3.0.0
         */
         this.texCoordinates = [];
+
+        /**
+         * The number of frames above which a tile is considered to have
+         * many animation frames. This is used to optimize rendering.
+         * If a tile has fewer frames than this, frames are searched using
+         * a linear search. If a tile has more, frames are searched using
+         * a binary search.
+         *
+         * @name Phaser.Tilemaps.Tileset#animationSearchThreshold
+         * @type {number}
+         * @since 4.0.0
+         * @default 64
+         */
+        this.animationSearchThreshold = 64;
+
+        /**
+         * The maximum length of any animation in this tileset, in frames.
+         * This is used internally to optimize rendering.
+         * It is updated when `createAnimationDataTexture` is called.
+         *
+         * @name Phaser.Tilemaps.Tileset#maxAnimationLength
+         * @type {number}
+         * @readonly
+         * @since 4.0.0
+         */
+        this.maxAnimationLength = 0;
+
+        /**
+         * The texture containing the animation data for this tileset, if any.
+         * This is used by `TilemapGPULayer` to animate tiles.
+         *
+         * This will be created when `createAnimationDataTexture` is called.
+         * Once created, it will be updated when `updateTileData` is called.
+         *
+         * Each texel stores a 32-bit number.
+         * The first set of texels consists of pairs of numbers,
+         * describing the total duration and starting index of an animation.
+         * The second set of texels are the targets of these indices, also in pairs,
+         * describing the duration and actual index of each frame in the animation.
+         *
+         * @name Phaser.Tilemaps.Tileset#_animationDataTexture
+         * @type {?Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper}
+         * @private
+         */
+        this._animationDataTexture = null;
+
+        /**
+         * The map from tile index to animation data index.
+         * This is used to quickly find the animation data for a tile.
+         * This is created when `createAnimationDataTexture` is called.
+         * Once created, it will be updated when `updateTileData` is called.
+         *
+         * @name Phaser.Tilemaps.Tileset#_animationDataIndexMap
+         * @type {?Map<number, number>}
+         * @private
+         */
+        this._animationDataIndexMap = null;
     },
 
     /**
-     * Get a tiles properties that are stored in the Tileset. Returns null if tile index is not
+     * Get a tile's properties that are stored in the Tileset. Returns null if tile index is not
      * contained in this Tileset. This is typically defined in Tiled under the Tileset editor.
      *
      * @method Phaser.Tilemaps.Tileset#getTileProperties
@@ -270,6 +329,61 @@ var Tileset = new Class({
     },
 
     /**
+     * Returns the ID of the tile to use, given a base tile and time,
+     * according to the tile's animation properties.
+     *
+     * If the tile is not animated, this method returns the base tile ID.
+     *
+     * @method Phaser.Tilemaps.Tileset#getAnimatedTileId
+     * @since 4.0.0
+     * @param {number} tileIndex - The unique id of the tile across all tilesets in the map.
+     * @param {number} milliseconds - The current time in milliseconds.
+     * @return {?number} The tile ID to use, or null if the tile is not contained in this tileset.
+     */
+    getAnimatedTileId: function (tileIndex, milliseconds)
+    {
+        if (!this.containsTileIndex(tileIndex)) { return null; }
+
+        var animData = this.getTileData(tileIndex);
+
+        if (!(animData && animData.animation)) { return tileIndex; }
+
+        milliseconds = milliseconds % animData.animationDuration;
+        var anim = animData.animation;
+        var frame = null;
+
+        // Binary search.
+
+        var low = 0;
+        var high = anim.length - 1;
+        var mid = 0;
+        var startTime = 0;
+
+        while (low <= high)
+        {
+            mid = (low + high) >>> 1;
+            frame = anim[mid];
+            startTime = frame.startTime;
+
+            if (startTime <= milliseconds && startTime + frame.duration > milliseconds)
+            {
+                return frame.tileid + this.firstgid;
+            }
+
+            if (startTime < milliseconds)
+            {
+                low = mid + 1;
+            }
+            else
+            {
+                high = mid - 1;
+            }
+        }
+
+        return null;
+    },
+
+    /**
      * Returns the texture coordinates (UV in pixels) in the Tileset image for the given tile index.
      * Returns null if tile index is not contained in this Tileset.
      *
@@ -302,9 +416,20 @@ var Tileset = new Class({
     {
         this.image = texture;
 
-        this.glTexture = texture.get().source.glTexture;
+        var frame = texture.get();
 
-        this.updateTileData(this.image.source[0].width, this.image.source[0].height);
+        var bounds = texture.getFrameBounds();
+
+        this.glTexture = frame.source.glTexture;
+
+        if (frame.width > bounds.width || frame.height > bounds.height)
+        {
+            this.updateTileData(frame.width, frame.height);
+        }
+        else
+        {
+            this.updateTileData(bounds.width, bounds.height, bounds.x, bounds.y);
+        }
 
         return this;
     },
@@ -334,7 +459,7 @@ var Tileset = new Class({
     },
 
     /**
-     * Sets the tile margin & spacing and updates the tile data (rows, columns, etc.).
+     * Sets the tile margin and spacing and updates the tile data (rows, columns, etc.).
      *
      * @method Phaser.Tilemaps.Tileset#setSpacing
      * @since 3.0.0
@@ -365,11 +490,16 @@ var Tileset = new Class({
      *
      * @param {number} imageWidth - The (expected) width of the image to slice.
      * @param {number} imageHeight - The (expected) height of the image to slice.
+     * @param {number} [offsetX=0] - The x offset in the source texture where the tileset starts.
+     * @param {number} [offsetY=0] - The y offset in the source texture where the tileset starts.
      *
      * @return {Phaser.Tilemaps.Tileset} This Tileset object.
      */
-    updateTileData: function (imageWidth, imageHeight)
+    updateTileData: function (imageWidth, imageHeight, offsetX, offsetY)
     {
+        if (offsetX === undefined) { offsetX = 0; }
+        if (offsetY === undefined) { offsetY = 0; }
+
         var rowCount = (imageHeight - this.tileMargin * 2 + this.tileSpacing) / (this.tileHeight + this.tileSpacing);
         var colCount = (imageWidth - this.tileMargin * 2 + this.tileSpacing) / (this.tileWidth + this.tileSpacing);
 
@@ -391,8 +521,8 @@ var Tileset = new Class({
 
         this.texCoordinates.length = 0;
 
-        var tx = this.tileMargin;
-        var ty = this.tileMargin;
+        var tx = this.tileMargin + offsetX;
+        var ty = this.tileMargin + offsetY;
 
         for (var y = 0; y < this.rows; y++)
         {
@@ -402,11 +532,152 @@ var Tileset = new Class({
                 tx += this.tileWidth + this.tileSpacing;
             }
 
-            tx = this.tileMargin;
+            tx = this.tileMargin + offsetX;
             ty += this.tileHeight + this.tileSpacing;
         }
 
+        // Update the animation data texture.
+        if (this._animationDataTexture)
+        {
+            this.createAnimationDataTexture();
+        }
+
         return this;
+    },
+
+    /**
+     * Get or create the texture containing the animation data for this tileset.
+     * This is used by `TilemapGPULayer` to animate tiles.
+     *
+     * @method Phaser.Tilemaps.Tileset#getAnimationDataTexture
+     * @since 4.0.0
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer to use.
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The animation data texture.
+     */
+    getAnimationDataTexture: function (renderer)
+    {
+        if (!this._animationDataTexture)
+        {
+            this.createAnimationDataTexture(renderer);
+        }
+
+        return this._animationDataTexture;
+    },
+
+    /**
+     * Get or create the map from tile index to animation data index.
+     * This is used by `TilemapGPULayer` to animate tiles.
+     *
+     * @method Phaser.Tilemaps.Tileset#getAnimationDataIndexMap
+     * @since 4.0.0
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer to use.
+     * @return {Map<number, number>} The map from tile index to animation data index.
+     */
+    getAnimationDataIndexMap: function (renderer)
+    {
+        if (!this._animationDataIndexMap)
+        {
+            this.createAnimationDataTexture(renderer);
+        }
+
+        return this._animationDataIndexMap;
+    },
+
+    /**
+     * Creates a new WebGLTexture for the tileset's animation data.
+     *
+     * @method Phaser.Tilemaps.Tileset#createAnimationDataTexture
+     * @since 4.0.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The renderer to use.
+     *
+     * @return {Phaser.Renderer.WebGL.Wrappers.WebGLTextureWrapper} The new WebGLTexture.
+     */
+    createAnimationDataTexture: function (renderer)
+    {
+        var tileData = this.tileData;
+        var total = this.total;
+
+        var animations = [];
+        var animFrames = [];
+        var indexToAnimMap = new Map();
+
+        var maxLength = 0;
+
+        for (var i = 0; i < total; i++)
+        {
+            var tileDatum = tileData[i];
+
+            if (tileDatum && tileDatum.animation)
+            {
+                var animation = tileDatum.animation;
+                var animationDuration = tileDatum.animationDuration;
+
+                // This index maps to an animation, not a single tile.
+                indexToAnimMap.set(i, animations.length);
+
+                // This animation points to a run of frames.
+                animations.push([ animationDuration, animFrames.length ]);
+
+                // The run of frames stores the duration and the actual index.
+                for (var j = 0; j < animation.length; j++)
+                {
+                    var frame = animation[j];
+                    animFrames.push([ frame.duration, frame.tileid ]);
+                }
+
+                // Store the maximum length of any animation.
+                maxLength = Math.max(maxLength, animation.length);
+            }
+        }
+
+        var totalTuples = animations.length + animFrames.length;
+
+        if (totalTuples > 4096 * 4096 / 2)
+        {
+            throw new Error('Tileset._animationDataTexture: too many animations - total number of animations plus animation frames is max 8388608, got ' + (totalTuples));
+        }
+
+        var size = totalTuples * 2;
+        var width = Math.min(size, 4096);
+        var height = Math.ceil(size / 4096);
+
+        var u32 = new Uint32Array(width * height);
+        var offset = 0;
+
+        var animLen = animations.length;
+
+        for (i = 0; i < animLen; i++)
+        {
+            animation = animations[i];
+            var duration = animation[0];
+            var index = animation[1];
+            u32[offset++] = duration;
+
+            // Store the index as an offset from the start of the animation frames.
+            // Double the index to account for the 2x 32-bit values per entry.
+            u32[offset++] = (index + animLen) * 2;
+        }
+
+        for (i = 0; i < animFrames.length; i++)
+        {
+            frame = animFrames[i];
+            var frameDuration = frame[0];
+            var frameIndex = frame[1];
+            u32[offset++] = frameDuration;
+            u32[offset++] = frameIndex;
+        }
+
+        // Create or update the animation data texture.
+        if (this._animationDataTexture)
+        {
+            this._animationDataTexture.destroy();
+        }
+
+        var u8 = new Uint8Array(u32.buffer);
+        this._animationDataTexture = renderer.createUint8ArrayTexture(u8, width, height, false, true);
+        this._animationDataIndexMap = indexToAnimMap;
+        this.maxAnimationLength = maxLength;
     }
 
 });

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,8 +11,10 @@ var SnapFloor = require('../../math/snap/SnapFloor');
 var bounds = new Rectangle();
 
 /**
- * Returns the bounds in the given orthogonal layer that are within the cameras viewport.
- * This is used internally by the cull tiles function.
+ * Calculates the tile coordinate bounds within the given orthogonal tilemap layer that fall inside
+ * the camera's viewport. The result accounts for the layer's position, scale, and cull padding
+ * on each axis. This is used internally by the cull tiles function to determine which tiles need
+ * to be rendered.
  *
  * @function Phaser.Tilemaps.Components.CullBounds
  * @since 3.50.0

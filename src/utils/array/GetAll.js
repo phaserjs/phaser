@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,7 +11,7 @@ var SafeRange = require('./SafeRange');
  *
  * You can optionally specify a matching criteria using the `property` and `value` arguments.
  *
- * For example: `getAll('visible', true)` would return only elements that have their visible property set.
+ * For example: `GetAll('visible', true)` would return only elements that have their visible property set to `true`.
  *
  * Optionally you can specify a start and end index. For example if the array had 100 elements,
  * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only

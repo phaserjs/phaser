@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,7 +12,15 @@ var Features = require('../device/Features');
 /**
  * Called automatically by Phaser.Game and responsible for creating the renderer it will use.
  *
- * Relies upon two webpack global flags to be defined: `WEBGL_RENDERER` and `CANVAS_RENDERER` during build time, but not at run-time.
+ * Inspects the game configuration to determine the appropriate render type (WebGL, Canvas, or Headless),
+ * validates that the chosen renderer is supported by the current device, sets up the canvas element
+ * (either adopting one provided in the game config or creating a new one from the CanvasPool), applies
+ * any canvas CSS styles and pixel art interpolation settings, then instantiates and assigns the renderer
+ * to `game.renderer`.
+ *
+ * Relies upon two webpack global flags, `WEBGL_RENDERER` and `CANVAS_RENDERER`, which are defined at
+ * build time and inlined into the bundle as compile-time constants. They are not available as runtime
+ * variables and determine which renderer classes are included in the build.
  *
  * @function Phaser.Core.CreateRenderer
  * @since 3.0.0

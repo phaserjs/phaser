@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,7 +15,7 @@ var Events = require('../events');
  * at the conclusion of the Tween.
  *
  * TweenFrameData instances are typically created by the TweenBuilder automatically, when it
- * detects the prescence of a 'texture' property as the key being tweened.
+ * detects the presence of a 'texture' property as the key being tweened.
  *
  * A Tween can own multiple TweenFrameData instances, but a TweenFrameData only
  * ever belongs to a single Tween.
@@ -35,9 +35,9 @@ var Events = require('../events');
  * @param {(string|number)} frame - The texture frame to set at the end of this tween.
  * @param {function} delay - Function that returns the time in milliseconds before tween will start.
  * @param {number} duration - The duration of the tween in milliseconds.
- * @param {number} hold - Function that returns the time in milliseconds the tween will pause before repeating or returning to its starting value if yoyo is set to true.
- * @param {number} repeat - Function that returns the number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
- * @param {number} repeatDelay - Function that returns the time in milliseconds before the repeat will start.
+ * @param {number} hold - The time in milliseconds the tween will pause before repeating or returning to its starting texture and frame if yoyo is set to true.
+ * @param {number} repeat - The number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
+ * @param {number} repeatDelay - The time in milliseconds before the repeat will start.
  * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
  * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
  */
@@ -100,7 +100,7 @@ var TweenFrameData = new Class({
         this.endFrame = frame;
 
         /**
-         * Will the Tween ease back to its starting values, after reaching the end
+         * Will the Tween revert back to its starting texture and frame, after reaching the end
          * and any `hold` value that may be set?
          *
          * @name Phaser.Tweens.TweenFrameData#yoyo

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -23,7 +23,7 @@
 var TWEEN_CONST = {
 
     /**
-     * TweenData state.
+     * TweenData state. The TweenData has been created but has not yet started processing.
      *
      * @name Phaser.Tweens.States.CREATED
      * @type {number}
@@ -35,7 +35,7 @@ var TWEEN_CONST = {
     //  1 used to be INIT prior to 3.60
 
     /**
-     * TweenData state.
+     * TweenData state. The TweenData is waiting for its initial delay to elapse before it begins playing.
      *
      * @name Phaser.Tweens.States.DELAY
      * @type {number}
@@ -47,7 +47,7 @@ var TWEEN_CONST = {
     //  3 used to be OFFSET_DELAY prior to 3.60
 
     /**
-     * TweenData state.
+     * TweenData state. The TweenData is waiting for its target Game Object to be rendered before it begins playing.
      *
      * @name Phaser.Tweens.States.PENDING_RENDER
      * @type {number}
@@ -57,7 +57,7 @@ var TWEEN_CONST = {
     PENDING_RENDER: 4,
 
     /**
-     * TweenData state.
+     * TweenData state. The TweenData is actively interpolating its properties in the forward direction, from start value to end value.
      *
      * @name Phaser.Tweens.States.PLAYING_FORWARD
      * @type {number}
@@ -67,7 +67,7 @@ var TWEEN_CONST = {
     PLAYING_FORWARD: 5,
 
     /**
-     * TweenData state.
+     * TweenData state. The TweenData is actively interpolating its properties in the backward direction, from end value back to start value.
      *
      * @name Phaser.Tweens.States.PLAYING_BACKWARD
      * @type {number}
@@ -77,7 +77,7 @@ var TWEEN_CONST = {
     PLAYING_BACKWARD: 6,
 
     /**
-     * TweenData state.
+     * TweenData state. The TweenData has reached its end value and is waiting for a hold delay to elapse before reversing or repeating.
      *
      * @name Phaser.Tweens.States.HOLD_DELAY
      * @type {number}
@@ -87,7 +87,7 @@ var TWEEN_CONST = {
     HOLD_DELAY: 7,
 
     /**
-     * TweenData state.
+     * TweenData state. The TweenData has completed a playthrough and is waiting for a repeat delay to elapse before starting the next repeat.
      *
      * @name Phaser.Tweens.States.REPEAT_DELAY
      * @type {number}
@@ -97,7 +97,7 @@ var TWEEN_CONST = {
     REPEAT_DELAY: 8,
 
     /**
-     * TweenData state.
+     * TweenData state. The TweenData has finished all of its repeats and its playback is complete.
      *
      * @name Phaser.Tweens.States.COMPLETE
      * @type {number}

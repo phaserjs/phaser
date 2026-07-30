@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,7 +12,20 @@ var Remove = require('../utils/array/Remove');
 
 /**
  * @classdesc
- * The Clock is a Scene plugin which creates and updates Timer Events for its Scene.
+ * The Clock is a Scene plugin that manages time and schedules Timer Events for its parent Scene.
+ *
+ * You can use it to run callbacks after a delay, on a repeating interval, or in a loop, all
+ * governed by the Scene's time rather than the system clock. This means the Clock respects
+ * Scene pausing, time scaling, and shutdown lifecycle automatically.
+ *
+ * Access it via `this.time` inside a Scene. For example:
+ *
+ * ```javascript
+ * this.time.delayedCall(1000, this.onTimer, [], this);
+ * ```
+ *
+ * The Clock's `timeScale` property allows you to speed up or slow down all Timer Events
+ * belonging to it independently of the rest of the game.
  *
  * @class Clock
  * @memberof Phaser.Time
@@ -167,7 +180,7 @@ var Clock = new Class({
     /**
      * Creates a Timer Event and adds it to this Clock at the start of the next frame.
      *
-     * You can pass in either a `TimerEventConfig` object, from with a new `TimerEvent` will
+     * You can pass in either a `TimerEventConfig` object, from which a new `TimerEvent` will
      * be created, or you can pass in a `TimerEvent` instance.
      *
      * If passing an instance please make sure that this instance hasn't been used before.
@@ -197,6 +210,11 @@ var Clock = new Class({
             event.elapsed = event.startAt;
             event.hasDispatched = false;
             event.repeatCount = (event.repeat === -1 || event.loop) ? 999999999999 : event.repeat;
+
+            if (event.delay <= 0 && event.repeatCount > 0)
+            {
+                throw new Error('TimerEvent infinite loop created via zero delay');
+            }
         }
         else
         {
@@ -295,9 +313,6 @@ var Clock = new Class({
      *
      * @method Phaser.Time.Clock#preUpdate
      * @since 3.0.0
-     *
-     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
-     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
     preUpdate: function ()
     {

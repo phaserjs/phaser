@@ -1,20 +1,23 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Elastic ease-in.
+ * An elastic ease-in, where the value oscillates back and forth with a spring-like motion before
+ * accelerating toward the target. The effect begins with a series of small oscillations that
+ * grow in magnitude, simulating a stretched elastic band being released. Use this when you want
+ * a tween to feel springy or bouncy at its start before snapping into motion.
  *
  * @function Phaser.Math.Easing.Elastic.In
  * @since 3.0.0
  *
- * @param {number} v - The value to be tweened.
- * @param {number} [amplitude=0.1] - The amplitude of the elastic ease.
- * @param {number} [period=0.1] - Sets how tight the sine-wave is, where smaller values are tighter waves, which result in more cycles.
+ * @param {number} v - The value to be eased, between 0 and 1.
+ * @param {number} [amplitude=0.1] - The amplitude of the elastic oscillation. Values below 1 are clamped to 1. Higher values produce a wider oscillation arc.
+ * @param {number} [period=0.1] - Controls how tight the sine-wave oscillation is. Smaller values produce tighter, more frequent cycles; larger values produce wider, slower oscillations.
  *
- * @return {number} The tweened value.
+ * @return {number} The eased value.
  */
 var In = function (v, amplitude, period)
 {

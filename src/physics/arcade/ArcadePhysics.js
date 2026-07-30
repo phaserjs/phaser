@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -88,6 +88,16 @@ var ArcadePhysics = new Class({
          */
         this.add;
 
+        /**
+         * Holds the internal collision filter category.
+         *
+         * @name Phaser.Physics.Arcade.ArcadePhysics#_category
+         * @private
+         * @type {number}
+         * @since 3.70.0
+         */
+        this._category = 0x0001;
+
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
     },
@@ -138,7 +148,7 @@ var ArcadePhysics = new Class({
 
     /**
      * Causes `World.update` to be automatically called each time the Scene
-     * emits and `UPDATE` event. This is the default setting, so only needs
+     * emits an `UPDATE` event. This is the default setting, so only needs
      * calling if you have specifically disabled it.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#enableUpdate
@@ -151,11 +161,11 @@ var ArcadePhysics = new Class({
 
     /**
      * Causes `World.update` to **not** be automatically called each time the Scene
-     * emits and `UPDATE` event.
+     * emits an `UPDATE` event.
      *
      * If you wish to run the World update at your own rate, or from your own
      * component, then you should call this method to disable the built-in link,
-     * and then call `World.update(delta, time)` accordingly.
+     * and then call `World.update(time, delta)` accordingly.
      *
      * Note that `World.postUpdate` is always automatically called when the Scene
      * emits a `POST_UPDATE` event, regardless of this setting.
@@ -190,6 +200,28 @@ var ArcadePhysics = new Class({
     },
 
     /**
+     * Returns the next available collision category.
+     *
+     * You can have a maximum of 32 categories.
+     *
+     * By default all bodies collide with all other bodies.
+     *
+     * Use the `Body.setCollisionCategory()` and
+     * `Body.setCollidesWith()` methods to change this.
+     *
+     * @method Phaser.Physics.Arcade.ArcadePhysics#nextCategory
+     * @since 3.70.0
+     *
+     * @return {number} The next collision category.
+     */
+    nextCategory: function ()
+    {
+        this._category = this._category << 1;
+
+        return this._category;
+    },
+
+    /**
      * Tests if Game Objects overlap. See {@link Phaser.Physics.Arcade.World#overlap}
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#overlap
@@ -198,7 +230,7 @@ var ArcadePhysics = new Class({
      * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} object1 - The first object or array of objects to check.
      * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} [object2] - The second object or array of objects to check, or `undefined`.
      * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [overlapCallback] - An optional callback function that is called if the objects overlap.
-     * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they overlap. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they overlap. If this is set then `overlapCallback` will only be called if this callback returns `true`.
      * @param {*} [callbackContext] - The context in which to run the callbacks.
      *
      * @return {boolean} True if at least one Game Object overlaps another.
@@ -304,17 +336,17 @@ var ArcadePhysics = new Class({
      * @fires Phaser.Physics.Arcade.Events#TILE_OVERLAP
      * @since 3.17.0
      *
-     * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
-     * @param {Phaser.Tilemaps.Tile[]} tiles - An array of Tiles to check for collision against.
-     * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects overlap.
-     * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for overlap.
+     * @param {Phaser.Tilemaps.Tile[]} tiles - An array of Tiles to check for overlap against.
+     * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [overlapCallback] - An optional callback function that is called if the objects overlap.
+     * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they overlap. If this is set then `overlapCallback` will only be called if this callback returns `true`.
      * @param {any} [callbackContext] - The context in which to run the callbacks.
      *
-     * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
+     * @return {boolean} True if any objects overlap.
      */
-    overlapTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext)
+    overlapTiles: function (sprite, tiles, overlapCallback, processCallback, callbackContext)
     {
-        return this.world.overlapTiles(sprite, tiles, collideCallback, processCallback, callbackContext);
+        return this.world.overlapTiles(sprite, tiles, overlapCallback, processCallback, callbackContext);
     },
 
     /**
@@ -380,7 +412,7 @@ var ArcadePhysics = new Class({
     },
 
     /**
-     * Sets the acceleration.x/y property on the game object so it will move towards the x/y coordinates at the given rate (in pixels per second squared)
+     * Sets the acceleration.x/y property on the game object so it will move towards the destination object at the given rate (in pixels per second squared)
      *
      * You must give a maximum speed value, beyond which the game object won't go any faster.
      *
@@ -427,7 +459,7 @@ var ArcadePhysics = new Class({
     {
         if (!targets)
         {
-            targets = this.world.bodies.entries;
+            targets = Array.from(this.world.bodies);
         }
 
         var min = Number.MAX_VALUE;
@@ -481,7 +513,7 @@ var ArcadePhysics = new Class({
     {
         if (!targets)
         {
-            targets = this.world.bodies.entries;
+            targets = Array.from(this.world.bodies);
         }
 
         var max = -1;
@@ -581,7 +613,7 @@ var ArcadePhysics = new Class({
      * @since 3.0.0
      *
      * @param {number} angle - The angle in degrees calculated in clockwise positive direction (down = 90 degrees positive, right = 0 degrees positive, up = 90 degrees negative)
-     * @param {number} [speed=60] - The speed it will move, in pixels per second squared.
+     * @param {number} [speed=60] - The speed it will move, in pixels per second.
      * @param {Phaser.Math.Vector2} [vec2] - The Vector2 in which the x and y properties will be set to the calculated velocity.
      *
      * @return {Phaser.Math.Vector2} The Vector2 that stores the velocity.
@@ -602,7 +634,7 @@ var ArcadePhysics = new Class({
      * @since 3.0.0
      *
      * @param {number} rotation - The angle in radians.
-     * @param {number} [speed=60] - The speed it will move, in pixels per second squared
+     * @param {number} [speed=60] - The speed it will move, in pixels per second.
      * @param {Phaser.Math.Vector2} [vec2] - The Vector2 in which the x and y properties will be set to the calculated velocity.
      *
      * @return {Phaser.Math.Vector2} The Vector2 that stores the velocity.
@@ -622,7 +654,7 @@ var ArcadePhysics = new Class({
      * A body only has to intersect with the search area to be considered, it doesn't have to be fully
      * contained within it.
      *
-     * If Arcade Physics is set to use the RTree (which it is by default) then the search for is extremely fast,
+     * If Arcade Physics is set to use the RTree (which it is by default) then the search is extremely fast,
      * otherwise the search is O(N) for Dynamic Bodies.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#overlapRect
@@ -694,6 +726,7 @@ var ArcadePhysics = new Class({
 
         this.add = null;
         this.world = null;
+        this._category = 1;
     },
 
     /**

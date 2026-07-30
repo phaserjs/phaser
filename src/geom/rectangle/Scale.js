@@ -1,11 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Scales the width and height of this Rectangle by the given amounts.
+ * Scales the width and height of the given Rectangle by the given factors.
  *
  * @function Phaser.Geom.Rectangle.Scale
  * @since 3.0.0
@@ -14,7 +14,7 @@
  *
  * @param {Phaser.Geom.Rectangle} rect - The `Rectangle` object that will be scaled by the specified amount(s).
  * @param {number} x - The factor by which to scale the rectangle horizontally.
- * @param {number} y - The amount by which to scale the rectangle vertically. If this is not specified, the rectangle will be scaled by the factor `x` in both directions.
+ * @param {number} y - The factor by which to scale the rectangle vertically. If this is not specified, the rectangle will be scaled by the factor `x` in both directions.
  *
  * @return {Phaser.Geom.Rectangle} The rectangle object with updated `width` and `height` properties as calculated from the scaling factor(s).
  */

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18,7 +18,7 @@ var BresenhamPoints = require('../geom/line/BresenhamPoints');
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
  * @param {Phaser.Geom.Triangle} triangle - The Triangle to position the Game Objects on.
- * @param {number} [stepRate=1] - An optional step rate, to increase or decrease the packing of the Game Objects on the lines.
+ * @param {number} [stepRate=1] - An optional step rate that controls the density of points sampled along each edge of the Triangle using Bresenham's line algorithm. A higher value produces fewer, more widely spaced points; a lower value produces more points and denser placement.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that was passed to this Action.
  */

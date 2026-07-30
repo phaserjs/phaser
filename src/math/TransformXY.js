@@ -1,14 +1,18 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Vector2 = require('./Vector2');
 
 /**
- * Takes the `x` and `y` coordinates and transforms them into the same space as
- * defined by the position, rotation and scale values.
+ * Takes the `x` and `y` coordinates and transforms them into the local coordinate
+ * space defined by the given position, rotation, and scale values. This performs
+ * an inverse transformation, converting a point from world space into the equivalent
+ * local-space coordinates of a Game Object or other transformed entity. This is
+ * useful for hit-testing or pointer input when you need to determine where a
+ * world-space point falls within a transformed object's local coordinate system.
  *
  * @function Phaser.Math.TransformXY
  * @since 3.0.0
@@ -20,9 +24,9 @@ var Vector2 = require('./Vector2');
  * @param {number} rotation - Rotation of the transform point, in radians.
  * @param {number} scaleX - Horizontal scale of the transform point.
  * @param {number} scaleY - Vertical scale of the transform point.
- * @param {(Phaser.Math.Vector2|Phaser.Geom.Point|object)} [output] - The output vector, point or object for the translated coordinates.
+ * @param {Phaser.Types.Math.Vector2Like} [output] - The output vector, point or object for the translated coordinates.
  *
- * @return {(Phaser.Math.Vector2|Phaser.Geom.Point|object)} The translated point.
+ * @return {Phaser.Types.Math.Vector2Like} The translated point.
  */
 var TransformXY = function (x, y, positionX, positionY, rotation, scaleX, scaleY, output)
 {

@@ -1,0 +1,114 @@
+// QUANTIZE
+#pragma phaserTemplate(shaderName)
+
+precision highp float;
+
+uniform sampler2D uMainSampler;
+uniform vec4 uSteps;
+uniform vec4 uGamma;
+uniform vec4 uOffset;
+uniform int uMode;
+uniform bool uDither;
+
+varying vec2 outTexCoord;
+
+vec4 rgbaToHsva(vec4 rgba)
+{
+    float r = rgba.r;
+    float g = rgba.g;
+    float b = rgba.b;
+    float a = rgba.a;
+    float min = min(min(r, g), b);
+    float max = max(max(r, g), b);
+    float d = max - min;
+    float h = 0.0;
+    float s = (max == 0.0) ? 0.0 : d / max;
+    float v = max;
+    if (max != min)
+    {
+        if (max == r)
+        {
+            h = (g - b) / d + ((g < b) ? 6.0 : 0.0);
+        }
+        else if (max == g)
+        {
+            h = (b - r) / d + 2.0;
+        }
+        else
+        {
+            h = (r - g) / d + 4.0;
+        }
+        h /= 6.0;
+    }
+    return vec4(h, s, v, a);
+}
+
+float hsvaToRgbaConvert(float n, vec4 hsva)
+{
+    float k = mod(n + hsva.x * 6.0, 6.0);
+    float min = min(min(k, 4.0 - k), 1.0);
+    return hsva.z - hsva.z * hsva.y * max(0.0, min);
+}
+
+vec4 hsvaToRgba(vec4 hsva)
+{
+    return vec4(
+        hsvaToRgbaConvert(5.0, hsva),
+        hsvaToRgbaConvert(3.0, hsva),
+        hsvaToRgbaConvert(1.0, hsva),
+        hsva.a
+    );
+}
+
+// Interleaved Gradient Noise implementation
+vec4 ditherIGN(vec4 value)
+{
+    value += fract(52.9829189 * fract(0.06711056 * gl_FragCoord.x + 0.00583715 * gl_FragCoord.y)) - 0.5;
+    return value;
+}
+
+void main ()
+{
+    vec4 sample = texture2D(uMainSampler, outTexCoord);
+
+    if (uMode == 1)
+    {
+        // Convert to HSVA.
+        sample = rgbaToHsva(sample);
+    }
+
+    // Apply gamma.
+    sample = pow(sample, uGamma);
+
+    // Offset.
+    sample -= uOffset;
+
+    // Scale to quantization steps.
+    vec4 steps = max(uSteps - 1.0, 1.0);
+    sample *= steps;
+
+    // Dither.
+    if (uDither)
+    {
+        sample = ditherIGN(sample);
+    }
+
+    // Quantize.
+    sample = ceil(sample - 0.5);
+    sample /= steps;
+
+    // De-offset.
+    sample += uOffset;
+
+    // De-gamma.
+    sample = pow(sample, 1.0 / uGamma);
+
+    if (uMode == 1)
+    {
+        // Convert from HSVA.
+        sample.x = mod(sample.x, 1.0);
+        sample = hsvaToRgba(clamp(sample, 0.0, 1.0));
+    }
+
+    gl_FragColor = sample;
+}

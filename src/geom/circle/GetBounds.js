@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,7 +17,7 @@ var Rectangle = require('../rectangle/Rectangle');
  * @param {Phaser.Geom.Circle} circle - The Circle to get the bounds from.
  * @param {(Phaser.Geom.Rectangle|object)} [out] - A Rectangle, or rectangle-like object, to store the circle bounds in. If not given a new Rectangle will be created.
  *
- * @return {(Phaser.Geom.Rectangle|object)} The Rectangle object containing the Circles bounds.
+ * @return {(Phaser.Geom.Rectangle|object)} The Rectangle object containing the Circle's bounds.
  */
 var GetBounds = function (circle, out)
 {

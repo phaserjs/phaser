@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -87,6 +87,17 @@ module.exports = {
      * @const
      * @since 3.16.0
      */
-    RESIZE: 5
+    RESIZE: 5,
+
+    /**
+     * The Canvas's visible area is resized to fit all available _parent_ space like RESIZE mode,
+     * and scales the canvas size to fit inside the visible area like FIT mode.
+     *
+     * @name Phaser.Scale.ScaleModes.EXPAND
+     * @type {number}
+     * @const
+     * @since 3.80.0
+     */
+    EXPAND: 6
 
 };

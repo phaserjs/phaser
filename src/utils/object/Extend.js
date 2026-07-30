@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,12 +11,20 @@ var IsPlainObject = require('./IsPlainObject');
 // @return {object} The extended object.
 
 /**
- * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
+ * Merges the properties of one or more source objects into a target object, returning the modified target.
+ * This is a slightly modified version of {@link http://api.jquery.com/jQuery.extend/ jQuery.extend}.
+ *
+ * The function accepts a variadic argument list. If the first argument is a boolean `true`, a deep (recursive)
+ * copy is performed, and the second argument is treated as the target. Otherwise, the first argument is the target
+ * and all subsequent arguments are source objects. Properties from each source object are copied onto the target in
+ * order; later sources overwrite earlier ones for the same key. Nested plain objects and arrays are cloned rather
+ * than referenced during a deep copy, preventing mutation of the originals. `undefined` values on a source are
+ * never copied to the target.
  *
  * @function Phaser.Utils.Objects.Extend
  * @since 3.0.0
  *
- * @param {...*} [args] - The objects that will be mixed.
+ * @param {...*} [args] - An optional leading boolean for deep-copy mode, followed by the target object, then one or more source objects whose properties will be merged into the target.
  *
  * @return {object} The extended object.
  */

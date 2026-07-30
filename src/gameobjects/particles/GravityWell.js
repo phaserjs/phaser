@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -93,7 +93,10 @@ var GravityWell = new Class({
     },
 
     /**
-     * Takes a Particle and updates it based on the properties of this Gravity Well.
+     * Takes a Particle and updates its velocity based on the gravitational force exerted
+     * by this Gravity Well. The force is calculated using the squared distance between the
+     * particle and the well, clamped by `epsilon` to avoid extreme forces at very close range,
+     * then applied to the particle's horizontal and vertical velocity components.
      *
      * @method Phaser.GameObjects.Particles.GravityWell#update
      * @since 3.0.0
@@ -127,7 +130,11 @@ var GravityWell = new Class({
     },
 
     /**
-     * The minimum distance for which the gravity force is calculated.
+     * The minimum distance for which the gravity force is calculated, in pixels.
+     *
+     * This acts as a lower bound on the distance used in the gravity calculation,
+     * preventing extreme or infinite forces when a particle passes very close to
+     * the well's position. Increase this value to soften the effect at close range.
      *
      * Defaults to 100.
      *
@@ -150,7 +157,11 @@ var GravityWell = new Class({
     },
 
     /**
-     * The strength of the gravity force - larger numbers produce a stronger force.
+     * The strength of the gravity force - larger numbers produce a stronger attractive force.
+     * Negative values reverse the effect, repelling particles away from the well instead.
+     *
+     * Internally this value is scaled by `gravity`, so changing `gravity` will also affect
+     * the effective force even if `power` remains the same.
      *
      * Defaults to 0.
      *
@@ -173,7 +184,10 @@ var GravityWell = new Class({
     },
 
     /**
-     * The gravitational force of this Gravity Well.
+     * The base gravitational force of this Gravity Well. This value acts as a scalar
+     * that is multiplied with `power` to determine the total force applied to particles.
+     * Increasing `gravity` amplifies the effect of `power`; setting it to zero will
+     * neutralise the well regardless of the `power` value.
      *
      * Defaults to 50.
      *

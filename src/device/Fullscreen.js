@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,8 +15,9 @@
  *
  * @property {boolean} available - Does the browser support the Full Screen API?
  * @property {boolean} keyboard - Does the browser support access to the Keyboard during Full Screen mode?
- * @property {string} cancel - If the browser supports the Full Screen API this holds the call you need to use to cancel it.
- * @property {string} request - If the browser supports the Full Screen API this holds the call you need to use to activate it.
+ * @property {boolean} active - Is the browser currently in fullscreen mode? This is a read-only getter that checks the various vendor-prefixed fullscreen element properties on the document.
+ * @property {string} cancel - If the browser supports the Full Screen API, this holds the name of the method to call on the document in order to exit fullscreen mode.
+ * @property {string} request - If the browser supports the Full Screen API, this holds the name of the method to call on a DOM element in order to request fullscreen mode.
  */
 var Fullscreen = {
 
@@ -27,11 +28,6 @@ var Fullscreen = {
 
 };
 
-/**
-* Checks for support of the Full Screen API.
-*
-* @ignore
-*/
 function init ()
 {
     if (typeof importScripts === 'function')

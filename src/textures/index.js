@@ -1,11 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Extend = require('../utils/object/Extend');
 var FilterMode = require('./const');
+var WrapMode = require('./const-wrap');
 
 /**
  * @namespace Phaser.Textures
@@ -39,10 +40,12 @@ var Textures = {
     Parsers: require('./parsers'),
     Texture: require('./Texture'),
     TextureManager: require('./TextureManager'),
-    TextureSource: require('./TextureSource')
+    TextureSource: require('./TextureSource'),
+    WrapMode: WrapMode
 
 };
 
 Textures = Extend(false, Textures, FilterMode);
+Textures = Extend(false, Textures, WrapMode);
 
 module.exports = Textures;

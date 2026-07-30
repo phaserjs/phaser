@@ -1,15 +1,16 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var AnimationState = require('../../animations/AnimationState');
+var DefaultRopeNodes = require('../../renderer/webgl/renderNodes/defaults/DefaultRopeNodes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
-var PIPELINE_CONST = require('../../renderer/webgl/pipelines/const');
 var RopeRender = require('./RopeRender');
+var TintModes = require('../../renderer/TintModes');
 var Vector2 = require('../../math/Vector2');
 
 /**
@@ -18,13 +19,23 @@ var Vector2 = require('../../math/Vector2');
  *
  * The Rope object is WebGL only and does not have a Canvas counterpart.
  *
- * A Rope is a special kind of Game Object that has a texture is stretched along its entire length.
+ * A Rope is a special kind of Game Object that has a texture that is stretched along its entire length,
+ * mapped across a series of vertices that you define. This makes it ideal for creating effects such as
+ * flags waving in the wind, banners, cloth, chains, wavy water surfaces, or any shape that needs a
+ * texture bent or deformed along a path.
  *
  * Unlike a Sprite, it isn't restricted to using just a quad and can have as many vertices as you define
  * when creating it. The vertices can be arranged in a horizontal or vertical strip and have their own
- * color and alpha values as well.
+ * color and alpha values as well. You can modify the vertex positions each frame to animate the shape
+ * of the Rope in real-time.
  *
- * A Ropes origin is always 0.5 x 0.5 and cannot be changed.
+ * The Rope also supports animations via the `anims` property, allowing you to play frame-based
+ * animations from a texture atlas across the surface of the Rope.
+ *
+ * A Rope's origin is always 0.5 x 0.5 and cannot be changed.
+ *
+ * This object does not support trimmed textures from Texture Packer.
+ * Trimming may interfere with the vertex arrangement.
  *
  * @class Rope
  * @extends Phaser.GameObjects.GameObject
@@ -38,8 +49,7 @@ var Vector2 = require('../../math/Vector2');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.PostPipeline
+ * @extends Phaser.GameObjects.Components.RenderNodes
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -66,8 +76,7 @@ var Rope = new Class({
         Components.Depth,
         Components.Flip,
         Components.Mask,
-        Components.Pipeline,
-        Components.PostPipeline,
+        Components.RenderNodes,
         Components.Size,
         Components.Texture,
         Components.Transform,
@@ -98,7 +107,7 @@ var Rope = new Class({
         /**
          * An array containing the points data for this Rope.
          *
-         * Each point should be given as a Vector2Like object (i.e. a Vector2, Geom.Point or object with public x/y properties).
+         * Each point should be given as a Vector2Like object (i.e. a Vector2 or object with public x/y properties).
          *
          * The point coordinates are given in local space, where 0 x 0 is the start of the Rope strip.
          *
@@ -167,16 +176,24 @@ var Rope = new Class({
         this.alphas;
 
         /**
-         * The tint fill mode.
+         * The tint mode to use when applying the tint to the texture.
          *
-        * `false` = An additive tint (the default), where vertices colors are blended with the texture.
-        * `true` = A fill tint, where the vertices colors replace the texture, but respects texture alpha.
+         * Available modes are:
+         * - Phaser.TintModes.MULTIPLY (default)
+         * - Phaser.TintModes.FILL (default when the texture is __DEFAULT)
+         * - Phaser.TintModes.ADD
+         * - Phaser.TintModes.SCREEN
+         * - Phaser.TintModes.OVERLAY
+         * - Phaser.TintModes.HARD_LIGHT
          *
-         * @name Phaser.GameObjects.Rope#tintFill
-         * @type {boolean}
-         * @since 3.23.0
+         * Rope does not currently support secondary tint colors or modes.
+         *
+         * @name Phaser.GameObjects.Rope#tintMode
+         * @type {Phaser.TintModes}
+         * @default Phaser.TintModes.MULTIPLY
+         * @since 4.0.0
          */
-        this.tintFill = (texture === '__DEFAULT') ? true : false;
+        this.tintMode = (texture === '__DEFAULT') ? TintModes.FILL : TintModes.MULTIPLY;
 
         /**
          * If the Rope is marked as `dirty` it will automatically recalculate its vertices
@@ -277,8 +294,7 @@ var Rope = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
-        this.initPipeline(PIPELINE_CONST.ROPE_PIPELINE);
-        this.initPostPipeline();
+        this.initRenderNodes(this._defaultRenderNodesMap);
 
         if (Array.isArray(points))
         {
@@ -290,13 +306,42 @@ var Rope = new Class({
         this.updateVertices();
     },
 
-    //  Overrides Game Object method
+    /**
+     * The default render nodes for this Game Object.
+     *
+     * @name Phaser.GameObjects.Rope#_defaultRenderNodesMap
+     * @type {Map<string, string>}
+     * @private
+     * @webglOnly
+     * @readonly
+     * @since 4.0.0
+     */
+    _defaultRenderNodesMap: {
+        get: function ()
+        {
+            return DefaultRopeNodes;
+        }
+    },
+
+    /**
+     * Called automatically by Phaser when this Game Object is added to a Scene.
+     * Registers this Rope with the Scene's update list so that `preUpdate` is called each frame.
+     *
+     * @method Phaser.GameObjects.Rope#addedToScene
+     * @since 3.23.0
+     */
     addedToScene: function ()
     {
         this.scene.sys.updateList.add(this);
     },
 
-    //  Overrides Game Object method
+    /**
+     * Called automatically by Phaser when this Game Object is removed from a Scene.
+     * Removes this Rope from the Scene's update list so that `preUpdate` is no longer called each frame.
+     *
+     * @method Phaser.GameObjects.Rope#removedFromScene
+     * @since 3.23.0
+     */
     removedFromScene: function ()
     {
         this.scene.sys.updateList.remove(this);
@@ -365,7 +410,7 @@ var Rope = new Class({
      * Sets the alignment of the points in this Rope to be horizontal, in a strip format.
      *
      * Calling this method will reset this Rope. The current points, vertices, colors and alpha
-     * values will be reset to thoes values given as parameters.
+     * values will be reset to those values given as parameters.
      *
      * @method Phaser.GameObjects.Rope#setHorizontal
      * @since 3.23.0
@@ -394,7 +439,7 @@ var Rope = new Class({
      * Sets the alignment of the points in this Rope to be vertical, in a column format.
      *
      * Calling this method will reset this Rope. The current points, vertices, colors and alpha
-     * values will be reset to thoes values given as parameters.
+     * values will be reset to those values given as parameters.
      *
      * @method Phaser.GameObjects.Rope#setVertical
      * @since 3.23.0
@@ -420,30 +465,33 @@ var Rope = new Class({
     },
 
     /**
-     * Sets the tint fill mode.
+     * Sets the tint mode to use when applying the tint to the texture.
      *
-     * Mode 0 (`false`) is an additive tint, the default, which blends the vertices colors with the texture.
-     * This mode respects the texture alpha.
-     *
-     * Mode 1 (`true`) is a fill tint. Unlike an additive tint, a fill-tint literally replaces the pixel colors
-     * from the texture with those in the tint. You can use this for effects such as making a player flash 'white'
-     * if hit by something. This mode respects the texture alpha.
+     * Available modes are:
+     * - Phaser.TintModes.MULTIPLY (default)
+     * - Phaser.TintModes.FILL
+     * - Phaser.TintModes.ADD
+     * - Phaser.TintModes.SCREEN
+     * - Phaser.TintModes.OVERLAY
+     * - Phaser.TintModes.HARD_LIGHT
      *
      * See the `setColors` method for details of how to color each of the vertices.
      *
-     * @method Phaser.GameObjects.Rope#setTintFill
-     * @webglOnly
-     * @since 3.23.0
+     * Rope does not currently support secondary tint colors or modes.
      *
-     * @param {boolean} [value=false] - Set to `false` for an Additive tint or `true` fill tint with alpha.
+     * @method Phaser.GameObjects.Rope#setTintMode
+     * @webglOnly
+     * @since 4.0.0
+     *
+     * @param {Phaser.TintModes} [value=Phaser.TintModes.MULTIPLY] - The tint mode to use.
      *
      * @return {this} This Game Object instance.
      */
-    setTintFill: function (value)
+    setTintMode: function (value)
     {
-        if (value === undefined) { value = false; }
+        if (value === undefined) { value = TintModes.MULTIPLY; }
 
-        this.tintFill = value;
+        this.tintMode = value;
 
         return this;
     },
@@ -454,7 +502,7 @@ var Rope = new Class({
      * You can provide the values in a number of ways:
      *
      * 1) One single numeric value: `setAlphas(0.5)` - This will set a single alpha for the whole Rope.
-     * 2) Two numeric value: `setAlphas(1, 0.5)` - This will set a 'top' and 'bottom' alpha value across the whole Rope.
+     * 2) Two numeric values: `setAlphas(1, 0.5)` - This will set a 'top' and 'bottom' alpha value across the whole Rope.
      * 3) An array of values: `setAlphas([ 1, 0.5, 0.2 ])`
      *
      * If you provide an array of values and the array has exactly the same number of values as `points` in the Rope, it

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20,7 +20,7 @@ var Angle = require('./Angle');
  */
 var NormalAngle = function (line)
 {
-    var angle = Angle(line) - MATH_CONST.TAU;
+    var angle = Angle(line) - MATH_CONST.PI_OVER_2;
 
     return Wrap(angle, -Math.PI, Math.PI);
 };

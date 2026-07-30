@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,8 @@ var CONST = require('./const');
 var Extend = require('./utils/object/Extend');
 
 /**
- * @namespace Phaser
+ * Alternative Phaser entry-point for the Arcade Physics build. This build excludes Matter.js physics.
+ * See phaser.js for the JSDocs entry point.
  */
 
 var Phaser = {
@@ -22,13 +23,12 @@ var Phaser = {
     Cameras: require('./cameras'),
     Core: require('./core'),
     Class: require('./utils/Class'),
-    Create: require('./create'),
     Curves: require('./curves'),
     Data: require('./data'),
     Display: require('./display'),
     DOM: require('./dom'),
     Events: require('./events'),
-    FX: require('./fx'),
+    Filters: require('./filters'),
     Game: require('./core/Game'),
     GameObjects: require('./gameobjects'),
     Geom: require('./geom'),
@@ -48,6 +48,7 @@ var Phaser = {
     Textures: require('./textures'),
     Tilemaps: require('./tilemaps'),
     Time: require('./time'),
+    TintModes: require('./renderer/TintModes'),
     Tweens: require('./tweens'),
     Utils: require('./utils')
 
@@ -60,38 +61,12 @@ if (typeof FEATURE_SOUND)
     Phaser.Sound = require('./sound');
 }
 
-if (typeof PLUGIN_CAMERA3D)
-{
-    Phaser.Cameras.Sprite3D = require('../plugins/camera3d/src');
-    Phaser.GameObjects.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3D');
-    Phaser.GameObjects.Factories.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3DFactory');
-    Phaser.GameObjects.Creators.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3DCreator');
-}
-
-if (typeof PLUGIN_FBINSTANT)
-{
-    Phaser.FacebookInstantGamesPlugin = require('../plugins/fbinstant/src/FacebookInstantGamesPlugin');
-}
-
 //   Merge in the consts
 
 Phaser = Extend(false, Phaser, CONST);
-
-/**
- * The root types namespace.
- *
- * @namespace Phaser.Types
- * @since 3.17.0
- */
 
 //  Export it
 
 module.exports = Phaser;
 
 global.Phaser = Phaser;
-
-/*
- * "Documentation is like pizza: when it is good, it is very, very good;
- * and when it is bad, it is better than nothing."
- *  -- Dick Brandon
- */

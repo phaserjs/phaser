@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,8 +8,10 @@ var Class = require('../../utils/Class');
 
 /**
  * @classdesc
- * Contains information about a specific Gamepad Axis.
- * Axis objects are created automatically by the Gamepad as they are needed.
+ * Represents a single axis on a Gamepad controller, such as one direction of an analog stick.
+ * Each axis has a `value` property ranging from -1 to 1 (with 0 as dead center), and a
+ * configurable `threshold` below which the value is treated as zero by `getValue()`. Axis
+ * objects are created automatically by the Gamepad as they are needed.
  *
  * @class Axis
  * @memberof Phaser.Input.Gamepad
@@ -90,7 +92,9 @@ var Axis = new Class({
     },
 
     /**
-     * Applies the `threshold` value to the axis and returns it.
+     * Returns the axis value after applying the dead zone threshold. If the absolute value
+     * of the axis is less than `threshold`, zero is returned instead, preventing minor stick
+     * drift from registering as intentional input. Otherwise the raw `value` is returned.
      *
      * @method Phaser.Input.Gamepad.Axis#getValue
      * @since 3.0.0

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -35,6 +35,7 @@ var GEOM_CONST = {
 
     /**
      * A Point Geometry object type.
+     * This object type was removed in 4.0.0. Use Vector2 instead.
      *
      * @name Phaser.Geom.POINT
      * @type {number}

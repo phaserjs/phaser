@@ -1,17 +1,17 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var ImageFile = require('./ImageFile.js');
+var ImageFile = require('./ImageFile');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var MultiFile = require('../MultiFile.js');
-var ParseXMLBitmapFont = require('../../gameobjects/bitmaptext/ParseXMLBitmapFont.js');
-var XMLFile = require('./XMLFile.js');
+var MultiFile = require('../MultiFile');
+var ParseXMLBitmapFont = require('../../gameobjects/bitmaptext/ParseXMLBitmapFont');
+var XMLFile = require('./XMLFile');
 
 /**
  * @classdesc
@@ -114,7 +114,7 @@ var BitmapFontFile = new Class({
  * Adds an XML based Bitmap Font, or array of fonts, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
-
+ *
  * ```javascript
  * function preload ()
  * {
@@ -156,7 +156,7 @@ var BitmapFontFile = new Class({
  *
  * See the documentation for `Phaser.Types.Loader.FileTypes.BitmapFontFileConfig` for more details.
  *
- * Once the atlas has finished loading you can use key of it when creating a Bitmap Text Game Object:
+ * Once the bitmap font has finished loading you can use the key of it when creating a Bitmap Text Game Object:
  *
  * ```javascript
  * this.load.bitmapFont('goldenFont', 'images/GoldFont.png', 'images/GoldFont.xml');

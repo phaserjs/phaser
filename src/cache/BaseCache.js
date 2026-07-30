@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,11 +11,11 @@ var Events = require('./events');
 
 /**
  * @classdesc
- * The BaseCache is a base Cache class that can be used for storing references to any kind of data.
- *
- * Data can be added, retrieved and removed based on the given keys.
- *
- * Keys are string-based.
+ * A key-value store used by the Phaser framework to cache loaded assets and other data.
+ * Items are stored and retrieved using string-based keys. The BaseCache emits events when
+ * items are added or removed, allowing other systems to react to cache changes. Multiple
+ * BaseCache instances are owned by the CacheManager, one per asset type (JSON, binary,
+ * audio, etc.), and you can also create custom caches via `CacheManager.addCustom()`.
  *
  * @class BaseCache
  * @memberof Phaser.Cache
@@ -119,7 +119,7 @@ var BaseCache = new Class({
     },
 
     /**
-     * Removes and item from this cache based on the given key.
+     * Removes an item from this cache based on the given key.
      *
      * If an entry matching the key is found it is removed from the cache and a `remove` event emitted.
      * No additional checks are done on the item removed. If other systems or parts of your game code
@@ -153,7 +153,7 @@ var BaseCache = new Class({
      * @method Phaser.Cache.BaseCache#getKeys
      * @since 3.17.0
      *
-     * @return {string[]} Array containing all the keys.
+     * @return {string[]} An array of strings containing all keys currently stored in this cache.
      */
     getKeys: function ()
     {
@@ -161,7 +161,8 @@ var BaseCache = new Class({
     },
 
     /**
-     * Destroys this cache and all items within it.
+     * Destroys this cache and all items within it. Clears the entries Map, removes all
+     * event listeners from the EventEmitter, and nulls the internal references.
      *
      * @method Phaser.Cache.BaseCache#destroy
      * @since 3.0.0

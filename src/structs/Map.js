@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,7 +17,10 @@ var Class = require('../utils/Class');
 
 /**
  * @classdesc
- * The keys of a Map can be arbitrary values.
+ * A custom Map implementation that stores entries as key-value pairs with ordered iteration.
+ * Unlike a native JavaScript Map, it also maintains an internal array of entries for efficient
+ * indexed access and iteration. Supports filtering, merging, and contains/size operations.
+ * Used internally by various Phaser systems for managing collections.
  *
  * ```javascript
  * var map = new Map([
@@ -66,6 +69,27 @@ var Map = new Class({
          */
         this.size = 0;
 
+        this.setAll(elements);
+    },
+
+    /**
+     * Adds all the elements in the given array to this Map.
+     *
+     * If the key already exists, the value will be replaced.
+     *
+     * @method Phaser.Structs.Map#setAll
+     * @since 3.70.0
+     *
+     * @generic K
+     * @generic V
+     * @genericUse {V[]} - [elements]
+     *
+     * @param {Array.<*>} elements - An array of key-value pairs to populate this Map with.
+     *
+     * @return {this} This Map object.
+     */
+    setAll: function (elements)
+    {
         if (Array.isArray(elements))
         {
             for (var i = 0; i < elements.length; i++)
@@ -73,11 +97,16 @@ var Map = new Class({
                 this.set(elements[i][0], elements[i][1]);
             }
         }
+
+        return this;
     },
 
     /**
      * Adds an element with a specified `key` and `value` to this Map.
+     *
      * If the `key` already exists, the value will be replaced.
+     *
+     * If you wish to add multiple elements in a single call, use the `setAll` method instead.
      *
      * @method Phaser.Structs.Map#set
      * @since 3.0.0
@@ -89,7 +118,7 @@ var Map = new Class({
      * @param {string} key - The key of the element to be added to this Map.
      * @param {*} value - The value of the element to be added to this Map.
      *
-     * @return {Phaser.Structs.Map} This Map object.
+     * @return {this} This Map object.
      */
     set: function (key, value)
     {
@@ -175,7 +204,7 @@ var Map = new Class({
      *
      * @param {string} key - The key of the element to delete from this Map.
      *
-     * @return {Phaser.Structs.Map} This Map object.
+     * @return {this} This Map object.
      */
     delete: function (key)
     {
@@ -196,7 +225,7 @@ var Map = new Class({
      *
      * @genericUse {Phaser.Structs.Map.<K, V>} - [$return]
      *
-     * @return {Phaser.Structs.Map} This Map object.
+     * @return {this} This Map object.
      */
     clear: function ()
     {
@@ -212,7 +241,7 @@ var Map = new Class({
     },
 
     /**
-     * Returns all entries keys in this Map.
+     * Returns an array of all entry keys in this Map.
      *
      * @method Phaser.Structs.Map#keys
      * @since 3.0.0
@@ -227,14 +256,14 @@ var Map = new Class({
     },
 
     /**
-     * Returns an `Array` of all entries.
+     * Returns an `Array` of all values stored in this Map.
      *
      * @method Phaser.Structs.Map#values
      * @since 3.0.0
      *
      * @genericUse {V[]} - [$return]
      *
-     * @return {Array.<*>} An `Array` of entries.
+     * @return {Array.<*>} An `Array` of values.
      */
     values: function ()
     {
@@ -284,7 +313,7 @@ var Map = new Class({
      *
      * @param {EachMapCallback} callback - The callback which will receive the keys and entries held in this Map.
      *
-     * @return {Phaser.Structs.Map} This Map object.
+     * @return {this} This Map object.
      */
     each: function (callback)
     {
@@ -340,7 +369,7 @@ var Map = new Class({
      * @param {Phaser.Structs.Map} map - The Map to merge in to this Map.
      * @param {boolean} [override=false] - Set to `true` to replace values in this Map with those from the source map, or `false` to skip them.
      *
-     * @return {Phaser.Structs.Map} This Map object.
+     * @return {this} This Map object.
      */
     merge: function (map, override)
     {

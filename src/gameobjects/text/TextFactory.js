@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,8 @@ var GameObjectFactory = require('../GameObjectFactory');
 /**
  * Creates a new Text Game Object and adds it to the Scene.
  *
- * A Text Game Object.
+ * The Text object renders one or more lines of styled text to an internal hidden Canvas, which is
+ * then uploaded as a texture and displayed within the Scene.
  *
  * Text objects work by creating their own internal hidden Canvas and then renders text to it using
  * the standard Canvas `fillText` API. It then creates a texture from this canvas which is rendered
@@ -22,7 +23,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * You can only display fonts that are currently loaded and available to the browser: therefore fonts must
  * be pre-loaded. Phaser does not do this for you, so you will require the use of a 3rd party font loader,
- * or have the fonts ready available in the CSS on the page in which your Phaser game resides.
+ * or have the fonts already available in the CSS on the page in which your Phaser game resides.
  *
  * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts
  * across mobile browsers.

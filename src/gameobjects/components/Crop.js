@@ -1,11 +1,17 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Provides methods used for getting and setting the texture of a Game Object.
+ * The Crop component provides the ability to crop the texture frame of a Game Object during rendering.
+ *
+ * It is applied as a mixin to Game Objects such as Sprite and Image, adding the `setCrop` method and
+ * related properties. Cropping limits the visible rectangular region of a texture frame without altering
+ * the Game Object's size, position, physics body, or hit area — only the rendered output is affected.
+ * The crop region is always relative to the texture frame's top-left origin and is automatically scaled
+ * to account for the Game Object's scale.
  *
  * @namespace Phaser.GameObjects.Components.Crop
  * @since 3.12.0
@@ -50,12 +56,14 @@ var Crop = {
      * Cropping a Game Object does not change its size, dimensions, physics body or hit area, it just
      * changes what is shown when rendered.
      *
+     * The crop size as well as coordinates cannot exceed the size of the texture frame.
+     *
      * The crop coordinates are relative to the texture frame, not the Game Object, meaning 0 x 0 is the top-left.
      *
      * Therefore, if you had a Game Object that had an 800x600 sized texture, and you wanted to show only the left
      * half of it, you could call `setCrop(0, 0, 400, 600)`.
      *
-     * It is also scaled to match the Game Object scale automatically. Therefore a crop rect of 100x50 would crop
+     * It is also scaled to match the Game Object scale automatically. Therefore a crop rectangle of 100x50 would crop
      * an area of 200x100 when applied to a Game Object that had a scale factor of 2.
      *
      * You can either pass in numeric values directly, or you can provide a single Rectangle object as the first argument.
@@ -68,10 +76,10 @@ var Crop = {
      * @method Phaser.GameObjects.Components.Crop#setCrop
      * @since 3.11.0
      *
-     * @param {(number|Phaser.Geom.Rectangle)} [x] - The x coordinate to start the crop from. Or a Phaser.Geom.Rectangle object, in which case the rest of the arguments are ignored.
-     * @param {number} [y] - The y coordinate to start the crop from.
-     * @param {number} [width] - The width of the crop rectangle in pixels.
-     * @param {number} [height] - The height of the crop rectangle in pixels.
+     * @param {(number|Phaser.Geom.Rectangle)} [x] - The x coordinate to start the crop from. Cannot be negative or exceed the Frame width. Or a Phaser.Geom.Rectangle object, in which case the rest of the arguments are ignored.
+     * @param {number} [y] - The y coordinate to start the crop from. Cannot be negative or exceed the Frame height.
+     * @param {number} [width] - The width of the crop rectangle in pixels. Cannot exceed the Frame width.
+     * @param {number} [height] - The height of the crop rectangle in pixels. Cannot exceed the Frame height.
      *
      * @return {this} This Game Object instance.
      */

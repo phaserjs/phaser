@@ -1,17 +1,21 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Internal function to process the separation of a physics body from a tile.
+ * Internal function to process the vertical separation of a physics body from a tile.
+ *
+ * Updates the body's blocked flags based on the direction of separation, adjusts the
+ * body's vertical position by the separation amount, and then either zeroes the vertical
+ * velocity or applies the body's bounce factor to reverse it.
  *
  * @function Phaser.Physics.Arcade.Tilemap.ProcessTileSeparationY
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
- * @param {number} y - The y separation amount.
+ * @param {number} y - The vertical separation amount, in pixels. A negative value indicates the body was blocked from above; a positive value indicates it was blocked from below.
  */
 var ProcessTileSeparationY = function (body, y)
 {

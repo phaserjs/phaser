@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,7 +11,7 @@
  * @since 3.0.0
  *
  * @param {HTMLCanvasElement} canvas - The canvas element to have the style applied to.
- * @param {string} [value='none'] - The touch callout value to set on the canvas. Set to `none` to disable touch callouts.
+ * @param {string} [value='none'] - The user-select value to set on the canvas. Set to `none` to disable default browser text selection and touch callouts.
  *
  * @return {HTMLCanvasElement} The canvas element.
  */

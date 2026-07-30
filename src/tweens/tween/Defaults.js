@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,8 +11,8 @@
  * @property {(object|object[])} targets - The object, or an array of objects, to run the tween on.
  * @property {number} [delay=0] - The number of milliseconds to delay before the tween will start.
  * @property {number} [duration=1000] - The duration of the tween in milliseconds.
- * @property {string} [ease='Power0'] - The easing equation to use for the tween.
- * @property {array} [easeParams] - Optional easing parameters.
+ * @property {string} [ease='Power0'] - The easing equation to use for the tween. This is a string key such as `'Linear'`, `'Quad.easeIn'`, `'Cubic.easeOut'`, or `'Bounce.easeInOut'`. See `Phaser.Tweens.Builders.GetEaseFunction` for the full list of supported values.
+ * @property {array} [easeParams] - An optional array of additional parameters to pass to the easing function, if it supports them.
  * @property {number} [hold=0] - The number of milliseconds to hold the tween for before yoyo'ing.
  * @property {number} [repeat=0] - The number of times to repeat the tween.
  * @property {number} [repeatDelay=0] - The number of milliseconds to pause before a tween will repeat.

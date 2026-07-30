@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,14 +8,14 @@ var GetTilesWithin = require('./GetTilesWithin');
 
 /**
  * Sets a collision callback for the given rectangular area (in tile coordinates) within the layer.
- * If a callback is already set for the tile index it will be replaced. Set the callback to null to
+ * If a callback is already set for a tile it will be replaced. Set the callback to null to
  * remove it.
  *
  * @function Phaser.Tilemaps.Components.SetTileLocationCallback
  * @since 3.0.0
  *
- * @param {number} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
- * @param {number} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {number} tileX - The left most tile coordinate to use as the origin of the area.
+ * @param {number} tileY - The top most tile coordinate to use as the origin of the area.
  * @param {number} width - How many tiles wide from the `tileX` index the area will be.
  * @param {number} height - How many tiles tall from the `tileY` index the area will be.
  * @param {function} callback - The callback that will be invoked when the tile is collided with.

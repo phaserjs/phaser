@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -24,7 +24,7 @@ var ScaleModes = {
     DEFAULT: 0,
 
     /**
-     * Linear Scale Mode.
+     * Linear Scale Mode. Uses bilinear interpolation when scaling textures, producing smooth results. Best for non-pixel-art graphics where smooth scaling is desired.
      *
      * @name Phaser.ScaleModes.LINEAR
      * @type {number}
@@ -34,7 +34,7 @@ var ScaleModes = {
     LINEAR: 0,
 
     /**
-     * Nearest Scale Mode.
+     * Nearest Scale Mode. Uses nearest-neighbor sampling when scaling textures, preserving hard pixel edges without interpolation. Best for pixel art and retro-style graphics.
      *
      * @name Phaser.ScaleModes.NEAREST
      * @type {number}

@@ -22,7 +22,7 @@
  * @property {number} [elapsed=0] - Delta counter
  * @property {number} [repeatCounter=0] - How many repeats are left to run?
  * @property {number} [start=0] - The property value at the start of the ease.
- * @property {number} [current=0] - The current propety value.
+ * @property {number} [current=0] - The current property value.
  * @property {number} [previous=0] - The previous property value.
  * @property {number} [end=0] - The property value at the end of the ease.
  * @property {Phaser.Types.Tweens.TweenDataGenConfig} [gen] - LoadValue generation functions.

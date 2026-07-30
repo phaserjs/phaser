@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,11 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
- * A single JSON File suitable for loading by the Loader.
+ * A single JSON File suitable for loading by the Loader. JSON files are parsed automatically upon load and the
+ * resulting data object is stored in the global JSON Cache, keyed by the file key. You can optionally supply a
+ * `dataKey` to extract and cache only a specific nested property from the JSON, rather than the entire file.
+ * JSON files are commonly used to store game configuration, level data, tilemap data, localization strings, or
+ * any other structured data your game requires.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#json method and are not typically created directly.
  *
@@ -87,7 +91,9 @@ var JSONFile = new Class({
 
     /**
      * Called automatically by Loader.nextFile.
-     * This method controls what extra work this File does with its loaded data.
+     * This method parses the XHR response text as JSON. If a `dataKey` was specified when the file was added
+     * to the load queue, only the value at that dot-notation key path is stored in `this.data`; otherwise the
+     * entire parsed JSON object is stored. Once processing is complete it calls `onProcessComplete`.
      *
      * @method Phaser.Loader.FileTypes.JSONFile#onProcess
      * @since 3.7.0
@@ -196,7 +202,7 @@ var JSONFile = new Class({
  * }
  * ```
  *
- * And you only wanted to store the `boss` data in the Cache, then you could pass `level1.baddies.boss`as the `dataKey`.
+ * And you only wanted to store the `boss` data in the Cache, then you could pass `level1.baddies.boss` as the `dataKey`.
  *
  * Note: The ability to load this type of file will only be available if the JSON File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.

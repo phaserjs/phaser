@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,7 +11,7 @@
  * or the HTML5 Audio Manager. It is dispatched when the `detune` property of the Sound Manager is changed, which globally
  * adjusts the detuning of all active sounds.
  *
- * Listen to it from a Scene using: `this.sound.on('rate', listener)`.
+ * Listen to it from a Scene using: `this.sound.on('detune', listener)`.
  *
  * @event Phaser.Sound.Events#GLOBAL_DETUNE
  * @type {string}

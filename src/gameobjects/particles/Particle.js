@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,10 +14,14 @@ var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
- * A Particle is a simple object owned and controlled by a Particle Emitter.
- *
- * It encapsulates all of the properties required to move and update according
- * to the Emitters operations.
+ * A Particle is a lightweight object owned and controlled by a ParticleEmitter. Each Particle
+ * holds its own position, velocity, acceleration, rotation, scale, alpha, tint, and lifespan
+ * values, which are updated each frame by the Emitter's configured EmitterOp instances.
+ * Particles are pooled and recycled by the Emitter for performance. When a particle's lifespan
+ * expires, it is deactivated and returned to the pool for reuse rather than being destroyed.
+ * You do not normally create Particle instances directly; instead, the Emitter manages their
+ * lifecycle. You can extend this class to add custom properties by providing a custom
+ * `particleClass` in the emitter configuration.
  *
  * @class Particle
  * @memberof Phaser.GameObjects.Particles
@@ -95,7 +99,7 @@ var Particle = new Class({
         this.worldPosition = new Vector2();
 
         /**
-         * The x velocity of this Particle.
+         * The x velocity of this Particle, in pixels per second.
          *
          * @name Phaser.GameObjects.Particles.Particle#velocityX
          * @type {number}
@@ -105,7 +109,7 @@ var Particle = new Class({
         this.velocityX = 0;
 
         /**
-         * The y velocity of this Particle.
+         * The y velocity of this Particle, in pixels per second.
          *
          * @name Phaser.GameObjects.Particles.Particle#velocityY
          * @type {number}
@@ -115,7 +119,7 @@ var Particle = new Class({
         this.velocityY = 0;
 
         /**
-         * The x acceleration of this Particle.
+         * The x acceleration of this Particle, in pixels per second squared.
          *
          * @name Phaser.GameObjects.Particles.Particle#accelerationX
          * @type {number}
@@ -125,7 +129,7 @@ var Particle = new Class({
         this.accelerationX = 0;
 
         /**
-         * The y acceleration of this Particle.
+         * The y acceleration of this Particle, in pixels per second squared.
          *
          * @name Phaser.GameObjects.Particles.Particle#accelerationY
          * @type {number}
@@ -135,7 +139,7 @@ var Particle = new Class({
         this.accelerationY = 0;
 
         /**
-         * The maximum horizontal velocity this Particle can travel at.
+         * The maximum horizontal velocity this Particle can travel at, in pixels per second.
          *
          * @name Phaser.GameObjects.Particles.Particle#maxVelocityX
          * @type {number}
@@ -145,7 +149,7 @@ var Particle = new Class({
         this.maxVelocityX = 10000;
 
         /**
-         * The maximum vertical velocity this Particle can travel at.
+         * The maximum vertical velocity this Particle can travel at, in pixels per second.
          *
          * @name Phaser.GameObjects.Particles.Particle#maxVelocityY
          * @type {number}
@@ -275,10 +279,13 @@ var Particle = new Class({
         this.lifeT = 0;
 
         /**
-         * The data used by the ease equation.
+         * An object that stores the min/max interpolation values for each of this Particle's
+         * properties (such as alpha, tint, scaleX, rotate, etc.) as they are eased over the
+         * particle's lifetime. These values are populated and used by the EmitterOp instances
+         * on the parent Emitter.
          *
          * @name Phaser.GameObjects.Particles.Particle#data
-         * @type {object}
+         * @type {Phaser.Types.GameObjects.Particles.ParticleData}
          * @since 3.0.0
          */
         this.data = {
@@ -330,11 +337,19 @@ var Particle = new Class({
          * It is responsible for playing, loading, queuing animations for later playback,
          * mixing between animations and setting the current animation frame to this Particle.
          *
+         * It is created only if the Particle's Emitter has at least one Animation.
+         *
          * @name Phaser.GameObjects.Particles.Particle#anims
-         * @type {Phaser.Animations.AnimationState}
+         * @type {?Phaser.Animations.AnimationState}
          * @since 3.60.0
+         * @see Phaser.GameObjects.Particles.ParticleEmitter#setAnim
          */
-        this.anims = new AnimationState(this);
+        this.anims = null;
+
+        if (this.emitter.anims.length > 0)
+        {
+            this.anims = new AnimationState(this);
+        }
 
         /**
          * A rectangle that holds the bounds of this Particle after a call to
@@ -397,7 +412,7 @@ var Particle = new Class({
     /**
      * Sets the position of this particle to the given x/y coordinates.
      *
-     * If the parameters are left undefined, it resets the particle back to 0x0.
+     * If the parameters are left undefined, it resets the particle back to (0, 0).
      *
      * @method Phaser.GameObjects.Particles.Particle#setPosition
      * @since 3.60.0
@@ -590,7 +605,10 @@ var Particle = new Class({
             return false;
         }
 
-        this.anims.update(0, delta);
+        if (this.anims)
+        {
+            this.anims.update(0, delta);
+        }
 
         var emitter = this.emitter;
         var ops = emitter.ops;
@@ -776,14 +794,19 @@ var Particle = new Class({
     },
 
     /**
-     * Destroys this Particle.
+     * Destroys this Particle by nulling its references to the emitter, texture, frame,
+     * and scene. If this Particle has an AnimationState, it is also destroyed. After
+     * calling this method the Particle should not be used again.
      *
      * @method Phaser.GameObjects.Particles.Particle#destroy
      * @since 3.60.0
      */
     destroy: function ()
     {
-        this.anims.destroy();
+        if (this.anims)
+        {
+            this.anims.destroy();
+        }
 
         this.anims = null;
         this.emitter = null;

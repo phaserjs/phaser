@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -149,7 +149,8 @@ var Arc = new Class({
     },
 
     /**
-     * The radius of the arc.
+     * The radius of the arc, in pixels. Changing this value also updates the size of the
+     * Game Object and triggers a recalculation of its geometry data.
      *
      * @name Phaser.GameObjects.Arc#radius
      * @type {number}
@@ -221,7 +222,9 @@ var Arc = new Class({
     },
 
     /**
-     * The winding order of the start and end angles.
+     * The winding order of the start and end angles. If `true` the arc is drawn anti-clockwise
+     * (counter-clockwise), otherwise it is drawn clockwise. This affects which direction the
+     * arc sweeps between the start and end angles.
      *
      * @name Phaser.GameObjects.Arc#anticlockwise
      * @type {boolean}
@@ -284,13 +287,14 @@ var Arc = new Class({
     },
 
     /**
-     * Sets the starting angle of the arc, in degrees.
+     * Sets the starting angle of the arc, in degrees. Optionally also updates the winding order.
      * This call can be chained.
      *
      * @method Phaser.GameObjects.Arc#setStartAngle
      * @since 3.13.0
      *
      * @param {number} value - The value to set the starting angle to.
+     * @param {boolean} [anticlockwise] - If `true` the arc will be drawn anti-clockwise. If `false` it will be drawn clockwise. If not given, the current `anticlockwise` property value is used.
      *
      * @return {this} This Game Object instance.
      */
@@ -307,13 +311,14 @@ var Arc = new Class({
     },
 
     /**
-     * Sets the ending angle of the arc, in degrees.
+     * Sets the ending angle of the arc, in degrees. Optionally also updates the winding order.
      * This call can be chained.
      *
      * @method Phaser.GameObjects.Arc#setEndAngle
      * @since 3.13.0
      *
      * @param {number} value - The value to set the ending angle to.
+     * @param {boolean} [anticlockwise] - If `true` the arc will be drawn anti-clockwise. If `false` it will be drawn clockwise. If not given, the current `anticlockwise` property value is used.
      *
      * @return {this} This Game Object instance.
      */
@@ -355,22 +360,22 @@ var Arc = new Class({
 
         if (anticlockwise)
         {
-            if (endAngle < -MATH_CONST.PI2)
+            if (endAngle < -MATH_CONST.TAU)
             {
-                endAngle = -MATH_CONST.PI2;
+                endAngle = -MATH_CONST.TAU;
             }
             else if (endAngle > 0)
             {
-                endAngle = -MATH_CONST.PI2 + endAngle % MATH_CONST.PI2;
+                endAngle = -MATH_CONST.TAU + endAngle % MATH_CONST.TAU;
             }
         }
-        else if (endAngle > MATH_CONST.PI2)
+        else if (endAngle > MATH_CONST.TAU)
         {
-            endAngle = MATH_CONST.PI2;
+            endAngle = MATH_CONST.TAU;
         }
         else if (endAngle < 0)
         {
-            endAngle = MATH_CONST.PI2 + endAngle % MATH_CONST.PI2;
+            endAngle = MATH_CONST.TAU + endAngle % MATH_CONST.TAU;
         }
 
         var path = [ x + Math.cos(startAngle) * radius, y + Math.sin(startAngle) * radius ];

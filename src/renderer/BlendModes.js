@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -47,7 +47,7 @@ module.exports = {
 
     /**
      * Multiply blend mode. For Canvas and WebGL.
-     * The pixels are of the top layer are multiplied with the corresponding pixel of the bottom layer. A darker picture is the result.
+     * The pixels of the top layer are multiplied with the corresponding pixel of the bottom layer. A darker picture is the result.
      *
      * @name Phaser.BlendModes.MULTIPLY
      * @type {number}
@@ -243,7 +243,7 @@ module.exports = {
     SOURCE_OUT: 19,
 
     /**
-     * Source-out blend mode. For Canvas only.
+     * Source-atop blend mode. For Canvas only.
      * The new shape is only drawn where it overlaps the existing canvas content.
      *
      * @name Phaser.BlendModes.SOURCE_ATOP
@@ -287,7 +287,7 @@ module.exports = {
     DESTINATION_OUT: 23,
 
     /**
-     * Destination-out blend mode. For Canvas only.
+     * Destination-atop blend mode. For Canvas only.
      * The existing canvas is only kept where it overlaps the new shape. The new shape is drawn behind the canvas content.
      *
      * @name Phaser.BlendModes.DESTINATION_ATOP
@@ -298,7 +298,7 @@ module.exports = {
     DESTINATION_ATOP: 24,
 
     /**
-     * Lighten blend mode. For Canvas only.
+     * Lighter blend mode. For Canvas only.
      * Where both shapes overlap the color is determined by adding color values.
      *
      * @name Phaser.BlendModes.LIGHTER

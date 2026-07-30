@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,7 +8,9 @@ var Length = require('../line/Length');
 var Line = require('../line/Line');
 
 /**
- * Returns the perimeter of the given Polygon.
+ * Returns the perimeter of the given Polygon by summing the lengths of all its edges.
+ * The polygon is treated as closed, so the edge between the last point and the first
+ * point is included in the total.
  *
  * @function Phaser.Geom.Polygon.Perimeter
  * @since 3.12.0

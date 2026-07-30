@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,10 +17,10 @@ var inputPlugins = {};
 var InputPluginCache = {};
 
 /**
- * Static method called directly by the Core internal Plugins.
- * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
- * Plugin is the object to instantiate to create the plugin
- * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
+ * Static method called directly by the core internal plugins.
+ * Key is a reference used to get the plugin from the input plugin cache.
+ * Plugin is the object to instantiate to create the plugin.
+ * Mapping is the property key used when the plugin is injected into the Input Plugin (e.g. `input`).
  *
  * @function Phaser.Input.InputPluginCache.register
  * @static

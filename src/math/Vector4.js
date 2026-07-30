@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,9 +11,14 @@ var Class = require('../utils/Class');
 
 /**
  * @classdesc
- * A representation of a vector in 4D space.
+ * A four-component vector (x, y, z, w) for use in 3D mathematics and transformations.
  *
- * A four-component vector.
+ * Vector4 is commonly used to represent homogeneous coordinates in 3D space, where the
+ * `w` component acts as a scaling factor, making it compatible with 4x4 matrix multiplication
+ * via `Matrix4`. It is also used to represent RGBA color values, quaternion components, and
+ * any other quantity that requires four independent scalar values. The class supports the
+ * standard vector operations you would expect: addition, subtraction, scaling, normalization,
+ * dot product, linear interpolation, and transformation by both `Matrix4` and `Quaternion` objects.
  *
  * @class Vector4
  * @memberof Phaser.Math
@@ -123,7 +128,7 @@ var Vector4 = new Class({
     /**
      * Check whether this Vector is equal to a given Vector.
      *
-     * Performs a strict quality check against each Vector's components.
+     * Performs a strict equality check against each Vector's components.
      *
      * @method Phaser.Math.Vector4#equals
      * @since 3.0.0
@@ -146,7 +151,7 @@ var Vector4 = new Class({
      * @param {(number|object)} x - The x value to set for this Vector, or an object containing x, y, z and w components.
      * @param {number} y - The y value to set for this Vector.
      * @param {number} z - The z value to set for this Vector.
-     * @param {number} w - The z value to set for this Vector.
+     * @param {number} w - The w value to set for this Vector.
      *
      * @return {Phaser.Math.Vector4} This Vector4.
      */

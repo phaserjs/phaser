@@ -1,21 +1,23 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Factorial = require('./Factorial');
 
 /**
- * Calculates the Bernstein basis from the three factorial coefficients.
+ * Calculates a Bernstein basis polynomial coefficient, used as a weighting factor
+ * in Bezier curve calculations. The result is the binomial coefficient n! / (i! * (n - i)!),
+ * which determines how much influence control point `i` has on a degree-`n` Bezier curve.
  *
  * @function Phaser.Math.Bernstein
  * @since 3.0.0
  *
- * @param {number} n - The first value.
- * @param {number} i - The second value.
+ * @param {number} n - The degree of the Bernstein polynomial.
+ * @param {number} i - The index of the basis function.
  *
- * @return {number} The Bernstein basis of Factorial(n) / Factorial(i) / Factorial(n - i)
+ * @return {number} The Bernstein basis coefficient: Factorial(n) / Factorial(i) / Factorial(n - i).
  */
 var Bernstein = function (n, i)
 {

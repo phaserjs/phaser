@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,11 +13,10 @@ var StableSort = require('../utils/array/StableSort');
 
 /**
  * @classdesc
- * The Display List plugin.
- *
- * Display Lists belong to a Scene and maintain the list of Game Objects to render every frame.
- *
- * Some of these Game Objects may also be part of the Scene's [Update List]{@link Phaser.GameObjects.UpdateList}, for updating.
+ * The Display List is a Scene plugin that maintains the ordered list of Game Objects
+ * to be rendered each frame. Game Objects are automatically sorted by depth before
+ * rendering. You do not normally interact with the Display List directly; instead use
+ * `addToDisplayList` and `removeFromDisplayList` on individual Game Objects.
  *
  * @class DisplayList
  * @extends Phaser.Structs.List.<Phaser.GameObjects.GameObject>
@@ -38,7 +37,7 @@ var DisplayList = new Class({
         List.call(this, scene);
 
         /**
-         * The flag the determines whether Game Objects should be sorted when `depthSort()` is called.
+         * The flag that determines whether Game Objects should be sorted when `depthSort()` is called.
          *
          * @name Phaser.GameObjects.DisplayList#sortChildrenFlag
          * @type {boolean}
@@ -235,11 +234,17 @@ var DisplayList = new Class({
     shutdown: function ()
     {
         var list = this.list;
+        var i = list.length;
 
-        while (list.length)
+        while (i--)
         {
-            list[0].destroy(true);
+            if (list[i])
+            {
+                list[i].destroy(true);
+            }
         }
+
+        list.length = 0;
 
         this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },

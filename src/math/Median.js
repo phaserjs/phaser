@@ -11,7 +11,7 @@
  * @function Phaser.Math.Median
  * @since 3.54.0
  *
- * @param {number[]} values - The values to average.
+ * @param {number[]} values - The values to find the median of.
  *
  * @return {number} The median value.
  */

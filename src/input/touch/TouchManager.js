@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -198,7 +198,7 @@ var TouchManager = new Class({
     /**
      * Attempts to disable the context menu from appearing if you touch-hold on the browser.
      *
-     * Works by listening for the `contextmenu` event and prevent defaulting it.
+     * Works by listening for the `contextmenu` event and calling `preventDefault()` on it.
      *
      * Use this if you need to disable the OS context menu on mobile.
      *

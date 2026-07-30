@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2021 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,8 +8,10 @@ var Class = require('../utils/Class');
 
 /**
  * @classdesc
- * The ObjectHelper helps tie objects with `gids` into the tileset
- * that sits behind them.
+ * Resolves Tiled object GIDs to their corresponding Tileset data and applies
+ * per-tile properties from Tilesets to objects. It assists in creating Game
+ * Objects from Tiled object layers by providing texture frames, animations,
+ * and custom properties defined in the Tiled editor.
  *
  * @class ObjectHelper
  * @memberof Phaser.Tilemaps
@@ -25,7 +27,8 @@ var ObjectHelper = new Class({
     function ObjectHelper (tilesets)
     {
         /**
-         * The Tile GIDs array.
+         * A sparse array mapping Tile GID indices to their corresponding Tileset object,
+         * populated during construction. Used to look up tileset data by GID at runtime.
          *
          * @name Phaser.Tilemaps.ObjectHelper#gids
          * @type {array}
@@ -123,7 +126,7 @@ var ObjectHelper = new Class({
      * as specified in the `gid` of the object being loaded (if any).
      *
      * This fallback will only work if the tileset was loaded as a spritesheet matching
-     * the geometry of sprites fed into tiled, so that, for example: "tile id #`3`"" within
+     * the geometry of sprites fed into tiled, so that, for example: "tile id #`3`" within
      * the tileset is the same as texture frame `3` from the image of the tileset.
      *
      * @method Phaser.Tilemaps.ObjectHelper#setTextureAndFrame
@@ -131,7 +134,7 @@ var ObjectHelper = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} sprite - The Game Object to modify.
      * @param {string|Phaser.Textures.Texture} [key] - The texture key to set (or else the `obj.gid`'s tile is used if available).
-     * @param {string|number|Phaser.Textures.Frame} [frame] - The frames key to set (or else the `obj.gid`'s tile is used if available).
+     * @param {string|number|Phaser.Textures.Frame} [frame] - The frame key to set (or else the `obj.gid`'s tile is used if available).
      * @param {Phaser.Types.Tilemaps.TiledObject} [obj] - The Tiled object for fallback.
      */
     setTextureAndFrame: function (sprite, key, frame, obj)
@@ -171,8 +174,8 @@ var ObjectHelper = new Class({
      * @method Phaser.Tilemaps.ObjectHelper#setPropertiesFromTiledObject
      * @since 3.60.0
      *
-     * @param {Phaser.GameObjects.GameObject} sprite
-     * @param {Phaser.Types.Tilemaps.TiledObject} obj
+     * @param {Phaser.GameObjects.GameObject} sprite - The Game Object on which to set the data.
+     * @param {Phaser.Types.Tilemaps.TiledObject} obj - The Tiled object whose properties will be applied.
      */
     setPropertiesFromTiledObject: function (sprite, obj)
     {

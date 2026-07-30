@@ -1,11 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Provides methods used for setting the angular acceleration properties of an Arcade Physics Body.
+ * Provides methods used for setting the angular velocity, acceleration, and drag properties of an Arcade Physics Body.
  *
  * @namespace Phaser.Physics.Arcade.Components.Angular
  * @since 3.0.0
@@ -22,7 +22,7 @@ var Angular = {
      * @method Phaser.Physics.Arcade.Components.Angular#setAngularVelocity
      * @since 3.0.0
      *
-     * @param {number} value - The amount of angular velocity.
+     * @param {number} value - The amount of angular velocity, in degrees per second.
      *
      * @return {this} This Game Object.
      */
@@ -43,7 +43,7 @@ var Angular = {
      * @method Phaser.Physics.Arcade.Components.Angular#setAngularAcceleration
      * @since 3.0.0
      *
-     * @param {number} value - The amount of angular acceleration.
+     * @param {number} value - The amount of angular acceleration, in degrees per second squared.
      *
      * @return {this} This Game Object.
      */
@@ -60,7 +60,7 @@ var Angular = {
      * @method Phaser.Physics.Arcade.Components.Angular#setAngularDrag
      * @since 3.0.0
      *
-     * @param {number} value - The amount of drag.
+     * @param {number} value - The amount of drag, in degrees per second squared.
      *
      * @return {this} This Game Object.
      */

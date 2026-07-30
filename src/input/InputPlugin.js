@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -347,7 +347,7 @@ var InputPlugin = new Class({
         this._drag = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [] };
 
         /**
-         * A array containing the dragStates, for this Scene, index by the Pointer ID.
+         * An array containing the drag states for this Scene, indexed by the Pointer ID.
          *
          * @name Phaser.Input.InputPlugin#_dragState
          * @type {number[]}
@@ -526,7 +526,7 @@ var InputPlugin = new Class({
     },
 
     /**
-     * Checks to see if both this plugin and the Scene to which it belongs is active.
+     * Checks to see if the Input Manager, this plugin and the Scene to which it belongs are all active and input enabled.
      *
      * @method Phaser.Input.InputPlugin#isActive
      * @since 3.10.0
@@ -535,7 +535,43 @@ var InputPlugin = new Class({
      */
     isActive: function ()
     {
-        return (this.enabled && this.scene.sys.canInput());
+        return (this.manager && this.manager.enabled && this.enabled && this.scene.sys.canInput());
+    },
+
+    /**
+     * Sets a custom cursor on the parent canvas element of the game, based on the `cursor`
+     * setting of the given Interactive Object (i.e. a Sprite).
+     * 
+     * See the CSS property `cursor` for more information on MDN:
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
+     *
+     * @method Phaser.Input.InputPlugin#setCursor
+     * @since 3.85.0
+     *
+     * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that will set the cursor on the canvas.
+     */
+    setCursor: function (interactiveObject)
+    {
+        if (this.manager)
+        {
+            this.manager.setCursor(interactiveObject);
+        }
+    },
+
+    /**
+     * Forces the Input Manager to clear the custom or hand cursor, regardless of the
+     * interactive state of any Game Objects.
+     *
+     * @method Phaser.Input.InputPlugin#resetCursor
+     * @since 3.85.0
+     */
+    resetCursor: function ()
+    {
+        if (this.manager)
+        {
+            this.manager.resetCursor(null, true);
+        }
     },
 
     /**
@@ -573,9 +609,8 @@ var InputPlugin = new Class({
         var manager = this.manager;
 
         var pointers = manager.pointers;
-        var pointersTotal = manager.pointersTotal;
 
-        for (i = 0; i < pointersTotal; i++)
+        for (i = 0; i < pointers.length; i++)
         {
             pointers[i].updateMotion();
         }
@@ -611,7 +646,7 @@ var InputPlugin = new Class({
         //  We got this far? Then we should poll for movement
         var captured = false;
 
-        for (i = 0; i < pointersTotal; i++)
+        for (i = 0; i < pointers.length; i++)
         {
             var total = 0;
 
@@ -678,10 +713,9 @@ var InputPlugin = new Class({
             return false;
         }
 
-        var pointersTotal = pointers.length;
         var captured = false;
 
-        for (var i = 0; i < pointersTotal; i++)
+        for (var i = 0; i < pointers.length; i++)
         {
             var total = 0;
             var pointer = pointers[i];
@@ -784,6 +818,7 @@ var InputPlugin = new Class({
         if (input)
         {
             this.removeDebug(gameObject);
+            this.manager.resetCursor(input);
 
             input.gameObject = undefined;
             input.target = undefined;
@@ -819,11 +854,14 @@ var InputPlugin = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its input system disabled.
+     * @param {boolean} [resetCursor=false] - Reset the cursor to the default?
      *
      * @return {this} This Input Plugin.
      */
-    disable: function (gameObject)
+    disable: function (gameObject, resetCursor)
     {
+        if (resetCursor === undefined) { resetCursor = false; }
+
         var input = gameObject.input;
 
         if (input)
@@ -832,20 +870,12 @@ var InputPlugin = new Class({
             input.dragState = 0;
         }
 
-        // Clear from _temp, _drag and _over
-        var temp = this._temp;
+        // Clear from _drag and _over
         var drag = this._drag;
         var over = this._over;
         var manager = this.manager;
 
-        var index = temp.indexOf(gameObject);
-
-        if (index > -1)
-        {
-            temp.splice(index, 1);
-        }
-
-        for (var i = 0; i < manager.pointersTotal; i++)
+        for (var i = 0, index; i < manager.pointers.length; i++)
         {
             index = drag[i].indexOf(gameObject);
 
@@ -859,9 +889,12 @@ var InputPlugin = new Class({
             if (index > -1)
             {
                 over[i].splice(index, 1);
-
-                manager.resetCursor(input);
             }
+        }
+
+        if (resetCursor)
+        {
+            this.resetCursor();
         }
 
         return this;
@@ -900,7 +933,7 @@ var InputPlugin = new Class({
 
         if (gameObject.input)
         {
-            //  If it is already has an InteractiveObject then just enable it and return
+            //  If it already has an InteractiveObject then just enable it and return
             gameObject.input.enabled = true;
         }
         else
@@ -995,8 +1028,6 @@ var InputPlugin = new Class({
 
         _eventData.cancelled = false;
 
-        var aborted = false;
-
         //  Go through all objects the pointer was over and fire their events / callbacks
         for (var i = 0; i < currentlyOver.length; i++)
         {
@@ -1009,32 +1040,41 @@ var InputPlugin = new Class({
 
             total++;
 
+            //  1) GAMEOBJECT_POINTER_DOWN
             gameObject.emit(Events.GAMEOBJECT_POINTER_DOWN, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+            if (_eventData.cancelled || !this.isActive())
             {
-                aborted = true;
+                //  They cancelled the whole event, it can't go any further
                 break;
             }
 
-            this.emit(Events.GAMEOBJECT_DOWN, pointer, gameObject, _eventContainer);
-
-            if (_eventData.cancelled || !gameObject.input)
+            //  Check that the game object wasn't input disabled or destroyed as a result of its input event
+            if (gameObject.input && gameObject.input.enabled)
             {
-                aborted = true;
-                break;
+                //  2) GAMEOBJECT_DOWN
+
+                this.emit(Events.GAMEOBJECT_DOWN, pointer, gameObject, _eventContainer);
+
+                if (_eventData.cancelled || !this.isActive())
+                {
+                    //  They cancelled the whole event, it can't go any further
+                    break;
+                }
             }
         }
 
-        //  If they released outside the canvas, but pressed down inside it, we'll still dispatch the event.
-        if (!aborted && this.manager)
+        //  If they pressed down outside the canvas, dispatch that event.
+        if (!_eventData.cancelled && this.isActive())
         {
             if (pointer.downElement === this.manager.game.canvas)
             {
+                //  3) POINTER_DOWN
                 this.emit(Events.POINTER_DOWN, pointer, currentlyOver);
             }
             else
             {
+                //  4) POINTER_DOWN_OUTSIDE
                 this.emit(Events.POINTER_DOWN_OUTSIDE, pointer);
             }
         }
@@ -1148,6 +1188,11 @@ var InputPlugin = new Class({
 
         var list = this._drag[pointer.id];
 
+        if (list.length > 1)
+        {
+            list = list.slice(0);
+        }
+
         for (var i = 0; i < list.length; i++)
         {
             var gameObject = list[i];
@@ -1161,6 +1206,8 @@ var InputPlugin = new Class({
 
             input.dragStartXGlobal = pointer.worldX;
             input.dragStartYGlobal = pointer.worldY;
+
+            input.dragStartCamera = pointer.camera;
 
             input.dragX = input.dragStartXGlobal - input.dragStartX;
             input.dragY = input.dragStartYGlobal - input.dragStartY;
@@ -1285,6 +1332,11 @@ var InputPlugin = new Class({
 
         var list = this._drag[pointer.id];
 
+        if (list.length > 1)
+        {
+            list = list.slice(0);
+        }
+
         for (var i = 0; i < list.length; i++)
         {
             var gameObject = list[i];
@@ -1361,15 +1413,17 @@ var InputPlugin = new Class({
             var dragX;
             var dragY;
 
+            var dragWorldXY = pointer.positionToCamera(input.dragStartCamera);
+
             if (!gameObject.parentContainer)
             {
-                dragX = pointer.worldX - input.dragX;
-                dragY = pointer.worldY - input.dragY;
+                dragX = dragWorldXY.x - input.dragX;
+                dragY = dragWorldXY.y - input.dragY;
             }
             else
             {
-                var dx = pointer.worldX - input.dragStartXGlobal;
-                var dy = pointer.worldY - input.dragStartYGlobal;
+                var dx = dragWorldXY.x - input.dragStartXGlobal;
+                var dy = dragWorldXY.y - input.dragStartYGlobal;
 
                 var rotation = gameObject.getParentRotation();
 
@@ -1392,8 +1446,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * Processes a 'drag down' event for the given pointer. Checks the pointer state, builds-up the drag list
-     * and prepares them all for interaction.
+     * Processes a 'drag up' event for the given pointer. Handles the release of any dragged Game Objects,
+     * dispatching drop and drag end events as appropriate.
      *
      * @method Phaser.Input.InputPlugin#processDragUpEvent
      * @fires Phaser.Input.Events#DRAG_END
@@ -1412,6 +1466,11 @@ var InputPlugin = new Class({
         //  5 = Pointer was actively dragging but has been released, notify draglist
         var list = this._drag[pointer.id];
 
+        if (list.length > 1)
+        {
+            list = list.slice(0);
+        }
+
         for (var i = 0; i < list.length; i++)
         {
             var gameObject = list[i];
@@ -1424,6 +1483,8 @@ var InputPlugin = new Class({
 
                 input.dragX = input.localX - gameObject.displayOriginX;
                 input.dragY = input.localY - gameObject.displayOriginY;
+
+                input.dragStartCamera = null;
 
                 var dropped = false;
 
@@ -1482,8 +1543,6 @@ var InputPlugin = new Class({
 
         _eventData.cancelled = false;
 
-        var aborted = false;
-
         //  Go through all objects the pointer was over and fire their events / callbacks
         for (var i = 0; i < currentlyOver.length; i++)
         {
@@ -1498,27 +1557,31 @@ var InputPlugin = new Class({
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_MOVE, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+            if (_eventData.cancelled || !this.isActive())
             {
-                aborted = true;
+                //  They cancelled the whole event, it can't go any further
                 break;
             }
 
-            this.emit(Events.GAMEOBJECT_MOVE, pointer, gameObject, _eventContainer);
-
-            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+            //  Check that the game object wasn't input disabled or destroyed as a result of its input event
+            if (gameObject.input && gameObject.input.enabled)
             {
-                aborted = true;
-                break;
-            }
+                this.emit(Events.GAMEOBJECT_MOVE, pointer, gameObject, _eventContainer);
 
-            if (this.topOnly)
-            {
-                break;
+                if (_eventData.cancelled || !this.isActive())
+                {
+                    //  They cancelled the whole event, it can't go any further
+                    break;
+                }
+
+                if (this.topOnly)
+                {
+                    break;
+                }
             }
         }
 
-        if (!aborted)
+        if (!_eventData.cancelled && this.isActive())
         {
             this.emit(Events.POINTER_MOVE, pointer, currentlyOver);
         }
@@ -1550,8 +1613,6 @@ var InputPlugin = new Class({
 
         _eventData.cancelled = false;
 
-        var aborted = false;
-
         var dx = pointer.deltaX;
         var dy = pointer.deltaY;
         var dz = pointer.deltaZ;
@@ -1570,22 +1631,26 @@ var InputPlugin = new Class({
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_WHEEL, pointer, dx, dy, dz, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+            if (_eventData.cancelled || !this.isActive())
             {
-                aborted = true;
+                //  They cancelled the whole event, it can't go any further
                 break;
             }
 
-            this.emit(Events.GAMEOBJECT_WHEEL, pointer, gameObject, dx, dy, dz, _eventContainer);
-
-            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+            //  Check that the game object wasn't input disabled or destroyed as a result of its input event
+            if (gameObject.input && gameObject.input.enabled)
             {
-                aborted = true;
-                break;
+                this.emit(Events.GAMEOBJECT_WHEEL, pointer, gameObject, dx, dy, dz, _eventContainer);
+
+                if (_eventData.cancelled || !this.isActive())
+                {
+                    //  They cancelled the whole event, it can't go any further
+                    break;
+                }
             }
         }
 
-        if (!aborted)
+        if (!_eventData.cancelled && this.isActive())
         {
             this.emit(Events.POINTER_WHEEL, pointer, currentlyOver, dx, dy, dz);
         }
@@ -1627,8 +1692,6 @@ var InputPlugin = new Class({
 
             _eventData.cancelled = false;
 
-            var aborted = false;
-
             for (var i = 0; i < total; i++)
             {
                 var gameObject = currentlyOver[i];
@@ -1646,22 +1709,26 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+                if (_eventData.cancelled || !this.isActive())
                 {
-                    aborted = true;
+                    //  They cancelled the whole event, it can't go any further
                     break;
                 }
 
-                this.emit(Events.GAMEOBJECT_OVER, pointer, gameObject, _eventContainer);
-
-                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+                //  Check that the game object wasn't input disabled or destroyed as a result of its input event
+                if (gameObject.input && gameObject.input.enabled)
                 {
-                    aborted = true;
-                    break;
+                    this.emit(Events.GAMEOBJECT_OVER, pointer, gameObject, _eventContainer);
+
+                    if (_eventData.cancelled || !this.isActive())
+                    {
+                        //  They cancelled the whole event, it can't go any further
+                        break;
+                    }
                 }
             }
 
-            if (!aborted)
+            if (!_eventData.cancelled && this.isActive())
             {
                 this.emit(Events.POINTER_OVER, pointer, justOver);
             }
@@ -1705,8 +1772,6 @@ var InputPlugin = new Class({
 
             _eventData.cancelled = false;
 
-            var aborted = false;
-
             this.sortGameObjects(previouslyOver, pointer);
 
             for (var i = 0; i < total; i++)
@@ -1727,24 +1792,27 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+                if (_eventData.cancelled || !this.isActive())
                 {
-                    aborted = true;
+                    //  They cancelled the whole event, it can't go any further
                     break;
                 }
 
-                this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
-
-                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+                if (gameObject.input && gameObject.input.enabled)
                 {
-                    aborted = true;
-                    break;
-                }
+                    this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
 
-                if (!aborted)
-                {
-                    this.emit(Events.POINTER_OUT, pointer, previouslyOver);
+                    if (_eventData.cancelled || !this.isActive())
+                    {
+                        //  They cancelled the whole event, it can't go any further
+                        break;
+                    }
                 }
+            }
+
+            if (!_eventData.cancelled && this.isActive())
+            {
+                this.emit(Events.POINTER_OUT, pointer, previouslyOver);
             }
 
             this._over[pointer.id] = [];
@@ -1829,8 +1897,6 @@ var InputPlugin = new Class({
 
         _eventData.cancelled = false;
 
-        var aborted = false;
-
         if (total > 0)
         {
             this.sortGameObjects(justOut, pointer);
@@ -1852,22 +1918,26 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+                if (_eventData.cancelled || !this.isActive())
                 {
-                    aborted = true;
+                    //  They cancelled the whole event, it can't go any further
                     break;
                 }
 
-                this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
-
-                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+                //  Check that the game object wasn't input disabled or destroyed as a result of its input event
+                if (gameObject.input && gameObject.input.enabled)
                 {
-                    aborted = true;
-                    break;
+                    this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
+
+                    if (_eventData.cancelled || !this.isActive())
+                    {
+                        //  They cancelled the whole event, it can't go any further
+                        break;
+                    }
                 }
             }
 
-            if (!aborted)
+            if (!_eventData.cancelled || this.isActive())
             {
                 this.emit(Events.POINTER_OUT, pointer, justOut);
             }
@@ -1877,8 +1947,6 @@ var InputPlugin = new Class({
         total = justOver.length;
 
         _eventData.cancelled = false;
-
-        aborted = false;
 
         if (total > 0)
         {
@@ -1901,22 +1969,26 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+                if (_eventData.cancelled || !this.isActive())
                 {
-                    aborted = true;
+                    //  They cancelled the whole event, it can't go any further
                     break;
                 }
 
-                this.emit(Events.GAMEOBJECT_OVER, pointer, gameObject, _eventContainer);
-
-                if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+                //  Check that the game object wasn't input disabled or destroyed as a result of its input event
+                if (gameObject.input && gameObject.input.enabled)
                 {
-                    aborted = true;
-                    break;
+                    this.emit(Events.GAMEOBJECT_OVER, pointer, gameObject, _eventContainer);
+
+                    if (_eventData.cancelled || !this.isActive())
+                    {
+                        //  They cancelled the whole event, it can't go any further
+                        break;
+                    }
                 }
             }
 
-            if (!aborted)
+            if (!_eventData.cancelled && this.isActive())
             {
                 this.emit(Events.POINTER_OVER, pointer, justOver);
             }
@@ -1955,8 +2027,6 @@ var InputPlugin = new Class({
 
         _eventData.cancelled = false;
 
-        var aborted = false;
-
         //  Go through all objects the pointer was over and fire their events / callbacks
         for (var i = 0; i < currentlyOver.length; i++)
         {
@@ -1967,25 +2037,32 @@ var InputPlugin = new Class({
                 continue;
             }
 
+            //  1) GAMEOBJECT_POINTER_UP
             gameObject.emit(Events.GAMEOBJECT_POINTER_UP, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+            if (_eventData.cancelled || !this.isActive())
             {
-                aborted = true;
+                //  They cancelled the whole event, it can't go any further
                 break;
             }
 
-            this.emit(Events.GAMEOBJECT_UP, pointer, gameObject, _eventContainer);
-
-            if (_eventData.cancelled || !gameObject.input || !gameObject.input.enabled)
+            //  Check that the game object wasn't input disabled or destroyed as a result of its input event
+            if (gameObject.input && gameObject.input.enabled)
             {
-                aborted = true;
-                break;
+                //  2) GAMEOBJECT_UP
+
+                this.emit(Events.GAMEOBJECT_UP, pointer, gameObject, _eventContainer);
+
+                if (_eventData.cancelled || !this.isActive())
+                {
+                    //  They cancelled the whole event, it can't go any further
+                    break;
+                }
             }
         }
 
         //  If they released outside the canvas, but pressed down inside it, we'll still dispatch the event.
-        if (!aborted && this.manager)
+        if (!_eventData.cancelled && this.isActive())
         {
             if (pointer.upElement === this.manager.game.canvas)
             {
@@ -1998,6 +2075,133 @@ var InputPlugin = new Class({
         }
 
         return currentlyOver.length;
+    },
+
+    /**
+     * This method will force the given Game Object into the 'down' input state.
+     * 
+     * This will check to see if the Game Object is enabled for input, and if so,
+     * it will emit the `GAMEOBJECT_POINTER_DOWN` event for it. If that doesn't change
+     * the input state, it will then emit the `GAMEOBJECT_DOWN` event.
+     * 
+     * The Game Object is not checked against the Pointer to see if it can enter this state,
+     * that is up to you to do before calling this method.
+     *
+     * @method Phaser.Input.InputPlugin#forceDownState
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_DOWN
+     * @fires Phaser.Input.Events#GAMEOBJECT_DOWN
+     * @since 3.85.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
+     */
+    forceDownState: function (pointer, gameObject)
+    {
+        this.forceState(pointer, gameObject, Events.GAMEOBJECT_POINTER_DOWN, Events.GAMEOBJECT_DOWN, false);
+    },
+
+    /**
+     * This method will force the given Game Object into the 'up' input state.
+     * 
+     * This will check to see if the Game Object is enabled for input, and if so,
+     * it will emit the `GAMEOBJECT_POINTER_UP` event for it. If that doesn't change
+     * the input state, it will then emit the `GAMEOBJECT_UP` event.
+     * 
+     * The Game Object is not checked against the Pointer to see if it can enter this state,
+     * that is up to you to do before calling this method.
+     *
+     * @method Phaser.Input.InputPlugin#forceUpState
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_UP
+     * @fires Phaser.Input.Events#GAMEOBJECT_UP
+     * @since 3.85.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
+     */
+    forceUpState: function (pointer, gameObject)
+    {
+        this.forceState(pointer, gameObject, Events.GAMEOBJECT_POINTER_UP, Events.GAMEOBJECT_UP, false);
+    },
+
+    /**
+     * This method will force the given Game Object into the 'over' input state.
+     * 
+     * This will check to see if the Game Object is enabled for input, and if so,
+     * it will emit the `GAMEOBJECT_POINTER_OVER` event for it. If that doesn't change
+     * the input state, it will then emit the `GAMEOBJECT_OVER` event.
+     * 
+     * The Game Object is not checked against the Pointer to see if it can enter this state,
+     * that is up to you to do before calling this method.
+     *
+     * @method Phaser.Input.InputPlugin#forceOverState
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_OVER
+     * @fires Phaser.Input.Events#GAMEOBJECT_OVER
+     * @since 3.85.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
+     */
+    forceOverState: function (pointer, gameObject)
+    {
+        this.forceState(pointer, gameObject, Events.GAMEOBJECT_POINTER_OVER, Events.GAMEOBJECT_OVER, true);
+    },
+
+    /**
+     * This method will force the given Game Object into the 'out' input state.
+     * 
+     * This will check to see if the Game Object is enabled for input, and if so,
+     * it will emit the `GAMEOBJECT_POINTER_OUT` event for it. If that doesn't change
+     * the input state, it will then emit the `GAMEOBJECT_OUT` event.
+     * 
+     * The Game Object is not checked against the Pointer to see if it can enter this state,
+     * that is up to you to do before calling this method.
+     *
+     * @method Phaser.Input.InputPlugin#forceOutState
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_OUT
+     * @fires Phaser.Input.Events#GAMEOBJECT_OUT
+     * @since 3.85.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
+     */
+    forceOutState: function (pointer, gameObject)
+    {
+        this.forceState(pointer, gameObject, Events.GAMEOBJECT_POINTER_OUT, Events.GAMEOBJECT_OUT, false);
+    },
+
+    /**
+     * This method will force the given Game Object into the given input state.
+     * 
+     * @method Phaser.Input.InputPlugin#forceState
+     * @since 3.85.0
+     * 
+     * @param {Phaser.Input.Pointer} pointer - The pointer to use when setting the state.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its state set.
+     * @param {string} gameObjectEvent - The event to emit on the Game Object.
+     * @param {string} inputPluginEvent - The event to emit on the Input Plugin.
+     * @param {boolean} [setCursor=false] - Should the cursor be set to the Game Object's cursor?
+     */
+    forceState: function (pointer, gameObject, gameObjectEvent, inputPluginEvent, setCursor)
+    {
+        var _eventData = this._eventData;
+        var _eventContainer = this._eventContainer;
+
+        _eventData.cancelled = false;
+
+        if (gameObject.input && gameObject.input.enabled)
+        {
+            gameObject.emit(gameObjectEvent, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
+
+            if (setCursor)
+            {
+                this.setCursor(gameObject.input);
+            }
+
+            if (!_eventData.cancelled && this.isActive() && gameObject.input && gameObject.input.enabled)
+            {
+                this.emit(inputPluginEvent, pointer, gameObject, _eventContainer);
+            }
+        }
     },
 
     /**
@@ -2138,12 +2342,14 @@ var InputPlugin = new Class({
      * The hit area callback is the function that takes an `x` and `y` coordinate and returns a boolean if
      * those values fall within the area of the shape or not. All of the Phaser geometry objects provide this,
      * such as `Phaser.Geom.Rectangle.Contains`.
+     * 
+     * A hit area callback can be supplied to the `hitArea` parameter without using the `hitAreaCallback` parameter.
      *
      * @method Phaser.Input.InputPlugin#setHitArea
      * @since 3.0.0
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set the hit area on.
-     * @param {(Phaser.Types.Input.InputConfiguration|any)} [hitArea] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {(Phaser.Types.Input.InputConfiguration|Phaser.Types.Input.HitAreaCallback|any)} [hitArea] - Either an input configuration object, a geometric shape that defines the hit area or a hit area callback. If not specified a Rectangle hit area will be used.
      * @param {Phaser.Types.Input.HitAreaCallback} [hitAreaCallback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      *
      * @return {this} This InputPlugin object.
@@ -2168,16 +2374,12 @@ var InputPlugin = new Class({
         var customHitArea = true;
 
         //  Config object?
-        if (IsPlainObject(hitArea))
+        if (IsPlainObject(hitArea) && Object.keys(hitArea).length)
         {
             var config = hitArea;
 
             hitArea = GetFastValue(config, 'hitArea', null);
             hitAreaCallback = GetFastValue(config, 'hitAreaCallback', null);
-            draggable = GetFastValue(config, 'draggable', false);
-            dropZone = GetFastValue(config, 'dropZone', false);
-            cursor = GetFastValue(config, 'cursor', false);
-            useHandCursor = GetFastValue(config, 'useHandCursor', false);
 
             pixelPerfect = GetFastValue(config, 'pixelPerfect', false);
             var alphaTolerance = GetFastValue(config, 'alphaTolerance', 1);
@@ -2187,6 +2389,11 @@ var InputPlugin = new Class({
                 hitArea = {};
                 hitAreaCallback = this.makePixelPerfect(alphaTolerance);
             }
+
+            draggable = GetFastValue(config, 'draggable', false);
+            dropZone = GetFastValue(config, 'dropZone', false);
+            cursor = GetFastValue(config, 'cursor', false);
+            useHandCursor = GetFastValue(config, 'useHandCursor', false);
 
             //  Still no hitArea or callback?
             if (!hitArea || !hitAreaCallback)
@@ -2286,7 +2493,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitAreaFromTexture
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set as having an ellipse hit area.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set as having a Rectangle hit area based on their texture frame.
      * @param {Phaser.Types.Input.HitAreaCallback} [callback] - The hit area callback. If undefined it uses Rectangle.Contains.
      *
      * @return {this} This InputPlugin object.
@@ -2369,7 +2576,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#setHitAreaTriangle
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set as having a  triangular hit area.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set as having a triangular hit area.
      * @param {number} x1 - The x coordinate of the first point of the triangle.
      * @param {number} y1 - The y coordinate of the first point of the triangle.
      * @param {number} x2 - The x coordinate of the second point of the triangle.
@@ -2491,6 +2698,8 @@ var InputPlugin = new Class({
 
             debug.preUpdate = function ()
             {
+                debug.setVisible(gameObject.visible);
+
                 debug.setStrokeStyle(1 / gameObject.scale, debug.strokeColor);
 
                 debug.setDisplayOrigin(gameObject.displayOriginX, gameObject.displayOriginY);
@@ -2547,8 +2756,7 @@ var InputPlugin = new Class({
         {
             var debug = input.hitAreaDebug;
 
-            this.systems.updateList.remove(debug);
-
+            //  This will remove it from both the display list and update list
             debug.destroy();
 
             input.hitAreaDebug = null;
@@ -2980,7 +3188,7 @@ var InputPlugin = new Class({
     },
 
     /**
-     * The x coordinates of the ActivePointer based on the first camera in the camera list.
+     * The x coordinate of the ActivePointer based on the first camera in the camera list.
      * This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
      *
      * @name Phaser.Input.InputPlugin#x
@@ -2998,7 +3206,7 @@ var InputPlugin = new Class({
     },
 
     /**
-     * The y coordinates of the ActivePointer based on the first camera in the camera list.
+     * The y coordinate of the ActivePointer based on the first camera in the camera list.
      * This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
      *
      * @name Phaser.Input.InputPlugin#y
@@ -3069,8 +3277,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * A touch-based Pointer object.
-     * This will be `undefined` by default unless you add a new Pointer using `addPointer`.
+     * A touch-based Pointer object. This is the first pointer created by Phaser and is available by default,
+     * alongside the `mousePointer`.
      *
      * @name Phaser.Input.InputPlugin#pointer1
      * @type {Phaser.Input.Pointer}

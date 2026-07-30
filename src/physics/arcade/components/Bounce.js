@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -34,7 +34,9 @@ var Bounce = {
     },
 
     /**
-     * Sets the horizontal bounce value for this body.
+     * Sets the horizontal bounce value for this body. This is the amount of restitution applied
+     * on the x-axis when the body collides with another object. A value of 1 retains full horizontal
+     * velocity after the rebound. A value of 0 means no horizontal bounce at all.
      *
      * @method Phaser.Physics.Arcade.Components.Bounce#setBounceX
      * @since 3.0.0
@@ -51,7 +53,9 @@ var Bounce = {
     },
 
     /**
-     * Sets the vertical bounce value for this body.
+     * Sets the vertical bounce value for this body. This is the amount of restitution applied
+     * on the y-axis when the body collides with another object. A value of 1 retains full vertical
+     * velocity after the rebound. A value of 0 means no vertical bounce at all.
      *
      * @method Phaser.Physics.Arcade.Components.Bounce#setBounceY
      * @since 3.0.0
@@ -76,8 +80,8 @@ var Bounce = {
      * @since 3.0.0
      *
      * @param {boolean} [value=true] - `true` if this body should collide with the world bounds, otherwise `false`.
-     * @param {number} [bounceX] - If given this will be replace the `worldBounce.x` value.
-     * @param {number} [bounceY] - If given this will be replace the `worldBounce.y` value.
+     * @param {number} [bounceX] - If given, this will replace the `worldBounce.x` value.
+     * @param {number} [bounceY] - If given, this will replace the `worldBounce.y` value.
      * @param {boolean} [onWorldBounds] - If given this replaces the Body's `onWorldBounds` value.
      *
      * @return {this} This Game Object.

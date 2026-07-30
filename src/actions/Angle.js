@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -20,8 +20,8 @@ var PropertyValueInc = require('./PropertyValueInc');
  * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - The array of items to be updated by this action.
- * @param {number} value - The amount to be added to the `angle` property.
- * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter.
+ * @param {number} value - The amount, in degrees, to be added to the `angle` property.
+ * @param {number} [step=0] - This is added to the `value` amount, multiplied by the iteration counter. For example, a `step` of 10 will add 0 to the first item, 10 to the second, 20 to the third, and so on.
  * @param {number} [index=0] - An optional offset to start searching from within the items array.
  * @param {number} [direction=1] - The direction to iterate through the array. 1 is from beginning to end, -1 from end to beginning.
  *

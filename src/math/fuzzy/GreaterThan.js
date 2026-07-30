@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,9 +14,9 @@
  *
  * @param {number} a - The first value.
  * @param {number} b - The second value.
- * @param {number} [epsilon=0.0001] - The epsilon.
+ * @param {number} [epsilon=0.0001] - The epsilon value used to control the degree of fuzziness. A larger value makes the comparison more lenient.
  *
- * @return {boolean} `true` if `a` is fuzzily greater than than `b`, otherwise `false`.
+ * @return {boolean} `true` if `a` is fuzzily greater than `b`, otherwise `false`.
  */
 var GreaterThan = function (a, b, epsilon)
 {

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,7 +15,7 @@ var RenderTexture = require('./RenderTexture');
  * A Render Texture is a combination of Dynamic Texture and an Image Game Object, that uses the
  * Dynamic Texture to display itself with.
  *
- * A Dynamic Texture is a special texture that allows you to draw textures, frames and most kind of
+ * A Dynamic Texture is a special texture that allows you to draw textures, frames and most kinds of
  * Game Objects directly to it.
  *
  * You can take many complex objects and draw them to this one texture, which can then be used as the

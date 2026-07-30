@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -33,7 +33,7 @@ var Mass = {
     },
 
     /**
-     * Sets density of the body.
+     * Sets the density of the body.
      *
      * @method Phaser.Physics.Matter.Components.Mass#setDensity
      * @since 3.0.0
@@ -52,7 +52,7 @@ var Mass = {
     /**
      * The body's center of mass.
      *
-     * Calling this creates a new `Vector2 each time to avoid mutation.
+     * Calling this creates a new `Vector2` each time to avoid mutation.
      *
      * If you only need to read the value and won't change it, you can get it from `GameObject.body.centerOfMass`.
      *

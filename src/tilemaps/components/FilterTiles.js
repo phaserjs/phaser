@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,7 +9,7 @@ var GetTilesWithin = require('./GetTilesWithin');
 /**
  * For each tile in the given rectangular area (in tile coordinates) of the layer, run the given
  * filter callback function. Any tiles that pass the filter test (i.e. where the callback returns
- * true) will returned as a new array. Similar to Array.prototype.Filter in vanilla JS.
+ * true) will be returned as a new array. Similar to Array.prototype.filter in vanilla JS.
  *
  * @function Phaser.Tilemaps.Components.FilterTiles
  * @since 3.0.0

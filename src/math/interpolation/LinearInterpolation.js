@@ -1,13 +1,19 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Linear = require('../Linear');
 
 /**
- * A linear interpolation method.
+ * Performs linear interpolation across an array of values.
+ *
+ * Given an array of values `v` and a progress factor `k` in the range 0 to 1,
+ * this function maps `k` to a position along the array and returns the linearly
+ * interpolated value between the two nearest array elements. A `k` of 0 returns
+ * a value near the first element, while a `k` of 1 returns a value near the last.
+ * Values of `k` outside the range 0 to 1 are extrapolated beyond the ends of the array.
  *
  * @function Phaser.Math.Interpolation.Linear
  * @since 3.0.0

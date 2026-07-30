@@ -1,11 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Nudges (translates) the top left corner of a Rectangle by a given offset.
+ * Translates a Rectangle by the given horizontal and vertical amounts, moving its position while preserving its size.
  *
  * @function Phaser.Geom.Rectangle.Offset
  * @since 3.0.0

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,8 +15,12 @@ var XHRSettings = require('./XHRSettings');
 
 /**
  * @classdesc
- * The base File class used by all File Types that the Loader can support.
- * You shouldn't create an instance of a File directly, but should extend it with your own class, setting a custom type and processing methods.
+ * The base File class used by all File Types that the Loader can support. It manages the lifecycle
+ * of a single file from queue to download to processing to completion, handling XHR configuration,
+ * URL resolution, progress tracking, and error states. You should not create an instance of a File
+ * directly, but should extend it with your own class, setting a custom type and overriding the
+ * `onProcess` method to handle the loaded data. See `Phaser.Loader.FileTypes` for built-in file
+ * type examples.
  *
  * @class File
  * @memberof Phaser.Loader
@@ -185,8 +189,8 @@ var File = new Class({
         this.percentComplete = -1;
 
         /**
-         * For CORs based loading.
-         * If this is undefined then the File will check BaseLoader.crossOrigin and use that (if set)
+         * For CORS based loading.
+         * If this is undefined then the File will check LoaderPlugin.crossOrigin and use that (if set)
          *
          * @name Phaser.Loader.File#crossOrigin
          * @type {(string|undefined)}
@@ -232,6 +236,34 @@ var File = new Class({
          * @since 3.7.0
          */
         this.linkFile;
+
+        /**
+         * Does this File contain a data URI?
+         *
+         * @name Phaser.Loader.File#base64
+         * @type {boolean}
+         * @since 3.80.0
+         */
+        this.base64 = (typeof url === 'string') && (url.indexOf('data:') === 0);
+
+        /**
+         * The counter for the number of times to retry loading this file before it fails.
+         * 
+         * You can set this property value in the FileConfig object. If not present,
+         * this property is read from the `LoaderPlugin.maxRetries` property when
+         * this File instance is created.
+         * 
+         * You can set this value via the Game Config, or you can adjust the `LoaderPlugin` property
+         * at any point after the Loader has started. However, it will not apply to files
+         * that have already been added to the Loader, only those added after this value
+         * is changed.
+         *
+         * @name Phaser.Loader.File#retryAttempts
+         * @type {number}
+         * @default 2
+         * @since 3.85.0
+         */
+        this.retryAttempts = GetFastValue(fileConfig, 'maxRetries', loader.maxRetries);
     },
 
     /**
@@ -250,7 +282,8 @@ var File = new Class({
     },
 
     /**
-     * Resets the XHRLoader instance this file is using.
+     * Clears the `onload`, `onerror`, and `onprogress` event handlers from the XHRLoader instance
+     * this file is using, preventing stale callbacks from firing after the load has completed or errored.
      *
      * @method Phaser.Loader.File#resetXHR
      * @since 3.0.0
@@ -286,21 +319,17 @@ var File = new Class({
 
             this.src = GetURL(this, this.loader.baseURL);
 
+            if (!this.src)
+            {
+                throw new Error('URL Error in File: ' + this.key + ' from: ' + this.url);
+            }
+
             if (this.src.indexOf('data:') === 0)
             {
-                console.warn('Local data URIs are not supported: ' + this.key);
+                this.base64 = true;
             }
-            else
-            {
-                //  The creation of this XHRLoader starts the load process going.
-                //  It will automatically call the following, based on the load outcome:
-                //
-                // xhr.onload = this.onLoad
-                // xhr.onerror = this.onError
-                // xhr.onprogress = this.onProgress
 
-                this.xhrLoader = XHRLoader(this, this.loader.xhr);
-            }
+            this.xhrLoader = XHRLoader(this, this.loader.xhr);
         }
     },
 
@@ -338,19 +367,51 @@ var File = new Class({
     },
 
     /**
-     * Called if the file errors while loading, is sent a DOM ProgressEvent.
+     * Called by the XHRLoader if it was given a File with base64 data to load.
+     *
+     * @method Phaser.Loader.File#onBase64Load
+     * @since 3.80.0
+     *
+     * @param {XMLHttpRequest} xhr - The FakeXHR object containing the decoded base64 data.
+     */
+    onBase64Load: function (xhr)
+    {
+        this.xhrLoader = xhr;
+
+        this.state = CONST.FILE_LOADED;
+
+        this.percentComplete = 1;
+
+        this.loader.emit(Events.FILE_PROGRESS, this, this.percentComplete);
+
+        this.loader.nextFile(this, true);
+    },
+
+    /**
+     * Called if the file errors while loading. Resets the XHR state, then either decrements
+     * `retryAttempts` and retries the load, or signals failure to the Loader via `nextFile`
+     * if no retry attempts remain.
      *
      * @method Phaser.Loader.File#onError
      * @since 3.0.0
      *
-     * @param {XMLHttpRequest} xhr - The XMLHttpRequest that caused this onload event.
+     * @param {XMLHttpRequest} xhr - The XMLHttpRequest that caused this onerror event.
      * @param {ProgressEvent} event - The DOM ProgressEvent that resulted from this error.
      */
     onError: function ()
     {
         this.resetXHR();
 
-        this.loader.nextFile(this, false);
+        if (this.retryAttempts > 0)
+        {
+            this.retryAttempts--;
+
+            this.load();
+        }
+        else
+        {
+            this.loader.nextFile(this, false);
+        }
     },
 
     /**
@@ -508,8 +569,8 @@ var File = new Class({
 });
 
 /**
- * Static method for creating object URL using URL API and setting it as image 'src' attribute.
- * If URL API is not supported (usually on old browsers) it falls back to creating Base64 encoded url using FileReader.
+ * Static method for creating an object URL using the URL API and setting it as the image 'src' attribute.
+ * If the URL API is not supported (usually on old browsers) it falls back to creating a Base64 encoded URL using FileReader.
  *
  * @method Phaser.Loader.File.createObjectURL
  * @static
@@ -543,7 +604,7 @@ File.createObjectURL = function (image, blob, defaultType)
 
 /**
  * Static method for releasing an existing object URL which was previously created
- * by calling {@link File#createObjectURL} method.
+ * by calling {@link Phaser.Loader.File.createObjectURL} method.
  *
  * @method Phaser.Loader.File.revokeObjectURL
  * @static

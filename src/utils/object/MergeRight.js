@@ -1,15 +1,15 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Clone = require('./Clone');
 
 /**
- * Creates a new Object using all values from obj1.
+ * Creates a new object by cloning `obj1`, then merging values from `obj2` into it using a "right wins" strategy.
  *
- * Then scans obj2. If a property is found in obj2 that *also* exists in obj1, the value from obj2 is used, otherwise the property is skipped.
+ * Only keys that exist in `obj1` are considered. For each key in `obj2` that also exists in `obj1`, the value from `obj2` overwrites the cloned value. Keys present in `obj2` but absent from `obj1` are ignored entirely. This differs from a standard merge in that `obj2` cannot introduce new keys — it can only override existing ones.
  *
  * @function Phaser.Utils.Objects.MergeRight
  * @since 3.0.0

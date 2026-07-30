@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,8 +9,16 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * @classdesc
- * A class for representing a Tiled object layer in a map. This mirrors the structure of a Tiled
- * object layer, except:
+ * Represents an object layer from a Tiled map, as created in the Tiled map editor. Object layers
+ * in Tiled are used to place non-tile elements such as spawn points, collision zones, triggers,
+ * paths, and other game-specific markers. Unlike tile layers, object layers store free-form
+ * objects (rectangles, ellipses, polygons, polylines, tiles, and text) at arbitrary positions.
+ *
+ * Instances of this class are created automatically by Phaser when parsing Tiled map data via
+ * `Phaser.Tilemaps.ParseToTilemap` or `scene.make.tilemap`. You can retrieve an ObjectLayer from
+ * a Tilemap using `tilemap.getObjectLayer(name)`.
+ *
+ * This class mirrors the structure of a Tiled object layer, except:
  *  - "x" & "y" properties are ignored since these cannot be changed in Tiled.
  *  - "offsetx" & "offsety" are applied to the individual object coordinates directly, so they
  *    are ignored as well.
@@ -45,7 +53,7 @@ var ObjectLayer = new Class({
          *
          * @name Phaser.Tilemaps.ObjectLayer#id
          * @type {number}
-         * @since 3.61.0
+         * @since 3.70.0
          */
         this.id = GetFastValue(config, 'id', 0);
 

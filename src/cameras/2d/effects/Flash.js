@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -128,7 +128,7 @@ var Flash = new Class({
         this._elapsed = 0;
 
         /**
-         * This is an internal copy of the initial value of `this.alpha`, used to calculate the current alpha value of the fade effect.
+         * This is an internal copy of the initial value of `this.alpha`, used to calculate the current alpha value of the flash effect.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#_alpha
          * @type {number}
@@ -150,7 +150,7 @@ var Flash = new Class({
         this._onUpdate;
 
         /**
-         * On Complete callback scope.
+         * On Update callback scope.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#_onUpdateScope
          * @type {any}
@@ -279,30 +279,11 @@ var Flash = new Class({
      * @method Phaser.Cameras.Scene2D.Effects.Flash#postRenderWebGL
      * @since 3.5.0
      *
-     * @param {Phaser.Renderer.WebGL.Pipelines.MultiPipeline} pipeline - The WebGL Pipeline to render to. Must provide the `drawFillRect` method.
-     * @param {function} getTintFunction - A function that will return the gl safe tint colors.
-     *
-     * @return {boolean} `true` if the effect drew to the renderer, otherwise `false`.
+     * @return {boolean} `true` if the effect should draw to the renderer, otherwise `false`.
      */
-    postRenderWebGL: function (pipeline, getTintFunction)
+    postRenderWebGL: function ()
     {
-        if (!this.isRunning)
-        {
-            return false;
-        }
-
-        var camera = this.camera;
-        var red = this.red / 255;
-        var green = this.green / 255;
-        var blue = this.blue / 255;
-
-        pipeline.drawFillRect(
-            camera.x, camera.y, camera.width, camera.height,
-            getTintFunction(blue, green, red, 1),
-            this.alpha
-        );
-
-        return true;
+        return this.isRunning;
     },
 
     /**

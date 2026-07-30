@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16,16 +16,20 @@ var FuncMap = {
 };
 
 /**
- * This internal function is used to return the correct interpolation function for a Tween.
+ * Returns the interpolation function to be used by a Tween for multi-value properties.
  *
- * It can take a variety of input, including a string, or a custom function.
+ * The `interpolation` argument can be a string key, a custom function, or `null`.
+ * Valid string keys are `'linear'`, `'bezier'`, `'catmull'`, and `'catmullrom'`.
+ * If a string is provided but not recognised, the function falls back to linear interpolation.
+ * If `null` is passed, `null` is returned, indicating no interpolation should be applied.
+ * If a custom function is passed, it is returned directly and used as the interpolator.
  *
  * @function Phaser.Tweens.Builders.GetInterpolationFunction
  * @since 3.60.0
  *
- * @param {(string|function|null)} interpolation - The interpolation function to find. This can be either a string, or a custom function, or null.
+ * @param {(string|function|null)} interpolation - The interpolation function to resolve. Can be a string key (`'linear'`, `'bezier'`, `'catmull'`, `'catmullrom'`), a custom interpolation function, or `null`.
  *
- * @return {?function} The interpolation function to use, or `null`.
+ * @return {?function} The resolved interpolation function, or `null` if `null` was passed in.
  */
 var GetInterpolationFunction = function (interpolation)
 {

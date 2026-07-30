@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -251,9 +251,7 @@ var BaseTween = new Class({
          * or they will retain references you may no longer require and waste memory.
          *
          * By default, `Tweens` are set to _not_ persist, so they are automatically cleaned-up by
-         * the Tween Manager. But `TweenChains` _do_ persist by default, unless overridden in their
-         * config. This is because the type of situations you use a chain for is far more likely to
-         * need to be replayed again in the future, rather than disposed of.
+         * the Tween Manager.
          *
          * @name Phaser.Tweens.BaseTween#persist
          * @type {boolean}
@@ -550,13 +548,13 @@ var BaseTween = new Class({
      */
     updateStartCountdown: function (delta)
     {
-        this.countdown -= delta;
+        this.startDelay -= delta;
 
-        if (this.countdown <= 0)
+        if (this.startDelay <= 0)
         {
-            this.hasStarted = true;
-
             this.setActiveState();
+            
+            this.hasStarted = true;
 
             this.dispatchEvent(Events.TWEEN_START, 'onStart');
 
@@ -601,7 +599,7 @@ var BaseTween = new Class({
      * `onPause` - Invoked only if the `Tween.pause` method is called. Not invoked if the Tween Manager is paused.
      * `onResume` - Invoked only if the `Tween.resume` method is called. Not invoked if the Tween Manager is resumed.
      *
-         * The following types are also available and are invoked on a `TweenData` level - that is per-object, per-property, being tweened.
+     * The following types are also available and are invoked on a `TweenData` level - that is per-object, per-property, being tweened.
      *
      * `onYoyo` - When a TweenData starts a yoyo. This happens _after_ the `hold` delay expires, if set.
      * `onRepeat` - When a TweenData repeats playback. This happens _after_ the `repeatDelay` expires, if set.
@@ -648,6 +646,8 @@ var BaseTween = new Class({
     setActiveState: function ()
     {
         this.state = TWEEN_CONST.ACTIVE;
+
+        this.hasStarted = false;
     },
 
     /**
@@ -849,9 +849,9 @@ var BaseTween = new Class({
     },
 
     /**
-     * Handles the destroy process of this Tween, clearing out the
-     * Tween Data and resetting the targets. A Tween that has been
-     * destroyed cannot ever be played or used again.
+     * Handles the destroy process of this Tween, destroying all TweenData
+     * objects, removing all event listeners, and nulling out internal references.
+     * A Tween that has been destroyed cannot ever be played or used again.
      *
      * @method Phaser.Tweens.BaseTween#destroy
      * @since 3.60.0

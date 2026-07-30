@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -12,16 +12,16 @@ var GameObjectFactory = require('../../GameObjectFactory');
  * 
  * BitmapText objects work by taking a texture file and an XML or JSON file that describes the font structure.
  * 
- * During rendering for each letter of the text is rendered to the display, proportionally spaced out and aligned to
+ * During rendering, each letter of the text is rendered to the display, proportionally spaced out and aligned to
  * match the font structure.
  * 
- * BitmapText objects are less flexible than Text objects, in that they have less features such as shadows, fills and the ability
+ * BitmapText objects are less flexible than Text objects, in that they have fewer features such as shadows, fills and the ability
  * to use Web Fonts, however you trade this flexibility for rendering speed. You can also create visually compelling BitmapTexts by
  * processing the font texture in an image editor, applying fills and any other effects required.
  *
  * To create multi-line text insert \r, \n or \r\n escape codes into the text string.
  *
- * To create a BitmapText data files you need a 3rd party app such as:
+ * To create BitmapText data files you need a 3rd party app such as:
  *
  * BMFont (Windows, free): http://www.angelcode.com/products/bmfont/
  * Glyph Designer (OS X, commercial): http://www.71squared.com/en/glyphdesigner

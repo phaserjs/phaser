@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -38,7 +38,7 @@ function SortIntersects (a, b)
 }
 
 /**
- * Projects rays out from the given point to each line segment of the polygons.
+ * Projects rays out from the given point to each vertex of the polygons.
  *
  * If the rays intersect with the polygons, the points of intersection are returned in an array.
  *
@@ -47,7 +47,7 @@ function SortIntersects (a, b)
  * Each Vector4 intersection result has the following properties:
  *
  * The `x` and `y` components contain the point of the intersection.
- * The `z` component contains the angle of intersection.
+ * The `z` component contains the angle of the projected ray, in radians.
  * The `w` component contains the index of the polygon, in the given array, that triggered the intersection.
  *
  * @function Phaser.Geom.Intersects.GetRaysFromPointToPolygon

@@ -1,20 +1,22 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Elastic ease-out.
+ * An Elastic ease-out, where the value overshoots its target and oscillates with a decaying sine wave
+ * before settling at the final value. The elastic effect occurs at the end of the transition, making
+ * the motion appear to bounce or spring into place. Accepts a normalized input value `v` in the range 0 to 1.
  *
  * @function Phaser.Math.Easing.Elastic.Out
  * @since 3.0.0
  *
- * @param {number} v - The value to be tweened.
- * @param {number} [amplitude=0.1] - The amplitude of the elastic ease.
- * @param {number} [period=0.1] - Sets how tight the sine-wave is, where smaller values are tighter waves, which result in more cycles.
+ * @param {number} v - The normalized value to be tweened, typically in the range [0, 1].
+ * @param {number} [amplitude=0.1] - The amplitude of the elastic overshoot. Values above 1 increase the size of the overshoot.
+ * @param {number} [period=0.1] - Controls how tight the sine-wave oscillation is. Smaller values produce tighter waves with more rapid oscillations.
  *
- * @return {number} The tweened value.
+ * @return {number} The eased value.
  */
 var Out = function (v, amplitude, period)
 {

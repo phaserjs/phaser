@@ -1,23 +1,23 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var RectangleToRectangle = require('../../geom/intersects/RectangleToRectangle');
 var TransformMatrix = require('../components/TransformMatrix');
 
-var tempMatrix1 = new TransformMatrix();
-var tempMatrix2 = new TransformMatrix();
-var tempMatrix3 = new TransformMatrix();
-var tempMatrix4 = new TransformMatrix();
+var camMatrix = new TransformMatrix();
+var calcMatrix = new TransformMatrix();
+var particleMatrix = new TransformMatrix();
+var managerMatrix = new TransformMatrix();
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
  * This method should not be called directly. It is a utility function of the Render module.
  *
- * @method Phaser.GameObjects.Particles.Emitter#renderCanvas
+ * @method Phaser.GameObjects.Particles.ParticleEmitter#renderCanvas
  * @since 3.60.0
  * @private
  *
@@ -28,23 +28,26 @@ var tempMatrix4 = new TransformMatrix();
  */
 var ParticleEmitterCanvasRenderer = function (renderer, emitter, camera, parentMatrix)
 {
-    var camMatrix = tempMatrix1;
-    var calcMatrix = tempMatrix2;
-    var particleMatrix = tempMatrix3;
-    var managerMatrix = tempMatrix4;
+    camera.addToRenderList(emitter);
+
+    camMatrix.copyWithScrollFactorFrom(
+        camera.matrix,
+        camera.scrollX, camera.scrollY,
+        emitter.scrollFactorX, emitter.scrollFactorY
+    );
 
     if (parentMatrix)
     {
-        managerMatrix.loadIdentity();
-        managerMatrix.multiply(parentMatrix);
-        managerMatrix.translate(emitter.x, emitter.y);
-        managerMatrix.rotate(emitter.rotation);
-        managerMatrix.scale(emitter.scaleX, emitter.scaleY);
+        camMatrix.multiply(parentMatrix);
     }
-    else
-    {
-        managerMatrix.applyITRS(emitter.x, emitter.y, emitter.rotation, emitter.scaleX, emitter.scaleY);
-    }
+
+    managerMatrix.applyITRS(
+        emitter.x, emitter.y,
+        emitter.rotation,
+        emitter.scaleX, emitter.scaleY
+    );
+
+    camMatrix.multiply(managerMatrix);
 
     var ctx = renderer.currentContext;
     var roundPixels = camera.roundPixels;
@@ -65,11 +68,6 @@ var ParticleEmitterCanvasRenderer = function (renderer, emitter, camera, parentM
         emitter.depthSort();
     }
 
-    camera.addToRenderList(emitter);
-
-    var scrollFactorX = emitter.scrollFactorX;
-    var scrollFactorY = emitter.scrollFactorY;
-
     ctx.save();
 
     ctx.globalCompositeOperation = renderer.blendModes[emitter.blendMode];
@@ -86,14 +84,6 @@ var ParticleEmitterCanvasRenderer = function (renderer, emitter, camera, parentM
         }
 
         particleMatrix.applyITRS(particle.x, particle.y, particle.rotation, particle.scaleX, particle.scaleY);
-
-        camMatrix.copyFrom(camera.matrix);
-
-        camMatrix.multiplyWithOffset(managerMatrix, -camera.scrollX * scrollFactorX, -camera.scrollY * scrollFactorY);
-
-        //  Undo the camera scroll
-        particleMatrix.e = particle.x;
-        particleMatrix.f = particle.y;
 
         //  Multiply by the particle matrix, store result in calcMatrix
         camMatrix.multiply(particleMatrix, calcMatrix);

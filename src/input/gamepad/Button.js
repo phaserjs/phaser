@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,7 +9,9 @@ var Events = require('./events');
 
 /**
  * @classdesc
- * Contains information about a specific button on a Gamepad.
+ * Represents a single button on a Gamepad controller. Each Button has a `value` between 0 and 1
+ * (supporting analog pressure for triggers) and a `pressed` boolean state. When the value exceeds
+ * the configurable `threshold`, the button emits `BUTTON_DOWN` and `GAMEPAD_BUTTON_DOWN` events.
  * Button objects are created automatically by the Gamepad as they are needed.
  *
  * @class Button
@@ -19,13 +21,16 @@ var Events = require('./events');
  *
  * @param {Phaser.Input.Gamepad.Gamepad} pad - A reference to the Gamepad that this Button belongs to.
  * @param {number} index - The index of this Button.
+ * @param {boolean} [isPressed=false] - Whether or not the button is already being pressed at creation time.  This prevents the Button from emitting spurious 'down' events at first update.
  */
 var Button = new Class({
 
     initialize:
 
-    function Button (pad, index)
+    function Button (pad, index, isPressed)
     {
+        if (isPressed === undefined) { isPressed = false; }
+
         /**
          * A reference to the Gamepad that this Button belongs to.
          *
@@ -54,7 +59,8 @@ var Button = new Class({
         this.index = index;
 
         /**
-         * Between 0 and 1.
+         * The current value of the button, between 0 (fully released) and 1 (fully pressed).
+         * For analog buttons like triggers, this reflects the pressure applied.
          *
          * @name Phaser.Input.Gamepad.Button#value
          * @type {number}
@@ -64,8 +70,9 @@ var Button = new Class({
         this.value = 0;
 
         /**
-         * Can be set for analogue buttons to enable a 'pressure' threshold,
-         * before a button is considered as being 'pressed'.
+         * The minimum value the button must reach before it is considered as being pressed.
+         * The value is between 0 and 1. The default of 1 requires the button to be fully pressed.
+         * For analog buttons such as triggers, you can lower this threshold to detect partial presses.
          *
          * @name Phaser.Input.Gamepad.Button#threshold
          * @type {number}
@@ -82,7 +89,7 @@ var Button = new Class({
          * @default false
          * @since 3.0.0
          */
-        this.pressed = false;
+        this.pressed = isPressed;
     },
 
     /**

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -17,7 +17,12 @@ var ParseTileLayers = require('./ParseTileLayers');
 var ParseTilesets = require('./ParseTilesets');
 
 /**
- * Parses a Tiled JSON object into a new MapData object.
+ * Parses a Tiled JSON object into a new MapData object. The source JSON is deep copied before
+ * processing. This function handles orthogonal, isometric, staggered, and hexagonal map
+ * orientations. For hexagonal maps it also calculates the pixel dimensions based on the hex side
+ * length and stagger axis. It parses all tile layers, image layers, object layers, and tilesets
+ * found in the JSON, builds the tileset index, and assigns custom tile properties before returning
+ * the fully populated MapData instance.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled
  * @since 3.0.0
@@ -26,7 +31,7 @@ var ParseTilesets = require('./ParseTilesets');
  * @param {object} source - The original Tiled JSON object. This is deep copied by this function.
  * @param {boolean} insertNull - Controls how empty tiles, tiles with an index of -1, in the map
  * data are handled. If `true`, empty locations will get a value of `null`. If `false`, empty
- * location will get a Tile object with an index of -1. If you've a large sparsely populated map and
+ * location will get a Tile object with an index of -1. If you have a large sparsely populated map and
  * the tile data doesn't need to change then setting this value to `true` will help with memory
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
@@ -57,6 +62,19 @@ var ParseJSONTiled = function (name, source, insertNull)
         mapData.hexSideLength = json.hexsidelength;
         mapData.staggerAxis = json.staggeraxis;
         mapData.staggerIndex = json.staggerindex;
+
+        if (mapData.staggerAxis === 'y')
+        {
+            var triangleHeight = (mapData.tileHeight - mapData.hexSideLength) / 2;
+            mapData.widthInPixels = mapData.tileWidth * (mapData.width + 0.5);
+            mapData.heightInPixels = mapData.height * (mapData.hexSideLength + triangleHeight) + triangleHeight;
+        }
+        else
+        {
+            var triangleWidth = (mapData.tileWidth - mapData.hexSideLength) / 2;
+            mapData.widthInPixels = mapData.width * (mapData.hexSideLength + triangleWidth) + triangleWidth;
+            mapData.heightInPixels = mapData.tileHeight * (mapData.height + 0.5);
+        }
     }
 
     mapData.layers = ParseTileLayers(json, insertNull);

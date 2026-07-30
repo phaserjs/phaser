@@ -1,13 +1,13 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var INPUT_CONST = {
 
     /**
-     * The mouse pointer is being held down.
+     * The mouse pointer button has been pressed down.
      *
      * @name Phaser.Input.MOUSE_DOWN
      * @type {number}
@@ -43,7 +43,7 @@ var INPUT_CONST = {
     TOUCH_START: 3,
 
     /**
-     * A touch pointer has been started.
+     * A touch pointer has been moved.
      *
      * @name Phaser.Input.TOUCH_MOVE
      * @type {number}
@@ -52,7 +52,7 @@ var INPUT_CONST = {
     TOUCH_MOVE: 4,
 
     /**
-     * A touch pointer has been started.
+     * A touch pointer has ended.
      *
      * @name Phaser.Input.TOUCH_END
      * @type {number}
@@ -70,7 +70,7 @@ var INPUT_CONST = {
     POINTER_LOCK_CHANGE: 6,
 
     /**
-     * A touch pointer has been been cancelled by the browser.
+     * A touch pointer has been cancelled by the browser.
      *
      * @name Phaser.Input.TOUCH_CANCEL
      * @type {number}
@@ -79,7 +79,7 @@ var INPUT_CONST = {
     TOUCH_CANCEL: 7,
 
     /**
-     * The mouse wheel changes.
+     * The mouse wheel has changed.
      *
      * @name Phaser.Input.MOUSE_WHEEL
      * @type {number}

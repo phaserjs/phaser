@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -218,7 +218,7 @@ var Factory = new Class({
      *
      * Do not pass the entire JSON file to this method, but instead pass one of the shapes contained within it.
      *
-     * If you pas in an `options` object, any settings in there will override those in the PhysicsEditor config object.
+     * If you pass in an `options` object, any settings in there will override those in the PhysicsEditor config object.
      *
      * @method Phaser.Physics.Matter.Factory#fromPhysicsEditor
      * @since 3.22.0
@@ -329,7 +329,7 @@ var Factory = new Class({
      *
      * Do not pass the entire JSON file to this method, but instead pass one of the shapes contained within it.
      *
-     * If you pas in an `options` object, any settings in there will override those in the config object.
+     * If you pass in an `options` object, any settings in there will override those in the config object.
      *
      * The structure of the JSON file is as follows:
      *
@@ -539,8 +539,8 @@ var Factory = new Class({
      *
      * @param {number} x - The horizontal position of the car in the world.
      * @param {number} y - The vertical position of the car in the world.
-     * @param {number} width - The width of the car chasis.
-     * @param {number} height - The height of the car chasis.
+     * @param {number} width - The width of the car chassis.
+     * @param {number} height - The height of the car chassis.
      * @param {number} wheelSize - The radius of the car wheels.
      *
      * @return {MatterJS.CompositeType} A new composite car body.
@@ -567,7 +567,7 @@ var Factory = new Class({
      * @param {number} columnGap - The distance between each column.
      * @param {number} rowGap - The distance between each row.
      * @param {boolean} crossBrace - `true` to create cross braces between the bodies, or `false` to create just straight braces.
-     * @param {number} particleRadius - The radius of this circlular composite.
+     * @param {number} particleRadius - The radius of each circular particle body in the composite.
      * @param {Phaser.Types.Physics.Matter.MatterBodyConfig} [particleOptions] - An optional Body configuration object that is used to set initial Body properties on creation.
      * @param {Phaser.Types.Physics.Matter.MatterConstraintConfig} [constraintOptions] - An optional Constraint configuration object that is used to set initial Constraint properties on creation.
      *

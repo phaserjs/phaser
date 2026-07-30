@@ -1,5 +1,5 @@
 /**
-* The `Matter.Runner` module is an optional utility which provides a game loop, 
+* The `Matter.Runner` module is an optional utility which provides a game loop,
 * that handles continuously updating a `Matter.Engine` for you within a browser.
 * It is intended for development and debugging purposes, but may also be suitable for simple games.
 * If you are using your own game loop instead, then you do not need the `Matter.Runner` module.
@@ -20,30 +20,13 @@ var Common = require('./Common');
 
 (function() {
 
-    var _requestAnimationFrame,
-        _cancelAnimationFrame;
+    Runner._maxFrameDelta = 1000 / 15;
+    Runner._frameDeltaFallback = 1000 / 60;
+    Runner._timeBufferMargin = 1.5;
+    Runner._elapsedNextEstimate = 1;
+    Runner._smoothingLowerBound = 0.1;
+    Runner._smoothingUpperBound = 0.9;
 
-    if (typeof window !== 'undefined') {
-        _requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame
-                                      || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
-   
-        _cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame 
-                                      || window.webkitCancelAnimationFrame || window.msCancelAnimationFrame;
-    }
-
-    if (!_requestAnimationFrame) {
-        var _frameTimeout;
-
-        _requestAnimationFrame = function(callback){ 
-            _frameTimeout = setTimeout(function() { 
-                callback(Common.now()); 
-            }, 1000 / 60);
-        };
-
-        _cancelAnimationFrame = function() {
-            clearTimeout(_frameTimeout);
-        };
-    }
 
     /**
      * Creates a new Runner. The options parameter is an object that specifies any properties you wish to override the defaults.
@@ -52,23 +35,25 @@ var Common = require('./Common');
      */
     Runner.create = function(options) {
         var defaults = {
-            fps: 60,
-            deltaSampleSize: 60,
-            counterTimestamp: 0,
-            frameCounter: 0,
-            deltaHistory: [],
-            timePrev: null,
+            delta: 1000 / 60,
+            frameDelta: null,
+            frameDeltaSmoothing: true,
+            frameDeltaSnapping: true,
+            frameDeltaHistory: [],
+            frameDeltaHistorySize: 100,
             frameRequestId: null,
-            isFixed: false,
+            timeBuffer: 0,
+            timeLastTick: null,
+            maxUpdates: null,
+            maxFrameTime: 1000 / 30,
+            lastUpdatesDeferred: 0,
             enabled: true
         };
 
         var runner = Common.extend(defaults, options);
 
-        runner.delta = runner.delta || 1000 / runner.fps;
-        runner.deltaMin = runner.deltaMin || 1000 / runner.fps;
-        runner.deltaMax = runner.deltaMax || 1000 / (runner.fps * 0.5);
-        runner.fps = 1000 / runner.delta;
+        // for temporary back compatibility only
+        runner.fps = 0;
 
         return runner;
     };
@@ -80,13 +65,10 @@ var Common = require('./Common');
      */
     Runner.run = function(runner, engine) {
         // create runner if engine is first argument
-        if (typeof runner.positionIterations !== 'undefined') {
-            engine = runner;
-            runner = Runner.create();
-        }
+        runner.timeBuffer = Runner._frameDeltaFallback;
 
-        (function run(time){
-            runner.frameRequestId = _requestAnimationFrame(run);
+        (function onFrame(time){
+            runner.frameRequestId = Runner._onNextFrame(runner, onFrame);
 
             if (time && runner.enabled) {
                 Runner.tick(runner, engine, time);
@@ -106,54 +88,93 @@ var Common = require('./Common');
      * @param {number} time
      */
     Runner.tick = function(runner, engine, time) {
-        var timing = engine.timing,
-            delta;
+        var tickStartTime = Common.now(),
+            engineDelta = runner.delta,
+            updateCount = 0;
 
-        if (runner.isFixed) {
             // fixed timestep
-            delta = runner.delta;
-        } else {
+        var frameDelta = time - runner.timeLastTick;
+
+        if (!frameDelta || !runner.timeLastTick || frameDelta > Math.max(Runner._maxFrameDelta, runner.maxFrameTime)) {
             // dynamic timestep based on wall clock between calls
-            delta = (time - runner.timePrev) || runner.delta;
-            runner.timePrev = time;
-
-            // optimistically filter delta over a few frames, to improve stability
-            runner.deltaHistory.push(delta);
-            runner.deltaHistory = runner.deltaHistory.slice(-runner.deltaSampleSize);
-            delta = Math.min.apply(null, runner.deltaHistory);
-
-            // limit delta
-            delta = delta < runner.deltaMin ? runner.deltaMin : delta;
-            delta = delta > runner.deltaMax ? runner.deltaMax : delta;
-
-            // update engine timing object
-            runner.delta = delta;
+            frameDelta = runner.frameDelta || Runner._frameDeltaFallback;
         }
 
+        if (runner.frameDeltaSmoothing) {
+            // optimistically filter delta over a few frames, to improve stability
+            runner.frameDeltaHistory.push(frameDelta);
+            runner.frameDeltaHistory = runner.frameDeltaHistory.slice(-runner.frameDeltaHistorySize);
+            var deltaHistorySorted = runner.frameDeltaHistory.slice(0).sort();
+
+            // limit delta
+            var deltaHistoryWindow = runner.frameDeltaHistory.slice(
+                deltaHistorySorted.length * Runner._smoothingLowerBound,
+                deltaHistorySorted.length * Runner._smoothingUpperBound
+            );
+
+            // update engine timing object
+            var frameDeltaSmoothed = _mean(deltaHistoryWindow);
+            frameDelta = frameDeltaSmoothed || frameDelta;
+        }
+
+        if (runner.frameDeltaSnapping) {
+            frameDelta = 1000 / Math.round(1000 / frameDelta);
+        }
+        runner.frameDelta = frameDelta;
+        runner.timeLastTick = time;
+        runner.timeBuffer += runner.frameDelta;
+        runner.timeBuffer = Common.clamp(
+            runner.timeBuffer, 0, runner.frameDelta + engineDelta * Runner._timeBufferMargin
+        );
+        runner.lastUpdatesDeferred = 0;
+        var maxUpdates = runner.maxUpdates || Math.ceil(runner.maxFrameTime / engineDelta);
         // create an event object
         var event = {
-            timestamp: timing.timestamp
+            timestamp: engine.timing.timestamp
         };
 
         Events.trigger(runner, 'beforeTick', event);
 
         // fps counter
-        runner.frameCounter += 1;
-        if (time - runner.counterTimestamp >= 1000) {
-            runner.fps = runner.frameCounter * ((time - runner.counterTimestamp) / 1000);
-            runner.counterTimestamp = time;
-            runner.frameCounter = 0;
-        }
 
         Events.trigger(runner, 'tick', event);
 
+        var updateStartTime = Common.now();
+        while (engineDelta > 0 && runner.timeBuffer >= engineDelta * Runner._timeBufferMargin) {
         // update
         Events.trigger(runner, 'beforeUpdate', event);
 
-        Engine.update(engine, delta);
+            Engine.update(engine, engineDelta);
         Events.trigger(runner, 'afterUpdate', event);
 
+            runner.timeBuffer -= engineDelta;
+            updateCount += 1;
+            var elapsedTimeTotal = Common.now() - tickStartTime,
+                elapsedTimeUpdates = Common.now() - updateStartTime,
+                elapsedNextEstimate = elapsedTimeTotal + Runner._elapsedNextEstimate * elapsedTimeUpdates / updateCount;
+            if (updateCount >= maxUpdates || elapsedNextEstimate > runner.maxFrameTime) {
+                runner.lastUpdatesDeferred = Math.round(Math.max(0, (runner.timeBuffer / engineDelta) - Runner._timeBufferMargin));
+                break;
+            }
+        }
+        engine.timing.lastUpdatesPerFrame = updateCount;
         Events.trigger(runner, 'afterTick', event);
+        if (runner.frameDeltaHistory.length >= 100) {
+            if (runner.lastUpdatesDeferred && Math.round(runner.frameDelta / engineDelta) > maxUpdates) {
+                Common.warnOnce('Matter.Runner: runner reached runner.maxUpdates, see docs.');
+            } else if (runner.lastUpdatesDeferred) {
+                Common.warnOnce('Matter.Runner: runner reached runner.maxFrameTime, see docs.');
+            }
+            if (typeof runner.isFixed !== 'undefined') {
+                Common.warnOnce('Matter.Runner: runner.isFixed is now redundant, see docs.');
+            }
+            if (runner.deltaMin || runner.deltaMax) {
+                Common.warnOnce('Matter.Runner: runner.deltaMin and runner.deltaMax were removed, see docs.');
+            }
+            if (runner.fps !== 0) {
+                Common.warnOnce('Matter.Runner: runner.fps was replaced by runner.delta, see docs.');
+            }
+        }
     };
 
     /**
@@ -163,7 +184,7 @@ var Common = require('./Common');
      * @param {runner} runner
      */
     Runner.stop = function(runner) {
-        _cancelAnimationFrame(runner.frameRequestId);
+        Runner._cancelNextFrame(runner);
     };
 
     /**
@@ -172,10 +193,31 @@ var Common = require('./Common');
      * @param {runner} runner
      * @param {engine} engine
      */
-    Runner.start = function(runner, engine) {
-        Runner.run(runner, engine);
+    Runner._onNextFrame = function(runner, callback) {
+        if (typeof window !== 'undefined' && window.requestAnimationFrame) {
+            runner.frameRequestId = window.requestAnimationFrame(callback);
+        } else {
+            throw new Error('Matter.Runner: missing required global window.requestAnimationFrame.');
+        }
+        return runner.frameRequestId;
+    };
+    Runner._cancelNextFrame = function(runner) {
+        if (typeof window !== 'undefined' && window.cancelAnimationFrame) {
+            window.cancelAnimationFrame(runner.frameRequestId);
+        } else {
+            throw new Error('Matter.Runner: missing required global window.cancelAnimationFrame.');
+        }
     };
 
+    var _mean = function(values) {
+        var result = 0,
+            valuesLength = values.length;
+        for (var i = 0; i < valuesLength; i += 1) {
+            result += values[i];
+        }
+        return (result / valuesLength) || 0;
+    };
+    Runner._mean = _mean;
     /*
     *
     *  Events Documentation
@@ -247,19 +289,7 @@ var Common = require('./Common');
      */
 
     /**
-     * A `Boolean` that specifies if the runner should use a fixed timestep (otherwise it is variable).
-     * If timing is fixed, then the apparent simulation speed will change depending on the frame rate (but behaviour will be deterministic).
-     * If the timing is variable, then the apparent simulation speed will be constant (approximately, but at the cost of determininism).
-     *
-     * @property isFixed
-     * @type boolean
-     * @default false
-     */
-
-    /**
      * A `Number` that specifies the time step between updates in milliseconds.
-     * If `engine.timing.isFixed` is set to `true`, then `delta` is fixed.
-     * If it is `false`, then `delta` can dynamically change to maintain the correct apparent simulation speed.
      *
      * @property delta
      * @type number

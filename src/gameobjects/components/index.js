@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -16,16 +16,20 @@ module.exports = {
     ComputedSize: require('./ComputedSize'),
     Crop: require('./Crop'),
     Depth: require('./Depth'),
+    ElapseTimer: require('./ElapseTimer'),
+    FilterList: require('./FilterList'),
+    Filters: require('./Filters'),
     Flip: require('./Flip'),
-    FX: require('./FX'),
     GetBounds: require('./GetBounds'),
+    Lighting: require('./Lighting'),
     Mask: require('./Mask'),
     Origin: require('./Origin'),
     PathFollower: require('./PathFollower'),
-    Pipeline: require('./Pipeline'),
-    PostPipeline: require('./PostPipeline'),
+    RenderNodes: require('./RenderNodes'),
+    RenderSteps: require('./RenderSteps'),
     ScrollFactor: require('./ScrollFactor'),
     Size: require('./Size'),
+    StencilModifier: require('./StencilModifier'),
     Texture: require('./Texture'),
     TextureCrop: require('./TextureCrop'),
     Tint: require('./Tint'),

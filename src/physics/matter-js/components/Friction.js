@@ -1,11 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Contains methods for changing the friction of a Game Object's Matter Body. Should be used a mixin, not called directly.
+ * Contains methods for changing the friction of a Game Object's Matter Body. Should be used as a mixin, not called directly.
  *
  * @namespace Phaser.Physics.Matter.Components.Friction
  * @since 3.0.0

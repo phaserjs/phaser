@@ -1,13 +1,17 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Tileset = require('../../Tileset');
 
 /**
- * Tilesets and Image Collections
+ * Parses all unique tilesets from an Impact (Weltmeister) tilemap JSON object and returns them as
+ * an array of Tileset instances. Each layer in the JSON is inspected for a tileset name; duplicate
+ * names and collision layers (which have a blank tileset name) are ignored. Tile IDs within Impact
+ * tilesets are relative to the tileset rather than globally unique, and tilesets have no margin or
+ * padding, so each Tileset is created with those values set to zero.
  *
  * @function Phaser.Tilemaps.Parsers.Impact.ParseTilesets
  * @since 3.0.0

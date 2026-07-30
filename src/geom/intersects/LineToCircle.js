@@ -1,13 +1,13 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var Contains = require('../circle/Contains');
-var Point = require('../point/Point');
+var Vector2 = require('../../math/Vector2');
 
-var tmp = new Point();
+var tmp = new Vector2();
 
 /**
  * Checks for intersection between the line segment and circle.
@@ -19,7 +19,7 @@ var tmp = new Point();
  *
  * @param {Phaser.Geom.Line} line - The line segment to check.
  * @param {Phaser.Geom.Circle} circle - The circle to check against the line.
- * @param {(Phaser.Geom.Point|any)} [nearest] - An optional Point-like object. If given the closest point on the Line where the circle intersects will be stored in this object.
+ * @param {Phaser.Math.Vector2} [nearest] - An optional Vector2 object. If given the closest point on the Line where the circle intersects will be stored in this object.
  *
  * @return {boolean} `true` if the two objects intersect, otherwise `false`.
  */

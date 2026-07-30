@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,9 +11,20 @@ var Class = require('../utils/Class');
 
 /**
  * @classdesc
- * A representation of a vector in 3D space.
+ * A Vector3 is a mathematical object representing a point or direction in 3D space,
+ * defined by three components: `x`, `y`, and `z`.
  *
- * A three-component vector.
+ * Vector3 objects are used throughout Phaser's 3D math utilities, including matrix
+ * transformations, quaternion rotations, camera unprojection, and 3D-to-2D projection.
+ * They are commonly used when working with 3D renderers, custom shaders, or any code
+ * that needs to represent positions, directions, or normals in three-dimensional space.
+ *
+ * The class includes methods for common vector operations such as addition, subtraction,
+ * scaling, normalization, dot and cross products, linear interpolation, and transformation
+ * by Matrix3, Matrix4, and Quaternion objects.
+ *
+ * A set of static read-only constants (e.g. `Vector3.UP`, `Vector3.FORWARD`) are provided
+ * for convenient directional references.
  *
  * @class Vector3
  * @memberof Phaser.Math
@@ -137,7 +148,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#clone
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Vector3} A new Vector3 object containing this Vectors values.
+     * @return {Phaser.Math.Vector3} A new Vector3 object containing this Vector's values.
      */
     clone: function ()
     {
@@ -165,13 +176,33 @@ var Vector3 = new Class({
     },
 
     /**
+     * Subtracts the two given Vector3s and sets the results into this Vector3.
+     *
+     * @method Phaser.Math.Vector3#subVectors
+     * @since 3.85.0
+     *
+     * @param {Phaser.Math.Vector3} a - The Vector to subtract from.
+     * @param {Phaser.Math.Vector3} b - The Vector to subtract.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    subVectors: function (a, b)
+    {
+        this.x = a.x - b.x;
+        this.y = a.y - b.y;
+        this.z = a.z - b.z;
+
+        return this;
+    },
+
+    /**
      * Calculate the cross (vector) product of two given Vectors.
      *
      * @method Phaser.Math.Vector3#crossVectors
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector3} a - The first Vector to multiply.
-     * @param {Phaser.Math.Vector3} b - The second Vector to multiply.
+     * @param {Phaser.Math.Vector3} a - The first Vector to use in the cross product calculation.
+     * @param {Phaser.Math.Vector3} b - The second Vector to use in the cross product calculation.
      *
      * @return {Phaser.Math.Vector3} This Vector3.
      */
@@ -629,7 +660,7 @@ var Vector3 = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Math.Vector3} v - The Vector3 to interpolate towards.
-     * @param {number} [t=0] - The interpolation percentage, between 0 and 1.
+     * @param {number} [t=0] - The interpolation factor, between 0 and 1.
      *
      * @return {Phaser.Math.Vector3} This Vector3.
      */

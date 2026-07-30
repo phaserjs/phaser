@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,6 +9,12 @@ var GameObjectFactory = require('../GameObjectFactory');
 
 /**
  * Creates a new Group Game Object and adds it to the Scene.
+ *
+ * A Group is a way of grouping together Game Objects so they can be managed as a single unit.
+ * Groups have no position or visual representation of their own; they are purely an organizational
+ * tool. A common use-case is object pooling: pre-creating a fixed set of identical Game Objects
+ * and recycling them rather than creating and destroying them at runtime. Groups can also apply
+ * bulk operations (such as setting visibility or enabling physics) to all of their members at once.
  *
  * Note: This method will only be available if the Group Game Object has been built into Phaser.
  *

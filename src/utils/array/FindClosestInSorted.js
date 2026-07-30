@@ -1,11 +1,11 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 /**
- * Searches a pre-sorted array for the closet value to the given number.
+ * Searches a pre-sorted array for the closest value to the given number.
  *
  * If the `key` argument is given it will assume the array contains objects that all have the required `key` property name,
  * and will check for the closest value of those to the given number.
@@ -15,7 +15,7 @@
  *
  * @param {number} value - The value to search for in the array.
  * @param {array} array - The array to search, which must be sorted.
- * @param {string} [key] - An optional property key. If specified the array elements property will be checked against value.
+ * @param {string} [key] - An optional property key. If specified the array element's property will be checked against value.
  *
  * @return {(number|any)} The nearest value found in the array, or if a `key` was given, the nearest object with the matching property value.
  */

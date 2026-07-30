@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,6 +13,7 @@ var GameObjectFactory = require('../gameobjects/GameObjectFactory');
 var GetFastValue = require('../utils/object/GetFastValue');
 var PluginCache = require('./PluginCache');
 var Remove = require('../utils/array/Remove');
+var CONST = require('../const');
 
 /**
  * @classdesc
@@ -30,12 +31,12 @@ var Remove = require('../utils/array/Remove');
  *
  * A Global Plugin is a plugin that lives within the Plugin Manager rather than a Scene. You can get
  * access to it by calling `PluginManager.get` and providing a key. Any Scene that requests a plugin in
- * this way will all get access to the same plugin instance, allowing you to use a single plugin across
+ * this way will get access to the same plugin instance, allowing you to use a single plugin across
  * multiple Scenes.
  *
  * A Scene Plugin is a plugin dedicated to running within a Scene. These are different to Global Plugins
  * in that their instances do not live within the Plugin Manager, but within the Scene Systems class instead.
- * And that every Scene created is given its own unique instance of a Scene Plugin. Examples of core Scene
+ * Also, every Scene created is given its own unique instance of a Scene Plugin. Examples of core Scene
  * Plugins include the Input Plugin, the Tween Plugin and the physics Plugins.
  *
  * You can add a plugin to Phaser in three different ways:
@@ -113,7 +114,7 @@ var PluginManager = new Class({
          */
         this._pendingScene = [];
 
-        if (game.isBooted)
+        if (game.isBooted || game.config.renderType === CONST.HEADLESS)
         {
             this.boot();
         }
@@ -124,7 +125,7 @@ var PluginManager = new Class({
     },
 
     /**
-     * Run once the game has booted and installs all of the plugins configured in the Game Config.
+     * Runs once the game has booted and installs all of the plugins configured in the Game Config.
      *
      * @method Phaser.Plugins.PluginManager#boot
      * @protected
@@ -314,7 +315,7 @@ var PluginManager = new Class({
      * @protected
      * @since 3.8.0
      *
-     * @return {string[]} A list keys of all the Scene Plugins to install.
+     * @return {string[]} A list of keys of all the Scene Plugins to install.
      */
     getDefaultScenePlugins: function ()
     {
@@ -834,7 +835,7 @@ var PluginManager = new Class({
      * this.load.wad();
      * ```
      *
-     * The callback is what is called when the loader tries to load a file  matching the given key.
+     * The callback is what is called when the loader tries to load a file matching the given key.
      * It's important to understand that the callback is invoked within
      * the context of the LoaderPlugin. In this context there are several properties / methods available
      * to use:
@@ -848,8 +849,8 @@ var PluginManager = new Class({
      * @method Phaser.Plugins.PluginManager#registerFileType
      * @since 3.8.0
      *
-     * @param {string} key - The key of the Game Object that the given callbacks will create, i.e. `image`, `sprite`.
-     * @param {function} callback - The callback to invoke when the Game Object Factory is called.
+     * @param {string} key - The key of the file type to register with the Loader Plugin, i.e. `wad`, `atlas`.
+     * @param {function} callback - The callback to invoke when the Loader Plugin tries to load a file of this type.
      * @param {Phaser.Scene} [addToScene] - Optionally add this file type into the Loader Plugin owned by the given Scene.
      */
     registerFileType: function (key, callback, addToScene)

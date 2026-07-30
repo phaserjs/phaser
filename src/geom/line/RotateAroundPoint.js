@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -15,7 +15,7 @@ var RotateAroundXY = require('./RotateAroundXY');
  * @generic {Phaser.Geom.Line} O - [line,$return]
  *
  * @param {Phaser.Geom.Line} line - The line to rotate.
- * @param {(Phaser.Geom.Point|object)} point - The point to rotate the line around.
+ * @param {Phaser.Math.Vector2} point - The point to rotate the line around.
  * @param {number} angle - The angle of rotation in radians.
  *
  * @return {Phaser.Geom.Line} The rotated line.

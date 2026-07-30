@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -18,7 +18,7 @@ var Vector2 = require('../../math/Vector2');
  * @param {number} worldY - The y coordinate to be converted, in pixels, not tiles.
  * @param {boolean} snapToFloor - Whether or not to round the tile coordinates down to the nearest integer.
  * @param {Phaser.Math.Vector2} point - A Vector2 to store the coordinates in. If not given a new Vector2 is created.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile index from the world values.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile XY coordinates from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {Phaser.Math.Vector2} The XY location in tile units.

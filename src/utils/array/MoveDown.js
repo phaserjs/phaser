@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -14,7 +14,7 @@
  * @param {array} array - The input array.
  * @param {*} item - The element to move down the array.
  *
- * @return {array} The input array.
+ * @return {array} The input array, with the item moved down one place.
  */
 var MoveDown = function (array, item)
 {

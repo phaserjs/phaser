@@ -1,18 +1,23 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var OS = require('../device/OS');
 
 /**
+ * A callback function to be invoked once the DOM content is fully loaded and the device is ready.
+ *
  * @callback ContentLoadedCallback
  */
 
 /**
- * Inspects the readyState of the document. If the document is already complete then it invokes the given callback.
- * If not complete it sets up several event listeners such as `deviceready`, and once those fire, it invokes the callback.
+ * Inspects the readyState of the document. If the document is already complete or interactive, it invokes the given
+ * callback immediately. If not, it registers event listeners to detect when the document becomes ready. On Cordova
+ * environments it listens for the `deviceready` event; otherwise it listens for `DOMContentLoaded` and the window
+ * `load` event, invoking the callback whichever fires first. If the document body is not yet available, it falls
+ * back to a short timeout before invoking the callback.
  * Called automatically by the Phaser.Game instance. Should not usually be accessed directly.
  *
  * @function Phaser.DOM.DOMContentLoaded

@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -100,173 +100,88 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
     var currentLineWidth = 0;
 
     var i;
+    var j;
+    var lines;
     var words = [];
     var characters = [];
     var current = null;
 
+    // Measure the width of the text
+    var measureTextWidth = function (text, fontData)
+    {
+        var width = 0;
+
+        for (var i = 0; i < text.length; i++)
+        {
+            var charCode = text.charCodeAt(i);
+            var glyph = fontData.chars[charCode];
+
+            if (glyph)
+            {
+                width += glyph.xAdvance;
+            }
+        }
+
+        return width * sx;
+    };
+    
     //  Scan for breach of maxWidth and insert carriage-returns
     if (maxWidth > 0)
     {
-        for (i = 0; i < textLength; i++)
+        // Split the text into lines
+        lines = text.split('\n');
+        var wrappedLines = [];
+
+        // Loop through each line
+        for (i = 0; i < lines.length; i++)
         {
-            charCode = text.charCodeAt(i);
+            var line = lines[i];
+            var word = '';
+            var wrappedLine = '';
+            var lineToCheck = '';
+            var lineWithWord = '';
 
-            if (charCode === 10)
+            // Loop through each character in a line
+            for (j = 0; j < line.length; j++)
             {
-                if (current !== null)
+                charCode = line.charCodeAt(j);
+
+                word += line[j];
+
+                // White space or end of line?
+                if (charCode === wordWrapCharCode || j === line.length - 1)
                 {
-                    words.push({
-                        word: current.word,
-                        i: current.i,
-                        x: current.x * sx,
-                        y: current.y * sy,
-                        w: current.w * sx,
-                        h: current.h * sy,
-                        cr: true
-                    });
+                    lineWithWord = lineToCheck + word;
+                    
+                    var textWidth = measureTextWidth(lineWithWord, src.fontData);
 
-                    current = null;
-                }
+                    if (textWidth <= maxWidth)
+                    {
+                        lineToCheck = lineWithWord;
+                    }
+                    else
+                    {
+                        // If the current word is too long to fit on a line, wrap it
+                        // Remove trailing word wrap char to keep text length the same
+                        wrappedLine = wrappedLine.slice(0, -1);
+                        wrappedLine += (wrappedLine ? '\n' : '') + lineToCheck;
+                        lineToCheck = word;
+                    }
 
-                xAdvance = 0;
-                yAdvance += lineHeight + lineSpacing;
-                lastGlyph = null;
-
-                continue;
-            }
-
-            glyph = chars[charCode];
-
-            if (!glyph)
-            {
-                continue;
-            }
-
-            if (lastGlyph !== null)
-            {
-                var glyphKerningOffset = glyph.kerning[lastCharCode];
-            }
-
-            if (charCode === wordWrapCharCode)
-            {
-                if (current !== null)
-                {
-                    words.push({
-                        word: current.word,
-                        i: current.i,
-                        x: current.x * sx,
-                        y: current.y * sy,
-                        w: current.w * sx,
-                        h: current.h * sy,
-                        cr: false
-                    });
-
-                    current = null;
+                    word = '';
                 }
             }
-            else
-            {
-                if (current === null)
-                {
-                    //  We're starting a new word, recording the starting index, etc
-                    current = { word: '', i: i, x: xAdvance, y: yAdvance, w: 0, h: lineHeight, cr: false };
-                }
 
-                current.word = current.word.concat(text[i]);
-                current.w += glyph.xOffset + glyph.xAdvance + ((glyphKerningOffset !== undefined) ? glyphKerningOffset : 0);
-            }
-
-            xAdvance += glyph.xAdvance + letterSpacing;
-            lastGlyph = glyph;
-            lastCharCode = charCode;
+            wrappedLine = wrappedLine.slice(0, -1);
+            wrappedLine += (wrappedLine ? '\n' : '') + lineToCheck;
+            wrappedLines.push(wrappedLine);
         }
 
-        //  Last word
-        if (current !== null)
-        {
-            words.push({
-                word: current.word,
-                i: current.i,
-                x: current.x * sx,
-                y: current.y * sy,
-                w: current.w * sx,
-                h: current.h * sy,
-                cr: false
-            });
-        }
-
-        //  Reset for the next loop
-        xAdvance = 0;
-        yAdvance = 0;
-        lastGlyph = null;
-        lastCharCode = 0;
-
-        //  Loop through the words array and see if we've got any > maxWidth
-        var prev;
-        var offset = 0;
-        var crs = [];
-
-        for (i = 0; i < words.length; i++)
-        {
-            var entry = words[i];
-            var left = entry.x;
-            var right = entry.x + entry.w;
-
-            if (prev)
-            {
-                var diff = left - (prev.x + prev.w);
-
-                offset = left - (diff + prev.w);
-
-                prev = null;
-            }
-
-            var checkLeft = left - offset;
-            var checkRight = right - offset;
-
-            if (checkLeft > maxWidth || checkRight > maxWidth)
-            {
-                crs.push(entry.i - 1);
-
-                if (entry.cr)
-                {
-                    crs.push(entry.i + entry.word.length);
-
-                    offset = 0;
-                    prev = null;
-                }
-                else
-                {
-                    prev = entry;
-                }
-            }
-            else if (entry.cr)
-            {
-                crs.push(entry.i + entry.word.length);
-
-                offset = 0;
-                prev = null;
-            }
-        }
-
-        var stringInsert = function (str, index, value)
-        {
-            return str.substr(0, index) + value + str.substr(index + 1);
-        };
-
-        for (i = crs.length - 1; i >= 0; i--)
-        {
-            // eslint-disable-next-line quotes
-            text = stringInsert(text, crs[i], "\n");
-        }
+        text = wrappedLines.join('\n');
 
         out.wrappedText = text;
 
         textLength = text.length;
-
-        //  Recalculated in the next loop
-        words = [];
-        current = null;
     }
 
     var charIndex = 0;
@@ -291,8 +206,6 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
                 current = null;
             }
 
-            xAdvance = 0;
-            yAdvance += lineHeight + lineSpacing;
             lastGlyph = null;
 
             lineWidths[currentLine] = currentLineWidth;
@@ -309,6 +222,9 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
             currentLine++;
             currentLineWidth = 0;
+
+            xAdvance = 0;
+            yAdvance = (lineHeight + lineSpacing) * currentLine;
 
             continue;
         }
@@ -457,7 +373,8 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
     var local = out.local;
     var global = out.global;
-    var lines = out.lines;
+    
+    lines = out.lines;
 
     local.x = bx * scale;
     local.y = by * scale;

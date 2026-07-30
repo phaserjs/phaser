@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,8 +11,10 @@ var TWEEN_CONST = require('../../tweens/tween/const');
 var Vector2 = require('../../math/Vector2');
 
 /**
- * Provides methods used for managing a Game Object following a Path.
- * Should be applied as a mixin and not used directly.
+ * Provides methods for making a Game Object follow a {@link Phaser.Curves.Path} at a configurable speed.
+ * The follower uses an internal Tween to animate progress along the path, and can optionally rotate
+ * the Game Object to face the direction of travel. This component is mixed in to Game Objects such as
+ * {@link Phaser.GameObjects.PathFollower} and should be applied as a mixin rather than used directly.
  *
  * @namespace Phaser.GameObjects.Components.PathFollower
  * @since 3.17.0
@@ -40,11 +42,11 @@ var PathFollower = {
     rotateToPath: false,
 
     /**
-     * If the PathFollower is rotating to match the Path (@see Phaser.GameObjects.PathFollower#rotateToPath)
-     * this value is added to the rotation value. This allows you to rotate objects to a path but control
+     * If the PathFollower is rotating to match the Path (@see Phaser.GameObjects.Components.PathFollower#rotateToPath)
+     * this value is added to the rotation value, in degrees. This allows you to rotate objects to a path but control
      * the angle of the rotation as well.
      *
-     * @name Phaser.GameObjects.PathFollower#pathRotationOffset
+     * @name Phaser.GameObjects.Components.PathFollower#pathRotationOffset
      * @type {number}
      * @default 0
      * @since 3.0.0
@@ -172,7 +174,7 @@ var PathFollower = {
      * @method Phaser.GameObjects.Components.PathFollower#isFollowing
      * @since 3.0.0
      *
-     * @return {boolean} `true` is this PathFollower is actively following a Path, otherwise `false`.
+     * @return {boolean} `true` if this PathFollower is actively following a Path, otherwise `false`.
      */
     isFollowing: function ()
     {

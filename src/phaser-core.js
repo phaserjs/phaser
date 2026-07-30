@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,8 @@ var CONST = require('./const');
 var Extend = require('./utils/object/Extend');
 
 /**
- * @namespace Phaser
+ * Alternative Phaser entry-point for a Core build only.
+ * See phaser.js for the JSDocs entry point.
  */
 
 var Phaser = {
@@ -25,7 +26,7 @@ var Phaser = {
     Display: { Masks: require('./display/mask') },
     DOM: require('./dom'),
     Events: require('./events'),
-    FX: require('./fx'),
+    Filters: require('./filters'),
     Game: require('./core/Game'),
     GameObjects: {
         DisplayList: require('./gameobjects/DisplayList'),
@@ -36,7 +37,7 @@ var Phaser = {
         BuildGameObject: require('./gameobjects/BuildGameObject'),
         BuildGameObjectAnimation: require('./gameobjects/BuildGameObjectAnimation'),
         GameObject: require('./gameobjects/GameObject'),
-        Graphics: require('./gameobjects/graphics/Graphics.js'),
+        Graphics: require('./gameobjects/graphics/Graphics'),
         Image: require('./gameobjects/image/Image'),
         Layer: require('./gameobjects/layer/Layer'),
         Sprite: require('./gameobjects/sprite/Sprite'),
@@ -98,6 +99,7 @@ var Phaser = {
     Structs: require('./structs'),
     Textures: require('./textures'),
     Time: require('./time'),
+    TintModes: require('./renderer/TintModes'),
     Tweens: require('./tweens')
 };
 
@@ -112,21 +114,8 @@ if (typeof FEATURE_SOUND)
 
 Phaser = Extend(false, Phaser, CONST);
 
-/**
- * The root types namespace.
- *
- * @namespace Phaser.Types
- * @since 3.17.0
- */
-
 //  Export it
 
 module.exports = Phaser;
 
 global.Phaser = Phaser;
-
-/*
- * "Documentation is like pizza: when it is good, it is very, very good;
- * and when it is bad, it is better than nothing."
- *  -- Dick Brandon
- */

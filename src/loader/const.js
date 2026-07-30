@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -25,7 +25,7 @@ var FILE_CONST = {
     LOADER_LOADING: 1,
 
     /**
-     * The Loader is processing files is has loaded.
+     * The Loader is processing files it has loaded.
      *
      * @name Phaser.Loader.LOADER_PROCESSING
      * @type {number}
@@ -70,7 +70,7 @@ var FILE_CONST = {
     FILE_PENDING: 10,
 
     /**
-     * File has been started to load by the loader (onLoad called)
+     * File has started loading by the loader (onLoad called).
      *
      * @name Phaser.Loader.FILE_LOADING
      * @type {number}
@@ -97,7 +97,7 @@ var FILE_CONST = {
     FILE_FAILED: 13,
 
     /**
-     * File is being processed (onProcess callback)
+     * File is being processed (onProcess callback).
      *
      * @name Phaser.Loader.FILE_PROCESSING
      * @type {number}
@@ -106,7 +106,7 @@ var FILE_CONST = {
     FILE_PROCESSING: 14,
 
     /**
-     * The File has errored somehow during processing.
+     * The file encountered an error during processing.
      *
      * @name Phaser.Loader.FILE_ERRORED
      * @type {number}
@@ -142,7 +142,7 @@ var FILE_CONST = {
     FILE_POPULATED: 19,
 
     /**
-     * File is pending being destroyed.
+     * File is pending destruction.
      *
      * @name Phaser.Loader.FILE_PENDING_DESTROY
      * @type {number}

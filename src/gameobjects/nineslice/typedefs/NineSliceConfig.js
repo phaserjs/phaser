@@ -11,4 +11,6 @@
  * @property {number} [rightWidth=10] - The size of the right vertical column (B).
  * @property {number} [topHeight=0] - The size of the top horiztonal row (C). Set to zero or undefined to create a 3 slice object.
  * @property {number} [bottomHeight=0] - The size of the bottom horiztonal row (D). Set to zero or undefined to create a 3 slice object.
+ * @property {boolean} [tileX=false] - Enable tile mode on the horizontal axis.
+ * @property {boolean} [tileY=false] - Enable tile mode on the vertical axis.
  */

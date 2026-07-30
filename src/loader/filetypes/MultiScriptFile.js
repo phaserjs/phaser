@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -8,8 +8,8 @@ var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var MultiFile = require('../MultiFile.js');
-var ScriptFile = require('./ScriptFile.js');
+var MultiFile = require('../MultiFile');
+var ScriptFile = require('./ScriptFile');
 
 /**
  * @classdesc
@@ -78,7 +78,11 @@ var MultiScriptFile = new Class({
     },
 
     /**
-     * Adds this file to its target cache upon successful loading and processing.
+     * Called automatically by the Loader when all files in this MultiFile have finished loading.
+     * Creates a `<script>` element for each loaded file, sets the language to JavaScript,
+     * disables deferred execution, populates the element with the response text, and appends
+     * it to `document.head` in the exact order the files were specified. This causes each
+     * script to execute immediately in the correct order, preserving any inter-script dependencies.
      *
      * @method Phaser.Loader.FileTypes.MultiScriptFile#addToCache
      * @since 3.17.0

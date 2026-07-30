@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,7 +10,7 @@ var PropertyValueInc = require('./PropertyValueInc');
  * Takes an array of Game Objects, or any objects that have a public `scaleY` property,
  * and then adds the given value to each of their `scaleY` properties.
  *
- * The optional `step` property is applied incrementally, multiplied by each item in the array.
+ * The optional `step` parameter is applied incrementally, multiplied by the iteration index of each item in the array.
  *
  * To use this with a Group: `ScaleY(group.getChildren(), value, step)`
  *

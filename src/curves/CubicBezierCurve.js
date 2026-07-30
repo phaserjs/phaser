@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,16 @@ var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
- * A higher-order Bézier curve constructed of four points.
+ * A Cubic Bézier curve is a smooth parametric curve defined by four points: a start point (`p0`),
+ * two control points (`p1` and `p2`) that shape the curvature, and an end point (`p3`). The curve
+ * passes through `p0` and `p3` but is only pulled toward the control points, allowing you to create
+ * a wide variety of smooth, flowing shapes.
+ *
+ * Cubic Bézier curves are commonly used in Phaser for defining movement paths, animating objects
+ * along arcs, and building complex `Path` objects. You can sample any position along the curve
+ * using a normalised `t` value from 0 (start) to 1 (end), or use the inherited helper methods such
+ * as `getPoints` and `getSpacedPoints` to obtain evenly distributed coordinates for rendering or
+ * movement.
  *
  * @class CubicBezier
  * @extends Phaser.Curves.Curve
@@ -101,7 +110,7 @@ var CubicBezierCurve = new Class({
     },
 
     /**
-     * Returns the resolution of this curve.
+     * Returns the resolution of this curve, which is the number of points used to approximate it when calculating lengths or sampling. For a Cubic Bézier, the resolution is equal to the number of divisions requested.
      *
      * @method Phaser.Curves.CubicBezier#getResolution
      * @since 3.0.0
@@ -116,7 +125,7 @@ var CubicBezierCurve = new Class({
     },
 
     /**
-     * Get point at relative position in curve according to length.
+     * Calculates the coordinates of the point at the given normalised position (`t`) along this curve using cubic Bézier interpolation.
      *
      * @method Phaser.Curves.CubicBezier#getPoint
      * @since 3.0.0

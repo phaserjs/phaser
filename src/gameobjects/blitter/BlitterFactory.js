@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,6 +9,12 @@ var GameObjectFactory = require('../GameObjectFactory');
 
 /**
  * Creates a new Blitter Game Object and adds it to the Scene.
+ *
+ * A Blitter is a special, highly optimized Game Object designed for rendering large numbers of
+ * identical or similar images with minimal overhead. Rather than creating individual Game Objects
+ * for each image, a Blitter manages a collection of lightweight `Bob` objects, all sharing the
+ * same texture. This makes it ideal for particle-like effects, crowds, bullet patterns, or any
+ * scenario where you need to display many copies of the same sprite at high performance.
  *
  * Note: This method will only be available if the Blitter Game Object has been built into Phaser.
  *

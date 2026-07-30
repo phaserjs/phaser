@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,17 +11,20 @@ var Class = require('../../utils/Class');
  * An Arcade Physics Collider will automatically check for collision, or overlaps, between two objects
  * every step. If a collision, or overlap, occurs it will invoke the given callbacks.
  *
+ * Note, if setting `overlapOnly` to `true`, and one of the objects is a `TilemapLayer`, every tile in the layer, regardless of tile ID, will be checked for collision.
+ * Even if the layer has had only a subset of tile IDs enabled for collision, all tiles will still be checked for overlap.
+ *
  * @class Collider
  * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Arcade.World} world - The Arcade physics World that will manage the collisions.
- * @param {boolean} overlapOnly - Whether to check for collisions or overlap.
+ * @param {boolean} overlapOnly - Whether to check for collisions or overlaps.
  * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} object1 - The first object to check for collision.
  * @param {Phaser.Types.Physics.Arcade.ArcadeColliderType} object2 - The second object to check for collision.
  * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} collideCallback - The callback to invoke when the two objects collide.
- * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
+ * @param {Phaser.Types.Physics.Arcade.ArcadePhysicsCallback} processCallback - The callback that is called before collision processing occurs. If it returns `false`, the collision or overlap is skipped for that pair.
  * @param {any} callbackContext - The scope in which to call the callbacks.
  */
 var Collider = new Class({
@@ -133,7 +136,7 @@ var Collider = new Class({
     },
 
     /**
-     * Called by World as part of its step processing, initial operation of collision checking.
+     * Called automatically by the Arcade Physics World during its step. Performs the collision or overlap check between the two registered objects and invokes the appropriate callbacks.
      *
      * @method Phaser.Physics.Arcade.Collider#update
      * @since 3.0.0

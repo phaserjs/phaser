@@ -11,5 +11,5 @@
  * @property {object|undefined} PVRTC - Indicates if PVRTC compression is supported (mostly iOS).
  * @property {object|undefined} RGTC - Indicates if RGTC compression is supported (mostly iOS).
  * @property {object|undefined} S3TC - Indicates if S3TC compression is supported on current device (mostly Windows).
- * @property {object|undefined} S3TCRGB - Indicates if S3TCRGB compression is supported on current device (mostly Windows).
+ * @property {object|undefined} S3TCSRGB - Indicates if S3TCSRGB compression is supported on current device (mostly Windows).
  */

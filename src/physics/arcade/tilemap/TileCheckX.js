@@ -1,23 +1,25 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
 var ProcessTileSeparationX = require('./ProcessTileSeparationX');
 
 /**
- * Check the body against the given tile on the X axis.
- * Used internally by the SeparateTile function.
+ * Checks the given physics body against a tile on the X axis, calculating the overlap and
+ * applying separation if a collision is detected. Respects the tile's face and collision flags
+ * when the check originates from a TilemapLayer, and dispatches to `ProcessTileSeparationX`
+ * (or sets `body.overlapX` if `customSeparateX` is enabled). Used internally by the SeparateTile function.
  *
  * @function Phaser.Physics.Arcade.Tilemap.TileCheckX
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
  * @param {Phaser.Tilemaps.Tile} tile - The tile to check.
- * @param {number} tileLeft - The left position of the tile within the tile world.
- * @param {number} tileRight - The right position of the tile within the tile world.
- * @param {number} tileBias - The tile bias value. Populated by the `World.TILE_BIAS` constant.
+ * @param {number} tileLeft - The left edge of the tile in world coordinates, in pixels.
+ * @param {number} tileRight - The right edge of the tile in world coordinates, in pixels.
+ * @param {number} tileBias - The tile bias value. Overlaps greater than this threshold are ignored to prevent tunneling. Typically set to `World.TILE_BIAS`.
  * @param {boolean} isLayer - Is this check coming from a TilemapLayer or an array of tiles?
  *
  * @return {number} The amount of separation that occurred.

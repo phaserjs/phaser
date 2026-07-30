@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -10,8 +10,12 @@ var Events = require('../events');
 
 /**
  * @classdesc
- * A generic Key object which can be passed to the Process functions (and so on)
- * keycode must be an integer
+ * Represents a single key on the keyboard. Key objects are created by the Keyboard Plugin
+ * via `addKey()` and track the state of a specific key, including whether it is currently
+ * held down, the duration it has been held, timestamps for press and release events, and
+ * repeat counts. You can poll Key objects directly in your game loop using properties like
+ * `isDown` and `isUp`, or listen for events via the `on` method. The keyCode must be an
+ * integer corresponding to a `Phaser.Input.Keyboard.KeyCodes` value.
  *
  * @class Key
  * @extends Phaser.Events.EventEmitter
@@ -186,7 +190,7 @@ var Key = new Class({
         this.emitOnRepeat = false;
 
         /**
-         * If a key is held down this holds down the number of times the key has 'repeated'.
+         * If a key is held down this holds the number of times the key has 'repeated'.
          *
          * @name Phaser.Input.Keyboard.Key#repeats
          * @type {number}
@@ -207,7 +211,7 @@ var Key = new Class({
         this._justDown = false;
 
         /**
-         * True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
+         * True if the key has just been released (NOTE: requires to be reset, see justUp getter)
          *
          * @name Phaser.Input.Keyboard.Key#_justUp
          * @type {boolean}

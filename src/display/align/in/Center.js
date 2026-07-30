@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -9,7 +9,7 @@ var GetCenterX = require('../../bounds/GetCenterX');
 var GetCenterY = require('../../bounds/GetCenterY');
 
 /**
- * Takes given Game Object and aligns it so that it is positioned in the center of the other.
+ * Takes a given Game Object and aligns it so that it is positioned in the center of the other.
  *
  * @function Phaser.Display.Align.In.Center
  * @since 3.0.0

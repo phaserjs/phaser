@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -11,8 +11,8 @@
  * @function Phaser.Math.Pow2.IsSize
  * @since 3.0.0
  *
- * @param {number} width - The width.
- * @param {number} height - The height.
+ * @param {number} width - The width to check, in pixels.
+ * @param {number} height - The height to check, in pixels.
  *
  * @return {boolean} `true` if `width` and `height` are a power of two, otherwise `false`.
  */

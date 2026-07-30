@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -13,7 +13,10 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
- * A single CSS File suitable for loading by the Loader.
+ * A single CSS File suitable for loading by the Loader. When loaded, the CSS is injected into the
+ * document by creating a `<style>` DOM element and appending it to `document.head`, making the styles
+ * immediately available to the page. This is useful for loading external stylesheets that affect your
+ * game's UI, fonts, or HTML overlay elements.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#css method and are not typically created directly.
  *
@@ -27,7 +30,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Types.Loader.FileTypes.CSSFileConfig)} key - The key to use for this file, or a file configuration object.
- * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.css`, i.e. if `key` was "alien" then the URL will be "alien.css".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var CSSFile = new Class({
@@ -65,7 +68,9 @@ var CSSFile = new Class({
 
     /**
      * Called automatically by Loader.nextFile.
-     * This method controls what extra work this File does with its loaded data.
+     * This method injects the loaded CSS text into the document by creating a `<style>` DOM element,
+     * setting its `innerHTML` to the response text, and appending it to `document.head`. The styles
+     * are applied to the current document immediately upon insertion.
      *
      * @method Phaser.Loader.FileTypes.CSSFile#onProcess
      * @since 3.17.0

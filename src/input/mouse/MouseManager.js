@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -77,7 +77,7 @@ var MouseManager = new Class({
          *
          * @name Phaser.Input.Mouse.MouseManager#preventDefaultWheel
          * @type {boolean}
-         * @default true
+         * @default false
          * @since 3.50.0
          */
         this.preventDefaultWheel = false;
@@ -230,7 +230,7 @@ var MouseManager = new Class({
     },
 
     /**
-     * The Touch Manager boot process.
+     * The Mouse Manager boot process.
      *
      * @method Phaser.Input.Mouse.MouseManager#boot
      * @private
@@ -328,7 +328,7 @@ var MouseManager = new Class({
 
     /**
      * If the browser supports pointer lock, this will request that the pointer lock is released. If
-     * the browser successfully enters a locked state, a 'POINTER_LOCK_CHANGE_EVENT' will be
+     * the browser successfully exits the locked state, a 'POINTER_LOCK_CHANGE_EVENT' will be
      * dispatched - from the game's input manager - with an `isPointerLocked` property.
      *
      * @method Phaser.Input.Mouse.MouseManager#releasePointerLock
@@ -397,6 +397,11 @@ var MouseManager = new Class({
 
         this.onMouseDownWindow = function (event)
         {
+            if (event.sourceCapabilities && event.sourceCapabilities.firesTouchEvents)
+            {
+                return;
+            }
+
             if (!event.defaultPrevented && _this.enabled && manager && manager.enabled && event.target !== canvas)
             {
                 //  Only process the event if the target isn't the canvas
@@ -419,6 +424,11 @@ var MouseManager = new Class({
 
         this.onMouseUpWindow = function (event)
         {
+            if (event.sourceCapabilities && event.sourceCapabilities.firesTouchEvents)
+            {
+                return;
+            }
+
             if (!event.defaultPrevented && _this.enabled && manager && manager.enabled && event.target !== canvas)
             {
                 //  Only process the event if the target isn't the canvas

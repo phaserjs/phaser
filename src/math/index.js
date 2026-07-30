@@ -1,6 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2013-2023 Photon Storm Ltd.
+ * @author       Richard Davey <rich@phaser.io>
+ * @copyright    2013-2026 Phaser Studio Inc.
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -39,7 +39,12 @@ var PhaserMath = {
     FloatBetween: require('./FloatBetween'),
     FloorTo: require('./FloorTo'),
     FromPercent: require('./FromPercent'),
+    GetCentroid: require('./GetCentroid'),
     GetSpeed: require('./GetSpeed'),
+    GetVec2Bounds: require('./GetVec2Bounds'),
+    Hash: require('./Hash'),
+    HashCell: require('./HashCell'),
+    HashSimplex: require('./HashSimplex'),
     IsEven: require('./IsEven'),
     IsEvenStrict: require('./IsEvenStrict'),
     Linear: require('./Linear'),
@@ -58,7 +63,6 @@ var PhaserMath = {
     RotateTo: require('./RotateTo'),
     RoundAwayFromZero: require('./RoundAwayFromZero'),
     RoundTo: require('./RoundTo'),
-    SinCosTableGenerator: require('./SinCosTableGenerator'),
     SmootherStep: require('./SmootherStep'),
     SmoothStep: require('./SmoothStep'),
     ToXY: require('./ToXY'),
