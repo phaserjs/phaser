@@ -212,7 +212,7 @@ var TilemapLayer = new Class({
      * @private
      * @since 3.50.0
      *
-     * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
+     * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tilesets - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
      */
     setTilesets: function (tilesets)
     {

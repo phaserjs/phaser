@@ -14,7 +14,7 @@
  * @function Phaser.Tilemaps.Components.FindByIndex
  * @since 3.0.0
  *
- * @param {number} index - The tile index value to search for.
+ * @param {number} findIndex - The tile index value to search for.
  * @param {number} skip - The number of times to skip a matching tile before returning.
  * @param {boolean} reverse - If true it will scan the layer in reverse, starting at the bottom-right. Otherwise it scans from the top-left.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
