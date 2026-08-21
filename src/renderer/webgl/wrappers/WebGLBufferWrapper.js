@@ -203,6 +203,15 @@ var WebGLBufferWrapper = new Class({
 
         this.bind();
 
+        if (this.bufferUsage !== gl.STATIC_DRAW)
+        {
+            gl.bufferData(
+                this.bufferType,
+                this.dataBuffer.byteLength,
+                this.bufferUsage
+            );
+        }
+
         if (offset === undefined)
         {
             offset = 0;
