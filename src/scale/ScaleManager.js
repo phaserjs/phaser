@@ -271,6 +271,18 @@ var ScaleManager = new Class({
         this.displayScale = new Vector2(1, 1);
 
         /**
+         * The cached inverse of any CSS transforms applied to the canvas or its ancestors.
+         * Used to correctly convert pointer coordinates when the canvas has been CSS rotated or skewed.
+         * `null` if no CSS transforms are detected or DOMMatrix is unavailable.
+         *
+         * @name Phaser.Scale.ScaleManager#_cssTransformInverse
+         * @type {?DOMMatrix}
+         * @private
+         * @since 4.NEXT
+         */
+        this._cssTransformInverse = null;
+
+        /**
          * If set, the canvas sizes will be automatically passed through Math.floor.
          * This results in rounded pixel display values, which is important for performance on legacy
          * and low powered devices, but at the cost of not achieving a 'perfect' fit in some browser windows.
@@ -1255,6 +1267,8 @@ var ScaleManager = new Class({
         bounds.y = clientRect.top + (window.pageYOffset || 0) - (document.documentElement.clientTop || 0);
         bounds.width = clientRect.width;
         bounds.height = clientRect.height;
+
+        this._cssTransformInverse = this.getInverseCSSTransform();
     },
 
     /**
@@ -1285,6 +1299,198 @@ var ScaleManager = new Class({
     transformY: function (pageY)
     {
         return (pageY - this.canvasBounds.top) * this.displayScale.y;
+    },
+
+    /**
+     * Transforms page coordinates into the scaled coordinate space of the Scale Manager,
+     * accounting for any CSS transforms (rotation, skew) applied to the canvas or its ancestors.
+     *
+     * Unlike the separate `transformX` and `transformY` methods, this handles coordinate
+     * coupling caused by CSS rotations where the X and Y axes are no longer independent.
+     *
+     * Only 2D CSS transforms are supported. 3D rotations and `perspective` cannot be
+     * inverted to a flat 2D mapping and will not produce correct results.
+     *
+     * @method Phaser.Scale.ScaleManager#transformXY
+     * @since 4.NEXT
+     *
+     * @param {number} pageX - The DOM pageX value.
+     * @param {number} pageY - The DOM pageY value.
+     * @param {Phaser.Types.Math.Vector2Like} output - An object with `x` and `y` properties to store the result.
+     *
+     * @return {Phaser.Types.Math.Vector2Like} The output object with translated `x` and `y` values.
+     */
+    transformXY: function (pageX, pageY, output)
+    {
+        var inv = this._cssTransformInverse;
+
+        if (inv)
+        {
+            //  CSS transforms couple the X and Y axes, so we transform as a single point.
+            //  Get the center of the canvas AABB in page coordinates.
+            var bounds = this.canvasBounds;
+            var centerX = bounds.x + bounds.width / 2;
+            var centerY = bounds.y + bounds.height / 2;
+
+            //  Offset from canvas center in screen space
+            var dx = pageX - centerX;
+            var dy = pageY - centerY;
+
+            //  Apply inverse rotation/scale to get canvas-local offset from center
+            var lx = inv.a * dx + inv.c * dy;
+            var ly = inv.b * dx + inv.d * dy;
+
+            //  Convert from center-relative to top-left-relative canvas-local coordinates,
+            //  then scale to game coordinates using the canvas CSS dimensions
+            var canvasW = this.canvas.clientWidth || this.canvas.width;
+            var canvasH = this.canvas.clientHeight || this.canvas.height;
+
+            output.x = (lx + canvasW / 2) * (this.baseSize.width / canvasW);
+            output.y = (ly + canvasH / 2) * (this.baseSize.height / canvasH);
+        }
+        else
+        {
+            //  No CSS transforms, use the simple offset + scale path
+            output.x = (pageX - this.canvasBounds.left) * this.displayScale.x;
+            output.y = (pageY - this.canvasBounds.top) * this.displayScale.y;
+        }
+
+        return output;
+    },
+
+    /**
+     * Computes the inverse of the accumulated CSS transform matrix applied to the canvas
+     * and its ancestor elements. Returns `null` if no CSS transforms are present or if
+     * `DOMMatrix` is not available.
+     *
+     * This walks up the DOM tree from the canvas element, composing any CSS `transform`
+     * values found along the way, as well as the individual `rotate` and `scale`
+     * properties, then extracts the linear (rotation/scale/skew) portion and returns
+     * its inverse. Translation, including the `translate` property, is excluded because
+     * canvas positioning is already handled by `getBoundingClientRect()`.
+     *
+     * Only 2D transforms are supported: 3D rotations and `perspective` cannot be
+     * inverted to a flat 2D mapping.
+     *
+     * @method Phaser.Scale.ScaleManager#getInverseCSSTransform
+     * @since 4.NEXT
+     *
+     * @return {?DOMMatrix} The inverse CSS transform matrix, or `null` if none is needed.
+     */
+    getInverseCSSTransform: function ()
+    {
+        if (typeof DOMMatrix === 'undefined')
+        {
+            return null;
+        }
+
+        var hasTransform = false;
+        var matrix = new DOMMatrix();
+        var el = this.canvas;
+
+        while (el && el instanceof HTMLElement)
+        {
+            var local = this.getElementCSSMatrix(el);
+
+            if (!local.isIdentity)
+            {
+                //  Pre-multiply: ancestor transforms apply on the outside
+                matrix = local.multiply(matrix);
+                hasTransform = true;
+            }
+
+            el = el.parentElement;
+        }
+
+        if (!hasTransform || matrix.isIdentity)
+        {
+            return null;
+        }
+
+        //  Zero the translation since canvas position is already handled by canvasBounds
+        matrix.e = 0;
+        matrix.f = 0;
+
+        var inverse = matrix.inverse();
+
+        //  A degenerate transform (e.g. `scale(0)`) cannot be inverted and yields NaNs
+        if (!isFinite(inverse.a + inverse.b + inverse.c + inverse.d))
+        {
+            return null;
+        }
+
+        return inverse;
+    },
+
+    /**
+     * Builds the CSS transformation matrix for a single element, composing the
+     * individual `rotate` and `scale` properties with the `transform` property in
+     * the order defined by the CSS Transforms Level 2 specification (rotate, then
+     * scale, then transform).
+     *
+     * The `translate` property is intentionally ignored: only the linear part of
+     * the composed matrix is used by `getInverseCSSTransform`, and translation
+     * anywhere in the chain never affects the linear part.
+     *
+     * @method Phaser.Scale.ScaleManager#getElementCSSMatrix
+     * @since 4.NEXT
+     *
+     * @param {HTMLElement} el - The element to read the computed transform styles from.
+     *
+     * @return {DOMMatrix} The composed transformation matrix for the element.
+     */
+    getElementCSSMatrix: function (el)
+    {
+        var style = window.getComputedStyle(el);
+
+        var transform = style.transform;
+        var matrix = (transform && transform !== 'none') ? new DOMMatrix(transform) : new DOMMatrix();
+
+        var scale = style.scale;
+
+        if (scale && scale !== 'none')
+        {
+            var s = scale.split(' ');
+            var sx = parseFloat(s[0]);
+            var sy = (s.length > 1) ? parseFloat(s[1]) : sx;
+            var sz = (s.length > 2) ? parseFloat(s[2]) : 1;
+
+            matrix = new DOMMatrix().scaleSelf(sx, sy, sz).multiply(matrix);
+        }
+
+        var rotate = style.rotate;
+
+        if (rotate && rotate !== 'none')
+        {
+            var r = rotate.split(' ');
+            var angle = parseFloat(r[r.length - 1]);
+            var rm = new DOMMatrix();
+
+            if (r.length === 1)
+            {
+                rm.rotateSelf(angle);
+            }
+            else if (r[0] === 'x')
+            {
+                rm.rotateAxisAngleSelf(1, 0, 0, angle);
+            }
+            else if (r[0] === 'y')
+            {
+                rm.rotateAxisAngleSelf(0, 1, 0, angle);
+            }
+            else if (r[0] === 'z')
+            {
+                rm.rotateAxisAngleSelf(0, 0, 1, angle);
+            }
+            else
+            {
+                rm.rotateAxisAngleSelf(parseFloat(r[0]), parseFloat(r[1]), parseFloat(r[2]), angle);
+            }
+
+            matrix = rm.multiply(matrix);
+        }
+
+        return matrix;
     },
 
     /**

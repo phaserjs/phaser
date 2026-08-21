@@ -1034,9 +1034,10 @@ var InputManager = new Class({
         p1.x = p0.x;
         p1.y = p0.y;
 
-        //  Translate coordinates
-        var x = this.scaleManager.transformX(pageX);
-        var y = this.scaleManager.transformY(pageY);
+        //  Translate coordinates using transformXY to handle CSS transforms (rotation, skew)
+        var transformed = this.scaleManager.transformXY(pageX, pageY, this._tempPoint);
+        var x = transformed.x;
+        var y = transformed.y;
 
         var a = pointer.smoothFactor;
 
