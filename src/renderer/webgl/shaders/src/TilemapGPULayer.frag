@@ -7,8 +7,10 @@
 
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
+#define DATA_PRECISION highp
 #else
 precision mediump float;
+#define DATA_PRECISION mediump
 #endif
 
 /* Redefine MAX_ANIM_FRAMES to support animations with different frame numbers. */
@@ -18,7 +20,16 @@ precision mediump float;
 
 uniform vec2 uResolution;
 uniform sampler2D uMainSampler;
-uniform sampler2D uLayerSampler;
+// The layer and animation samplers carry packed integer data (tile indices and
+// flag bits), not colour, so they need more than the default sampler precision.
+// GLSL ES 1.00 declares fragment shader samplers `lowp` by default (spec 4.5.3),
+// which only guarantees 8-bit absolute precision. A driver that takes that
+// literally decodes the layer texel a fraction below its true byte value, which
+// is enough to break the exact comparisons that read the flag bits out of it.
+// Observed on Adreno 740/750 (Galaxy S23 / S23 Ultra / Z Fold 7), where every
+// empty tile failed its `flags == 16.0` test and drew tile 0 of the tileset over
+// the layers beneath it.
+uniform DATA_PRECISION sampler2D uLayerSampler;
 uniform vec2 uMainResolution;
 uniform vec2 uLayerResolution;
 uniform float uTileColumns;
@@ -27,7 +38,7 @@ uniform float uAlpha;
 uniform float uTime;
 
 #if MAX_ANIM_FRAMES > 0
-uniform sampler2D uAnimSampler;
+uniform DATA_PRECISION sampler2D uAnimSampler;
 uniform vec2 uAnimResolution;
 #endif
 
@@ -42,10 +53,20 @@ vec2 getTexRes ()
     return uMainResolution;
 }
 
+// Snap a UNORM8 texel back to the exact 0-255 byte values it was uploaded with.
+// The channels below are weighted by powers of 256, so a fetch that is off by a
+// fraction of a byte becomes an error of hundreds in the decoded value.
+vec4 texelBytes (vec4 texel)
+{
+    return floor(texel * 255.0 + 0.5);
+}
+
 // Convert a vec4 texel to a float.
 float floatTexel (vec4 texel)
 {
-    return texel.r * 255.0 + (texel.g * 255.0 * 256.0) + (texel.b * 255.0 * 256.0 * 256.0) + (texel.a * 255.0 * 256.0 * 256.0 * 256.0);
+    vec4 bytes = texelBytes(texel);
+
+    return bytes.r + (bytes.g * 256.0) + (bytes.b * 256.0 * 256.0) + (bytes.a * 256.0 * 256.0 * 256.0);
 }
 
 struct Tile
@@ -67,7 +88,7 @@ Tile getLayerData (vec2 coord)
     // Invert Y, as textures are flipped in GL.
     uv.y = 1.0 - uv.y;
 
-    vec4 texel = texture2D(uLayerSampler, (tile + 0.5) / uLayerResolution) * 255.0;
+    vec4 texel = texelBytes(texture2D(uLayerSampler, (tile + 0.5) / uLayerResolution));
 
     float flags = texel.a;
 
