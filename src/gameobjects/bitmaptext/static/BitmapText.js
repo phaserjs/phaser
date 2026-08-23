@@ -12,6 +12,7 @@ var GameObject = require('../../GameObject');
 var GetBitmapTextSize = require('../GetBitmapTextSize');
 var ParseFromAtlas = require('../ParseFromAtlas');
 var ParseXMLBitmapFont = require('../ParseXMLBitmapFont');
+var ParseRichText = require('../RichTextParser');
 var Rectangle = require('../../../geom/rectangle/Rectangle');
 var Render = require('./BitmapTextRender');
 var TintModes = require('../../../renderer/TintModes');
@@ -134,6 +135,37 @@ var BitmapText = new Class({
          * @since 3.0.0
          */
         this._text = '';
+
+        /**
+         * Named text styles from `addTextStyle`, resolved per font key.
+         *
+         * @name Phaser.GameObjects.BitmapText#_styles
+         * @type {Object.<string, Phaser.Types.GameObjects.BitmapText.Style>}
+         * @private
+         * @since 4.3.0
+         */
+        this._styles = {};
+
+        /**
+         * The rich-text segments of this Bitmap Text, or `null` for plain text.
+         *
+         * @name Phaser.GameObjects.BitmapText#_segments
+         * @type {?Phaser.Types.GameObjects.BitmapText.Segment[]}
+         * @private
+         * @since 4.3.0
+         */
+        this._segments = null;
+
+        /**
+         * The resolved style for each character of the flattened text.
+         * `null` for plain text.
+         *
+         * @name Phaser.GameObjects.BitmapText#_styleByIndex
+         * @type {?Array.<Phaser.Types.GameObjects.BitmapText.Style>}
+         * @private
+         * @since 4.3.0
+         */
+        this._styleByIndex = null;
 
         /**
          * The font size of this Bitmap Text.
@@ -439,6 +471,52 @@ var BitmapText = new Class({
     },
 
     /**
+     * Registers a named text style: a bitmap font plus optional size and color.
+     * Segments passed to `setRichText` reference it by name.
+     *
+     * @method Phaser.GameObjects.BitmapText#addTextStyle
+     * @since 4.3.0
+     *
+     * @param {string} name - The style name.
+     * @param {Phaser.Types.GameObjects.BitmapText.TextStyleConfig} config - The style configuration.
+     *
+     * @return {this} This BitmapText Object.
+     */
+    addTextStyle: function (name, config)
+    {
+        var fontData;
+        var frame;
+
+        if (config.font !== undefined)
+        {
+            var fontEntry = this.scene.sys.cache.bitmapFont.get(config.font);
+
+            if (!fontEntry)
+            {
+                console.warn('Invalid BitmapText style key: ' + config.font);
+
+                return this;
+            }
+
+            fontData = fontEntry.data;
+            frame = this.scene.sys.textures.getFrame(fontEntry.texture, fontEntry.frame);
+        }
+
+        var color = config.color;
+
+        if (color === undefined) { color = 0xffffff; }
+
+        this._styles[name] = {
+            fontData: fontData,
+            frame: frame,
+            size: config.size,
+            color: color
+        };
+
+        return this;
+    },
+
+    /**
      * Set the textual content of this BitmapText.
      *
      * An array of strings will be converted into multi-line text. Use the align methods to change multi-line alignment.
@@ -465,6 +543,114 @@ var BitmapText = new Class({
         if (value !== this.text)
         {
             this._text = value.toString();
+
+            this._segments = null;
+            this._styleByIndex = null;
+
+            this._dirty = true;
+
+            this.updateDisplayOrigin();
+        }
+
+        return this;
+    },
+
+    /**
+     * Sets rich text, either from markup string with `[style]...[/style]`
+     * tags, or from explicit segments.
+     *
+     * @method Phaser.GameObjects.BitmapText#setRichText
+     * @since 4.3.0
+     *
+     * @param {(string|Phaser.Types.GameObjects.BitmapText.Segment[])} richText - Markup string or segments to set.
+     *
+     * @return {this} This BitmapText Object.
+     */
+    setRichText: function (richText)
+    {
+        var segments = richText;
+        if (typeof richText === 'string')
+        {
+            segments = ParseRichText(richText);
+        }
+
+        var defaultStyle = { fontData: this.fontData, frame: this.frame, size: undefined, color: 0xffffff };
+        var text = '';
+        var styleByIndex = [];
+
+        for (var i = 0; i < segments.length; i++)
+        {
+            var segment = segments[i];
+
+            if (typeof segment.text !== 'string')
+            {
+                continue;
+            }
+
+            var style = defaultStyle;
+
+            if (segment.style !== undefined)
+            {
+                var namedStyle = this._styles[segment.style];
+
+                if (namedStyle === undefined)
+                {
+                    console.warn('Unknown BitmapText style: ' + segment.style);
+                }
+                else
+                {
+                    style = namedStyle;
+                }
+            }
+
+            var fontData = style.fontData;
+            var frame = style.frame;
+            var size = style.size;
+            var color = style.color;
+
+            if (segment.font !== undefined)
+            {
+                var fontEntry = this.scene.sys.cache.bitmapFont.get(segment.font);
+
+                if (!fontEntry)
+                {
+                    console.warn('Invalid BitmapText font key: ' + segment.font);
+                }
+                else
+                {
+                    fontData = fontEntry.data;
+                    frame = this.scene.sys.textures.getFrame(fontEntry.texture, fontEntry.frame);
+                }
+            }
+
+            //  A style without its own font inherits the BitmapText's font
+            if (fontData === undefined)
+            {
+                fontData = this.fontData;
+                frame = this.frame;
+            }
+
+            if (segment.size !== undefined) { size = segment.size; }
+            if (segment.color !== undefined) { color = segment.color; }
+
+            if (fontData !== style.fontData || size !== style.size || color !== style.color)
+            {
+                style = { fontData: fontData, frame: frame, size: size, color: color };
+            }
+
+            for (var j = 0; j < segment.text.length; j++)
+            {
+                styleByIndex.push(style);
+            }
+
+            text += segment.text;
+        }
+
+        if (text !== this.text || segments !== this._segments)
+        {
+            this._text = text;
+            this._segments = segments;
+            this._styleByIndex = styleByIndex;
 
             this._dirty = true;
 

@@ -72,6 +72,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
+    var styleByIndex = src._styleByIndex;
     var letterSpacing = src.letterSpacing;
     var lineSpacing = src.lineSpacing;
 
@@ -93,6 +94,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
     var lastGlyph = null;
     var lastCharCode = 0;
+    var lastFontData = null;
     var lineWidths = [];
     var shortestLine = Number.MAX_VALUE;
     var longestLine = 0;
@@ -100,97 +102,217 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
     var currentLineWidth = 0;
 
     var i;
-    var j;
     var lines;
     var words = [];
     var characters = [];
     var current = null;
 
-    // Measure the width of the text
-    var measureTextWidth = function (text, fontData)
-    {
-        var width = 0;
-
-        for (var i = 0; i < text.length; i++)
-        {
-            var charCode = text.charCodeAt(i);
-            var glyph = fontData.chars[charCode];
-
-            if (glyph)
-            {
-                width += glyph.xAdvance;
-            }
-        }
-
-        return width * sx;
-    };
-    
-    //  Scan for breach of maxWidth and insert carriage-returns
-    if (maxWidth > 0)
-    {
-        // Split the text into lines
-        lines = text.split('\n');
-        var wrappedLines = [];
-
-        // Loop through each line
-        for (i = 0; i < lines.length; i++)
-        {
-            var line = lines[i];
-            var word = '';
-            var wrappedLine = '';
-            var lineToCheck = '';
-            var lineWithWord = '';
-
-            // Loop through each character in a line
-            for (j = 0; j < line.length; j++)
-            {
-                charCode = line.charCodeAt(j);
-
-                word += line[j];
-
-                // White space or end of line?
-                if (charCode === wordWrapCharCode || j === line.length - 1)
-                {
-                    lineWithWord = lineToCheck + word;
-                    
-                    var textWidth = measureTextWidth(lineWithWord, src.fontData);
-
-                    if (textWidth <= maxWidth)
-                    {
-                        lineToCheck = lineWithWord;
-                    }
-                    else
-                    {
-                        // If the current word is too long to fit on a line, wrap it
-                        // Remove trailing word wrap char to keep text length the same
-                        wrappedLine = wrappedLine.slice(0, -1);
-                        wrappedLine += (wrappedLine ? '\n' : '') + lineToCheck;
-                        lineToCheck = word;
-                    }
-
-                    word = '';
-                }
-            }
-
-            wrappedLine = wrappedLine.slice(0, -1);
-            wrappedLine += (wrappedLine ? '\n' : '') + lineToCheck;
-            wrappedLines.push(wrappedLine);
-        }
-
-        text = wrappedLines.join('\n');
-
-        out.wrappedText = text;
-
-        textLength = text.length;
-    }
-
-    var charIndex = 0;
-
+    //  Resolve each character into an item carrying its glyph, advance and kerning
+    var items = [];
     for (i = 0; i < textLength; i++)
     {
         charCode = text.charCodeAt(i);
-
         if (charCode === 10)
+        {
+            items.push({ newline: true });
+            lastGlyph = null;
+            lastFontData = null;
+            continue;
+        }
+
+        var fontData = src.fontData;
+        var style = null;
+
+        if (styleByIndex)
+        {
+            style = styleByIndex[i];
+            fontData = style.fontData;
+
+            glyph = fontData.chars[charCode];
+
+            //  The style font is missing this char: fall back to the default
+            if (!glyph)
+            {
+                fontData = src.fontData;
+                glyph = fontData.chars[charCode];
+                style = null;
+            }
+        }
+        else
+        {
+            glyph = chars[charCode];
+        }
+
+        if (!glyph) continue;
+
+        var kerningOffset = 0;
+
+        if (lastGlyph !== null && fontData === lastFontData)
+        {
+            kerningOffset = glyph.kerning[lastCharCode];
+            if (kerningOffset === undefined)
+                kerningOffset = 0;
+        }
+
+        //  Scale of this item relative to the global scale; 1 unless the
+        //  style sets an explicit size
+        var rel = 1;
+
+        if (style !== null && style.size !== undefined)
+        {
+            rel = (style.size / fontData.size) / scale;
+        }
+
+        items.push({
+            idx: i,
+            char: text[i],
+            code: charCode,
+            glyph: glyph,
+            fontData: fontData,
+            base: (fontData.base === undefined) ? fontData.lineHeight : fontData.base,
+            style: style,
+            rel: rel,
+            kerningOffset: kerningOffset,
+            advance: glyph.xAdvance + letterSpacing + kerningOffset,
+            charWidth: glyph.xOffset + glyph.xAdvance + kerningOffset,
+            isSpace: charCode === wordWrapCharCode
+        });
+
+        lastGlyph = glyph;
+        lastCharCode = charCode;
+        lastFontData = fontData;
+    }
+
+    //  Apply automatic wrapping
+    if (maxWidth > 0)
+    {
+        var breakIndices = [];
+        var wordWidth = 0;
+        var wordSpace = null;
+        var wordFirst = null;
+        var wrapLineWidth = 0;
+        var lastSpace = null;
+
+        for (i = 0; i <= items.length; i++)
+        {
+            var wrapItem = (i < items.length) ? items[i] : null;
+            var atLineEnd = (wrapItem === null || wrapItem.newline);
+
+            if (!atLineEnd)
+            {
+                if (wordWidth === 0)
+                {
+                    wordFirst = wrapItem;
+                }
+
+                //  More correct would be wordWidth += wrapItem.advance, but the old
+                //  string-based wrap used glyph.xAdvance only, so keeping it to avoid a behaviour change
+                wordWidth += wrapItem.glyph.xAdvance * wrapItem.rel;
+
+                if (wrapItem.code === wordWrapCharCode)
+                {
+                    wordSpace = wrapItem;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            if (wordWidth > 0 || wordSpace !== null)
+            {
+                if ((wrapLineWidth + wordWidth) * sx <= maxWidth)
+                {
+                    wrapLineWidth += wordWidth;
+                }
+                else
+                {
+                    if (lastSpace !== null)
+                    {
+                        lastSpace.newline = true;
+                        breakIndices.push(lastSpace.idx);
+
+                        wordFirst.advance -= wordFirst.kerningOffset;
+                        wordFirst.charWidth -= wordFirst.kerningOffset;
+                        wordFirst.kerningOffset = 0;
+                    }
+
+                    wrapLineWidth = wordWidth;
+                }
+
+                lastSpace = wordSpace;
+                wordSpace = null;
+                wordWidth = 0;
+                wordFirst = null;
+            }
+
+            if (atLineEnd)
+            {
+                wrapLineWidth = 0;
+                lastSpace = null;
+            }
+        }
+
+        if (breakIndices.length > 0)
+        {
+            var textChars = text.split('');
+
+            for (i = 0; i < breakIndices.length; i++)
+            {
+                textChars[breakIndices[i]] = '\n';
+            }
+
+            text = textChars.join('');
+        }
+
+        out.wrappedText = text;
+    }
+
+    //  Calculate per-line metrics (base and height)
+    var lineHeights = null;
+    var lineBases = null;
+
+    if (styleByIndex)
+    {
+        var defaultBase = (src.fontData.base === undefined) ? lineHeight : src.fontData.base;
+        var metricsLine = 0;
+
+        lineHeights = [ lineHeight ];
+        lineBases = [ defaultBase ];
+
+        for (i = 0; i < items.length; i++)
+        {
+            var metricsItem = items[i];
+
+            if (metricsItem.newline)
+            {
+                metricsLine++;
+
+                lineHeights[metricsLine] = lineHeight;
+                lineBases[metricsLine] = defaultBase;
+            }
+            else
+            {
+                if (metricsItem.fontData.lineHeight * metricsItem.rel > lineHeights[metricsLine])
+                {
+                    lineHeights[metricsLine] = metricsItem.fontData.lineHeight * metricsItem.rel;
+                }
+
+                if (metricsItem.base * metricsItem.rel > lineBases[metricsLine])
+                {
+                    lineBases[metricsLine] = metricsItem.base * metricsItem.rel;
+                }
+            }
+        }
+    }
+
+    //  Position characters
+    var charIndex = 0;
+    for (i = 0; i < items.length; i++)
+    {
+        var item = items[i];
+
+        if (item.newline)
         {
             if (current !== null)
             {
@@ -205,8 +327,6 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
                 current = null;
             }
-
-            lastGlyph = null;
 
             lineWidths[currentLine] = currentLineWidth;
 
@@ -224,26 +344,28 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             currentLineWidth = 0;
 
             xAdvance = 0;
-            yAdvance = (lineHeight + lineSpacing) * currentLine;
+
+            if (lineHeights)
+            {
+                yAdvance += lineHeights[currentLine - 1] + lineSpacing;
+            }
+            else
+            {
+                yAdvance = (lineHeight + lineSpacing) * currentLine;
+            }
 
             continue;
         }
 
-        glyph = chars[charCode];
+        glyph = item.glyph;
 
-        if (!glyph)
-        {
-            continue;
-        }
-
-        x = xAdvance;
+        x = xAdvance + item.kerningOffset * item.rel;
         y = yAdvance;
 
-        if (lastGlyph !== null)
+        //  Baseline alignment: raise chars of shorter fonts to the line base
+        if (lineHeights)
         {
-            var kerningOffset = glyph.kerning[lastCharCode];
-
-            x += (kerningOffset !== undefined) ? kerningOffset : 0;
+            y += lineBases[currentLine] - item.base * item.rel;
         }
 
         if (bx > x)
@@ -256,8 +378,8 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             by = y;
         }
 
-        var gw = x + glyph.xAdvance;
-        var gh = y + lineHeight;
+        var gw = x + glyph.xAdvance * item.rel;
+        var gh = y + (lineHeights ? lineHeights[currentLine] : lineHeight);
 
         if (bw < gw)
         {
@@ -269,9 +391,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
             bh = gh;
         }
 
-        var charWidth = glyph.xOffset + glyph.xAdvance + ((kerningOffset !== undefined) ? kerningOffset : 0);
-
-        if (charCode === wordWrapCharCode)
+        if (item.isSpace)
         {
             if (current !== null)
             {
@@ -295,29 +415,34 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
                 current = { word: '', i: charIndex, x: xAdvance, y: yAdvance, w: 0, h: lineHeight };
             }
 
-            current.word = current.word.concat(text[i]);
-            current.w += charWidth;
+            current.word = current.word.concat(item.char);
+            current.w += item.charWidth * item.rel;
         }
 
-        characters.push({
+        var charEntry = {
             i: charIndex,
-            idx: i,
-            char: text[i],
-            code: charCode,
-            x: (glyph.xOffset + x) * scale,
-            y: (glyph.yOffset + yAdvance) * scale,
-            w: glyph.width * scale,
-            h: glyph.height * scale,
+            idx: item.idx,
+            char: item.char,
+            code: item.code,
+            x: (glyph.xOffset * item.rel + x) * scale,
+            y: (glyph.yOffset * item.rel + y) * scale,
+            w: glyph.width * item.rel * scale,
+            h: glyph.height * item.rel * scale,
             t: yAdvance * scale,
             r: gw * scale,
-            b: lineHeight * scale,
+            b: (lineHeights ? lineHeights[currentLine] : lineHeight) * scale,
             line: currentLine,
             glyph: glyph
-        });
+        };
 
-        xAdvance += glyph.xAdvance + letterSpacing + ((kerningOffset !== undefined) ? kerningOffset : 0);
-        lastGlyph = glyph;
-        lastCharCode = charCode;
+        if (item.style !== null)
+        {
+            charEntry.style = item.style;
+        }
+
+        characters.push(charEntry);
+
+        xAdvance += item.advance * item.rel;
         currentLineWidth = gw * scale;
         charIndex++;
     }
@@ -373,7 +498,7 @@ var GetBitmapTextSize = function (src, round, updateOrigin, out)
 
     var local = out.local;
     var global = out.global;
-    
+
     lines = out.lines;
 
     local.x = bx * scale;

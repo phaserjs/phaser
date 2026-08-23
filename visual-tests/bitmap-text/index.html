@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>bitmap-text</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #202020; }
+</style>
+</head>
+<body>
+<div id="game"></div>
+<script src="/dist/phaser.js"></script>
+<script>
+(function () {
+    var FONT_A = 'lato';
+    var FONT_B = 'clarendon';
+    var NATIVE_SIZE = 96;
+    var HALF_SIZE = 48;
+
+    var rendererType = new URLSearchParams(window.location.search).get('renderer') === 'canvas'
+        ? Phaser.CANVAS
+        : Phaser.WEBGL;
+
+    window.game = new Phaser.Game({
+        type: rendererType,
+        parent: 'game',
+        width: 1200,
+        height: 1200,
+        backgroundColor: '#202020',
+        render: { antialias: false, pixelArt: true },
+        scene: {
+            preload: function ()
+            {
+                this.load.bitmapFont(FONT_A, 'lato_0.png', 'lato.xml');
+                this.load.bitmapFont(FONT_B, 'clarendon.png', 'clarendon.xml');
+            },
+
+            create: function ()
+            {
+                // Column captions
+                this.add.bitmapText(16, 16, FONT_A, 'Plain Text', NATIVE_SIZE);
+                var richCaption = this.add.bitmapText(620, 16, FONT_A, '', NATIVE_SIZE);
+                richCaption.setRichText([
+                    { text: 'Rich', font: FONT_B, size: NATIVE_SIZE * 0.75, color: 0xffff00 },
+                    { text: ' Text', color: 0xcc66ff }
+                ]);
+
+                // 1. Markup string with named styles, autowrap + tight lines.
+                //    name = Clarendon red, item = green, vehicle = 0.75x orange,
+                //    accent = purple. Explicit \n starts a second speaker line.
+                var markup = this.add.bitmapText(620, 140, FONT_A, '', HALF_SIZE);
+                markup.addTextStyle('name', { font: FONT_B, color: 0xff6666 });
+                markup.addTextStyle('item', { color: 0x66ff66 });
+                markup.addTextStyle('vehicle', { size: NATIVE_SIZE * 0.75, color: 0xff8800 });
+                markup.addTextStyle('accent', { color: 0xcc66ff });
+                markup.setRichText('[name]T-800:[/name] Give me your [item]clothes[/item], your [item]boots[/item] and your [vehicle]motorcycle[/vehicle].\n\n[name]Guy:[/name] You forgot to say [accent]please[/accent].');
+                markup.setMaxWidth(450);
+                markup.setLineSpacing(-12);
+
+                // 1. Plain string.
+                this.add.bitmapText(16, 140, FONT_A, 'Plain string', HALF_SIZE);
+
+                // 2. Multi-line + centered alignment.
+                var centered = this.add.bitmapText(16, 200, FONT_A, 'Centered\nlines', HALF_SIZE);
+                centered.setCenterAlign();
+
+                // 3. Drop shadow (bright offset, visible on the dark background).
+                var shadow = this.add.bitmapText(16, 310, FONT_A, 'Shadow', HALF_SIZE);
+                shadow.setDropShadow(4, 4, 0xff8800, 1);
+
+                // 4. Per-character tint on a run ("bits" = indices 8..11).
+                var tinted = this.add.bitmapText(16, 370, FONT_A, 'Colored bits', HALF_SIZE);
+                tinted.setCharacterTint(8, 4, Phaser.TintModes.MULTIPLY, 0x66ff66);
+
+                // 5. Word wrap, with negative lineSpacing for compact lines.
+                var wrapped = this.add.bitmapText(16, 430, FONT_A, 'Wraps across several lines now', HALF_SIZE);
+                wrapped.setMaxWidth(180);
+                wrapped.setLineSpacing(-12);
+
+                // 6. Autowrapped + right-aligned (shorter line shifts right).
+                //    Tints on "aligned" (6..12) and "auto" (13..16 in characters[],
+                //    which excludes the wrap-inserted newline).
+                var right = this.add.bitmapText(16, 640, FONT_A, 'Right aligned autowrap', HALF_SIZE);
+                right.setMaxWidth(250);
+                right.setRightAlign();
+                right.setCharacterTint(6, 7, Phaser.TintModes.MULTIPLY, 0xff6666);
+                right.setCharacterTint(13, 4, Phaser.TintModes.MULTIPLY, 0x66aaff);
+
+                // 7. Letter spacing.
+                var spaced = this.add.bitmapText(16, 750, FONT_A, 'Spaced out', HALF_SIZE);
+                spaced.setLetterSpacing(12);
+
+                // 8. Explicit newline + autowrap on the second logical line.
+                var mixed = this.add.bitmapText(16, 810, FONT_A, 'First\nparagraph wraps here', HALF_SIZE);
+                mixed.setMaxWidth(200);
+
+                // 9. Missing glyph (€ has no Lato entry, is skipped silently),
+                //    tint on "ch" after the gap pins the characters[] indexing.
+                var missing = this.add.bitmapText(16, 960, FONT_A, 'Skip € char', HALF_SIZE);
+                missing.setCharacterTint(6, 2, Phaser.TintModes.MULTIPLY, 0xff66cc);
+
+                // 10. Empty line in the middle (zero-width line metrics).
+                this.add.bitmapText(16, 1020, FONT_A, 'Empty\n\nline', HALF_SIZE);
+            }
+        }
+    });
+
+    game.events.once('postrender', function ()
+    {
+        window.__READY__ = true;
+    });
+})();
+</script>
+</body>
+</html>

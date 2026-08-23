@@ -38,6 +38,14 @@ var tempTintData2 = {
  * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
+var multiplyTint = function (a, b)
+{
+    var ar = (a >> 16) & 0xff, ag = (a >> 8) & 0xff, ab = a & 0xff;
+    var br = (b >> 16) & 0xff, bg = (b >> 8) & 0xff, bb = b & 0xff;
+
+    return (((ar * br / 255) | 0) << 16) | (((ag * bg / 255) | 0) << 8) | ((ab * bb / 255) | 0);
+};
+
 var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMatrix)
 {
     var text = src._text;
@@ -128,7 +136,23 @@ var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMat
         }
         else
         {
-            BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, tempTintData1);
+            var styleColor = char.style ? char.style.color : 0xffffff;
+
+            //  White (0xffffff) is the identity, so plain text is unchanged
+            if (styleColor === 0xffffff)
+            {
+                BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, tempTintData1);
+            }
+            else
+            {
+                tempTintData2.tintEffect = src.tintMode;
+                tempTintData2.tintTopLeft = getTint(multiplyTint(src.tintTopLeft, styleColor), src._alphaTL);
+                tempTintData2.tintTopRight = getTint(multiplyTint(src.tintTopRight, styleColor), src._alphaTR);
+                tempTintData2.tintBottomLeft = getTint(multiplyTint(src.tintBottomLeft, styleColor), src._alphaBL);
+                tempTintData2.tintBottomRight = getTint(multiplyTint(src.tintBottomRight, styleColor), src._alphaBR);
+
+                BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, tempTintData2);
+            }
         }
     }
 };

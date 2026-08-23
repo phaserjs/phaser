@@ -854,6 +854,26 @@ describe('GetBitmapTextSize', function ()
             GetBitmapTextSize(src, false, false, out);
 
             expect(out.wrappedText).toBe('AB\nCD');
+
+            expect(out.characters.length).toBe(4);
+
+            //  'C' landed on line 1, x reset to the line start,
+            //  y advanced by one lineHeight.
+            expect(out.characters[2].char).toBe('C');
+            expect(out.characters[2].line).toBe(1);
+            expect(out.characters[2].x).toBe(0);
+            expect(out.characters[2].y).toBe(16);
+
+            //  Line metrics reflect two equal wrapped lines.
+            expect(out.lines.lengths).toEqual([ 20, 20 ]);
+            expect(out.lines.longest).toBe(20);
+            expect(out.lines.shortest).toBe(20);
+
+            //  Word splitting survived the wrap: two words, the second on line 1.
+            expect(out.words.length).toBe(2);
+            expect(out.words[0].word).toBe('AB');
+            expect(out.words[1].word).toBe('CD');
+            expect(out.words[1].y).toBe(16);
         });
 
         it('should not set wrappedText when text fits within maxWidth', function ()

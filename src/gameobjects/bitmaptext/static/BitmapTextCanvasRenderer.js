@@ -6,6 +6,8 @@
 
 var SetTransform = require('../../../renderer/canvas/utils/SetTransform');
 
+var _warned = false;
+
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -33,6 +35,13 @@ var BitmapTextCanvasRenderer = function (renderer, src, camera, parentMatrix)
     }
 
     camera.addToRenderList(src);
+
+    if (src._segments && !_warned)
+    {
+        _warned = true;
+
+        console.warn('BitmapText rich-text segments are not supported by the Canvas renderer, rendering as flat text');
+    }
 
     var textureFrame = src.fromAtlas
         ? src.frame

@@ -32,7 +32,7 @@ var tempTransformData = {
  */
 var BatchChar = function (drawingContext, submitterNode, src, char, glyph, offsetX, offsetY, calcMatrix, tintData)
 {
-    tempTextureData.frame = src.frame;
+    tempTextureData.frame = char.style ? char.style.frame : src.frame;
     tempTextureData.uvSource = glyph;
 
     var x = (char.x - src.displayOriginX) + offsetX;

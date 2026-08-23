@@ -1,0 +1,13 @@
+{
+  "name": "phaser-visual-tests",
+  "private": true,
+  "description": "Self-contained Playwright visual-regression tests for Phaser. Not published.",
+  "scripts": {
+    "visual-test": "playwright test",
+    "visual-test:update": "playwright test --update-snapshots",
+    "setup": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
+}

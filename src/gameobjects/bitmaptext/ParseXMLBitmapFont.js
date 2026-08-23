@@ -54,6 +54,8 @@ var ParseXMLBitmapFont = function (xml, frame, xSpacing, ySpacing, texture)
     data.font = info.getAttribute('face');
     data.size = getValue(info, 'size');
     data.lineHeight = getValue(common, 'lineHeight') + ySpacing;
+    data.base = getValue(common, 'base');
+    if (isNaN(data.base)) { data.base = data.lineHeight - ySpacing; }
     data.chars = {};
 
     var letters = xml.getElementsByTagName('char');
