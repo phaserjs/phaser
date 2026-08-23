@@ -614,7 +614,13 @@ var Tileset = new Class({
                 var animationDuration = tileDatum.animationDuration;
 
                 // This index maps to an animation, not a single tile.
-                indexToAnimMap.set(i, animations.length);
+                // The value is a texel offset into the animation data texture,
+                // where each animation header occupies 2 texels (duration and
+                // frame offset), so it must be `2 * ordinal` - the same way the
+                // frame offset above is stored in texel units. The shader reads
+                // the header at texel `index`; storing the raw ordinal made
+                // every animated tile after the first read a wrong header.
+                indexToAnimMap.set(i, animations.length * 2);
 
                 // This animation points to a run of frames.
                 animations.push([ animationDuration, animFrames.length ]);
