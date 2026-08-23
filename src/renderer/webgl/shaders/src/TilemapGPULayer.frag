@@ -301,6 +301,15 @@ void main ()
     vec2 layerTexCoord = outTexCoord;
     Tile tile = getLayerData(layerTexCoord);
 
+    // Empty cells must not draw anything. Without this, empty tiles sample the
+    // tileset at (0, 0) - the top-left texel of tile 0 - which is opaque for
+    // most tilesets, painting tile 0 over everything drawn beneath the layer
+    // (and causing stacked GPU layers to hide one another).
+    if (tile.empty)
+    {
+        discard;
+    }
+
     Samples samples = getFinalSamples(tile, layerTexCoord);
 
     vec4 fragColor = samples.color;
