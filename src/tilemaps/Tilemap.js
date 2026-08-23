@@ -1099,7 +1099,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#findByIndex
      * @since 3.0.0
      *
-     * @param {number} index - The tile index value to search for.
+     * @param {number} findIndex - The tile index value to search for.
      * @param {number} [skip=0] - The number of times to skip a matching tile before returning.
      * @param {boolean} [reverse=false] - If true it will scan the layer in reverse, starting at the bottom-right. Otherwise it scans from the top-left.
      * @param {(string|number|Phaser.Tilemaps.TilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
@@ -1697,7 +1697,7 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#putTilesAt
      * @since 3.0.0
      *
-     * @param {(number[]|number[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][])} tile - A row (array) or grid (2D array) of Tiles or tile indexes to place.
+     * @param {(number[]|number[][]|Phaser.Tilemaps.Tile[]|Phaser.Tilemaps.Tile[][])} tilesArray - A row (array) or grid (2D array) of Tiles or tile indexes to place.
      * @param {number} tileX - The x coordinate, in tiles, not pixels.
      * @param {number} tileY - The y coordinate, in tiles, not pixels.
      * @param {boolean} [recalculateFaces] - `true` if the faces data should be recalculated.
@@ -2473,8 +2473,8 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#swapByIndex
      * @since 3.0.0
      *
-     * @param {number} tileA - First tile index.
-     * @param {number} tileB - Second tile index.
+     * @param {number} indexA - First tile index.
+     * @param {number} indexB - Second tile index.
      * @param {number} [tileX] - The left most tile index (in tile coordinates) to use as the origin of the area.
      * @param {number} [tileY] - The top most tile index (in tile coordinates) to use as the origin of the area.
      * @param {number} [width] - How many tiles wide from the `tileX` index the area will be.
