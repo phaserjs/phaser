@@ -515,11 +515,16 @@ var SubmitterTilemapGPULayer = new Class({
         calcMatrix.multiply(spriteMatrix);
 
         // Compute output quad.
+        // The layer's x/y position is already baked into `spriteMatrix` (via
+        // `applyITRS`) and thus into `calcMatrix`, so the quad must be built
+        // from local coordinates (0, 0)-(width, height). Passing the absolute
+        // x/y here would apply the position twice, offsetting the layer by
+        // (x, y) (i.e. rendering a layer placed at (x, y) at (2x, 2y)).
         calcMatrix.setQuad(
-            x,
-            y,
-            x + width,
-            y + height,
+            0,
+            0,
+            width,
+            height,
             quad
         );
 
