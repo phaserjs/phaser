@@ -187,6 +187,58 @@ describe('File', function ()
             expect(file.src).toBe('');
         });
 
+        it('should leave default xhr credentials undefined', function ()
+        {
+            var file = makeFile();
+
+            expect(file.xhrSettings.user).toBeUndefined();
+            expect(file.xhrSettings.password).toBeUndefined();
+        });
+
+        it('should preserve omitted xhr credentials with unrelated settings', function ()
+        {
+            var file = makeFile({ xhrSettings: { timeout: 5000 } });
+
+            expect(file.xhrSettings.timeout).toBe(5000);
+            expect(file.xhrSettings.user).toBeUndefined();
+            expect(file.xhrSettings.password).toBeUndefined();
+        });
+
+        it('should preserve explicit empty xhr credentials', function ()
+        {
+            var file = makeFile({ xhrSettings: { user: '', password: '' } });
+
+            expect(file.xhrSettings.user).toBe('');
+            expect(file.xhrSettings.password).toBe('');
+        });
+
+        it('should preserve explicit non-empty xhr credentials', function ()
+        {
+            var file = makeFile({ xhrSettings: { user: 'fileuser', password: 'filepass' } });
+
+            expect(file.xhrSettings.user).toBe('fileuser');
+            expect(file.xhrSettings.password).toBe('filepass');
+        });
+
+        it('should preserve partial xhr credential overrides', function ()
+        {
+            var userFile = makeFile({ xhrSettings: { user: 'fileuser' } });
+            var passwordFile = makeFile({ xhrSettings: { password: 'filepass' } });
+
+            expect(userFile.xhrSettings.user).toBe('fileuser');
+            expect(userFile.xhrSettings.password).toBeUndefined();
+            expect(passwordFile.xhrSettings.user).toBeUndefined();
+            expect(passwordFile.xhrSettings.password).toBe('filepass');
+        });
+
+        it('should treat explicit undefined xhr credentials as omitted', function ()
+        {
+            var file = makeFile({ xhrSettings: { user: undefined, password: undefined } });
+
+            expect(file.xhrSettings.user).toBeUndefined();
+            expect(file.xhrSettings.password).toBeUndefined();
+        });
+
         it('should initialise xhrLoader to null', function ()
         {
             var file = makeFile();

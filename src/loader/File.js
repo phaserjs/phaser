@@ -132,6 +132,10 @@ var File = new Class({
          */
         this.xhrSettings = XHRSettings(GetFastValue(fileConfig, 'responseType', undefined));
 
+        //  Preserve unspecified credentials so they can inherit from the Loader settings.
+        this.xhrSettings.user = undefined;
+        this.xhrSettings.password = undefined;
+
         if (GetFastValue(fileConfig, 'xhrSettings', false))
         {
             this.xhrSettings = MergeXHRSettings(this.xhrSettings, GetFastValue(fileConfig, 'xhrSettings', {}));
