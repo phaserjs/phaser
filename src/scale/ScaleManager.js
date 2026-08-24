@@ -691,8 +691,10 @@ var ScaleManager = new Class({
         {
             var canvasBounds = this.canvasBounds;
             var canvasRect = this.canvas.getBoundingClientRect();
+            var canvasX = canvasRect.left + (window.pageXOffset || 0) - (document.documentElement.clientLeft || 0);
+            var canvasY = canvasRect.top + (window.pageYOffset || 0) - (document.documentElement.clientTop || 0);
 
-            if (canvasRect.x !== canvasBounds.x || canvasRect.y !== canvasBounds.y)
+            if (canvasX !== canvasBounds.x || canvasY !== canvasBounds.y)
             {
                 return true;
             }
