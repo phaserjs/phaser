@@ -610,7 +610,12 @@ var InputManager = new Class({
 
                 if (pointer.active && pointer.identifier === changedTouch.identifier)
                 {
-                    var element = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
+                    //  Use the canvas's root node (a ShadowRoot when Phaser runs inside shadow DOM,
+                    //  otherwise the Document) so over-canvas detection pierces shadow boundaries.
+                    //  document.elementFromPoint does not, returning the shadow host instead, which made
+                    //  isOver latch false and silently dropped every touch move inside a shadow root.
+                    var inputRoot = this.canvas ? this.canvas.getRootNode() : null;
+                    var element = (inputRoot && inputRoot.elementFromPoint ? inputRoot : document).elementFromPoint(changedTouch.clientX, changedTouch.clientY);
                     var overCanvas = element === this.canvas;
 
                     if (!this.isOver && overCanvas)
