@@ -61,8 +61,14 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
     var srcMatrix = tempMatrix2;
     var calcMatrix = tempMatrix3;
 
-    var dx = src.width * src.originX;
-    var dy = src.height * src.originY;
+    //  Bake the (scale-aware) origin offset into the matrix and keep `transform-origin` at 0,0.
+    //  This is what the `parentMatrix` branch already did; applying it to scene-level elements too
+    //  keeps both paths consistent. Previously the scene-level (else) branch set
+    //  `transform-origin: (100 * origin)%` while ALSO baking the offset into the matrix below,
+    //  applying the origin offset twice. The two only cancel at camera zoom 1, so under camera
+    //  zoom the element drifted by `origin * size * (1 - zoom)`.
+    var dx = src.width * src.originX * src.scaleX;
+    var dy = src.height * src.originY * src.scaleY;
 
     var tx = '0%';
     var ty = '0%';
@@ -76,13 +82,6 @@ var DOMElementCSSRenderer = function (renderer, src, camera, parentMatrix)
     if (parentMatrix)
     {
         camMatrix.multiply(parentMatrix);
-        dx *= src.scaleX;
-        dy *= src.scaleY;
-    }
-    else
-    {
-        tx = (100 * src.originX) + '%';
-        ty = (100 * src.originY) + '%';
     }
 
     camMatrix.translate(-dx, -dy);
