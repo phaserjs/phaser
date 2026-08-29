@@ -258,9 +258,9 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#create
      * @since 3.0.0
      *
-     * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenBuilderConfig[]|object|object[]} config - A Tween Configuration object. Or an array of Tween Configuration objects.
+     * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenChainBuilderConfig|Phaser.Tweens.Tween|Phaser.Tweens.TweenChain|Array.<(Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenChainBuilderConfig|Phaser.Tweens.Tween|Phaser.Tweens.TweenChain)>} config - A Tween Configuration object, a Tween or TweenChain instance, or an array of them.
      *
-     * @return {Phaser.Tweens.Tween|Phaser.Tweens.Tween[]} The created Tween, or an array of Tweens if an array of tween configs was provided.
+     * @return {Phaser.Tweens.Tween|Phaser.Tweens.TweenChain|Array.<(Phaser.Tweens.Tween|Phaser.Tweens.TweenChain)>} The created Tween or TweenChain, or an array of them if an array was provided.
      */
     create: function (config)
     {
@@ -376,9 +376,9 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#addMultiple
      * @since 3.60.0
      *
-     * @param {Phaser.Types.Tweens.TweenBuilderConfig[]|object[]} configs - An array of Tween Configuration objects.
+     * @param {Array.<(Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenChainBuilderConfig|Phaser.Tweens.Tween|Phaser.Tweens.TweenChain)>} configs - An array of Tween Configuration objects, Tweens or TweenChains.
      *
-     * @return {Phaser.Tweens.Tween[]} An array of created Tweens.
+     * @return {Array.<(Phaser.Tweens.Tween|Phaser.Tweens.TweenChain)>} An array of created Tweens and TweenChains.
      */
     addMultiple: function (configs)
     {
@@ -429,7 +429,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#chain
      * @since 3.60.0
      *
-     * @param {Phaser.Types.Tweens.TweenChainBuilderConfig|object} tweens - A Tween Chain configuration object.
+     * @param {Phaser.Types.Tweens.TweenChainBuilderConfig|Phaser.Tweens.TweenChain} config - A Tween Chain configuration object or TweenChain instance.
      *
      * @return {Phaser.Tweens.TweenChain} The Tween Chain instance.
      */
