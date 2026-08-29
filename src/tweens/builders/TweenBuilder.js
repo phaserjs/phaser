@@ -42,7 +42,7 @@ var Tween = require('../tween/Tween');
  * @since 3.0.0
  *
  * @param {Phaser.Tweens.TweenManager} parent - The owner of the new Tween.
- * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - Configuration for the new Tween.
+ * @param {Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Tweens.Tween} config - Configuration for the new Tween, or an existing Tween instance.
  * @param {Phaser.Types.Tweens.TweenConfigDefaults} defaults - Tween configuration defaults.
  *
  * @return {Phaser.Tweens.Tween} The new tween.

@@ -107,7 +107,7 @@ var TweenChain = new Class({
      * @method Phaser.Tweens.TweenChain#add
      * @since 3.60.0
      *
-     * @param {Phaser.Types.Tweens.TweenBuilderConfig[]|object[]} tweens - An array of Tween configuration objects for the Tweens in this chain.
+     * @param {Array.<(Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenChainBuilderConfig|Phaser.Tweens.Tween|Phaser.Tweens.TweenChain)>} tweens - An array of Tween configuration objects, Tweens or TweenChains.
      *
      * @return {this} This TweenChain instance.
      */
@@ -544,7 +544,7 @@ var TweenChain = new Class({
  * @method Phaser.GameObjects.GameObjectFactory#tweenchain
  * @since 3.60.0
  *
- * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The TweenChain configuration.
+ * @param {Phaser.Types.Tweens.TweenChainBuilderConfig|Phaser.Tweens.TweenChain} config - The TweenChain configuration or an existing TweenChain instance.
  *
  * @return {Phaser.Tweens.TweenChain} The TweenChain that was created.
  */
@@ -561,7 +561,7 @@ GameObjectFactory.register('tweenchain', function (config)
  * @method Phaser.GameObjects.GameObjectCreator#tweenchain
  * @since 3.60.0
  *
- * @param {Phaser.Types.Tweens.TweenBuilderConfig|object} config - The TweenChain configuration.
+ * @param {Phaser.Types.Tweens.TweenChainBuilderConfig|Phaser.Tweens.TweenChain} config - The TweenChain configuration or an existing TweenChain instance.
  *
  * @return {Phaser.Tweens.TweenChain} The TweenChain that was created.
  */
