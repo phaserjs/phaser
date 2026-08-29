@@ -193,7 +193,7 @@ var BaseTween = new Class({
         this.paused = false;
 
         /**
-         * An object containing the different Tween callback functions.
+         * An object containing the different Tween callback handlers.
          *
          * You can either set these in the Tween config, or by calling the `Tween.setCallback` method.
          *
