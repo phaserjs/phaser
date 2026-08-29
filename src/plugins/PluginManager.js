@@ -452,7 +452,7 @@ var PluginManager = new Class({
             start = true;
         }
 
-        if (!this.game.isBooted)
+        if (!this.game.isBooted && this.game.config.renderType !== CONST.HEADLESS)
         {
             this._pendingGlobal.push({ key: key, plugin: plugin, start: start, mapping: mapping, data: data });
         }

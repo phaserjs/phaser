@@ -3,6 +3,7 @@ var PluginCache = require('../../src/plugins/PluginCache');
 var GameObjectFactory = require('../../src/gameobjects/GameObjectFactory');
 var GameObjectCreator = require('../../src/gameobjects/GameObjectCreator');
 var FileTypesManager = require('../../src/loader/FileTypesManager');
+var CONST = require('../../src/const');
 
 describe('PluginManager', function ()
 {
@@ -97,6 +98,41 @@ describe('PluginManager', function ()
             new PluginManager(bootedGame);
 
             expect(bootSpy).toHaveBeenCalled();
+        });
+
+        it('should install mapped global plugins immediately in HEADLESS mode', function ()
+        {
+            var MockPlugin = createMockPluginClass();
+            var cachedPlugin;
+            var headlessGame = createMockGame();
+
+            headlessGame.config.renderType = CONST.HEADLESS;
+            headlessGame.config.installGlobalPlugins = [
+                { key: 'headlessPlugin', plugin: MockPlugin, mapping: 'headlessPlugin' }
+            ];
+
+            vi.spyOn(PluginCache, 'hasCustom').mockImplementation(function ()
+            {
+                return cachedPlugin !== undefined;
+            });
+            vi.spyOn(PluginCache, 'registerCustom').mockImplementation(function (key, plugin, mapping, data)
+            {
+                cachedPlugin = { plugin: plugin, mapping: mapping, data: data };
+            });
+            vi.spyOn(PluginCache, 'getCustom').mockImplementation(function ()
+            {
+                return cachedPlugin;
+            });
+
+            var headlessManager = new PluginManager(headlessGame);
+            var mockSys = {
+                scene: {},
+                settings: { map: {}, isBooted: false }
+            };
+
+            headlessManager.addToScene(mockSys, [], []);
+
+            expect(mockSys.scene.headlessPlugin).toBeInstanceOf(MockPlugin);
         });
     });
 
