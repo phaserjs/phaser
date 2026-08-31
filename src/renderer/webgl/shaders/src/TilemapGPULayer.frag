@@ -188,7 +188,29 @@ vec2 getTileTexelCoord (Tile tile)
     #endif
 
     vec2 frameCorner = getFrameCorner(index);
+
+    #ifdef FEATURE_BORDERFILTER
     return frameCorner + tile.uv;
+    #else
+    // Keep the sample inside its own frame.
+    //
+    // `tile.uv` comes from fract(), so it spans [0, 1) - the far edge is never reached. But the
+    // flip flags mirror it into (0, 1]. A fragment landing exactly on a tile boundary, where
+    // fract() is 0, therefore gets uv 1.0 on a flipped axis, and `frameCorner + uv * tileSize`
+    // addresses the first texel of the next frame in the tileset. Under NEAREST that is a whole
+    // row or column of an unrelated tile drawn along the tile edge.
+    //
+    // Half a texel of inset is a no-op for every other fragment under NEAREST, since it cannot
+    // move the sample out of the texel it already lands in.
+    //
+    // The BORDERFILTER path deliberately keeps the raw coordinate: it measures the overshoot
+    // itself in order to blend with the neighbouring tile, and clamps separately.
+    return clamp(
+        frameCorner + tile.uv,
+        frameCorner + 0.5,
+        frameCorner + uTileWidthHeightMarginSpacing.xy - 0.5
+    );
+    #endif
 }
 
 #pragma phaserTemplate(fragmentHeader)
