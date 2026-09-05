@@ -46,7 +46,7 @@ var StrokePathWebGL = function (drawingContext, submitter, matrix, src, alpha, d
         var y = path[i + 1] - dy;
         if (i > 0)
         {
-            if (x === path[i - 2] && y === path[i - 1])
+            if (path[i] === path[i - 2] && path[i + 1] === path[i - 1])
             {
                 // Duplicate point, skip it
                 continue;
