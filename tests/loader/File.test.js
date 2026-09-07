@@ -223,17 +223,23 @@ describe('File', function ()
             expect(file.data).toBeUndefined();
         });
 
-        it('should use loader.maxRetries for retryAttempts when not in config', function ()
+        it('should use loader.maxRetries when not in xhrSettings', function ()
         {
             mockLoader.maxRetries = 5;
             var file = makeFile();
-            expect(file.retryAttempts).toBe(5);
+            expect(file.maxRetries).toBe(5);
         });
 
-        it('should use config maxRetries when provided', function ()
+        it('should use xhrSettings maxRetries when provided', function ()
         {
-            var file = makeFile({ maxRetries: 7 });
-            expect(file.retryAttempts).toBe(7);
+            var file = makeFile({ xhrSettings: { maxRetries: 7 } });
+            expect(file.maxRetries).toBe(7);
+        });
+
+        it('should initialise retries to 0', function ()
+        {
+            var file = makeFile();
+            expect(file.retries).toBe(0);
         });
 
         it('should store cache reference from fileConfig', function ()
@@ -367,7 +373,7 @@ describe('File', function ()
 
             file.onLoad(xhr, event);
 
-            expect(mockLoader.nextFile).toHaveBeenCalledWith(file, true);
+            expect(mockLoader.nextFile).toHaveBeenCalledWith(file, true, event);
         });
 
         it('should call loader.nextFile with false on a 404 response', function ()
@@ -378,7 +384,7 @@ describe('File', function ()
 
             file.onLoad(xhr, event);
 
-            expect(mockLoader.nextFile).toHaveBeenCalledWith(file, false);
+            expect(mockLoader.nextFile).toHaveBeenCalledWith(file, false, event);
         });
 
         it('should call loader.nextFile with false on a 500 response', function ()
@@ -389,7 +395,7 @@ describe('File', function ()
 
             file.onLoad(xhr, event);
 
-            expect(mockLoader.nextFile).toHaveBeenCalledWith(file, false);
+            expect(mockLoader.nextFile).toHaveBeenCalledWith(file, false, event);
         });
 
         it('should call loader.nextFile with false on a 599 response', function ()
@@ -400,7 +406,7 @@ describe('File', function ()
 
             file.onLoad(xhr, event);
 
-            expect(mockLoader.nextFile).toHaveBeenCalledWith(file, false);
+            expect(mockLoader.nextFile).toHaveBeenCalledWith(file, false, event);
         });
 
         it('should treat a local file with status 0 as successful', function ()
@@ -412,7 +418,7 @@ describe('File', function ()
 
             file.onLoad(xhr, event);
 
-            expect(loader.nextFile).toHaveBeenCalledWith(file, true);
+            expect(loader.nextFile).toHaveBeenCalledWith(file, true, event);
         });
 
         it('should reset xhrLoader event handlers', function ()
@@ -484,32 +490,90 @@ describe('File', function ()
 
     describe('onError', function ()
     {
-        it('should decrement retryAttempts when attempts remain', function ()
+        beforeEach(function ()
         {
-            var file = makeFile();
-            file.retryAttempts = 3;
-            file.load = vi.fn();
-
-            file.onError();
-
-            expect(file.retryAttempts).toBe(2);
+            vi.useFakeTimers();
         });
 
-        it('should call load() when retry attempts remain', function ()
+        afterEach(function ()
+        {
+            vi.useRealTimers();
+        });
+
+        it('should increment retries when attempts remain', function ()
         {
             var file = makeFile();
-            file.retryAttempts = 1;
+            file.maxRetries = 3;
             file.load = vi.fn();
 
             file.onError();
 
-            expect(file.load).toHaveBeenCalled();
+            expect(file.retries).toBe(1);
+        });
+
+        it('should call load() after the retry delay when attempts remain', function ()
+        {
+            var file = makeFile();
+            file.maxRetries = 1;
+            file.load = vi.fn();
+
+            file.onError();
+
+            expect(file.load).not.toHaveBeenCalled();
+
+            vi.runAllTimers();
+
+            expect(file.load).toHaveBeenCalledTimes(1);
+        });
+
+        it('should back off exponentially between retries', function ()
+        {
+            var file = makeFile();
+            file.maxRetries = 10;
+            file.load = vi.fn();
+
+            file.onError();
+            vi.advanceTimersByTime(99);
+            expect(file.load).not.toHaveBeenCalled();
+            vi.advanceTimersByTime(1);
+            expect(file.load).toHaveBeenCalledTimes(1);
+
+            file.onError();
+            vi.advanceTimersByTime(199);
+            expect(file.load).toHaveBeenCalledTimes(1);
+            vi.advanceTimersByTime(1);
+            expect(file.load).toHaveBeenCalledTimes(2);
+        });
+
+        it('should cap the retry delay at 5000ms', function ()
+        {
+            var file = makeFile();
+            file.maxRetries = 10;
+            file.retries = 9;
+            file.load = vi.fn();
+
+            file.onError();
+            vi.advanceTimersByTime(5000);
+
+            expect(file.load).toHaveBeenCalledTimes(1);
+        });
+
+        it('should emit FILE_LOAD_RETRY with the file, event and retry count', function ()
+        {
+            var file = makeFile();
+            file.maxRetries = 1;
+            file.load = vi.fn();
+            var event = { type: 'error' };
+
+            file.onError({}, event);
+
+            expect(mockLoader.emit).toHaveBeenCalledWith(Events.FILE_LOAD_RETRY, file, event, 1);
         });
 
         it('should not call loader.nextFile when retrying', function ()
         {
             var file = makeFile();
-            file.retryAttempts = 1;
+            file.maxRetries = 1;
             file.load = vi.fn();
 
             file.onError();
@@ -517,23 +581,35 @@ describe('File', function ()
             expect(mockLoader.nextFile).not.toHaveBeenCalled();
         });
 
-        it('should call loader.nextFile with false when no retry attempts remain', function ()
+        it('should call loader.nextFile with false and the event when no retry attempts remain', function ()
         {
             var file = makeFile();
-            file.retryAttempts = 0;
+            file.maxRetries = 0;
+            var event = { type: 'error' };
+
+            file.onError({}, event);
+
+            expect(mockLoader.nextFile).toHaveBeenCalledWith(file, false, event);
+        });
+
+        it('should not emit FILE_LOAD_RETRY when no retry attempts remain', function ()
+        {
+            var file = makeFile();
+            file.maxRetries = 0;
 
             file.onError();
 
-            expect(mockLoader.nextFile).toHaveBeenCalledWith(file, false);
+            expect(mockLoader.emit).not.toHaveBeenCalledWith(Events.FILE_LOAD_RETRY, expect.anything(), expect.anything(), expect.anything());
         });
 
         it('should not call load() when no retry attempts remain', function ()
         {
             var file = makeFile();
-            file.retryAttempts = 0;
+            file.maxRetries = 0;
             file.load = vi.fn();
 
             file.onError();
+            vi.runAllTimers();
 
             expect(file.load).not.toHaveBeenCalled();
         });
@@ -541,7 +617,7 @@ describe('File', function ()
         it('should reset xhrLoader event handlers before retrying', function ()
         {
             var file = makeFile();
-            file.retryAttempts = 1;
+            file.maxRetries = 1;
             file.load = vi.fn();
             file.xhrLoader = {
                 onload: function () {},

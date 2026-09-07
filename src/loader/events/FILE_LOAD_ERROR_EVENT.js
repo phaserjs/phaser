@@ -7,7 +7,7 @@
 /**
  * The File Load Error Event.
  *
- * This event is dispatched by the Loader Plugin when a file fails to load.
+ * This event is dispatched by the Loader Plugin when a file fails to load without retry.
  *
  * Listen to it from a Scene using: `this.load.on('loaderror', listener)`.
  *
@@ -16,5 +16,6 @@
  * @since 3.0.0
  *
  * @param {Phaser.Loader.File} file - A reference to the File which errored during load.
+ * @param {Event | string} event - The Event that resulted from this error.
  */
 module.exports = 'loaderror';

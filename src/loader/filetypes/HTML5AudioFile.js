@@ -92,8 +92,10 @@ var HTML5AudioFile = new Class({
      *
      * @method Phaser.Loader.FileTypes.HTML5AudioFile#onError
      * @since 3.0.0
+     *
+     * @param {Event | string} event - The Event that resulted from this error.
      */
-    onError: function ()
+    onError: function (event)
     {
         for (var i = 0; i < this.data.length; i++)
         {
@@ -103,7 +105,7 @@ var HTML5AudioFile = new Class({
             audio.onerror = null;
         }
 
-        this.loader.nextFile(this, false);
+        this.loader.nextFile(this, false, event);
     },
 
     /**
