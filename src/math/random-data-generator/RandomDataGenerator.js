@@ -378,6 +378,12 @@ var RandomDataGenerator = new Class({
     /**
      * Returns a random element from within the given array, favoring the earlier entries.
      *
+     * The index is calculated as `floor(u * u * (n - 0.5) + 0.5)`, where `u` is a
+     * uniform random value from 0 (inclusive) to 1 (exclusive) and `n` is the array length.
+     * Squaring `u` biases the selection toward the start of the array; the weights
+     * do not decrease linearly. For an array of four elements, the probabilities are
+     * approximately 37.8%, 27.7%, 19.1% and 15.5%, in index order.
+     *
      * @method Phaser.Math.RandomDataGenerator#weightedPick
      * @since 3.0.0
      *
