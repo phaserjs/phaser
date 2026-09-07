@@ -575,6 +575,83 @@ describe('WebAudioSound', function ()
 
     describe('update', function ()
     {
+        it('should follow changes to all three spatial coordinates', function ()
+        {
+            var target = { x: 10, y: 20, z: 30 };
+
+            sound.play({ source: { follow: target } });
+            sound.update();
+
+            expect(sound.spatialNode.positionX.value).toBe(10);
+            expect(sound.spatialNode.positionY.value).toBe(20);
+            expect(sound.spatialNode.positionZ.value).toBe(30);
+
+            target.z = -15;
+            sound.update();
+
+            expect(sound.spatialNode.positionZ.value).toBe(-15);
+        });
+
+        it('should follow a z coordinate of zero', function ()
+        {
+            sound.spatialNode.positionZ.value = 30;
+            sound.play({ source: { follow: { x: 10, y: 20, z: 0 } } });
+            sound.update();
+
+            expect(sound.spatialNode.positionZ.value).toBe(0);
+        });
+
+        it('should preserve the z position when following a two-dimensional object', function ()
+        {
+            sound.spatialNode.positionZ.value = 30;
+            sound.play({ source: { follow: { x: 10, y: 20 } } });
+            sound.update();
+
+            expect(sound.spatialNode.positionX.value).toBe(10);
+            expect(sound.spatialNode.positionY.value).toBe(20);
+            expect(sound.spatialNode.positionZ.value).toBe(30);
+        });
+
+        it('should preserve the z position when the target z is undefined', function ()
+        {
+            sound.spatialNode.positionZ.value = 30;
+            sound.play({ source: { follow: { x: 10, y: 20, z: undefined } } });
+            sound.update();
+
+            expect(sound.spatialNode.positionZ.value).toBe(30);
+        });
+
+        it('should not update the spatial position while paused', function ()
+        {
+            sound.spatialNode.positionZ.value = 30;
+            sound.play({ source: { follow: { z: 10 } } });
+            sound.pause();
+            sound.update();
+
+            expect(sound.spatialNode.positionZ.value).toBe(30);
+        });
+
+        it('should only write the z position when it changes', function ()
+        {
+            var positionZ = 0;
+            var setPositionZ = vi.fn(function (value)
+            {
+                positionZ = value;
+            });
+
+            Object.defineProperty(sound.spatialNode.positionZ, 'value', {
+                get: function () { return positionZ; },
+                set: setPositionZ
+            });
+
+            sound.play({ source: { follow: { z: 10 } } });
+            sound.update();
+            sound.update();
+
+            expect(setPositionZ).toHaveBeenCalledTimes(1);
+            expect(setPositionZ).toHaveBeenCalledWith(10);
+        });
+
         it('should emit COMPLETE and reset state when hasEnded is true', function ()
         {
             var completeFired = false;

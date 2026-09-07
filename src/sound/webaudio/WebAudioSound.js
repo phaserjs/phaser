@@ -123,7 +123,7 @@ var WebAudioSound = new Class({
          * Game Object, this retains a reference to it.
          *
          * @name Phaser.Sound.WebAudioSound#spatialSource
-         * @type {?Phaser.Types.Math.Vector2Like}
+         * @type {?Phaser.Types.Math.Vector3Like}
          * @since 3.60.0
          */
         this.spatialSource = null;
@@ -626,6 +626,7 @@ var WebAudioSound = new Class({
         {
             var x = GetFastValue(this.spatialSource, 'x', null);
             var y = GetFastValue(this.spatialSource, 'y', null);
+            var z = GetFastValue(this.spatialSource, 'z', null);
 
             if (x && x !== this._spatialx)
             {
@@ -634,6 +635,10 @@ var WebAudioSound = new Class({
             if (y && y !== this._spatialy)
             {
                 this._spatialy = this.spatialNode.positionY.value = y;
+            }
+            if (z !== null && z !== this._spatialz)
+            {
+                this._spatialz = this.spatialNode.positionZ.value = z;
             }
         }
 
