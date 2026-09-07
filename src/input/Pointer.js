@@ -965,7 +965,7 @@ var Pointer = new Class({
      */
     leftButtonReleased: function ()
     {
-        return this.buttons === 0 ? (this.button === 0 && !this.isDown) : this.button === 0;
+        return this.buttons === 0 ? (this.button === 0 && !this.isDown) : (this.button === 0 && !this.leftButtonDown());
     },
 
     /**
