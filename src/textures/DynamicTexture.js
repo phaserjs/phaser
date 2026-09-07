@@ -768,7 +768,7 @@ var DynamicTexture = new Class({
      *
      * You can pass in a string in which case it will look for a texture in the Texture
      * Manager matching that string, and draw the base frame. If you need to specify
-     * exactly which frame to draw then use the method `drawFrame` instead.
+     * exactly which frame to draw then use the method `stamp` instead.
      *
      * You can pass in the `x` and `y` coordinates to draw the objects at. The use of
      * the coordinates differ based on what objects are being drawn. If the object is
