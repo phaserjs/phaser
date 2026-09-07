@@ -1192,6 +1192,32 @@ var NineSlice = new Class({
     },
 
     /**
+     * Sets the texture frame and refreshes the UV coordinates of this Nine Slice.
+     *
+     * The UV coordinates are updated even when `updateSize` is `false`.
+     *
+     * @method Phaser.GameObjects.NineSlice#setFrame
+     * @since 3.60.0
+     *
+     * @param {(string|number|Phaser.Textures.Frame)} frame - The name or index of the frame within the Texture, or a Frame instance.
+     * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
+     * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
+     *
+     * @return {this} This Game Object instance.
+     */
+    setFrame: function (frame, updateSize, updateOrigin)
+    {
+        Components.Texture.setFrame.call(this, frame, updateSize, updateOrigin);
+
+        if (updateSize === false)
+        {
+            this.updateUVs();
+        }
+
+        return this;
+    },
+
+    /**
      * Resets the size of this Nine Slice Game Object to match the current texture frame.
      *
      * For a 3-slice object, this sets the height to match the frame height and refreshes
