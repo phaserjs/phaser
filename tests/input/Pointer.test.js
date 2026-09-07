@@ -225,6 +225,63 @@ describe('Phaser.Input.Pointer', function ()
             pointer.button = 0;
             expect(pointer.leftButtonReleased()).toBe(true);
         });
+
+        it('should return false after pressing the left button', function ()
+        {
+            var pointer = new Pointer(mockManager, 0);
+            pointer.down({ button: 0, buttons: 1 });
+            expect(pointer.leftButtonReleased()).toBe(false);
+        });
+
+        it('should return false after pressing the left button while the right button is held', function ()
+        {
+            var pointer = new Pointer(mockManager, 0);
+            pointer.down({ button: 2, buttons: 2 });
+            pointer.down({ button: 0, buttons: 3 });
+            expect(pointer.leftButtonReleased()).toBe(false);
+        });
+
+        it('should return true after releasing the left button', function ()
+        {
+            var pointer = new Pointer(mockManager, 0);
+            pointer.down({ button: 0, buttons: 1 });
+            pointer.up({ button: 0, buttons: 0 });
+            expect(pointer.leftButtonReleased()).toBe(true);
+        });
+
+        it('should return true after releasing the left button while the right button is held', function ()
+        {
+            var pointer = new Pointer(mockManager, 0);
+            pointer.down({ button: 2, buttons: 2 });
+            pointer.down({ button: 0, buttons: 3 });
+            pointer.up({ button: 0, buttons: 2 });
+            expect(pointer.isDown).toBe(true);
+            expect(pointer.leftButtonReleased()).toBe(true);
+        });
+
+        it('should return false after releasing a different button', function ()
+        {
+            var pointer = new Pointer(mockManager, 0);
+            pointer.down({ button: 2, buttons: 2 });
+            pointer.up({ button: 2, buttons: 0 });
+            expect(pointer.leftButtonReleased()).toBe(false);
+        });
+
+        it('should return false after starting a touch', function ()
+        {
+            var pointer = new Pointer(mockManager, 1);
+            pointer.touchstart({ identifier: 1 }, { timeStamp: 1000 });
+            expect(pointer.leftButtonReleased()).toBe(false);
+        });
+
+        it('should return true after ending a touch', function ()
+        {
+            var pointer = new Pointer(mockManager, 1);
+            var touch = { identifier: 1 };
+            pointer.touchstart(touch, { timeStamp: 1000 });
+            pointer.touchend(touch, { timeStamp: 1100 });
+            expect(pointer.leftButtonReleased()).toBe(true);
+        });
     });
 
     describe('rightButtonReleased', function ()
