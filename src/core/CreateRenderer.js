@@ -22,6 +22,10 @@ var Features = require('../device/Features');
  * build time and inlined into the bundle as compile-time constants. They are not available as runtime
  * variables and determine which renderer classes are included in the build.
  *
+ * If the renderer type is `Phaser.AUTO` and the WebGL context cannot be created, despite the
+ * feature detection passing, this will fall back to the Canvas Renderer. The original error is
+ * dispatched as an `error` event on `window`, so it remains visible to error monitoring.
+ *
  * @function Phaser.Core.CreateRenderer
  * @since 3.0.0
  *
@@ -30,6 +34,9 @@ var Features = require('../device/Features');
 var CreateRenderer = function (game)
 {
     var config = game.config;
+
+    //  Remember the requested type, as AUTO is resolved to a concrete renderer below
+    var isAutoRenderType = (config.renderType === CONST.AUTO);
 
     if ((config.customEnvironment || config.canvas) && config.renderType === CONST.AUTO)
     {
@@ -111,9 +118,27 @@ var CreateRenderer = function (game)
         //  Let the config pick the renderer type, as both are included
         if (config.renderType === CONST.WEBGL)
         {
-            game.renderer = new WebGLRenderer(game);
+            try
+            {
+                game.renderer = new WebGLRenderer(game);
+            }
+            catch (e)
+            {
+                if (!isAutoRenderType)
+                {
+                    throw e;
+                }
+
+                e.message += '. Falling back to CanvasRenderer';
+                window.dispatchEvent(new ErrorEvent('error', {
+                    error: e
+                }));
+
+                //  Force the type to Canvas, since the WebGL context could not be created
+                config.renderType = CONST.CANVAS;
+            }
         }
-        else
+        if (config.renderType === CONST.CANVAS)
         {
             game.renderer = new CanvasRenderer(game);
             game.context = game.renderer.gameContext;
