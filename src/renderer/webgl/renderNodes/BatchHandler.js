@@ -8,7 +8,7 @@ var Class = require('../../../utils/Class');
 var ProgramManager = require('../ProgramManager');
 var WebGLVertexBufferLayoutWrapper = require('../wrappers/WebGLVertexBufferLayoutWrapper');
 var RenderNode = require('./RenderNode');
-var Renderer = require('../../../renderer');
+var RendererEvents = require('../../events');
 
 /**
  * @classdesc
@@ -129,7 +129,7 @@ var BatchHandler = new Class({
 
         // Listen for changes to the number of draw calls per batch.
         this.manager.on(
-            Renderer.Events.SET_PARALLEL_TEXTURE_UNITS,
+            RendererEvents.SET_PARALLEL_TEXTURE_UNITS,
             this.updateTextureCount,
             this
         );
@@ -267,7 +267,7 @@ var BatchHandler = new Class({
 
         // Set the dimension-related uniforms and listen for resize events.
         this.resize(renderer.width, renderer.height);
-        renderer.on(Renderer.Events.RESIZE, this.resize, this);
+        renderer.on(RendererEvents.RESIZE, this.resize, this);
     },
 
     /**
