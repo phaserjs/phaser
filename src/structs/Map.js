@@ -35,11 +35,11 @@ var Class = require('../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @generic K
+ * @generic {string|number} K
  * @generic V
- * @genericUse {V[]} - [elements]
+ * @genericUse {(K|V)[][]} - [elements]
  *
- * @param {Array.<*>} elements - An optional array of key-value pairs to populate this Map with.
+ * @param {Array.<Array.<K|V>>} [elements] - An optional array of key-value pairs to populate this Map with.
  */
 var Map = new Class({
 
@@ -80,11 +80,9 @@ var Map = new Class({
      * @method Phaser.Structs.Map#setAll
      * @since 3.70.0
      *
-     * @generic K
-     * @generic V
-     * @genericUse {V[]} - [elements]
+     * @genericUse {(K|V)[][]} - [elements]
      *
-     * @param {Array.<*>} elements - An array of key-value pairs to populate this Map with.
+     * @param {Array.<Array.<K|V>>} [elements] - An array of key-value pairs to populate this Map with.
      *
      * @return {this} This Map object.
      */
@@ -139,7 +137,7 @@ var Map = new Class({
      * @since 3.0.0
      *
      * @genericUse {K} - [key]
-     * @genericUse {V} - [$return]
+     * @genericUse {V|undefined} - [$return]
      *
      * @param {string} key - The key of the element to return from the `Map` object.
      *
