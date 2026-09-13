@@ -1,0 +1,199 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Texture ID shader regression</title>
+<style>
+    body { max-width: 960px; margin: 24px auto; padding: 0 20px; font: 16px/1.5 system-ui; }
+    pre { white-space: pre-wrap; font-size: 13px; }
+    button { padding: 8px 16px; }
+</style>
+<h1>Texture ID shader regression</h1>
+<p>Serve the repository root over HTTP and open this file in a WebGL 1 browser.</p>
+<p>This test deliberately supplies slightly non-integer texture IDs to the real GLSL helpers.
+It checks their tolerance of interpolation error; it does not reproduce the rasterizer-specific
+rotation bug in <a href="https://github.com/phaserjs/phaser/issues/7372">#7372</a>.</p>
+<button id="run">Run shader checks</button>
+<pre id="result">Ready.</pre>
+<canvas id="test" width="1" height="1" hidden></canvas>
+<script>
+var module = { exports: null };
+</script>
+<script src="../../../src/renderer/webgl/shaders/GetTexture-glsl.js"></script>
+<script>
+var textureSource = module.exports;
+</script>
+<script src="../../../src/renderer/webgl/shaders/GetTexRes-glsl.js"></script>
+<script>
+var resolutionSource = module.exports;
+
+function checkShader (gl, type, source)
+{
+    var shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
+    {
+        throw new Error(gl.getShaderInfoLog(shader));
+    }
+
+    return shader;
+}
+
+function runChecks ()
+{
+    var output = document.getElementById('result');
+    var gl = document.getElementById('test').getContext('webgl');
+
+    if (!gl)
+    {
+        output.textContent = 'SKIPPED: WebGL 1 is unavailable.';
+        return;
+    }
+
+    var debug = gl.getExtension('WEBGL_debug_renderer_info');
+    var maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+    var counts = [ 1, 2, maxTextures ];
+    var precisions = [ 'mediump' ];
+
+    if (gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision > 0)
+    {
+        precisions.push('highp');
+    }
+
+    var passed = 0;
+    var failed = [];
+    var buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ -1, -1, 3, -1, -1, 3 ]), gl.STATIC_DRAW);
+
+    try
+    {
+        precisions.forEach(function (precision)
+        {
+            counts.forEach(function (count)
+            {
+                [ 'texture', 'resolution' ].forEach(function (kind)
+                {
+                    var cases = '';
+
+                    for (var index = 1; index < count; index++)
+                    {
+                        cases += 'ELSE_TEX_CASE(' + index + ')\n';
+                    }
+
+                    var helper = (kind === 'texture' ? textureSource : resolutionSource)
+                        .replace('#pragma phaserTemplate(texIdProcess)', kind === 'texture' ? cases : '');
+                    var shared = 'precision ' + precision + ' float;\nvarying float outTexDatum;\n';
+                    var vertex = checkShader(gl, gl.VERTEX_SHADER, shared +
+                        'attribute vec2 position;\nuniform float testId;\n' +
+                        'void main () { gl_Position = vec4(position, 0.0, 1.0); outTexDatum = testId; }');
+                    var fragment = checkShader(gl, gl.FRAGMENT_SHADER, shared +
+                        '#define TEXTURE_COUNT ' + count + '\n' + helper + '\n' +
+                        'void main () { gl_FragColor = ' + (kind === 'texture' ?
+                            'getTexture(vec2(0.5));' : 'vec4(getTexRes() / 255.0, 0.0, 1.0);') + ' }');
+                    var program = gl.createProgram();
+                    gl.attachShader(program, vertex);
+                    gl.attachShader(program, fragment);
+                    gl.linkProgram(program);
+
+                    if (!gl.getProgramParameter(program, gl.LINK_STATUS))
+                    {
+                        throw new Error(gl.getProgramInfoLog(program));
+                    }
+
+                    gl.useProgram(program);
+                    var position = gl.getAttribLocation(program, 'position');
+                    gl.enableVertexAttribArray(position);
+                    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+                    var textures = [];
+
+                    for (var id = 0; id < count; id++)
+                    {
+                        if (kind === 'texture')
+                        {
+                            var texture = gl.createTexture();
+                            textures.push(texture);
+                            gl.activeTexture(gl.TEXTURE0 + id);
+                            gl.bindTexture(gl.TEXTURE_2D, texture);
+                            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+                            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+                            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+                                new Uint8Array([ id + 1, id + 17, 64, 255 ]));
+                            gl.uniform1i(gl.getUniformLocation(program, 'uMainSampler[' + id + ']'), id);
+                        }
+                        else
+                        {
+                            gl.uniform2f(gl.getUniformLocation(program, 'uMainResolution[' + id + ']'), id + 1, id + 17);
+                        }
+                    }
+
+                    var epsilon = precision === 'highp' ? 1 / 1024 : 1 / 64;
+                    var inputs = [];
+
+                    for (var expectedId = 0; expectedId < count; expectedId++)
+                    {
+                        [ -epsilon, 0, epsilon ].forEach(function (delta)
+                        {
+                            inputs.push({ value: expectedId + delta, expected: expectedId });
+                        });
+                    }
+
+                    inputs.push({ value: -1, expected: count === 1 ? 0 : -1 });
+                    inputs.push({ value: count, expected: count === 1 ? 0 : -1 });
+                    var location = gl.getUniformLocation(program, 'testId');
+
+                    inputs.forEach(function (input)
+                    {
+                        gl.uniform1f(location, input.value);
+                        gl.drawArrays(gl.TRIANGLES, 0, 3);
+                        var pixel = new Uint8Array(4);
+                        gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+                        var expected = input.expected < 0 ? [ 0, 0, 0, kind === 'texture' ? 0 : 255 ] :
+                            [ input.expected + 1, input.expected + 17, kind === 'texture' ? 64 : 0, 255 ];
+                        var error = gl.getError();
+                        var matches = expected.every(function (value, channel)
+                        {
+                            return pixel[channel] === value;
+                        });
+
+                        if (matches && error === gl.NO_ERROR)
+                        {
+                            passed++;
+                        }
+                        else
+                        {
+                            failed.push({ kind: kind, precision: precision, count: count, input: input.value,
+                                expected: expected, actual: Array.from(pixel), glError: error });
+                        }
+                    });
+
+                    textures.forEach(function (texture) { gl.deleteTexture(texture); });
+                    gl.deleteProgram(program);
+                    gl.deleteShader(vertex);
+                    gl.deleteShader(fragment);
+                });
+            });
+        });
+
+        output.textContent = JSON.stringify({
+            status: failed.length === 0 ? 'PASS' : 'FAIL',
+            passed: passed,
+            failed: failed.length,
+            precisions: precisions,
+            textureCounts: counts,
+            renderer: debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER),
+            failures: failed
+        }, null, 2);
+    }
+    catch (error)
+    {
+        output.textContent = 'ERROR: ' + error.message;
+    }
+    finally
+    {
+        gl.deleteBuffer(buffer);
+    }
+}
+
+document.getElementById('run').addEventListener('click', runChecks);
+</script>
