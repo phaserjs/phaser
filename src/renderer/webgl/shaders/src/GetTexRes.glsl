@@ -5,7 +5,8 @@ vec2 getTexRes ()
     #if TEXTURE_COUNT == 1
     float texId = 0.0;
     #else
-    float texId = outTexDatum;
+    // Use the same rounded ID as getTexture.
+    float texId = floor(outTexDatum + 0.5);
     #endif
     #pragma phaserTemplate(texIdProcess)
 

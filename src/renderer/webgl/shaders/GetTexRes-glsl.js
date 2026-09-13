@@ -5,7 +5,7 @@ module.exports = [
     '    #if TEXTURE_COUNT == 1',
     '    float texId = 0.0;',
     '    #else',
-    '    float texId = outTexDatum;',
+    '    float texId = floor(outTexDatum + 0.5);',
     '    #endif',
     '    #pragma phaserTemplate(texIdProcess)',
     '    vec2 texRes = vec2(0.0);',
@@ -18,5 +18,5 @@ module.exports = [
     '        }',
     '    }',
     '    return texRes;',
-    '}',
+    '}'
 ].join('\n');
