@@ -194,6 +194,9 @@ var DynamicTexture = new Class({
         if (!isCanvas)
         {
             var frame = this.get();
+
+            renderer.deleteTexture(frame.source.glTexture);
+
             frame.source.glTexture = this.drawingContext.texture;
         }
 
