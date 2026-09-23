@@ -1024,14 +1024,14 @@ var AnimationManager = new Class({
      * Returns the Animation data as JavaScript object based on the given key.
      * Or, if no key is defined, it will return the data of all animations as array of objects.
      *
-     * @method Phaser.Animations.AnimationManager#toJSON
-     * @since 3.0.0
+     * @method Phaser.Animations.AnimationManager#getJSON
+     * @since 4.3.0
      *
      * @param {string} [key] - The animation to get the JSONAnimation data from. If not provided, all animations are returned as an array.
      *
      * @return {Phaser.Types.Animations.JSONAnimations} The resulting JSONAnimations formatted object.
      */
-    toJSON: function (key)
+    getJSON: function (key)
     {
         var output = {
             anims: [],
@@ -1051,6 +1051,22 @@ var AnimationManager = new Class({
         }
 
         return output;
+    },
+
+    /**
+     * Returns the Animation data as JavaScript object.
+     *
+     * This method is called automatically by `JSON.stringify`. It must not accept an animation key,
+     * because the argument supplied by `JSON.stringify` is the property name being serialized.
+     *
+     * @method Phaser.Animations.AnimationManager#toJSON
+     * @since 3.0.0
+     *
+     * @return {Phaser.Types.Animations.JSONAnimations} The resulting JSONAnimations formatted object.
+     */
+    toJSON: function ()
+    {
+        return this.getJSON();
     },
 
     /**

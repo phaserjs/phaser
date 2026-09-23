@@ -1746,7 +1746,16 @@ declare namespace Phaser {
              * @param key The animation to get the JSONAnimation data from. If not provided, all animations are returned as an array.
              * @returns The resulting JSONAnimations formatted object.
              */
-            toJSON(key?: string): Phaser.Types.Animations.JSONAnimations;
+            getJSON(key?: string): Phaser.Types.Animations.JSONAnimations;
+
+            /**
+             * Returns the Animation data as JavaScript object.
+             *
+             * This method is called automatically by `JSON.stringify`. It must not accept an animation key,
+             * because the argument supplied by `JSON.stringify` is the property name being serialized.
+             * @returns The resulting JSONAnimations formatted object.
+             */
+            toJSON(): Phaser.Types.Animations.JSONAnimations;
 
             /**
              * Destroy this Animation Manager and clean up animation definitions and references to other objects.
