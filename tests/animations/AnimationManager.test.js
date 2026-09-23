@@ -426,11 +426,33 @@ describe('AnimationManager', function ()
             expect(result.anims.length).toBe(2);
         });
 
+        it('should return all animations when called by JSON.stringify', function ()
+        {
+            manager.anims.set('idle', createMockAnim('idle'));
+            manager.anims.set('run', createMockAnim('run'));
+            var result = JSON.parse(JSON.stringify({ anims: manager }));
+
+            expect(result.anims.anims.length).toBe(2);
+        });
+
+        it('should return all animations when stringified in an array', function ()
+        {
+            manager.anims.set('idle', createMockAnim('idle'));
+            manager.anims.set('run', createMockAnim('run'));
+            var result = JSON.parse(JSON.stringify([ manager ]));
+
+            expect(result[0].anims.length).toBe(2);
+        });
+    });
+
+    describe('getJSON', function ()
+    {
         it('should return only the specified animation when a key is provided', function ()
         {
             manager.anims.set('idle', createMockAnim('idle'));
             manager.anims.set('run', createMockAnim('run'));
-            var result = manager.toJSON('idle');
+            var result = manager.getJSON('idle');
+
             expect(result.anims.length).toBe(1);
             expect(result.anims[0].key).toBe('idle');
         });
