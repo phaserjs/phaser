@@ -89,7 +89,7 @@ Set via `scale.zoom` in config. Multiplies the display size:
 | `ZOOM_4X` | 4 | 4x zoom. |
 | `MAX_ZOOM` | -1 | Automatically calculates the largest integer zoom that fits in the parent. |
 
-You can also pass any numeric value. The zoom affects CSS display size but not the canvas resolution.
+You can also pass any numeric value. The zoom affects CSS display size but not the canvas resolution. Only `Scale.NONE` uses it for the display size; FIT and the other scaling modes size the canvas to the parent instead.
 
 ### Orientation (src/scale/const/ORIENTATION_CONST.js)
 
@@ -203,7 +203,8 @@ In NONE mode, if you change the canvas size externally you must call `game.scale
 
 ```js
 scale: {
-    mode: Phaser.Scale.FIT,
+    parent: 'game-container',
+    mode: Phaser.Scale.NONE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     width: 320,
     height: 240,
@@ -212,7 +213,17 @@ scale: {
 pixelArt: true
 ```
 
-`MAX_ZOOM` calculates the largest integer multiplier that fits in the parent. Combined with `pixelArt: true` (which disables anti-aliasing), this gives crisp pixel rendering.
+`MAX_ZOOM` calculates the largest integer multiplier that fits in the parent, and `Scale.NONE` applies it as the display size. Combined with `pixelArt: true` (which disables anti-aliasing), every game pixel becomes an equal square of CSS pixels. `Scale.NONE` skips `expandParent`, so give the parent an explicit CSS size (for example `body { margin: 0; }` and `#game-container { width: 100vw; height: 100vh; }`); an unsized parent measures 0 high and `MAX_ZOOM` falls back to 1.
+
+`MAX_ZOOM` is resolved once at boot. To pick a new multiplier when the parent resizes, call `setMaxZoom()` from a guarded, game-level handler (`setMaxZoom()` itself emits `resize`):
+
+```js
+game.scale.on('resize', () => {
+    if (game.scale.getMaxZoom() !== game.scale.zoom) game.scale.setMaxZoom();
+});
+```
+
+With `Scale.FIT`, `zoom` does not set the display size: the canvas scales to the parent at a usually non-integer ratio, so pixels come out unevenly sized. If you need FIT, `snap: { width: 320, height: 240 }` with `min: { width: 320, height: 240 }` keeps it to integer steps.
 
 ### Snap Values for Grid Alignment
 
