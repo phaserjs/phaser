@@ -440,9 +440,11 @@ Filters enable framebuffer rendering automatically. Use `setForceComposite(true)
 In Phaser 4, `Camera` has a `filters` property with two `FilterList` instances:
 
 ```js
-cam.filters.internal   // FilterList -- applied by the system
-cam.filters.external   // FilterList -- for user-added filters
+cam.filters.internal   // FilterList -- applies to things within the camera
+cam.filters.external   // FilterList -- applies to the camera itself, in its rendering context
 ```
+
+Both lists start empty; add your own filters to either.
 
 Add post-processing effects to a camera the same way you add them to Game Objects:
 
@@ -450,12 +452,12 @@ Add post-processing effects to a camera the same way you add them to Game Object
 // Add a blur filter to the camera
 cam.filters.external.addBlur(1, 2);
 
-// Add a glow
-cam.filters.external.addGlow(0xff0000, 4, 0, false, 0.1, 10);
+// Add a glow: (color, outerStrength, innerStrength, scale, knockout, quality, distance)
+cam.filters.external.addGlow(0xff0000, 4, 0, 1, false, 10, 10);
 
 // Add a color matrix filter
 const fx = cam.filters.external.addColorMatrix();
-fx.grayscale();
+fx.colorMatrix.grayscale();
 
 // Remove all external filters
 cam.filters.external.clear();
