@@ -244,7 +244,7 @@ sprite.on('animationupdate', (anim, frame, gameObject, frameKey) => {
 
 ### Per-Frame Duration
 
-Individual frames can have a `duration` (ms) that is added to the base msPerFrame.
+Individual frames can have a `duration` (ms) that replaces the base msPerFrame for that frame. It is ignored whenever the playback's frame rate differs from the animation's own, for example when `play()` passes a different `frameRate`.
 
 ```js
 this.anims.create({
@@ -456,7 +456,7 @@ Key properties: `isPlaying`, `hasStarted`, `currentAnim`, `currentFrame`, `forwa
 1. **Animations are global by default.** `this.anims.create()` registers across all Scenes. Do not recreate in every Scene -- it logs a warning and returns the existing one.
 2. **`repeat: -1` never fires `animationcomplete`.** Use `stop()` to end infinite animations. Listen for `animationstop` instead.
 3. **`frameRate` beats `duration`.** If both are set, frameRate wins. Set only `duration` (leave frameRate null) to control total length.
-4. **Per-frame `duration` is additive.** Added on top of base msPerFrame, not a replacement.
+4. **Per-frame `duration` replaces msPerFrame.** That frame lasts `duration` ms (since 3.80). It is ignored whenever the playback's frame rate differs from the animation's own.
 5. **`play()` stops the current animation** (fires `animationstop`). Use `play(key, true)` to skip if already playing.
 6. **Mix delays only work with `play()`.** `playAfterDelay`/`playAfterRepeat` bypass mixes.
 7. **Local animations override global.** Same key on a sprite's local map takes priority.

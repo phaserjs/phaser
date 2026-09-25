@@ -362,7 +362,9 @@ Property:     length (read-only child count)
 Factory:  this.add.layer(children?)
 
 Extends:  Phaser.Structs.List
-Mixins:   AlphaSingle, BlendMode, Depth, Filters, Mask, RenderSteps, Visible
+Mixins:   EventEmitter, GameObject (since 4.1; brings Filters, RenderSteps),
+          AlphaSingle, BlendMode, Depth, Mask, Visible
+Note:     layer instanceof Phaser.GameObjects.GameObject is false at runtime.
 
 Key members:  scene, displayList, sortChildrenFlag
 Children:     add, remove (inherited from List)
@@ -381,7 +383,7 @@ Cannot be added to a Container. Containers can be added to Layers.
 
 3. **Container origin is always 0,0.** The transform point cannot be changed. Position children relative to (0,0).
 
-4. **Container children lose Scene-level depth control.** A child's `depth` only orders within the Container. The Container's own depth positions it in the Scene.
+4. **Container children lose Scene-level depth control.** Children render in list order, and a child's `depth` has no effect on its own: call `container.sort('depth')` after changing depths, or reorder with `bringToTop`, `moveUp`, `moveTo` and similar. (A Layer, by contrast, sorts its children by depth.) The Container's own depth positions it in the Scene.
 
 5. **Physics + Container is problematic.** If a Container is not at (0,0), physics bodies on children will be offset. Avoid physics bodies on Container children.
 

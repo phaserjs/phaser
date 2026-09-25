@@ -453,9 +453,6 @@ this.game.scene.start('MenuScene');
 
 ## v4 Changes from v3
 
-- **Default dimensions changed:** Width defaults to `1024` (was `800`), height to `768` (was `600`).
-- **EXPAND scale mode added:** `Phaser.Scale.EXPAND` (value `6`) is new -- combines RESIZE visible area behavior with FIT canvas scaling.
-- **Loader maxRetries default:** `loader.maxRetries` defaults to `2` (was `0` in early v3).
 - **smoothPixelArt option:** New WebGL-only rendering mode that smooths edges between blocky pixels.
 - **renderNodes config:** New `render.renderNodes` property for custom WebGL render node registration.
 - **skipUnreadyShaders:** New option for parallel shader compilation to prevent stutter.

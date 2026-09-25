@@ -26,7 +26,7 @@ Or in more detail:
     - Optionally, add post-processing to further stylize the display.
     - Restrictions: you need to scale up your game objects, and use a fairly high resolution.
   - Do you want to blend color?
-    - Apply a Pixelate filter to the camera: `this.cameras.main.filters.external.addBlocky(6);`
+    - Apply a Pixelate filter to the camera: `this.cameras.main.filters.external.addPixelate(6);`
     - Optionally, add post-processing to further stylize the display.
     - Restrictions: you need to scale up your game objects, and use a fairly high resolution.
 
@@ -317,7 +317,7 @@ The answer depends on a great many factors, but we can boil it down to just a fe
     - Optionally, add post-processing to further stylize the display.
     - Restrictions: you need to scale up your game objects, and use a fairly high resolution.
   - Do you want to blend color?
-    - Apply a Pixelate filter to the camera: `this.cameras.main.filters.external.addBlocky(6);`
+    - Apply a Pixelate filter to the camera: `this.cameras.main.filters.external.addPixelate(6);`
     - Optionally, add post-processing to further stylize the display.
     - Restrictions: you need to scale up your game objects, and use a fairly high resolution.
 

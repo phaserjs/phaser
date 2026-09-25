@@ -129,8 +129,9 @@ Frame loop order: `preupdate` -> `update` -> `Scene.update()` -> `postupdate` ->
 ```js
 create() {
     this.events.on(Phaser.Scenes.Events.UPDATE, this.onUpdate, this);
-    // CRITICAL: always clean up on shutdown to prevent leaks on scene restart
-    this.events.on(Phaser.Scenes.Events.SHUTDOWN, () => {
+    // CRITICAL: always clean up on shutdown to prevent leaks on scene restart.
+    // Use once(): an on() SHUTDOWN handler would itself be added again on every restart.
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
         this.events.off(Phaser.Scenes.Events.UPDATE, this.onUpdate, this);
         this.input.off('pointerdown', this.onPointerDown, this);
     });
@@ -425,19 +426,19 @@ create() {
 
 ### Memory Leaks from Unremoved Listeners
 
-The most common source of bugs. If a scene uses `on()` and the scene restarts via `scene.restart()`, old listeners persist because `on()` does not auto-remove. Each restart adds duplicate listeners.
+The most common source of bugs. Listeners on emitters that survive a scene restart (`this.events`, `this.game.events`, `this.registry.events`, `this.scale`) persist across `scene.restart()`, because `on()` does not auto-remove. Each restart adds duplicate listeners. Scene input is the exception: InputPlugin, KeyboardPlugin and GamepadPlugin call `removeAllListeners()` on shutdown, so listeners on `this.input`, `this.input.keyboard` and `this.input.gamepad` are cleared for you.
 
 ```js
 // BAD: leaks listeners on every scene restart
 create() {
-    this.input.on('pointerdown', this.shoot, this);
+    this.game.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
 }
 
 // GOOD: clean up in shutdown
 create() {
-    this.input.on('pointerdown', this.shoot, this);
+    this.game.events.on(Phaser.Core.Events.BLUR, this.onBlur, this);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-        this.input.off('pointerdown', this.shoot, this);
+        this.game.events.off(Phaser.Core.Events.BLUR, this.onBlur, this);
     });
 }
 
