@@ -194,6 +194,11 @@ class BootScene extends Phaser.Scene {
         particles.stop();
         particles.start();
 
+        // Random emit zones with Geom shape sources
+        let randomZone = new Phaser.GameObjects.Particles.Zones.RandomZone(new Phaser.Geom.Rectangle(0, 0, 100, 100));
+        particles.addEmitZone(randomZone);
+        particles.addEmitZone({ type: 'random', source: new Phaser.Geom.Circle(0, 0, 50) });
+
         // Blitter
         let blitter = this.add.blitter(0, 0, 'cards');
         blitter.create(100, 100, 'clubs3');
