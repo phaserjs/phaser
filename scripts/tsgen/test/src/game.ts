@@ -199,6 +199,24 @@ class BootScene extends Phaser.Scene {
         blitter.create(100, 100, 'clubs3');
 
         // ---------------------------------------------------------------
+        // Game Object Creator
+        // ---------------------------------------------------------------
+
+        // Creators read `key` and `frame` from the config at runtime, so
+        // their config types must accept them.
+        let madeImage = this.make.image({ key: 'logo', frame: 'logo', x: 100, y: 100 }, false);
+        madeImage.setOrigin(0.5, 0.5);
+
+        let madeSprite = this.make.sprite({ key: 'logo', frame: 0 });
+        madeSprite.play('walk');
+
+        let madeBlitter = this.make.blitter({ key: 'cards', frame: 'clubs3' });
+        madeBlitter.create(0, 0, 'clubs3');
+
+        let madeCaptureFrame = this.make.captureFrame({ key: 'dynamic', visible: false }, false);
+        madeCaptureFrame.setAlpha(0.5);
+
+        // ---------------------------------------------------------------
         // RenderTexture / DynamicTexture
         // ---------------------------------------------------------------
 

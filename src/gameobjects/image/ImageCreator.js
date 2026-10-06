@@ -17,7 +17,7 @@ var Image = require('./Image');
  * @method Phaser.GameObjects.GameObjectCreator#image
  * @since 3.0.0
  *
- * @param {Phaser.Types.GameObjects.GameObjectConfig} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.Types.GameObjects.Image.ImageConfig} config - The configuration object this Game Object will use to create itself. The `key` property identifies the texture to use, and the optional `frame` property identifies a specific frame within that texture.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Image} The Game Object that was created.
