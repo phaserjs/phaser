@@ -169,6 +169,25 @@ var TimeStep = new Class({
         this._limitRate = (this.hasFpsLimit) ? (1000 / this.fpsLimit) : 0;
 
         /**
+         * Accumulated time used to preserve the FPS limiter cadence.
+         *
+         * @name Phaser.Core.TimeStep#_limitDelta
+         * @type {number}
+         * @private
+         */
+        this._limitDelta = 0;
+
+        /**
+         * Elapsed time not yet delivered to a limited Game step.
+         *
+         * @name Phaser.Core.TimeStep#_stepDelta
+         * @type {number}
+         * @private
+         */
+        this._stepDelta = 0;
+
+
+        /**
          * The minimum fps value in ms.
          *
          * Defaults to 200ms between frames (i.e. super slow!)
@@ -515,6 +534,8 @@ var TimeStep = new Class({
         }
 
         this.delta = 0;
+        this._limitDelta = 0;
+        this._stepDelta = 0;
         this.deltaIndex = 0;
 
         this._coolDown = this.panicMax;
@@ -683,7 +704,9 @@ var TimeStep = new Class({
         }
 
         //  Set as the world delta value (after smoothing, if applied)
-        this.delta += delta;
+        this._stepDelta += delta;
+        this._limitDelta += delta;
+        this.delta = this._stepDelta;
 
         if (time >= this.nextFpsUpdate)
         {
@@ -692,11 +715,13 @@ var TimeStep = new Class({
 
         this.framesThisSecond++;
 
-        if (this.delta >= this._limitRate)
+        if (this._limitDelta >= this._limitRate)
         {
-            this.callback(time, this.delta);
+            //  Keep the limiter phase without delivering its remainder twice.
+            this._limitDelta %= this._limitRate;
+            this._stepDelta = 0;
 
-            this.delta %= this._limitRate;
+            this.callback(time, this.delta);
         }
 
         //  Shift time value over
@@ -870,6 +895,12 @@ var TimeStep = new Class({
      */
     setFPSLimit: function (limit)
     {
+        if (this.hasFpsLimit !== (limit > 0))
+        {
+            this._limitDelta = 0;
+            this._stepDelta = 0;
+        }
+
         this.fpsLimit = limit;
         this.hasFpsLimit = (this.fpsLimit > 0);
         this._limitRate = (this.hasFpsLimit) ? (1000 / this.fpsLimit) : 0;
