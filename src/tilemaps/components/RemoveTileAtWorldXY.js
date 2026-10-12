@@ -23,7 +23,7 @@ var point = new Vector2();
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
- * @return {Phaser.Tilemaps.Tile} The Tile object that was removed.
+ * @return {?Phaser.Tilemaps.Tile} The Tile object that was removed, or null if there was no tile there or the coordinates were invalid.
  */
 var RemoveTileAtWorldXY = function (worldX, worldY, replaceWithNull, recalculateFaces, camera, layer)
 {

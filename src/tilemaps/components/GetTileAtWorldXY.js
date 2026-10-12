@@ -21,7 +21,7 @@ var point = new Vector2();
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
- * @return {Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
+ * @return {?Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
  */
 var GetTileAtWorldXY = function (worldX, worldY, nonNull, camera, layer)
 {

@@ -405,7 +405,7 @@ var TilemapLayerBase = new Class({
      * @param {number} [skip=0] - The number of times to skip a matching tile before returning.
      * @param {boolean} [reverse=false] - If true it will scan the layer in reverse, starting at the bottom-right. Otherwise it scans from the top-left.
      *
-     * @return {Phaser.Tilemaps.Tile} The first matching Tile object.
+     * @return {?Phaser.Tilemaps.Tile} The first matching Tile object, or null if no match was found.
      */
     findByIndex: function (findIndex, skip, reverse)
     {
@@ -469,7 +469,7 @@ var TilemapLayerBase = new Class({
      * @param {number} tileY - Y position to get the tile from (given in tile units, not pixels).
      * @param {boolean} [nonNull=false] - For empty tiles, return a Tile object with an index of -1 instead of null.
      *
-     * @return {Phaser.Tilemaps.Tile} The Tile at the given coordinates or null if no tile was found or the coordinates were invalid.
+     * @return {?Phaser.Tilemaps.Tile} The Tile at the given coordinates or null if no tile was found or the coordinates were invalid.
      */
     getTileAt: function (tileX, tileY, nonNull)
     {
@@ -487,7 +487,7 @@ var TilemapLayerBase = new Class({
      * @param {boolean} [nonNull=false] - For empty tiles, return a Tile object with an index of -1 instead of null.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      *
-     * @return {Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
+     * @return {?Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
      */
     getTileAtWorldXY: function (worldX, worldY, nonNull, camera)
     {
@@ -506,7 +506,7 @@ var TilemapLayerBase = new Class({
      * @param {boolean} [nonNull=false] - For empty tiles, return a Tile object with an index of -1 instead of null.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      *
-     * @return {Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
+     * @return {?Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
      */
     getIsoTileAtWorldXY: function (worldX, worldY, originTop, nonNull, camera)
     {
@@ -715,7 +715,7 @@ var TilemapLayerBase = new Class({
      * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified location with null instead of a Tile with an index of -1.
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
      *
-     * @return {Phaser.Tilemaps.Tile} The Tile object that was removed from the given location.
+     * @return {?Phaser.Tilemaps.Tile} The Tile object that was removed from the given location, or null if there was no tile there or the coordinates were invalid.
      */
     removeTileAt: function (tileX, tileY, replaceWithNull, recalculateFaces)
     {
@@ -735,7 +735,7 @@ var TilemapLayerBase = new Class({
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to use when calculating the tile index from the world values.
      *
-     * @return {Phaser.Tilemaps.Tile} The Tile object that was removed from the given location.
+     * @return {?Phaser.Tilemaps.Tile} The Tile object that was removed from the given location, or null if there was no tile there or the coordinates were invalid.
      */
     removeTileAtWorldXY: function (worldX, worldY, replaceWithNull, recalculateFaces, camera)
     {
