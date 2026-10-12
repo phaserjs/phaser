@@ -17,7 +17,7 @@ var IsInLayerBounds = require('./IsInLayerBounds');
  * @param {boolean} nonNull - For empty tiles, return a Tile object with an index of -1 instead of null.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
- * @return {Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
+ * @return {?Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates were invalid.
  */
 var GetTileAt = function (tileX, tileY, nonNull, layer)
 {

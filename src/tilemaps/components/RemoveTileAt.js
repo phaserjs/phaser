@@ -21,7 +21,7 @@ var CalculateFacesAt = require('./CalculateFacesAt');
  * @param {boolean} recalculateFaces - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
- * @return {Phaser.Tilemaps.Tile} The Tile object that was removed.
+ * @return {?Phaser.Tilemaps.Tile} The Tile object that was removed, or null if there was no tile there or the coordinates were invalid.
  */
 var RemoveTileAt = function (tileX, tileY, replaceWithNull, recalculateFaces, layer)
 {
