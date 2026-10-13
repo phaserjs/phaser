@@ -13,7 +13,6 @@ var GameObjectFactory = require('../gameobjects/GameObjectFactory');
 var GetFastValue = require('../utils/object/GetFastValue');
 var PluginCache = require('./PluginCache');
 var Remove = require('../utils/array/Remove');
-var CONST = require('../const');
 
 /**
  * @classdesc
@@ -114,7 +113,7 @@ var PluginManager = new Class({
          */
         this._pendingScene = [];
 
-        if (game.isBooted || game.config.renderType === CONST.HEADLESS)
+        if (game.isBooted)
         {
             this.boot();
         }
@@ -452,7 +451,7 @@ var PluginManager = new Class({
             start = true;
         }
 
-        if (!this.game.isBooted && this.game.config.renderType !== CONST.HEADLESS)
+        if (!this.game.isBooted)
         {
             this._pendingGlobal.push({ key: key, plugin: plugin, start: start, mapping: mapping, data: data });
         }
