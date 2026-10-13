@@ -751,6 +751,19 @@ class BootScene extends Phaser.Scene {
 
         // ---------------------------------------------------------------
         // Structs
+        const typedMap = new Phaser.Structs.Map<string, number>();
+        typedMap.setAll([ [ 'score', 1 ] ]);
+        typedMap.set('score', 2);
+        const optionalValue: number | undefined = typedMap.get('missing');
+
+        // @ts-expect-error Map keys must be strings or numbers
+        new Phaser.Structs.Map<object, number>();
+
+        // @ts-expect-error setAll must retain the Map's value type
+        typedMap.setAll([ [ 'score', false ] ]);
+
+        // @ts-expect-error Missing keys can return undefined
+        const requiredValue: number = typedMap.get('missing');
         // ---------------------------------------------------------------
 
         let list = new Phaser.Structs.List<Phaser.GameObjects.Sprite>(null);
