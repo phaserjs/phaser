@@ -347,6 +347,54 @@ class BootScene extends Phaser.Scene {
             loop: 2
         });
 
+        // Tween configs support custom tween properties without an object fallback
+        this.tweens.create({
+            targets: sprite,
+            customValue: 100
+        });
+
+        this.tweens.addMultiple([
+            { targets: sprite, customValue: 200 },
+            tween,
+            chain
+        ]);
+
+        this.tweens.create({
+            targets: sprite,
+            tweens: [
+                { customValue: 300 }
+            ]
+        });
+
+        this.tweens.chain({
+            tweens: [
+                { targets: sprite, customValue: 400 },
+                tween
+            ]
+        });
+
+        this.tweens.create(chain);
+        this.tweens.chain(chain);
+        chain.add([ tween ]);
+
+        // @ts-expect-error Invalid primitives are not Tween configuration objects
+        this.tweens.create([1]);
+
+        // @ts-expect-error Tween chains require a configuration object or chain instance
+        this.tweens.chain(1);
+
+        // Empty chains can be populated later, and targets can be inherited.
+        this.tweens.chain({});
+        this.tweens.chain({ delay: 100 });
+        this.tweens.chain({ targets: sprite });
+        this.tweens.chain({ repeat: 2, repeatDelay: 50 });
+
+        // @ts-expect-error Arbitrary objects are not Tween configuration objects
+        this.tweens.create({ unexpected: true });
+
+        // @ts-expect-error Invalid primitives are not Tween configuration objects
+        this.tweens.addMultiple([1]);
+
         // Number tween
         let counter = this.tweens.addCounter({
             from: 0,

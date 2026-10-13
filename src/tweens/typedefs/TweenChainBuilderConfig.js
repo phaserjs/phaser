@@ -1,15 +1,16 @@
 /**
  * @typedef {object} Phaser.Types.Tweens.TweenChainBuilderConfig
- * @extends object
  * @since 3.60.0
  *
- * @property {any} targets - The object, or an array of objects, to run each tween on.
+ * @property {any} [targets] - The object, or an array of objects, to run each tween on.
  * @property {(number|function)} [delay=0] - The number of milliseconds to delay before the chain will start.
  * @property {string|number|function|object|array} [completeDelay=0] - The time the chain will wait before the onComplete event is dispatched once it has completed, in ms.
  * @property {string|number|function|object|array} [loop=0] - The number of times the chain will repeat. (A value of 1 means the chain will play twice, as it repeated once.) The first loop starts after every tween has completed once.
  * @property {string|number|function|object|array} [loopDelay=0] - The time the chain will pause before returning to the start for a repeat.
+ * @property {string|number|function|object|array} [repeat=0] - Alias for `loop`, used when `loop` is not specified.
+ * @property {string|number|function|object|array} [repeatDelay=0] - Alias for `loopDelay`, used when `loopDelay` is not specified.
  * @property {boolean} [paused=false] - Does the chain start in a paused state (true) or playing (false)?
- * @property {Phaser.Types.Tweens.TweenBuilderConfig[]} [tweens] - The tweens to chain together.
+ * @property {Array.<(Partial.<Phaser.Types.Tweens.TweenBuilderConfig>|Phaser.Tweens.Tween)>} [tweens] - The tweens to chain together. Each Tween configuration can inherit targets from this Tween Chain.
  * @property {any} [callbackScope] - The scope (or context) for all of the callbacks. The default scope is the chain.
  * @property {Phaser.Types.Tweens.TweenOnCompleteCallback} [onComplete] - A function to call when the chain completes.
  * @property {array} [onCompleteParams] - Additional parameters to pass to `onComplete`.
