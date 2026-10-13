@@ -26875,7 +26875,7 @@ declare namespace Phaser {
              * @param config The TweenChain configuration.
              * @returns The TweenChain that was created.
              */
-            tweenchain(config: Phaser.Types.Tweens.TweenBuilderConfig | object): Phaser.Tweens.TweenChain;
+            tweenchain(config: Phaser.Types.Tweens.TweenChainBuilderConfig | Phaser.Tweens.TweenChain): Phaser.Tweens.TweenChain;
 
         }
 
@@ -28207,7 +28207,7 @@ declare namespace Phaser {
              * @param config The TweenChain configuration.
              * @returns The TweenChain that was created.
              */
-            tweenchain(config: Phaser.Types.Tweens.TweenBuilderConfig | object): Phaser.Tweens.TweenChain;
+            tweenchain(config: Phaser.Types.Tweens.TweenChainBuilderConfig | Phaser.Tweens.TweenChain): Phaser.Tweens.TweenChain;
 
         }
 
@@ -105176,11 +105176,11 @@ declare namespace Phaser {
 
             type TweenCallbackTypes = 'onActive' | 'onComplete' | 'onLoop' | 'onPause' | 'onRepeat' | 'onResume' | 'onStart' | 'onStop' | 'onUpdate' | 'onYoyo';
 
-            type TweenChainBuilderConfig = {[key: string]: any} & {
+            type TweenChainBuilderConfig = {
                 /**
                  * The object, or an array of objects, to run each tween on.
                  */
-                targets: any;
+                targets?: any;
                 /**
                  * The number of milliseconds to delay before the chain will start.
                  */
@@ -105198,13 +105198,21 @@ declare namespace Phaser {
                  */
                 loopDelay?: string | number | Function | object | any[];
                 /**
+                 * Alias for `loop`, used when `loop` is not specified.
+                 */
+                repeat?: string | number | Function | object | any[];
+                /**
+                 * Alias for `loopDelay`, used when `loopDelay` is not specified.
+                 */
+                repeatDelay?: string | number | Function | object | any[];
+                /**
                  * Does the chain start in a paused state (true) or playing (false)?
                  */
                 paused?: boolean;
                 /**
-                 * The tweens to chain together.
+                 * The tweens to chain together. Each Tween configuration can inherit targets from this Tween Chain.
                  */
-                tweens?: Phaser.Types.Tweens.TweenBuilderConfig[];
+                tweens?: (Partial<Phaser.Types.Tweens.TweenBuilderConfig>|Phaser.Tweens.Tween)[];
                 /**
                  * The scope (or context) for all of the callbacks. The default scope is the chain.
                  */
@@ -135700,7 +135708,8 @@ declare namespace Phaser {
              * @param y The y coordinate of the pixel within the Texture.
              * @param key The unique string-based key of the Texture.
              * @param frame The string or index of the Frame.
-             * @returns A Color object populated with the color values of the requested pixel,or `null` if the coordinates were out of bounds.
+             * @returns A Color object populated with the color values of the requested pixel,
+or `null` if the coordinates were out of bounds.
              */
             getPixel(x: number, y: number, key: string, frame?: string | number): Phaser.Display.Color | null;
 
@@ -137436,7 +137445,8 @@ declare namespace Phaser {
                  * @param insertNull Controls how empty tiles (those with an index of -1) are stored in
                  * the LayerData. If `true`, empty tile positions are stored as `null`. If `false`, a Tile object
                  * with an index of -1 is created for each empty position instead.
-                 * @returns - An array of LayerData objects, one for each entry injson.layer.
+                 * @returns - An array of LayerData objects, one for each entry in
+json.layer.
                  */
                 function ParseTileLayers(json: object, insertNull: boolean): Phaser.Tilemaps.LayerData[];
 
@@ -137659,7 +137669,8 @@ declare namespace Phaser {
                  * @param json The Tiled JSON object.
                  * @param insertNull Controls how empty tiles, tiles with an index of -1, in the map
                  * data are handled (see {@link Phaser.Tilemaps.Parsers.Tiled.ParseJSONTiled}).
-                 * @returns - An array of LayerData objects, one for each entry injson.layers with the type 'tilelayer'.
+                 * @returns - An array of LayerData objects, one for each entry in
+json.layers with the type 'tilelayer'.
                  */
                 function ParseTileLayers(json: object, insertNull: boolean): Phaser.Tilemaps.LayerData[];
 
@@ -138462,7 +138473,8 @@ declare namespace Phaser {
              * GID this set will use here. Default 0.
              * @param tileOffset Tile texture drawing offset.
              * If not specified, it will default to {0, 0} Default {x: 0, y: 0}.
-             * @returns Returns the Tileset object that was created or updated, or null if itfailed.
+             * @returns Returns the Tileset object that was created or updated, or null if it
+failed.
              */
             addTilesetImage(tilesetName: string, key?: string, tileWidth?: number, tileHeight?: number, tileMargin?: number, tileSpacing?: number, gid?: number, tileOffset?: object): Phaser.Tilemaps.Tileset | null;
 
@@ -144392,7 +144404,8 @@ declare namespace Phaser {
              * Returns the texture coordinates (UV in pixels) in the Tileset image for the given tile index.
              * Returns null if tile index is not contained in this Tileset.
              * @param tileIndex The unique id of the tile across all tilesets in the map.
-             * @returns Object in the form { x, y } representing the top-left UV coordinatewithin the Tileset image.
+             * @returns Object in the form { x, y } representing the top-left UV coordinate
+within the Tileset image.
              */
             getTileTextureCoordinates(tileIndex: number): object | null;
 
@@ -145291,7 +145304,7 @@ declare namespace Phaser {
              * @param defaults Tween configuration defaults.
              * @returns The new tween.
              */
-            function TweenBuilder(parent: Phaser.Tweens.TweenManager, config: Phaser.Types.Tweens.TweenBuilderConfig | object, defaults: Phaser.Types.Tweens.TweenConfigDefaults): Phaser.Tweens.Tween;
+            function TweenBuilder(parent: Phaser.Tweens.TweenManager, config: Phaser.Types.Tweens.TweenBuilderConfig | Phaser.Tweens.Tween, defaults: Phaser.Types.Tweens.TweenConfigDefaults): Phaser.Tweens.Tween;
 
             /**
              * Creates a new TweenChain instance from the given configuration object. A TweenChain is a
@@ -145310,7 +145323,7 @@ declare namespace Phaser {
              * @param config Configuration for the new Tween.
              * @returns The new Tween Chain.
              */
-            function TweenChainBuilder(parent: Phaser.Tweens.TweenManager, config: Phaser.Types.Tweens.TweenChainBuilderConfig | object): Phaser.Tweens.TweenChain;
+            function TweenChainBuilder(parent: Phaser.Tweens.TweenManager, config: Phaser.Types.Tweens.TweenChainBuilderConfig | Phaser.Tweens.TweenChain): Phaser.Tweens.TweenChain;
 
         }
 
@@ -146684,7 +146697,7 @@ declare namespace Phaser {
              * @param tweens An array of Tween configuration objects for the Tweens in this chain.
              * @returns This TweenChain instance.
              */
-            add(tweens: Phaser.Types.Tweens.TweenBuilderConfig[] | object[]): this;
+            add(tweens: (Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenChainBuilderConfig|Phaser.Tweens.Tween|Phaser.Tweens.TweenChain)[]): this;
 
             /**
              * See if any of the tweens in this Tween Chain is currently acting upon the given target.
@@ -147136,7 +147149,7 @@ declare namespace Phaser {
              * @param config A Tween Configuration object. Or an array of Tween Configuration objects.
              * @returns The created Tween, or an array of Tweens if an array of tween configs was provided.
              */
-            create(config: Phaser.Types.Tweens.TweenBuilderConfig | Phaser.Types.Tweens.TweenBuilderConfig[] | object | object[]): Phaser.Tweens.Tween | Phaser.Tweens.Tween[];
+            create(config: Phaser.Types.Tweens.TweenBuilderConfig | Phaser.Types.Tweens.TweenChainBuilderConfig | Phaser.Tweens.Tween | Phaser.Tweens.TweenChain | (Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenChainBuilderConfig|Phaser.Tweens.Tween|Phaser.Tweens.TweenChain)[]): Phaser.Tweens.Tween | Phaser.Tweens.TweenChain | (Phaser.Tweens.Tween|Phaser.Tweens.TweenChain)[];
 
             /**
              * Create a Tween and add it to this Tween Manager by passing a Tween Configuration object.
@@ -147191,7 +147204,7 @@ declare namespace Phaser {
              * @param configs An array of Tween Configuration objects.
              * @returns An array of created Tweens.
              */
-            addMultiple(configs: Phaser.Types.Tweens.TweenBuilderConfig[] | object[]): Phaser.Tweens.Tween[];
+            addMultiple(configs: (Phaser.Types.Tweens.TweenBuilderConfig|Phaser.Types.Tweens.TweenChainBuilderConfig|Phaser.Tweens.Tween|Phaser.Tweens.TweenChain)[]): (Phaser.Tweens.Tween|Phaser.Tweens.TweenChain)[];
 
             /**
              * Create a sequence of Tweens, chained to one another, and add them to this Tween Manager.
@@ -147207,7 +147220,7 @@ declare namespace Phaser {
              * @param tweens A Tween Chain configuration object.
              * @returns The Tween Chain instance.
              */
-            chain(tweens: Phaser.Types.Tweens.TweenChainBuilderConfig | object): Phaser.Tweens.TweenChain;
+            chain(config: Phaser.Types.Tweens.TweenChainBuilderConfig | Phaser.Tweens.TweenChain): Phaser.Tweens.TweenChain;
 
             /**
              * Returns an array containing the given Tween and all Tweens chained to it,
