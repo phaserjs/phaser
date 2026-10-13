@@ -336,6 +336,15 @@ class BootScene extends Phaser.Scene {
         tween.stop();
         tween.remove();
 
+        let callbacks: Record<Phaser.Types.Tweens.TweenCallbackTypes, { func: Function; params: any[] } | null> = tween.callbacks;
+        let onCompleteCallback = callbacks.onComplete;
+
+        if (onCompleteCallback)
+        {
+            let callback: Function = onCompleteCallback.func;
+            let callbackParams: any[] = onCompleteCallback.params;
+        }
+
         // Tween chain
         let chain = this.tweens.chain({
             targets: sprite,

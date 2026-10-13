@@ -1,15 +1,23 @@
 /**
+ * @typedef {object} Phaser.Types.Tweens.TweenCallbackData
+ * @since 4.3.0
+ *
+ * @property {function} func - The callback function.
+ * @property {array} params - Additional parameters to pass to the callback.
+ */
+
+/**
  * @typedef {object} Phaser.Types.Tweens.TweenCallbacks
  * @since 3.60.0
  *
- * @property {Phaser.Types.Tweens.TweenOnActiveCallback} [onActive] - A function to call when the tween becomes active within the Tween Manager.
- * @property {Phaser.Types.Tweens.TweenOnStartCallback} [onStart] - A function to call when the tween starts playback, after any delays have expired.
- * @property {Phaser.Types.Tweens.TweenOnCompleteCallback} [onComplete] - A function to call when the tween completes.
- * @property {Phaser.Types.Tweens.TweenOnLoopCallback} [onLoop] - A function to call each time the tween loops.
- * @property {Phaser.Types.Tweens.TweenOnPauseCallback} [onPause] - A function to call each time the tween is paused.
- * @property {Phaser.Types.Tweens.TweenOnResumeCallback} [onResume] - A function to call each time the tween is resumed.
- * @property {Phaser.Types.Tweens.TweenOnRepeatCallback} [onRepeat] - A function to call each time the tween repeats. Called once per property per target.
- * @property {Phaser.Types.Tweens.TweenOnStopCallback} [onStop] - A function to call when the tween is stopped.
- * @property {Phaser.Types.Tweens.TweenOnUpdateCallback} [onUpdate] - A function to call each time the tween steps. Called once per property per target.
- * @property {Phaser.Types.Tweens.TweenOnYoyoCallback} [onYoyo] - A function to call each time the tween yoyos. Called once per property per target.
+ * @property {?Phaser.Types.Tweens.TweenCallbackData} onActive - The `onActive` callback handler, or `null` if it has not been set.
+ * @property {?Phaser.Types.Tweens.TweenCallbackData} onStart - The `onStart` callback handler, or `null` if it has not been set.
+ * @property {?Phaser.Types.Tweens.TweenCallbackData} onComplete - The `onComplete` callback handler, or `null` if it has not been set.
+ * @property {?Phaser.Types.Tweens.TweenCallbackData} onLoop - The `onLoop` callback handler, or `null` if it has not been set.
+ * @property {?Phaser.Types.Tweens.TweenCallbackData} onPause - The `onPause` callback handler, or `null` if it has not been set.
+ * @property {?Phaser.Types.Tweens.TweenCallbackData} onResume - The `onResume` callback handler, or `null` if it has not been set.
+ * @property {?Phaser.Types.Tweens.TweenCallbackData} onRepeat - The `onRepeat` callback handler, or `null` if it has not been set.
+ * @property {?Phaser.Types.Tweens.TweenCallbackData} onStop - The `onStop` callback handler, or `null` if it has not been set.
+ * @property {?Phaser.Types.Tweens.TweenCallbackData} onUpdate - The `onUpdate` callback handler, or `null` if it has not been set.
+ * @property {?Phaser.Types.Tweens.TweenCallbackData} onYoyo - The `onYoyo` callback handler, or `null` if it has not been set.
  */
