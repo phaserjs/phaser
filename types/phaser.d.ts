@@ -133099,12 +133099,12 @@ declare namespace Phaser {
          * ]);
          * ```
          */
-        class Map<K, V> {
+        class Map<K extends string|number, V> {
             /**
              * 
              * @param elements An optional array of key-value pairs to populate this Map with.
              */
-            constructor(elements: V[]);
+            constructor(elements?: (K|V)[][]);
 
             /**
              * The entries in this Map.
@@ -133123,7 +133123,7 @@ declare namespace Phaser {
              * @param elements An array of key-value pairs to populate this Map with.
              * @returns This Map object.
              */
-            setAll<K, V>(elements: V[]): this;
+            setAll(elements?: (K|V)[][]): this;
 
             /**
              * Adds an element with a specified `key` and `value` to this Map.
@@ -133142,7 +133142,7 @@ declare namespace Phaser {
              * @param key The key of the element to return from the `Map` object.
              * @returns The element associated with the specified key or `undefined` if the key can't be found in this Map object.
              */
-            get(key: K): V;
+            get(key: K): V|undefined;
 
             /**
              * Returns an `Array` of all the values stored in this Map.undefined
