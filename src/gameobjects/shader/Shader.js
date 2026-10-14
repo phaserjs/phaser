@@ -10,6 +10,7 @@ var ShaderQuad = require('../../renderer/webgl/renderNodes/ShaderQuad');
 var DrawingContext = require('../../renderer/webgl/DrawingContext');
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var ArrayRemove = require('../../utils/array/Remove');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var ShaderRender = require('./ShaderRender');
@@ -588,6 +589,25 @@ var Shader = new Class({
      */
     preDestroy: function ()
     {
+        var renderNode = this.renderNode;
+
+        if (renderNode)
+        {
+            var renderer = renderNode.renderer;
+            var programs = renderNode.programManager.programs;
+
+            // The programs and index buffer are shared; only the VAOs and vertex buffer are owned.
+            for (var key in programs)
+            {
+                var vao = programs[key].vao;
+
+                ArrayRemove(renderer.glVAOWrappers, vao);
+                vao.destroy();
+            }
+
+            renderer.deleteBuffer(renderNode.vertexBufferLayout.buffer);
+        }
+
         this.renderNode = null;
 
         this.textures.length = 0;
