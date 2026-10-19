@@ -55,6 +55,11 @@ var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMat
 
     var calcMatrix = GetCalcMatrix(src, camera, parentMatrix, !drawingContext.useCanvas).calc;
 
+    // Determine whether the matrix does not rotate, scale, or skew.
+    // Keyword: #OnlyTranslate
+    var onlyTranslate = calcMatrix.a === 1 && calcMatrix.b === 0 && calcMatrix.c === 0 && calcMatrix.d === 1;
+    var roundVertices = src.willRoundVertices(camera, onlyTranslate);
+
     var charColors = src.charColors;
 
     var getTint = Utils.getTintAppendFloatAlpha;
@@ -100,7 +105,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMat
                 continue;
             }
 
-            BatchChar(drawingContext, submitterNode, src, char, glyph, dropShadowX, dropShadowY, calcMatrix, tempTintData2);
+            BatchChar(drawingContext, submitterNode, src, char, glyph, dropShadowX, dropShadowY, calcMatrix, tempTintData2, roundVertices);
         }
     }
 
@@ -124,11 +129,11 @@ var BitmapTextWebGLRenderer = function (renderer, src, drawingContext, parentMat
             tempTintData2.tintBottomLeft = getTint(color.tintBL, src._alphaBL);
             tempTintData2.tintBottomRight = getTint(color.tintBR, src._alphaBR);
 
-            BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, tempTintData2);
+            BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, tempTintData2, roundVertices);
         }
         else
         {
-            BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, tempTintData1);
+            BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, tempTintData1, roundVertices);
         }
     }
 };
