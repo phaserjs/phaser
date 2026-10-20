@@ -50,8 +50,25 @@ var StaggeredWorldToTileXY = function (worldX, worldY, snapToFloor, point, camer
         tileWidth *= tilemapLayer.scaleX;
     }
 
-    var y = (snapToFloor) ? Math.floor((worldY / (tileHeight / 2))) : (worldY / (tileHeight / 2));
-    var x = (snapToFloor) ? Math.floor((worldX + (y % 2) * 0.5 * tileWidth) / tileWidth) : (worldX + (y % 2) * 0.5 * tileWidth) / tileWidth;
+    if (snapToFloor)
+    {
+        //  Each tile is a diamond inside its bounding box and the boxes of neighboring rows
+        //  overlap, so the box alone can't tell which tile the point is in. In half tile units
+        //  the diamond centers are where u + v and u - v are both even, on a grid turned by 45 degrees.
+
+        var u = worldX / (tileWidth / 2);
+        var v = worldY / (tileHeight / 2);
+
+        var p = 2 * Math.floor((u + v + 1) / 2);
+        var q = 2 * Math.floor((u - v + 1) / 2);
+
+        var tileY = (p - q) / 2 - 1;
+
+        return point.set(Math.floor((q + tileY) / 2), tileY);
+    }
+
+    var y = worldY / (tileHeight / 2);
+    var x = (worldX + (y % 2) * 0.5 * tileWidth) / tileWidth;
 
     return point.set(x, y);
 };
