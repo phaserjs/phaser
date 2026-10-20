@@ -343,4 +343,30 @@ describe('BatchChar', function ()
         expect(quad[0]).toBeCloseTo(0);
         expect(quad[1]).toBeCloseTo(12.5);
     });
+
+    it('should not round the quad when roundVertices is not set', function ()
+    {
+        calcMatrix.e = 4.5;
+        calcMatrix.f = 24.5;
+
+        BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, tintData);
+
+        var quad = capturedArgs.transformData.quad;
+
+        expect(quad[0]).toBe(14.5);
+        expect(quad[1]).toBe(44.5);
+    });
+
+    it('should round every quad vertex when roundVertices is true', function ()
+    {
+        calcMatrix.e = 4.4;
+        calcMatrix.f = 24.6;
+        // x=10 y=20 xw=26 yh=44
+
+        BatchChar(drawingContext, submitterNode, src, char, glyph, 0, 0, calcMatrix, tintData, true);
+
+        var quad = Array.from(capturedArgs.transformData.quad);
+
+        expect(quad).toEqual([ 14, 45, 14, 69, 30, 69, 30, 45 ]);
+    });
 });

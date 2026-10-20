@@ -29,8 +29,9 @@ var tempTransformData = {
  * @param {number} offsetY - The y offset.
  * @param {Phaser.GameObjects.Components.TransformMatrix} calcMatrix - The transform matrix.
  * @param {object} tintData - The tint data to pass to the submitter node.
+ * @param {boolean} [roundVertices=false] - Whether to round the vertex positions to whole pixels.
  */
-var BatchChar = function (drawingContext, submitterNode, src, char, glyph, offsetX, offsetY, calcMatrix, tintData)
+var BatchChar = function (drawingContext, submitterNode, src, char, glyph, offsetX, offsetY, calcMatrix, tintData, roundVertices)
 {
     tempTextureData.frame = src.frame;
     tempTextureData.uvSource = glyph;
@@ -59,6 +60,18 @@ var BatchChar = function (drawingContext, submitterNode, src, char, glyph, offse
 
     var tx3 = xw * a + y * c + e;
     var ty3 = xw * b + y * d + f;
+
+    if (roundVertices)
+    {
+        tx0 = Math.round(tx0);
+        ty0 = Math.round(ty0);
+        tx1 = Math.round(tx1);
+        ty1 = Math.round(ty1);
+        tx2 = Math.round(tx2);
+        ty2 = Math.round(ty2);
+        tx3 = Math.round(tx3);
+        ty3 = Math.round(ty3);
+    }
 
     tempTransformData.quad[0] = tx0;
     tempTransformData.quad[1] = ty0;

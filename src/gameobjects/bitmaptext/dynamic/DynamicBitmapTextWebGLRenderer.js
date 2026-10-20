@@ -269,6 +269,23 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, drawingContext, pa
         var tx3 = xw * spriteMatrix.a + spriteMatrix.e;
         var ty3 = xw * spriteMatrix.b + spriteMatrix.f;
 
+        // Glyphs can be rotated or scaled individually by the display callback,
+        // so check each one.
+        // Keyword: #OnlyTranslate
+        var onlyTranslate = spriteMatrix.a === 1 && spriteMatrix.b === 0 && spriteMatrix.c === 0 && spriteMatrix.d === 1;
+
+        if (src.willRoundVertices(camera, onlyTranslate))
+        {
+            tx0 = Math.round(tx0);
+            ty0 = Math.round(ty0);
+            tx1 = Math.round(tx1);
+            ty1 = Math.round(ty1);
+            tx2 = Math.round(tx2);
+            ty2 = Math.round(ty2);
+            tx3 = Math.round(tx3);
+            ty3 = Math.round(ty3);
+        }
+
         submitterNode.run(
             currentContext,
             src,
