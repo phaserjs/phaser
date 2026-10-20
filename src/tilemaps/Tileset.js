@@ -614,7 +614,9 @@ var Tileset = new Class({
                 var animationDuration = tileDatum.animationDuration;
 
                 // This index maps to an animation, not a single tile.
-                indexToAnimMap.set(i, animations.length);
+                // Each animation takes two 32-bit values in the texture,
+                // and the shader reads them at this offset.
+                indexToAnimMap.set(i, animations.length * 2);
 
                 // This animation points to a run of frames.
                 animations.push([ animationDuration, animFrames.length ]);

@@ -734,6 +734,61 @@ describe('Tileset', function ()
             expect(ts._animationDataIndexMap.has(1)).toBe(false);
         });
 
+        it('should map every animated tile to its own animation in the texture data', function ()
+        {
+            var data = {
+                2: {
+                    animation: [
+                        { tileid: 2, duration: 100, startTime: 0 },
+                        { tileid: 3, duration: 100, startTime: 100 }
+                    ],
+                    animationDuration: 200
+                },
+                5: {
+                    animation: [
+                        { tileid: 6, duration: 300, startTime: 0 },
+                        { tileid: 7, duration: 300, startTime: 300 },
+                        { tileid: 8, duration: 300, startTime: 600 }
+                    ],
+                    animationDuration: 900
+                },
+                9: {
+                    animation: [
+                        { tileid: 1, duration: 50, startTime: 0 },
+                        { tileid: 0, duration: 50, startTime: 50 }
+                    ],
+                    animationDuration: 100
+                }
+            };
+
+            var ts = new Tileset('tiles', 1, 32, 32, 0, 0, {}, data);
+            ts.updateTileData(160, 160);
+
+            ts.createAnimationDataTexture(makeMockRenderer());
+
+            var tex = ts._animationDataTexture;
+            var u32 = new Uint32Array(tex._u8.buffer);
+
+            //  Read it the way TilemapGPULayer.frag does: the value at the offset
+            //  is the animation duration, the next one the offset of its first frame,
+            //  and each frame is a duration followed by a tile id.
+            [ 2, 5, 9 ].forEach(function (tileIndex)
+            {
+                var offset = ts._animationDataIndexMap.get(tileIndex);
+                var expected = data[tileIndex];
+
+                expect(u32[offset]).toBe(expected.animationDuration);
+
+                var frameOffset = u32[offset + 1];
+
+                expected.animation.forEach(function (frame, i)
+                {
+                    expect(u32[frameOffset + i * 2]).toBe(frame.duration);
+                    expect(u32[frameOffset + i * 2 + 1]).toBe(frame.tileid);
+                });
+            });
+        });
+
         it('should set maxAnimationLength to the longest animation', function ()
         {
             var data = {
