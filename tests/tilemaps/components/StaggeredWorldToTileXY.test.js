@@ -1,9 +1,21 @@
 var StaggeredWorldToTileXY = require('../../../src/tilemaps/components/StaggeredWorldToTileXY');
+var StaggeredTileToWorldXY = require('../../../src/tilemaps/components/StaggeredTileToWorldXY');
 var Vector2 = require('../../../src/math/Vector2');
 
 describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
 {
     var layer;
+
+    //  Center of the tile's diamond, from the top left of its bounding box
+    function center (tileX, tileY)
+    {
+        var topLeft = StaggeredTileToWorldXY(tileX, tileY, null, null, layer);
+
+        return {
+            x: topLeft.x + layer.baseTileWidth / 2,
+            y: topLeft.y + layer.baseTileHeight / 2
+        };
+    }
 
     beforeEach(function ()
     {
@@ -38,10 +50,12 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
             expect(result).toBe(point);
         });
 
-        it('should set x and y on the provided plain object if it has a set method', function ()
+        it('should set x and y on the provided point', function ()
         {
             var point = new Vector2();
-            StaggeredWorldToTileXY(64, 64, true, point, null, layer);
+            var c = center(2, 4);
+
+            StaggeredWorldToTileXY(c.x, c.y, true, point, null, layer);
 
             expect(point.x).toBe(2);
             expect(point.y).toBe(4);
@@ -50,23 +64,56 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
 
     describe('coordinate conversion without tilemapLayer', function ()
     {
-        it('should return (0, 0) for world origin', function ()
+        it('should return the tile whose diamond contains the point', function ()
         {
-            var result = StaggeredWorldToTileXY(0, 0, true, null, null, layer);
+            [ [ 32, 32 ], [ 64, 32 ], [ 32, 16 ] ].forEach(function (size)
+            {
+                layer.baseTileWidth = size[0];
+                layer.baseTileHeight = size[1];
 
-            expect(result.x).toBe(0);
-            expect(result.y).toBe(0);
+                var hw = size[0] / 2 - 1;
+                var hh = size[1] / 2 - 1;
+
+                for (var tileY = 0; tileY < 6; tileY++)
+                {
+                    for (var tileX = 0; tileX < 4; tileX++)
+                    {
+                        var c = center(tileX, tileY);
+
+                        //  The center and points just inside each corner of the diamond
+                        [ [ 0, 0 ], [ -hw, 0 ], [ hw, 0 ], [ 0, -hh ], [ 0, hh ] ].forEach(function (offset)
+                        {
+                            var result = StaggeredWorldToTileXY(c.x + offset[0], c.y + offset[1], true, null, null, layer);
+
+                            expect([ result.x, result.y ]).toEqual([ tileX, tileY ]);
+                        });
+                    }
+                }
+            });
         });
 
-        it('should convert world coordinates to staggered tile coordinates with snapToFloor true', function ()
+        it('should return the neighboring row in the corners of the bounding box', function ()
         {
-            // tileHeight = 32, tileHeight/2 = 16
-            // y = floor(32 / 16) = 2
-            // x = floor((32 + (2 % 2) * 0.5 * 32) / 32) = floor(32 / 32) = 1
-            var result = StaggeredWorldToTileXY(32, 32, true, null, null, layer);
+            //  Tile (1, 2) has its bounding box at 32,32 to 64,64. Its top corners
+            //  belong to the diamonds of row 1 above it.
+            expect(StaggeredWorldToTileXY(33, 33, true, null, null, layer)).toEqual(new Vector2(0, 1));
+            expect(StaggeredWorldToTileXY(63, 33, true, null, null, layer)).toEqual(new Vector2(1, 1));
+            expect(StaggeredWorldToTileXY(48, 33, true, null, null, layer)).toEqual(new Vector2(1, 2));
+        });
 
-            expect(result.x).toBe(1);
-            expect(result.y).toBe(2);
+        it('should shift odd rows half a tile to the right', function ()
+        {
+            //  Tile (0, 1) spans x = 16 to 48 across its middle, left of it is tile (-1, 1)
+            expect(StaggeredWorldToTileXY(12, 32, true, null, null, layer)).toEqual(new Vector2(-1, 1));
+            expect(StaggeredWorldToTileXY(20, 32, true, null, null, layer)).toEqual(new Vector2(0, 1));
+        });
+
+        it('should handle negative world coordinates with snapToFloor true', function ()
+        {
+            var result = StaggeredWorldToTileXY(-16, -16, true, null, null, layer);
+
+            expect(result.x).toBe(-1);
+            expect(result.y).toBe(-2);
         });
 
         it('should return exact (non-floored) values when snapToFloor is false', function ()
@@ -78,80 +125,12 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
             expect(result.y).toBeCloseTo(2.0);
         });
 
-        it('should floor fractional tile coordinates when snapToFloor is true', function ()
-        {
-            // y = floor(10 / 16) = 0
-            // x = floor((10 + 0) / 32) = 0
-            var result = StaggeredWorldToTileXY(10, 10, true, null, null, layer);
-
-            expect(result.x).toBe(0);
-            expect(result.y).toBe(0);
-        });
-
         it('should return fractional tile coordinates when snapToFloor is false', function ()
         {
             // y = 10 / 16 = 0.625
-            // x = (10 + (0.625 % 2) * 0.5 * 32) / 32 = (10 + 10) / 32 = 0.625
             var result = StaggeredWorldToTileXY(10, 10, false, null, null, layer);
 
             expect(result.y).toBeCloseTo(0.625);
-        });
-
-        it('should apply stagger offset on odd rows', function ()
-        {
-            // y = floor(16 / 16) = 1 (odd row)
-            // x = floor((0 + (1 % 2) * 0.5 * 32) / 32) = floor(16 / 32) = 0
-            var result = StaggeredWorldToTileXY(0, 16, true, null, null, layer);
-
-            expect(result.y).toBe(1);
-            expect(result.x).toBe(0);
-        });
-
-        it('should not apply stagger offset on even rows', function ()
-        {
-            // y = floor(32 / 16) = 2 (even row)
-            // x = floor((32 + (2 % 2) * 0.5 * 32) / 32) = floor(32 / 32) = 1
-            var result = StaggeredWorldToTileXY(32, 32, true, null, null, layer);
-
-            expect(result.y).toBe(2);
-            expect(result.x).toBe(1);
-        });
-
-        it('should handle large tile dimensions', function ()
-        {
-            layer.baseTileWidth = 64;
-            layer.baseTileHeight = 64;
-
-            // y = floor(64 / 32) = 2
-            // x = floor((64 + 0) / 64) = 1
-            var result = StaggeredWorldToTileXY(64, 64, true, null, null, layer);
-
-            expect(result.x).toBe(1);
-            expect(result.y).toBe(2);
-        });
-
-        it('should handle non-square tile dimensions', function ()
-        {
-            layer.baseTileWidth = 32;
-            layer.baseTileHeight = 16;
-
-            // tileHeight/2 = 8
-            // y = floor(16 / 8) = 2
-            // x = floor((32 + 0) / 32) = 1
-            var result = StaggeredWorldToTileXY(32, 16, true, null, null, layer);
-
-            expect(result.x).toBe(1);
-            expect(result.y).toBe(2);
-        });
-
-        it('should handle negative world coordinates with snapToFloor true', function ()
-        {
-            // y = floor(-16 / 16) = -1
-            // x = floor((-32 + (-1 % 2) * 0.5 * 32) / 32) = floor((-32 + -16) / 32) = floor(-1.5) = -2
-            var result = StaggeredWorldToTileXY(-32, -16, true, null, null, layer);
-
-            expect(result.y).toBe(-1);
-            expect(result.x).toBe(-2);
         });
 
         it('should handle negative world coordinates with snapToFloor false', function ()
@@ -181,6 +160,10 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
     {
         var camera;
         var tilemapLayer;
+
+        //  Center of tile (1, 2) with no layer offset, scale or scroll
+        var cx = 48;
+        var cy = 48;
 
         beforeEach(function ()
         {
@@ -213,7 +196,7 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
                 scrollY: 0
             };
 
-            var result = StaggeredWorldToTileXY(32, 32, true, null, customCamera, layer);
+            var result = StaggeredWorldToTileXY(cx, cy, true, null, customCamera, layer);
 
             expect(result.x).toBe(1);
             expect(result.y).toBe(2);
@@ -221,7 +204,7 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
 
         it('should fall back to scene main camera when no camera provided', function ()
         {
-            var result = StaggeredWorldToTileXY(32, 32, true, null, null, layer);
+            var result = StaggeredWorldToTileXY(cx, cy, true, null, null, layer);
 
             expect(result.x).toBe(1);
             expect(result.y).toBe(2);
@@ -231,8 +214,7 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
         {
             tilemapLayer.x = 32;
 
-            // worldX becomes 64 - 32 = 32
-            var result = StaggeredWorldToTileXY(64, 32, true, null, camera, layer);
+            var result = StaggeredWorldToTileXY(cx + 32, cy, true, null, camera, layer);
 
             expect(result.x).toBe(1);
             expect(result.y).toBe(2);
@@ -242,8 +224,7 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
         {
             tilemapLayer.y = 16;
 
-            // worldY becomes 48 - 16 = 32
-            var result = StaggeredWorldToTileXY(32, 48, true, null, camera, layer);
+            var result = StaggeredWorldToTileXY(cx, cy + 16, true, null, camera, layer);
 
             expect(result.x).toBe(1);
             expect(result.y).toBe(2);
@@ -254,8 +235,7 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
             camera.scrollX = 32;
             tilemapLayer.scrollFactorX = 0;
 
-            // worldX becomes 64 - (0 + 32 * 1) = 32
-            var result = StaggeredWorldToTileXY(64, 32, true, null, camera, layer);
+            var result = StaggeredWorldToTileXY(cx + 32, cy, true, null, camera, layer);
 
             expect(result.x).toBe(1);
         });
@@ -265,8 +245,7 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
             camera.scrollY = 16;
             tilemapLayer.scrollFactorY = 0;
 
-            // worldY becomes 48 - (0 + 16 * 1) = 32
-            var result = StaggeredWorldToTileXY(32, 48, true, null, camera, layer);
+            var result = StaggeredWorldToTileXY(cx, cy + 16, true, null, camera, layer);
 
             expect(result.y).toBe(2);
         });
@@ -275,22 +254,21 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
         {
             tilemapLayer.scaleX = 2;
 
-            // tileWidth becomes 32 * 2 = 64
-            // y = floor(32 / 16) = 2 (even)
-            // x = floor((64 + 0) / 64) = 1
-            var result = StaggeredWorldToTileXY(64, 32, true, null, camera, layer);
+            //  Tile (1, 2) is now 64 wide, centered at x = 96
+            var result = StaggeredWorldToTileXY(96, cy, true, null, camera, layer);
 
             expect(result.x).toBe(1);
+            expect(result.y).toBe(2);
         });
 
         it('should apply scaleY to tile height', function ()
         {
             tilemapLayer.scaleY = 2;
 
-            // tileHeight becomes 32 * 2 = 64, tileHeight/2 = 32
-            // y = floor(64 / 32) = 2
-            var result = StaggeredWorldToTileXY(32, 64, true, null, camera, layer);
+            //  Tile (1, 2) is now 64 high, centered at y = 96
+            var result = StaggeredWorldToTileXY(cx, 96, true, null, camera, layer);
 
+            expect(result.x).toBe(1);
             expect(result.y).toBe(2);
         });
 
@@ -300,10 +278,9 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
             tilemapLayer.scrollFactorX = 1;
 
             // scrollX contribution = 32 * (1 - 1) = 0
-            // worldX unchanged from raw: 64 - 0 = 64
-            var result = StaggeredWorldToTileXY(64, 32, true, null, camera, layer);
+            var result = StaggeredWorldToTileXY(cx, cy, true, null, camera, layer);
 
-            expect(result.x).toBe(2);
+            expect(result.x).toBe(1);
         });
 
         it('should respect scrollFactorX of 0 (no camera scroll applied)', function ()
@@ -312,8 +289,7 @@ describe('Phaser.Tilemaps.Components.StaggeredWorldToTileXY', function ()
             tilemapLayer.scrollFactorX = 0;
 
             // scrollX contribution = 100 * (1 - 0) = 100
-            // worldX: 132 - (0 + 100) = 32
-            var result = StaggeredWorldToTileXY(132, 32, true, null, camera, layer);
+            var result = StaggeredWorldToTileXY(cx + 100, cy, true, null, camera, layer);
 
             expect(result.x).toBe(1);
         });
