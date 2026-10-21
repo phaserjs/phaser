@@ -2016,7 +2016,7 @@ var Tilemap = new Class({
      *
      * If no layer is specified, the maps current layer is used.
      *
-     * **Note:** This method currently only works with orthogonal tilemap layers.
+     * **Note:** This method only works with orthogonal and isometric tilemap layers.
      *
      * @method Phaser.Tilemaps.Tilemap#renderDebug
      * @since 3.0.0

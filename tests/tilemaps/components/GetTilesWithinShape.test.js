@@ -79,16 +79,6 @@ describe('Phaser.Tilemaps.Components.GetTilesWithinShape', function ()
         expect(result).toEqual([]);
     });
 
-    it('should return an empty array when layer orientation is ISOMETRIC', function ()
-    {
-        layer.orientation = CONST.ISOMETRIC;
-
-        var shape = new Geom.Rectangle(0, 0, 64, 64);
-        var result = GetTilesWithinShape(shape, {}, camera, layer);
-
-        expect(result).toEqual([]);
-    });
-
     it('should return an empty array when layer orientation is STAGGERED', function ()
     {
         layer.orientation = CONST.STAGGERED;
@@ -311,5 +301,110 @@ describe('Phaser.Tilemaps.Components.GetTilesWithinShape', function ()
         var result = GetTilesWithinShape(shape, {}, camera, layer);
 
         expect(result).toEqual([]);
+    });
+
+    describe('isometric layers', function ()
+    {
+        var ISO_TILE_WIDTH = 64;
+        var ISO_TILE_HEIGHT = 32;
+
+        function createIsometricLayer()
+        {
+            var data = [];
+
+            for (var ty = 0; ty < GRID_HEIGHT; ty++)
+            {
+                data[ty] = [];
+                for (var tx = 0; tx < GRID_WIDTH; tx++)
+                {
+                    data[ty][tx] = createTile(tx, ty);
+                }
+            }
+
+            //  Same projection as IsometricTileToWorldXY: the top-left of the tile's bounding box
+            var tilemapLayer = {
+                x: 0,
+                y: 0,
+                scaleX: 1,
+                scaleY: 1,
+                scrollFactorX: 1,
+                scrollFactorY: 1,
+                tileToWorldXY: function (tileX, tileY, point)
+                {
+                    point.x = (tileX - tileY) * ISO_TILE_WIDTH / 2;
+                    point.y = (tileX + tileY) * ISO_TILE_HEIGHT / 2;
+                }
+            };
+
+            return {
+                orientation: CONST.ISOMETRIC,
+                tileWidth: ISO_TILE_WIDTH,
+                tileHeight: ISO_TILE_HEIGHT,
+                baseTileWidth: ISO_TILE_WIDTH,
+                baseTileHeight: ISO_TILE_HEIGHT,
+                width: GRID_WIDTH,
+                height: GRID_HEIGHT,
+                data: data,
+                tilemapLayer: tilemapLayer
+            };
+        }
+
+        function coords(tiles)
+        {
+            return tiles.map(function (tile) { return tile.x + ',' + tile.y; }).sort();
+        }
+
+        beforeEach(function ()
+        {
+            layer = createIsometricLayer();
+            camera = { scrollX: 0, scrollY: 0 };
+        });
+
+        it('should return the tile whose diamond contains a small Circle', function ()
+        {
+            //  Tile (2, 1) spans x 32 to 96 and y 48 to 80, its center is (64, 64)
+            var result = GetTilesWithinShape(new Geom.Circle(64, 64, 2), {}, camera, layer);
+
+            expect(coords(result)).toEqual([ '2,1' ]);
+        });
+
+        it('should use the diamond and not the bounding box of a tile', function ()
+        {
+            //  (34, 50) is inside the bounding box of tile (2, 1) but in the diamond of tile (1, 1)
+            var result = GetTilesWithinShape(new Geom.Circle(34, 50, 1), {}, camera, layer);
+
+            expect(coords(result)).toEqual([ '1,1' ]);
+        });
+
+        it('should return every tile when a Rectangle covers the whole map', function ()
+        {
+            var result = GetTilesWithinShape(new Geom.Rectangle(-200, -10, 500, 300), {}, camera, layer);
+
+            expect(result.length).toBe(GRID_WIDTH * GRID_HEIGHT);
+        });
+
+        it('should return the tiles of one row for a Line along that row', function ()
+        {
+            //  Through the centers of tiles (0, 2) to (4, 2)
+            var line = new Geom.Line(-32, 48, 96, 112);
+            var result = GetTilesWithinShape(line, {}, camera, layer);
+
+            expect(coords(result)).toEqual([ '0,2', '1,2', '2,2', '3,2', '4,2' ]);
+        });
+
+        it('should return tiles intersecting a Triangle', function ()
+        {
+            var triangle = new Geom.Triangle(60, 62, 68, 62, 64, 66);
+            var result = GetTilesWithinShape(triangle, {}, camera, layer);
+
+            expect(coords(result)).toEqual([ '2,1' ]);
+        });
+
+        it('should return an empty array when the shape is outside the map', function ()
+        {
+            var result = GetTilesWithinShape(new Geom.Circle(1000, 1000, 10), {}, camera, layer);
+
+            expect(result).toEqual([]);
+        });
     });
 });
