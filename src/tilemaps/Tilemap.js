@@ -887,22 +887,27 @@ var Tilemap = new Class({
                     sprite.displayHeight = obj.height;
                 }
 
-                if (this.orientation === ORIENTATION.ISOMETRIC)
-                {
-                    var isometricRatio = this.tileWidth / this.tileHeight;
-                    var isometricPosition = {
-                        x: sprite.x - sprite.y,
-                        y: (sprite.x + sprite.y) / isometricRatio
-                    };
+                var isometric = (this.orientation === ORIENTATION.ISOMETRIC);
 
-                    sprite.x = isometricPosition.x;
-                    sprite.y = isometricPosition.y;
+                if (isometric)
+                {
+                    //  Tiled stores isometric object positions unprojected, measured in tileHeight along both map axes.
+                    //  Project them the same way Tiled does, relative to the top corner of tile (0, 0), which is
+                    //  half a tile to the right of the layer origin.
+                    var halfTileWidth = this.tileWidth / 2;
+                    var halfTileHeight = this.tileHeight / 2;
+                    var tileX = sprite.x / this.tileHeight;
+                    var tileY = sprite.y / this.tileHeight;
+
+                    sprite.x = (tileX - tileY) * halfTileWidth + halfTileWidth;
+                    sprite.y = (tileX + tileY) * halfTileHeight;
                 }
 
                 //  Origin is (0, 1) for tile objects or (0, 0) for other objects in Tiled, so find the offset that matches the Sprites origin.
+                //  On isometric maps Tiled aligns tile objects to their bottom center instead.
                 //  Do not offset objects with zero dimensions (e.g. points).
                 var offset = {
-                    x: sprite.originX * obj.width,
+                    x: (sprite.originX - (isometric && obj.gid ? 0.5 : 0)) * obj.width,
                     y: (sprite.originY - (obj.gid ? 1 : 0)) * obj.height
                 };
 
