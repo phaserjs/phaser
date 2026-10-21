@@ -606,8 +606,10 @@ var Camera = new Class({
         var displayWidth = width / zoomX;
         var displayHeight = height / zoomY;
 
-        var vwx = midX - (displayWidth / 2);
-        var vwy = midY - (displayHeight / 2);
+        //  Zoom is applied around the camera origin, so the top-left of the view
+        //  only lines up with the middle of the camera when the origin is 0.5
+        var vwx = sx + originX - (originX / zoomX);
+        var vwy = sy + originY - (originY / zoomY);
 
         this.worldView.setTo(vwx, vwy, displayWidth, displayHeight);
 
