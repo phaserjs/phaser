@@ -105,16 +105,25 @@ var ContainerWebGLRenderer = function (renderer, container, drawingContext, pare
         var childScrollFactorX = child.scrollFactorX;
         var childScrollFactorY = child.scrollFactorY;
 
-        if (
-            !containerHasBlendMode &&
-            child.blendMode !== currentContext.blendMode &&
-            child.blendMode !== CONST.BlendModes.SKIP_CHECK
-        )
+        if (!containerHasBlendMode)
         {
-            //  If Container doesn't have its own blend mode, then a child can have one
-            currentContext = baseContext.getClone();
-            currentContext.setBlendMode(child.blendMode);
-            currentContext.use();
+            if (child.blendMode === CONST.BlendModes.SKIP_CHECK)
+            {
+                //  A child without a blend mode of its own, such as a nested Container,
+                //  must not pick up the blend mode left by a previous sibling
+                if (currentContext !== baseContext)
+                {
+                    currentContext = baseContext;
+                    currentContext.use();
+                }
+            }
+            else if (child.blendMode !== currentContext.blendMode)
+            {
+                //  If Container doesn't have its own blend mode, then a child can have one
+                currentContext = baseContext.getClone();
+                currentContext.setBlendMode(child.blendMode);
+                currentContext.use();
+            }
         }
 
         //  Set parent values
