@@ -792,6 +792,72 @@ describe('Phaser.Tilemaps.Tilemap', function ()
         });
     });
 
+    describe('createFromObjects', function ()
+    {
+        function FakeSprite ()
+        {
+            this.x = 0;
+            this.y = 0;
+            this.originX = 0.5;
+            this.originY = 0.5;
+            this.rotation = 0;
+            this.visible = true;
+        }
+
+        FakeSprite.prototype.setName = function (name) { this.name = name; };
+        FakeSprite.prototype.setPosition = function (x, y) { this.x = x; this.y = y; };
+        FakeSprite.prototype.setTexture = function () {};
+
+        function makeObjectMap (orientation, tileWidth, tileHeight, objects)
+        {
+            var map = new Tilemap(scene, makeMapData({
+                orientation: orientation,
+                tileWidth: tileWidth,
+                tileHeight: tileHeight,
+                width: 4,
+                height: 4,
+                objects: [ { name: 'objects', objects: objects } ]
+            }));
+
+            return map.createFromObjects('objects', {
+                classType: FakeSprite,
+                scene: { add: { existing: function () {} } }
+            }, false);
+        }
+
+        function tileObject (x, y)
+        {
+            return { id: 1, gid: 2, name: '', x: x, y: y, width: 40, height: 40, rotation: 0, visible: true };
+        }
+
+        it('should place orthogonal tile objects from their bottom-left corner', function ()
+        {
+            var sprites = makeObjectMap(0, 32, 32, [ tileObject(64, 96) ]);
+
+            expect(sprites[0].x).toBe(84);
+            expect(sprites[0].y).toBe(76);
+        });
+
+        it('should project isometric tile objects like Tiled and align them to their bottom center', function ()
+        {
+            //  186 x 108 tiles, Tiled puts these two objects at (93, 54) and (186, 108) relative to the top corner of the map
+            var sprites = makeObjectMap(1, 186, 108, [ tileObject(54, 54), tileObject(162, 54) ]);
+
+            expect(sprites[0].x).toBeCloseTo(93);
+            expect(sprites[0].y).toBeCloseTo(34);
+            expect(sprites[1].x).toBeCloseTo(186);
+            expect(sprites[1].y).toBeCloseTo(88);
+        });
+
+        it('should project isometric objects relative to the top corner of tile (0, 0)', function ()
+        {
+            var sprites = makeObjectMap(1, 64, 32, [ { id: 1, name: '', x: 0, y: 0, width: 0, height: 0, rotation: 0, visible: true } ]);
+
+            expect(sprites[0].x).toBe(32);
+            expect(sprites[0].y).toBe(0);
+        });
+    });
+
     describe('destroy', function ()
     {
         it('should clear the tiles array', function ()
