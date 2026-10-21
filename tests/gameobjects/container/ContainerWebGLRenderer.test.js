@@ -473,6 +473,39 @@ describe('ContainerWebGLRenderer', function ()
 
             expect(ctx.getClone).not.toHaveBeenCalled();
         });
+
+        it('should render a SKIP_CHECK child after a blended sibling with the base context', function ()
+        {
+            var addCtx = makeContext(1);
+            var ctx = makeContext(0);
+            ctx.getClone.mockReturnValue(addCtx);
+
+            var blended = makeChild({ blendMode: 1 });
+            var nested = makeChild({ blendMode: -1 }); // e.g. a nested Container
+            var container = makeContainer([ blended, nested ], { blendMode: -1 });
+
+            ContainerWebGLRenderer({}, container, ctx, null, 0, [], 0);
+
+            expect(blended.renderWebGLStep.mock.calls[0][2]).toBe(addCtx);
+            expect(nested.renderWebGLStep.mock.calls[0][2]).toBe(ctx);
+            expect(ctx.use).toHaveBeenCalled();
+        });
+
+        it('should keep the blend mode for consecutive siblings with the same blend mode', function ()
+        {
+            var addCtx = makeContext(1);
+            var ctx = makeContext(0);
+            ctx.getClone.mockReturnValue(addCtx);
+
+            var first = makeChild({ blendMode: 1 });
+            var second = makeChild({ blendMode: 1 });
+            var container = makeContainer([ first, second ], { blendMode: -1 });
+
+            ContainerWebGLRenderer({}, container, ctx, null, 0, [], 0);
+
+            expect(ctx.getClone).toHaveBeenCalledTimes(1);
+            expect(second.renderWebGLStep.mock.calls[0][2]).toBe(addCtx);
+        });
     });
 
     describe('context release', function ()
