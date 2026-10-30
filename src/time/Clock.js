@@ -431,6 +431,14 @@ var Clock = new Class({
                 {
                     this._pendingRemoval.push(event);
                 }
+
+                //  The callback may have removed an event from the active list,
+                //  such as by re-adding this event with addEvent, so step back
+                //  to avoid skipping the event that moved into this slot
+                if (this._active[i] !== event)
+                {
+                    i--;
+                }
             }
         }
     },

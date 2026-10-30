@@ -557,5 +557,41 @@ describe('Clock', function ()
             expect(cb1).toHaveBeenCalledTimes(1);
             expect(cb2).toHaveBeenCalledTimes(1);
         });
+
+        it('should not skip the next event when a callback re-adds its own event', function ()
+        {
+            var event;
+            var cb2 = vi.fn();
+            event = clock.addEvent({ delay: 100, callback: function () { clock.addEvent(event); } });
+            clock.addEvent({ delay: 100, callback: cb2 });
+            clock.preUpdate();
+            clock.update(100, 100);
+
+            expect(cb2).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not skip the next event when a callback removes its own event', function ()
+        {
+            var event;
+            var cb2 = vi.fn();
+            event = clock.addEvent({ delay: 100, callback: function () { clock.removeEvent(event); } });
+            clock.addEvent({ delay: 100, callback: cb2 });
+            clock.preUpdate();
+            clock.update(100, 100);
+
+            expect(cb2).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not skip the next event when a callback removes an earlier event', function ()
+        {
+            var cb3 = vi.fn();
+            var first = clock.addEvent({ delay: 1000, callback: vi.fn() });
+            clock.addEvent({ delay: 100, callback: function () { clock.removeEvent(first); } });
+            clock.addEvent({ delay: 100, callback: cb3 });
+            clock.preUpdate();
+            clock.update(100, 100);
+
+            expect(cb3).toHaveBeenCalledTimes(1);
+        });
     });
 });
