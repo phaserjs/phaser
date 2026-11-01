@@ -1,7 +1,12 @@
 vec4 applyTint(vec4 texture)
 {
+    if (texture.a <= 0.0) {
+        return vec4(0.0);
+    }
+
     float tintMode = outTintEffect.a;
     vec3 unpremultTexture = texture.rgb / texture.a;
+
     float alpha = texture.a * outTint.a;
     vec3 color = vec3(unpremultTexture);
 
