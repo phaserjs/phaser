@@ -67,23 +67,23 @@ rbush.prototype = {
     search: function (bbox)
     {
         var node = this.data,
-            result = [],
-            toBBox = this.toBBox;
+            result = [];
 
         if (!intersects(bbox, node)) return result;
 
         var nodesToSearch = [],
-            i, len, child, childBBox;
+            i, len, child;
 
         while (node) {
             for (i = 0, len = node.children.length; i < len; i++) {
 
                 child = node.children[i];
-                childBBox = node.leaf ? toBBox(child) : child;
 
-                if (intersects(bbox, childBBox)) {
-                    if (node.leaf) result.push(child);
-                    else if (contains(bbox, childBBox)) this._all(child, result);
+                if (node.leaf) {
+                    if (intersectsItem(bbox, child)) result.push(child);
+                }
+                else if (intersects(bbox, child)) {
+                    if (contains(bbox, child)) this._all(child, result);
                     else nodesToSearch.push(child);
                 }
             }
@@ -108,22 +108,23 @@ rbush.prototype = {
      */
     collides: function (bbox)
     {
-        var node = this.data,
-            toBBox = this.toBBox;
+        var node = this.data;
 
         if (!intersects(bbox, node)) return false;
 
         var nodesToSearch = [],
-            i, len, child, childBBox;
+            i, len, child;
 
         while (node) {
             for (i = 0, len = node.children.length; i < len; i++) {
 
                 child = node.children[i];
-                childBBox = node.leaf ? toBBox(child) : child;
 
-                if (intersects(bbox, childBBox)) {
-                    if (node.leaf || contains(bbox, childBBox)) return true;
+                if (node.leaf) {
+                    if (intersectsItem(bbox, child)) return true;
+                }
+                else if (intersects(bbox, child)) {
+                    if (contains(bbox, child)) return true;
                     nodesToSearch.push(child);
                 }
             }
@@ -653,7 +654,8 @@ function distBBox (node, k, p, toBBox, destNode)
 
     for (var i = k, child; i < p; i++) {
         child = node.children[i];
-        extend(destNode, node.leaf ? toBBox(child) : child);
+        if (node.leaf) extendItem(destNode, child);
+        else extend(destNode, child);
     }
 
     return destNode;
@@ -666,6 +668,23 @@ function extend (a, b)
     a.maxX = Math.max(a.maxX, b.maxX);
     a.maxY = Math.max(a.maxY, b.maxY);
     return a;
+}
+
+function extendItem (a, b)
+{
+    a.minX = Math.min(a.minX, b.left);
+    a.minY = Math.min(a.minY, b.top);
+    a.maxX = Math.max(a.maxX, b.right);
+    a.maxY = Math.max(a.maxY, b.bottom);
+    return a;
+}
+
+function intersectsItem (a, b)
+{
+    return b.left <= a.maxX &&
+           b.top <= a.maxY &&
+           b.right >= a.minX &&
+           b.bottom >= a.minY;
 }
 
 function compareNodeMinX (a, b) { return a.minX - b.minX; }
