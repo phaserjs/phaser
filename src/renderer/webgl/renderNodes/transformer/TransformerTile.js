@@ -114,7 +114,7 @@ var TransformerTile = new Class({
         if (element.flipY)
         {
             height *= -1;
-            x += frameHeight;
+            y += frameHeight;
         }
 
         spriteMatrix.applyITRS(
