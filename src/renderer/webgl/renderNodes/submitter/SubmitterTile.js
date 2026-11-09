@@ -32,6 +32,20 @@ var SubmitterTile = new Class({
         SubmitterQuad.call(this, manager, config);
 
         this._renderOptions.clampFrame = true;
+
+        this._layer = null;
+    },
+
+    setupLayer: function (drawingContext, gameObject)
+    {
+        this.setRenderOptions(gameObject);
+
+        this._layer = gameObject;
+    },
+
+    endLayer: function ()
+    {
+        this._layer = null;
     },
 
     /**
@@ -129,7 +143,10 @@ var SubmitterTile = new Class({
         var u1 = uvSource.u1;
         var v1 = uvSource.v1;
 
-        this.setRenderOptions(gameObject, normalMap, normalMapRotation);
+        if (this._layer !== gameObject || normalMap || normalMapRotation !== undefined)
+        {
+            this.setRenderOptions(gameObject, normalMap, normalMapRotation);
+        }
 
         (
             gameObject.customRenderNodes[this.batchHandler] ||

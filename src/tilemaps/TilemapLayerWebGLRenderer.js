@@ -67,6 +67,16 @@ var TilemapLayerWebGLRenderer = function (renderer, src, drawingContext, parentM
 
     var timeElapsed = src.timeElapsed;
 
+    if (submitterNode.setupLayer)
+    {
+        submitterNode.setupLayer(drawingContext, src);
+    }
+
+    if (transformerNode.setupLayer)
+    {
+        transformerNode.setupLayer(drawingContext, src, parentMatrix);
+    }
+
     for (var i = 0; i < tileCount; i++)
     {
         var tile = renderTiles[i];
@@ -132,6 +142,16 @@ var TilemapLayerWebGLRenderer = function (renderer, src, drawingContext, parentM
             transformerNode,
             tinterData
         );
+    }
+
+    if (submitterNode.endLayer)
+    {
+        submitterNode.endLayer();
+    }
+
+    if (transformerNode.endLayer)
+    {
+        transformerNode.endLayer();
     }
 };
 

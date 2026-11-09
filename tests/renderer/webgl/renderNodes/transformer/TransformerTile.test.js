@@ -98,7 +98,10 @@ describe('TransformerTile', function ()
             mockCalcMatrix = {
                 matrix: [ 1, 0, 0, 1, 0, 0 ],
                 copyWithScrollFactorFrom: vi.fn(),
+                copyFrom: vi.fn(),
                 multiply: vi.fn(),
+                translate: vi.fn(),
+                scale: vi.fn(),
                 setQuad: vi.fn(function (x, y, x2, y2, quad)
                 {
                     quad[0] = x;
@@ -168,8 +171,9 @@ describe('TransformerTile', function ()
             expect(drawingContext.camera.getViewMatrix).toHaveBeenCalledOnce();
         });
 
-        it('should call applyITRS on spriteMatrix', function ()
+        it('should call applyITRS on spriteMatrix when the tile is rotated', function ()
         {
+            element.rotation = 0.5;
             node.run(drawingContext, gameObject, texturerNode, null, element);
             expect(mockSpriteMatrix.applyITRS).toHaveBeenCalledOnce();
         });
@@ -182,6 +186,7 @@ describe('TransformerTile', function ()
 
         it('should call multiply on calcMatrix twice when no parentMatrix', function ()
         {
+            element.rotation = 0.5;
             node.run(drawingContext, gameObject, texturerNode, null, element);
             // Once for spriteMatrix multiply
             expect(mockCalcMatrix.multiply).toHaveBeenCalledTimes(1);
@@ -190,6 +195,7 @@ describe('TransformerTile', function ()
         it('should call multiply on calcMatrix twice when parentMatrix is provided', function ()
         {
             var parentMatrix = {};
+            element.rotation = 0.5;
             node.run(drawingContext, gameObject, texturerNode, parentMatrix, element);
             // Once for parentMatrix, once for spriteMatrix
             expect(mockCalcMatrix.multiply).toHaveBeenCalledTimes(2);
@@ -214,6 +220,7 @@ describe('TransformerTile', function ()
         {
             gameObject.scaleX = 2;
             gameObject.scaleY = 3;
+            element.rotation = 0.5;
             node.run(drawingContext, gameObject, texturerNode, null, element);
             var call = mockSpriteMatrix.applyITRS.mock.calls[0];
             expect(call[3]).toBe(2);
@@ -230,7 +237,7 @@ describe('TransformerTile', function ()
             gameObject.gidMap[0].tileOffset.x = 4;
             // srcX = 100 + 10*2 + (16*2 - 4) = 100 + 20 + 28 = 148
             node.run(drawingContext, gameObject, texturerNode, null, element);
-            var call = mockSpriteMatrix.applyITRS.mock.calls[0];
+            var call = mockCalcMatrix.translate.mock.calls[0];
             expect(call[0]).toBeCloseTo(148);
         });
 
@@ -244,7 +251,7 @@ describe('TransformerTile', function ()
             gameObject.gidMap[0].tileOffset.y = 8;
             // srcY = 50 + 5*2 + (16*2 - 8) = 50 + 10 + 24 = 84
             node.run(drawingContext, gameObject, texturerNode, null, element);
-            var call = mockSpriteMatrix.applyITRS.mock.calls[0];
+            var call = mockCalcMatrix.translate.mock.calls[0];
             expect(call[1]).toBeCloseTo(84);
         });
 
@@ -303,7 +310,7 @@ describe('TransformerTile', function ()
             texturerNode.frameHeight = 32;
             // srcX = 0 + 0 + (16 - 10) = 6, srcY = 0 + 0 + (16 - 20) = -4
             node.run(drawingContext, gameObject, texturerNode, null, element);
-            var call = mockSpriteMatrix.applyITRS.mock.calls[0];
+            var call = mockCalcMatrix.translate.mock.calls[0];
             expect(call[0]).toBeCloseTo(6);
             expect(call[1]).toBeCloseTo(-4);
         });
@@ -401,6 +408,48 @@ describe('TransformerTile', function ()
             node.run(drawingContext, gameObject, texturerNode, null, element);
             // getViewMatrix receives !useCanvas = true
             expect(drawingContext.camera.getViewMatrix).toHaveBeenCalledWith(true);
+        });
+
+        it('should translate and scale calcMatrix instead of using applyITRS when the tile is not rotated', function ()
+        {
+            gameObject.scaleX = 2;
+            gameObject.scaleY = 3;
+            node.run(drawingContext, gameObject, texturerNode, null, element);
+            expect(mockSpriteMatrix.applyITRS).not.toHaveBeenCalled();
+            expect(mockCalcMatrix.multiply).not.toHaveBeenCalled();
+            expect(mockCalcMatrix.translate).toHaveBeenCalledOnce();
+            expect(mockCalcMatrix.scale).toHaveBeenCalledWith(2, 3);
+        });
+
+        it('should copy the layer matrix instead of recomputing the view matrix after setupLayer', function ()
+        {
+            var parentMatrix = {};
+            node._layerMatrix = { copyWithScrollFactorFrom: vi.fn(), multiply: vi.fn() };
+            node.setupLayer(drawingContext, gameObject, parentMatrix);
+            expect(drawingContext.camera.getViewMatrix).toHaveBeenCalledOnce();
+            expect(node._layerMatrix.multiply).toHaveBeenCalledWith(parentMatrix);
+
+            node.run(drawingContext, gameObject, texturerNode, parentMatrix, element);
+            node.run(drawingContext, gameObject, texturerNode, parentMatrix, element);
+            expect(drawingContext.camera.getViewMatrix).toHaveBeenCalledOnce();
+            expect(mockCalcMatrix.copyWithScrollFactorFrom).not.toHaveBeenCalled();
+            expect(mockCalcMatrix.copyFrom).toHaveBeenCalledTimes(2);
+            expect(mockCalcMatrix.copyFrom).toHaveBeenCalledWith(node._layerMatrix);
+        });
+
+        it('should recompute the view matrix for a different game object or after endLayer', function ()
+        {
+            node._layerMatrix = { copyWithScrollFactorFrom: vi.fn(), multiply: vi.fn() };
+            node.setupLayer(drawingContext, gameObject, null);
+
+            var other = Object.assign({}, gameObject);
+            node.run(drawingContext, other, texturerNode, null, element);
+            expect(mockCalcMatrix.copyWithScrollFactorFrom).toHaveBeenCalledOnce();
+
+            node.endLayer();
+            node.run(drawingContext, gameObject, texturerNode, null, element);
+            expect(mockCalcMatrix.copyWithScrollFactorFrom).toHaveBeenCalledTimes(2);
+            expect(mockCalcMatrix.copyFrom).not.toHaveBeenCalled();
         });
 
         it('should pass the quad Float32Array to setQuad', function ()
