@@ -350,5 +350,34 @@ describe('SubmitterTile', function ()
             // drawingContext + glTexture + 8 quad coords + 4 uv + tintEffect + 4 tints + renderOptions + 4 secondary tints + 8 frame coords = 32
             expect(args.length).toBe(32);
         });
+
+        it('should compute render options once in setupLayer and reuse them for each tile of that layer', function ()
+        {
+            var spy = vi.spyOn(node, 'setRenderOptions');
+            node.setupLayer(drawingContext, gameObject);
+            expect(spy).toHaveBeenCalledOnce();
+
+            node.run(drawingContext, gameObject, parentMatrix, null, texturerNode, transformerNode);
+            node.run(drawingContext, gameObject, parentMatrix, null, texturerNode, transformerNode);
+            expect(spy).toHaveBeenCalledOnce();
+            expect(mockBatch).toHaveBeenCalledTimes(2);
+        });
+
+        it('should compute render options per run for other game objects, after endLayer, or with a normal map', function ()
+        {
+            var spy = vi.spyOn(node, 'setRenderOptions');
+            node.setupLayer(drawingContext, gameObject);
+
+            var other = Object.assign({}, gameObject);
+            node.run(drawingContext, other, parentMatrix, null, texturerNode, transformerNode);
+            expect(spy).toHaveBeenCalledTimes(2);
+
+            node.run(drawingContext, gameObject, parentMatrix, null, texturerNode, transformerNode, undefined, {});
+            expect(spy).toHaveBeenCalledTimes(3);
+
+            node.endLayer();
+            node.run(drawingContext, gameObject, parentMatrix, null, texturerNode, transformerNode);
+            expect(spy).toHaveBeenCalledTimes(4);
+        });
     });
 });
