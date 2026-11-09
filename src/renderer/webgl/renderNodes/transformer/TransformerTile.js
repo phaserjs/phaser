@@ -37,11 +37,45 @@ var TransformerTile = new Class({
     {
         TransformerImage.call(this, manager, config);
 
+        /**
+         * The camera view matrix, with scroll factor and parent matrix applied,
+         * for the layer set up by `setupLayer`. It is copied for each tile
+         * of that layer instead of being recomputed.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerTile#_layerMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 4.3.0
+         */
         this._layerMatrix = new TransformMatrix();
 
+        /**
+         * The layer whose matrix is cached in `_layerMatrix`,
+         * or `null` if no layer is set up.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.TransformerTile#_layer
+         * @type {?Phaser.GameObjects.GameObject}
+         * @private
+         * @since 4.3.0
+         */
         this._layer = null;
     },
 
+    /**
+     * Prepares this node to render the tiles of a layer.
+     *
+     * Computes the camera view matrix, scroll factor and parent matrix
+     * once for the layer, so that `run` can reuse it for every tile
+     * of that layer instead of recomputing it.
+     *
+     * Call `endLayer` when the layer has been rendered.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.TransformerTile#setupLayer
+     * @since 4.3.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The tilemap layer about to be rendered.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - This transform matrix is defined if the game object is nested.
+     */
     setupLayer: function (drawingContext, gameObject, parentMatrix)
     {
         var camera = drawingContext.camera;
@@ -61,6 +95,13 @@ var TransformerTile = new Class({
         this._layer = gameObject;
     },
 
+    /**
+     * Clears the layer prepared by `setupLayer`,
+     * so that `run` computes the full matrix again.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.TransformerTile#endLayer
+     * @since 4.3.0
+     */
     endLayer: function ()
     {
         this._layer = null;

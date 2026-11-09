@@ -33,9 +33,32 @@ var SubmitterTile = new Class({
 
         this._renderOptions.clampFrame = true;
 
+        /**
+         * The layer whose render options were set by `setupLayer`,
+         * or `null` if no layer is set up.
+         *
+         * @name Phaser.Renderer.WebGL.RenderNodes.SubmitterTile#_layer
+         * @type {?Phaser.GameObjects.GameObject}
+         * @private
+         * @since 4.3.0
+         */
         this._layer = null;
     },
 
+    /**
+     * Prepares this node to render the tiles of a layer.
+     *
+     * Sets the render options once for the layer, so that `run` can skip
+     * `setRenderOptions` for every tile of that layer. Tiles rendered with
+     * a normal map or normal map rotation still set their own options.
+     *
+     * Call `endLayer` when the layer has been rendered.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.SubmitterTile#setupLayer
+     * @since 4.3.0
+     * @param {Phaser.Renderer.WebGL.DrawingContext} drawingContext - The current drawing context.
+     * @param {Phaser.GameObjects.GameObject} gameObject - The tilemap layer about to be rendered.
+     */
     setupLayer: function (drawingContext, gameObject)
     {
         this.setRenderOptions(gameObject);
@@ -43,6 +66,13 @@ var SubmitterTile = new Class({
         this._layer = gameObject;
     },
 
+    /**
+     * Clears the layer prepared by `setupLayer`,
+     * so that `run` sets the render options again on every call.
+     *
+     * @method Phaser.Renderer.WebGL.RenderNodes.SubmitterTile#endLayer
+     * @since 4.3.0
+     */
     endLayer: function ()
     {
         this._layer = null;
