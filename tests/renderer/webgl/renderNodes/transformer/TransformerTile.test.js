@@ -268,9 +268,10 @@ describe('TransformerTile', function ()
             texturerNode.frameHeight = 32;
             node.run(drawingContext, gameObject, texturerNode, null, element);
             var setQuadCall = mockCalcMatrix.setQuad.mock.calls[0];
-            // y = -halfHeight = -16, height = -32, so y + height = -48
-            expect(setQuadCall[1]).toBe(-16);
-            expect(setQuadCall[3]).toBe(-48);
+            expect(setQuadCall[0]).toBe(-16);
+            expect(setQuadCall[1]).toBe(16);
+            expect(setQuadCall[2]).toBe(16);
+            expect(setQuadCall[3]).toBe(-16);
         });
 
         it('should use standard quad x and y when no flip is applied', function ()
