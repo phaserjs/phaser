@@ -131,6 +131,21 @@ var WebGLBufferWrapper = new Class({
          */
         this.bufferUsage = bufferUsage;
 
+        /**
+         * The size in bytes of the data store currently allocated on the GPU.
+         *
+         * This can be smaller than `dataBuffer.byteLength` after a partial
+         * update of a dynamic buffer, which respecifies the store at the
+         * uploaded size. Any later update that needs the full store
+         * restores it first.
+         *
+         * @name Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#_gpuByteLength
+         * @type {number}
+         * @private
+         * @since 4.3.0
+         */
+        this._gpuByteLength = 0;
+
         this.createViews();
 
         this.createResource();
@@ -156,6 +171,7 @@ var WebGLBufferWrapper = new Class({
 
         this.bind();
         gl.bufferData(bufferType, this.dataBuffer, this.bufferUsage);
+        this._gpuByteLength = this.dataBuffer.byteLength;
         this.bind(true);
     },
 
@@ -192,6 +208,13 @@ var WebGLBufferWrapper = new Class({
      * The dataBuffer must contain the new data to be uploaded to the GPU.
      * The specified range of data is uploaded from the local dataBuffer to the WebGLBuffer on the GPU.
      *
+     * If the buffer is not `STATIC_DRAW` and `bytes` is given with no offset,
+     * the GPU data store is respecified at exactly `bytes` in size with
+     * `bufferData`, rather than partially overwritten with `bufferSubData`.
+     * This lets the driver discard the previous contents instead of copying
+     * or synchronizing on a buffer still in use by earlier draw calls,
+     * which matters when a batch is flushed many times per frame.
+     *
      * @method Phaser.Renderer.WebGL.Wrappers.WebGLBufferWrapper#update
      * @since 4.0.0
      * @param {number} [bytes] - The number of bytes to update in the buffer. If not specified, the entire buffer will be updated.
@@ -208,7 +231,17 @@ var WebGLBufferWrapper = new Class({
             offset = 0;
         }
 
-        if (bytes === undefined)
+        if (bytes !== undefined && offset === 0 && this.bufferUsage !== gl.STATIC_DRAW)
+        {
+            gl.bufferData(this.bufferType, this.viewU8.subarray(0, bytes), this.bufferUsage);
+            this._gpuByteLength = bytes;
+        }
+        else if (this._gpuByteLength !== this.dataBuffer.byteLength)
+        {
+            gl.bufferData(this.bufferType, this.dataBuffer, this.bufferUsage);
+            this._gpuByteLength = this.dataBuffer.byteLength;
+        }
+        else if (bytes === undefined)
         {
             gl.bufferSubData(
                 this.bufferType,
@@ -246,6 +279,7 @@ var WebGLBufferWrapper = new Class({
 
         this.bind();
         gl.bufferData(this.bufferType, this.dataBuffer, this.bufferUsage);
+        this._gpuByteLength = bytes;
     },
 
     /**

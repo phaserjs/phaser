@@ -11,6 +11,8 @@ function makeMockGl ()
     return {
         ARRAY_BUFFER: ARRAY_BUFFER,
         ELEMENT_ARRAY_BUFFER: ELEMENT_ARRAY_BUFFER,
+        DYNAMIC_DRAW: DYNAMIC_DRAW,
+        STATIC_DRAW: STATIC_DRAW,
         createBuffer: vi.fn().mockReturnValue({ id: 'mock-buffer' }),
         bufferData: vi.fn(),
         bufferSubData: vi.fn(),
@@ -345,7 +347,7 @@ describe('WebGLBufferWrapper', function ()
         {
             var gl = makeMockGl();
             var renderer = makeMockRenderer(gl);
-            var wrapper = new WebGLBufferWrapper(renderer, new ArrayBuffer(16), ARRAY_BUFFER, DYNAMIC_DRAW);
+            var wrapper = new WebGLBufferWrapper(renderer, new ArrayBuffer(16), ARRAY_BUFFER, STATIC_DRAW);
 
             wrapper.update(8);
 
@@ -353,11 +355,11 @@ describe('WebGLBufferWrapper', function ()
             expect(lastCall[1]).toBe(0);
         });
 
-        it('should call gl.bufferSubData with a subarray when bytes is specified', function ()
+        it('should call gl.bufferSubData with a subarray when bytes is specified on a static buffer', function ()
         {
             var gl = makeMockGl();
             var renderer = makeMockRenderer(gl);
-            var wrapper = new WebGLBufferWrapper(renderer, new ArrayBuffer(16), ARRAY_BUFFER, DYNAMIC_DRAW);
+            var wrapper = new WebGLBufferWrapper(renderer, new ArrayBuffer(16), ARRAY_BUFFER, STATIC_DRAW);
 
             wrapper.update(8, 0);
 
@@ -365,6 +367,67 @@ describe('WebGLBufferWrapper', function ()
             expect(lastCall[0]).toBe(ARRAY_BUFFER);
             expect(lastCall[2]).toBeInstanceOf(Uint8Array);
             expect(lastCall[2].byteLength).toBe(8);
+        });
+
+        it('should respecify a dynamic buffer with gl.bufferData when bytes is specified from offset 0', function ()
+        {
+            var gl = makeMockGl();
+            var renderer = makeMockRenderer(gl);
+            var wrapper = new WebGLBufferWrapper(renderer, new ArrayBuffer(16), ARRAY_BUFFER, DYNAMIC_DRAW);
+
+            gl.bufferData.mockClear();
+            gl.bufferSubData.mockClear();
+
+            wrapper.update(8);
+
+            expect(gl.bufferSubData).not.toHaveBeenCalled();
+            expect(gl.bufferData).toHaveBeenCalledTimes(1);
+            var call = gl.bufferData.mock.calls[0];
+            expect(call[0]).toBe(ARRAY_BUFFER);
+            expect(call[1]).toBeInstanceOf(Uint8Array);
+            expect(call[1].byteLength).toBe(8);
+            expect(call[2]).toBe(DYNAMIC_DRAW);
+        });
+
+        it('should restore the full buffer size before a partial update at an offset after a dynamic upload', function ()
+        {
+            var gl = makeMockGl();
+            var renderer = makeMockRenderer(gl);
+            var buf = new ArrayBuffer(16);
+            var wrapper = new WebGLBufferWrapper(renderer, buf, ARRAY_BUFFER, DYNAMIC_DRAW);
+
+            wrapper.update(8);
+
+            gl.bufferData.mockClear();
+            gl.bufferSubData.mockClear();
+
+            wrapper.update(4, 8);
+
+            expect(gl.bufferSubData).not.toHaveBeenCalled();
+            expect(gl.bufferData).toHaveBeenCalledWith(ARRAY_BUFFER, buf, DYNAMIC_DRAW);
+
+            wrapper.update(4, 8);
+
+            expect(gl.bufferSubData).toHaveBeenCalledTimes(1);
+            expect(gl.bufferSubData.mock.calls[0][1]).toBe(8);
+        });
+
+        it('should restore the full buffer size on a full update after a dynamic upload', function ()
+        {
+            var gl = makeMockGl();
+            var renderer = makeMockRenderer(gl);
+            var buf = new ArrayBuffer(16);
+            var wrapper = new WebGLBufferWrapper(renderer, buf, ARRAY_BUFFER, DYNAMIC_DRAW);
+
+            wrapper.update(8);
+
+            gl.bufferData.mockClear();
+            gl.bufferSubData.mockClear();
+
+            wrapper.update();
+
+            expect(gl.bufferSubData).not.toHaveBeenCalled();
+            expect(gl.bufferData).toHaveBeenCalledWith(ARRAY_BUFFER, buf, DYNAMIC_DRAW);
         });
 
         it('should pass the given offset to gl.bufferSubData', function ()
