@@ -131,6 +131,8 @@ var WebGLBufferWrapper = new Class({
          */
         this.bufferUsage = bufferUsage;
 
+        this._gpuByteLength = 0;
+
         this.createViews();
 
         this.createResource();
@@ -156,6 +158,7 @@ var WebGLBufferWrapper = new Class({
 
         this.bind();
         gl.bufferData(bufferType, this.dataBuffer, this.bufferUsage);
+        this._gpuByteLength = this.dataBuffer.byteLength;
         this.bind(true);
     },
 
@@ -208,7 +211,17 @@ var WebGLBufferWrapper = new Class({
             offset = 0;
         }
 
-        if (bytes === undefined)
+        if (bytes !== undefined && offset === 0 && this.bufferUsage !== gl.STATIC_DRAW)
+        {
+            gl.bufferData(this.bufferType, this.viewU8.subarray(0, bytes), this.bufferUsage);
+            this._gpuByteLength = bytes;
+        }
+        else if (this._gpuByteLength !== this.dataBuffer.byteLength)
+        {
+            gl.bufferData(this.bufferType, this.dataBuffer, this.bufferUsage);
+            this._gpuByteLength = this.dataBuffer.byteLength;
+        }
+        else if (bytes === undefined)
         {
             gl.bufferSubData(
                 this.bufferType,
@@ -246,6 +259,7 @@ var WebGLBufferWrapper = new Class({
 
         this.bind();
         gl.bufferData(this.bufferType, this.dataBuffer, this.bufferUsage);
+        this._gpuByteLength = bytes;
     },
 
     /**
