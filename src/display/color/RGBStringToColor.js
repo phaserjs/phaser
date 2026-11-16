@@ -23,7 +23,7 @@ var RGBStringToColor = function (rgb, color)
 {
     if (!color) { color = new Color(); }
 
-    var result = (/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*(\d+(?:\.\d+)?))?\s*\)$/).exec(rgb.toLowerCase());
+    var result = (/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*(\d*\.?\d+))?\s*\)$/).exec(rgb.toLowerCase());
 
     if (result)
     {

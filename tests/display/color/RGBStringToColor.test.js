@@ -60,6 +60,22 @@ describe('Phaser.Display.Color.RGBStringToColor', function ()
         expect(result.alpha).toBe(127);
     });
 
+    it('should parse a fractional alpha without a leading zero', function ()
+    {
+        var result = RGBStringToColor('rgba(100, 150, 200, .5)');
+        expect(result.red).toBe(100);
+        expect(result.green).toBe(150);
+        expect(result.blue).toBe(200);
+        expect(result.alpha).toBe(127);
+    });
+
+    it('should parse a minified rgba string', function ()
+    {
+        var result = RGBStringToColor('rgba(0,0,0,.25)');
+        expect(result.red).toBe(0);
+        expect(result.alpha).toBe(63);
+    });
+
     it('should default alpha to 255 when using rgb format', function ()
     {
         var result = RGBStringToColor('rgb(10, 20, 30)');
