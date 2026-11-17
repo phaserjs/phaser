@@ -14,7 +14,7 @@
  * Note that we're not guaranteed that there will be any 'normal' tiles if the only
  * things in the tileset are wangtile definitions, so this has to be parsed separately.
  *
- * See https://doc.mapeditor.org/en/latest/manual/using-wang-tiles/ for more information.
+ * See https://doc.mapeditor.org/en/latest/manual/terrain/ for more information.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.ParseWangsets
  * @since 3.53.0

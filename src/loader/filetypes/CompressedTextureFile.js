@@ -459,8 +459,8 @@ var CompressedTextureFile = new Class({
  * Compressed textures will appear darker than normal textures. This is because
  * the Web uses sRGB colorspace, but compressed textures are sampled as linear
  * colorspace. You must adjust your textures to be lighter before compression.
- * See https://imagemagick.org/Usage/color_basics/#srgb for more details.
- * You can do this with ImageMagick (https://imagemagick.org/index.php) using
+ * See https://usage.imagemagick.org/color_basics/#srgb for more details.
+ * You can do this with ImageMagick (https://imagemagick.org/) using
  * the following command:
  *
  * `magick input.png -set colorspace RGB -colorspace sRGB output.png`

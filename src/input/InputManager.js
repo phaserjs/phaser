@@ -403,7 +403,6 @@ var InputManager = new Class({
      * Please read about the differences between browsers when it comes to the file formats and sizes they support:
      *
      * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
-     * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_User_Interface/Using_URL_values_for_the_cursor_property
      *
      * It's up to you to pick a suitable cursor format that works across the range of browsers you need to support.
      *
