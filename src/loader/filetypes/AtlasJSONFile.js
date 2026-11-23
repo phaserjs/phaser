@@ -139,6 +139,7 @@ var AtlasJSONFile = new Class({
  * * [Adobe Flash / Animate](https://www.adobe.com/uk/products/animate.html)
  * * [Free Texture Packer](http://free-tex-packer.com/)
  * * [Leshy SpriteSheet Tool](https://www.leshylabs.com/apps/sstool/)
+ * * [SpriteSheet.dev](https://spritesheet.dev/)
  *
  * If you are using Texture Packer and have enabled multi-atlas support, then please use the Phaser Multi Atlas loader
  * instead of this one.
