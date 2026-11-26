@@ -69,6 +69,22 @@ float floatTexel (vec4 texel)
     return bytes.r + (bytes.g * 256.0) + (bytes.b * 256.0 * 256.0) + (bytes.a * 256.0 * 256.0 * 256.0);
 }
 
+// Split an integer-valued index into (column, row) coordinates in a grid
+// `width` cells wide.
+// `floor(index / width)` is not safe for this: GPUs divide by multiplying with
+// the reciprocal, so an exact multiple of `width` can land a hair below the
+// integer quotient (15.0 / 15.0 == 0.99999994). `floor()` then returns the
+// previous row and `mod()` returns `width` instead of 0, which addresses a cell
+// past the end of the row. Dividing `index + 0.5` keeps the quotient half a
+// cell away from any integer, and the column is derived from the row so the
+// two always agree.
+vec2 indexToGrid (float index, float width)
+{
+    float row = floor((index + 0.5) / width);
+
+    return vec2(index - row * width, row);
+}
+
 struct Tile
 {
     float index;
@@ -141,9 +157,7 @@ Tile getLayerData (vec2 coord)
 // Returns the texel coordinates of the tile in the main texture.
 vec2 getFrameCorner (float index)
 {
-    float x = mod(index, uTileColumns);
-    float y = floor(index / uTileColumns);
-    vec2 xy = vec2(x, y);
+    vec2 xy = indexToGrid(index, uTileColumns);
 
     return xy * outTileStride + uTileWidthHeightMarginSpacing.zz;
 }
@@ -154,9 +168,9 @@ float animationIndex (float index)
 {
     // Get initial animation data.
     float animTextureWidth = uAnimResolution.x;
-    vec2 index2D = vec2(mod(index, animTextureWidth), floor(index / animTextureWidth));
+    vec2 index2D = indexToGrid(index, animTextureWidth);
     vec4 animDurationTexel = texture2D(uAnimSampler, (index2D + 0.5) / uAnimResolution);
-    index2D = vec2(mod(index + 1.0, animTextureWidth), floor((index + 1.0) / animTextureWidth));
+    index2D = indexToGrid(index + 1.0, animTextureWidth);
     vec4 animIndexTexel = texture2D(uAnimSampler, (index2D + 0.5) / uAnimResolution);
 
     float animDuration = floatTexel(animDurationTexel);
@@ -167,7 +181,7 @@ float animationIndex (float index)
     float animTimeAccum = 0.0;
     for (int i = 0; i < MAX_ANIM_FRAMES; i++)
     {
-        index2D = vec2(mod(animIndex, animTextureWidth), floor(animIndex / animTextureWidth));
+        index2D = indexToGrid(animIndex, animTextureWidth);
         animDurationTexel = texture2D(uAnimSampler, (index2D + 0.5) / uAnimResolution);
         float frameDuration = floatTexel(animDurationTexel);
         animTimeAccum += frameDuration;
@@ -184,7 +198,7 @@ float animationIndex (float index)
     animIndex += 1.0;
 
     // Derive the animation frame index.
-    index2D = vec2(mod(animIndex, animTextureWidth), floor(animIndex / animTextureWidth));
+    index2D = indexToGrid(animIndex, animTextureWidth);
     animIndexTexel = texture2D(uAnimSampler, (index2D + 0.5) / uAnimResolution);
     float animFrameIndex = floatTexel(animIndexTexel);
 
