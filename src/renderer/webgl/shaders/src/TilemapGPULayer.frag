@@ -7,8 +7,10 @@
 
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
+#define DATA_PRECISION highp
 #else
 precision mediump float;
+#define DATA_PRECISION mediump
 #endif
 
 /* Redefine MAX_ANIM_FRAMES to support animations with different frame numbers. */
@@ -18,7 +20,16 @@ precision mediump float;
 
 uniform vec2 uResolution;
 uniform sampler2D uMainSampler;
-uniform sampler2D uLayerSampler;
+// The layer and animation samplers carry packed integer data (tile indices and
+// flag bits), not colour, so they need more than the default sampler precision.
+// GLSL ES 1.00 declares fragment shader samplers `lowp` by default (spec 4.5.3),
+// which only guarantees 8-bit absolute precision. A driver that takes that
+// literally decodes the layer texel a fraction below its true byte value, which
+// is enough to break the exact comparisons that read the flag bits out of it.
+// Observed on Adreno 740/750 (Galaxy S23 / S23 Ultra / Z Fold 7), where every
+// empty tile failed its `flags == 16.0` test and drew tile 0 of the tileset over
+// the layers beneath it.
+uniform DATA_PRECISION sampler2D uLayerSampler;
 uniform vec2 uMainResolution;
 uniform vec2 uLayerResolution;
 uniform float uTileColumns;
@@ -27,7 +38,7 @@ uniform float uAlpha;
 uniform float uTime;
 
 #if MAX_ANIM_FRAMES > 0
-uniform sampler2D uAnimSampler;
+uniform DATA_PRECISION sampler2D uAnimSampler;
 uniform vec2 uAnimResolution;
 #endif
 
@@ -42,10 +53,36 @@ vec2 getTexRes ()
     return uMainResolution;
 }
 
+// Snap a UNORM8 texel back to the exact 0-255 byte values it was uploaded with.
+// The channels below are weighted by powers of 256, so a fetch that is off by a
+// fraction of a byte becomes an error of hundreds in the decoded value.
+vec4 texelBytes (vec4 texel)
+{
+    return floor(texel * 255.0 + 0.5);
+}
+
 // Convert a vec4 texel to a float.
 float floatTexel (vec4 texel)
 {
-    return texel.r * 255.0 + (texel.g * 255.0 * 256.0) + (texel.b * 255.0 * 256.0 * 256.0) + (texel.a * 255.0 * 256.0 * 256.0 * 256.0);
+    vec4 bytes = texelBytes(texel);
+
+    return bytes.r + (bytes.g * 256.0) + (bytes.b * 256.0 * 256.0) + (bytes.a * 256.0 * 256.0 * 256.0);
+}
+
+// Split an integer-valued index into (column, row) coordinates in a grid
+// `width` cells wide.
+// `floor(index / width)` is not safe for this: GPUs divide by multiplying with
+// the reciprocal, so an exact multiple of `width` can land a hair below the
+// integer quotient (15.0 / 15.0 == 0.99999994). `floor()` then returns the
+// previous row and `mod()` returns `width` instead of 0, which addresses a cell
+// past the end of the row. Dividing `index + 0.5` keeps the quotient half a
+// cell away from any integer, and the column is derived from the row so the
+// two always agree.
+vec2 indexToGrid (float index, float width)
+{
+    float row = floor((index + 0.5) / width);
+
+    return vec2(index - row * width, row);
 }
 
 struct Tile
@@ -67,7 +104,7 @@ Tile getLayerData (vec2 coord)
     // Invert Y, as textures are flipped in GL.
     uv.y = 1.0 - uv.y;
 
-    vec4 texel = texture2D(uLayerSampler, (tile + 0.5) / uLayerResolution) * 255.0;
+    vec4 texel = texelBytes(texture2D(uLayerSampler, (tile + 0.5) / uLayerResolution));
 
     float flags = texel.a;
 
@@ -120,9 +157,7 @@ Tile getLayerData (vec2 coord)
 // Returns the texel coordinates of the tile in the main texture.
 vec2 getFrameCorner (float index)
 {
-    float x = mod(index, uTileColumns);
-    float y = floor(index / uTileColumns);
-    vec2 xy = vec2(x, y);
+    vec2 xy = indexToGrid(index, uTileColumns);
 
     return xy * outTileStride + uTileWidthHeightMarginSpacing.zz;
 }
@@ -133,9 +168,9 @@ float animationIndex (float index)
 {
     // Get initial animation data.
     float animTextureWidth = uAnimResolution.x;
-    vec2 index2D = vec2(mod(index, animTextureWidth), floor(index / animTextureWidth));
+    vec2 index2D = indexToGrid(index, animTextureWidth);
     vec4 animDurationTexel = texture2D(uAnimSampler, (index2D + 0.5) / uAnimResolution);
-    index2D = vec2(mod(index + 1.0, animTextureWidth), floor((index + 1.0) / animTextureWidth));
+    index2D = indexToGrid(index + 1.0, animTextureWidth);
     vec4 animIndexTexel = texture2D(uAnimSampler, (index2D + 0.5) / uAnimResolution);
 
     float animDuration = floatTexel(animDurationTexel);
@@ -146,7 +181,7 @@ float animationIndex (float index)
     float animTimeAccum = 0.0;
     for (int i = 0; i < MAX_ANIM_FRAMES; i++)
     {
-        index2D = vec2(mod(animIndex, animTextureWidth), floor(animIndex / animTextureWidth));
+        index2D = indexToGrid(animIndex, animTextureWidth);
         animDurationTexel = texture2D(uAnimSampler, (index2D + 0.5) / uAnimResolution);
         float frameDuration = floatTexel(animDurationTexel);
         animTimeAccum += frameDuration;
@@ -163,7 +198,7 @@ float animationIndex (float index)
     animIndex += 1.0;
 
     // Derive the animation frame index.
-    index2D = vec2(mod(animIndex, animTextureWidth), floor(animIndex / animTextureWidth));
+    index2D = indexToGrid(animIndex, animTextureWidth);
     animIndexTexel = texture2D(uAnimSampler, (index2D + 0.5) / uAnimResolution);
     float animFrameIndex = floatTexel(animIndexTexel);
 
