@@ -1573,7 +1573,7 @@ var WebGLRenderer = new Class({
     {
         var index = this.blendModes.push(WebGLBlendParametersFactory.createCombined(this, true, undefined, equation, func[0], func[1])) - 1;
 
-        return index - 1;
+        return index;
     },
 
     /**
