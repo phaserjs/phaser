@@ -415,8 +415,16 @@ var BitmapText = new Class({
     },
 
     /**
-     * Sets the line spacing value. This value is added to the font height to
-     * calculate the overall line height.
+     * Sets the extra spacing between lines in the bitmap font's original units.
+     * This value is added to the font's line height before applying the ratio of
+     * `fontSize` to the font's original size.
+     *
+     * For example, a BitmapText using a font with an original size of 20 and a
+     * display size of 30 adds 30 pixels of local spacing when `spacing` is 20.
+     *
+     * DynamicBitmapText includes this spacing when calculating text bounds.
+     * Its renderers advance glyphs by the font's original line height scaled
+     * to the display size.
      *
      * Spacing can be a negative or positive number.
      *
@@ -425,7 +433,7 @@ var BitmapText = new Class({
      * @method Phaser.GameObjects.BitmapText#setLineSpacing
      * @since 3.60.0
      *
-     * @param {number} [spacing=0] - The amount of space to add between each line in multi-line text.
+     * @param {number} [spacing=0] - Extra space between lines in the bitmap font's original units.
      *
      * @return {this} This BitmapText Object.
      */
@@ -1019,7 +1027,8 @@ var BitmapText = new Class({
     },
 
     /**
-     * Adds / Removes spacing between lines.
+     * Extra spacing between lines in the bitmap font's original units.
+     * This value scales with `fontSize`.
      *
      * Can be a negative or positive number.
      *
