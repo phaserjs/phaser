@@ -244,6 +244,58 @@ describe('Arc', function ()
             expect(result).toBe(arc);
         });
 
+        describe('interactive arcs', function ()
+        {
+            var helper = require('../../../helper');
+            var scene;
+
+            beforeEach(async function ()
+            {
+                scene = await helper.createGame();
+            });
+
+            afterEach(function ()
+            {
+                helper.destroyGame();
+            });
+
+            it('should resize the default hit area as the arc grows and shrinks', function ()
+            {
+                var arc = new Arc(scene, 0, 0, 10).setInteractive();
+                var manager = scene.input.manager;
+                expect(manager.pointWithinHitArea(arc, 15, 0)).toBe(false);
+
+                var tween = scene.tweens.add({ targets: arc, radius: 20, duration: 100, paused: true });
+                tween.seek(200, 10);
+                expect(arc.radius).toBe(20);
+                expect(manager.pointWithinHitArea(arc, 15, 0)).toBe(true);
+
+                arc.setRadius(5);
+                expect(manager.pointWithinHitArea(arc, 15, 0)).toBe(false);
+            });
+
+            it('should preserve a custom hit area', function ()
+            {
+                var Rectangle = helper.Phaser.Geom.Rectangle;
+                var hitArea = new Rectangle(0, 0, 5, 8);
+                var arc = new Arc(scene, 0, 0, 10).setInteractive(hitArea, Rectangle.Contains);
+
+                arc.radius = 20;
+
+                expect(arc.input.hitArea).toBe(hitArea);
+                expect(hitArea.width).toBe(5);
+                expect(hitArea.height).toBe(8);
+            });
+
+            it('should allow resizing a zero-radius arc with an input config', function ()
+            {
+                var arc = new Arc(scene, 0, 0, 0).setInteractive({ useHandCursor: true });
+
+                arc.setRadius(10);
+                expect(arc.width).toBe(20);
+            });
+        });
+
         it('should accept zero radius', function ()
         {
             var arc = createArc();

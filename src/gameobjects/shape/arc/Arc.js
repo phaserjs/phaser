@@ -171,6 +171,14 @@ var Arc = new Class({
             this.setSize(diameter, diameter);
             this.updateDisplayOrigin();
             this.updateData();
+
+            var input = this.input;
+
+            if (input && !input.customHitArea && input.hitArea)
+            {
+                input.hitArea.width = diameter;
+                input.hitArea.height = diameter;
+            }
         }
 
     },
